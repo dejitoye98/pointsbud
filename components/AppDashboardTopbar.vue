@@ -12,7 +12,7 @@
             </div>
 
             <div class="el__end">
-                <button v-if="active === 'Campaigns'">Create new campaign</button>
+                <button v-if="active === 'Campaigns'" @click="createCampaign">Create new campaign</button>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
      &__container {
          width: 100%;
          display: flex;
-         padding: 24px 24px;
+         padding: 24px 0;
          justify-content: space-between;
          align-items: center;
          
@@ -50,7 +50,7 @@
          font-weight: 400;
          width: auto!important;
          color: white;
-         border-radius: 50px;
+         border-radius: 20px;
          min-height: auto;
          cursor: pointer;
      }
@@ -74,6 +74,11 @@
 import { mapGetters } from "vuex";
 
 export default {
+    methods: {
+        createCampaign() {
+            this.$store.commit('dashboard/setCreateCampaign', true)
+        },
+    },
     computed: {
         ...mapGetters("dashboard", ["dashboardTitle", 'active']),
     },

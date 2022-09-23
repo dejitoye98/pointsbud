@@ -56,6 +56,7 @@
 
 
 <script>
+
 export default {
     data() {
         return {
@@ -79,6 +80,9 @@ export default {
                 .then(resp => {
                     this.error = '';
                     this.loading = false;
+                    this.$router.push({
+                        path: '/dashboard/campaigns'
+                    })
                 })
                 .catch(err => {
                     this.loading = false;

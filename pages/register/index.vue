@@ -95,7 +95,7 @@
                                         <label for="">Country</label>
 
                                         <select type="text" v-model="business.country">
-                                            <option :value="industry" v-for="country in countries" :key="country.name"> {{country.name}}</option>
+                                            <option :value="country.name"  v-for="country in countries" :key="country.name"> {{country.name}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -563,7 +563,9 @@ export default {
                         this.successful = true;
                         //login
                         this.status = 'Successful. Signing you in...'
-                        this.login();
+                        this.$store.dispatch('auth/login', payload).then(resp=> {
+                            this.$router.push({path: '/dashboard/campaigns'})
+                        })
                     }).catch(err => {
                         this.successful = false;
                         this.error = err.response && err.response.data.data || err.response.data.message;

@@ -18,6 +18,7 @@ export const mutations = ({
 
 export const actions = {
     login({ dispatch, commit}, payload) {
+        Cookies.remove('aff-token')
         return new Promise((resolve, reject) => {
             this.$api.post(`/auth/login`, payload)
                 .then(resp => {

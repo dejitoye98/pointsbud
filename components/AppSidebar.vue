@@ -12,6 +12,7 @@
                 <sidebar-item :text="'Overview'" />
                 <sidebar-item :text="'Earnings'" />
                 <sidebar-item :text="'Campaigns'" link='/campaigns' />
+                <sidebar-item :text="'Settings'" link='/settings' />
             </div>
         </div>
     </div>

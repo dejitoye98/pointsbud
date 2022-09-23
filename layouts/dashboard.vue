@@ -1,6 +1,9 @@
 <template>
     <div class="layout">
-        <AppSidebar/>
+        <div class="sidebar">
+
+            <AppSidebar/>
+        </div>
 
         <main class="body">
             <AppDashboardTopbar/>
@@ -18,9 +21,14 @@
     display: flex;
     background: $dashboard-background-color;
 }
+
+.sidebar {
+    
+}
 .body {
    // background:lightblue;
    width: 100%;
    height: 100%;
+   padding: 0 24px;
 }
 </style>
