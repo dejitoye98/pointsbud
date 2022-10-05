@@ -1,48 +1,138 @@
 @mixin largebutton {
     background: $primary;
-      border: 2px solid $primary;
-      border-radius: 10px;
-      box-sizing: border-box;
-      color: #FFFFFF;
-      cursor: pointer;
-      display: inline-block;
-      font-size: 16px;
-      font-weight: 500;
-      line-height: normal;
-      margin: 0;
-      min-height: 60px;
-      min-width: 0;
-      outline: none;
-      padding: 16px 24px;
-      text-align: center;
-      text-decoration: none;
-      transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: manipulation;
-      width: 400px;
-      will-change: transform;
-      margin-bottom: 8px;
-
-      @include media("<=t"){
-          min-height: 40px;
-          font-size: 14px;
-          padding: 8px 12px;
-      }
-
-      &:hover {
-          box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
-          transform: translateY(-2px);
-      }
-      &:active {
+    border: 2px solid $primary;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: normal;
+    margin: 0;
+    min-height: 60px;
+    min-width: 0;
+    outline: none;
+    padding: 16px 24px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 400px;
+    will-change: transform;
+    margin-bottom: 8px;
+    @include media("<=t") {
+        min-height: 40px;
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    &:hover {
+        box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+        transform: translateY(-2px);
+    }
+    &:active {
         box-shadow: none;
         transform: translateY(0);
-      }
-      &:disabled {
-          background: lightgrey;
-          border: 2px solid lightgrey;
-          box-shadow: none;
-      }
+    }
+    &:disabled {
+        background: lightgrey;
+        border: 2px solid lightgrey;
+        box-shadow: none;
+    }
+}
+
+@mixin smallbutton {
+    background: $primary;
+    border: 2px solid $primary;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: normal;
+    margin: 0;
+    min-height: auto;
+    min-width: auto;
+    outline: none;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: auto;
+    will-change: transform;
+    margin-bottom: 8px;
+    height: auto;
+    @include media("<=t") {
+        min-height: 40px;
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    &:hover {
+        box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+        transform: translateY(-2px);
+    }
+    &:active {
+        box-shadow: none;
+        transform: translateY(0);
+    }
+    &:disabled {
+        background: lightgrey;
+        border: 2px solid lightgrey;
+        box-shadow: none;
+    }
+}
+
+@mixin smallbutton-white {
+    background: white !important;
+    border: 2px solid lightgrey;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: $primary;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0;
+    min-height: auto;
+    min-width: auto;
+    outline: none;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: auto;
+    will-change: transform;
+    margin-bottom: 8px;
+    height: auto;
+    @include media("<=t") {
+        min-height: 40px;
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    &:hover {
+        box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+        transform: translateY(-2px);
+    }
+    &:active {
+        box-shadow: none;
+        transform: translateY(0);
+    }
+    &:disabled {
+        background: lightgrey;
+        border: 2px solid lightgrey;
+        box-shadow: none;
+    }
 }
 
 @mixin container {
@@ -54,7 +144,7 @@
     color: red;
 }
 
-@mixin  form-input {
+@mixin form-input {
     background: rgba(211, 211, 211, 0.247);
     border-radius: 5px;
     min-height: 55px;
@@ -65,19 +155,15 @@
     flex-direction: column;
     position: relative;
     width: 100%;
-
     @include media("<=t") {
         margin-bottom: 16px;
     }
-
     &--marginOverrule {
         margin-bottom: 0;
     }
-
     &--half {
         //width: 48%;
     }
-
     label {
         font-size: 12px;
         color: grey;
@@ -85,11 +171,12 @@
         position: absolute;
         top: 0;
         left: 10px;
-        right: 10px;    
+        right: 10px;
         top: 10px;
     }
-
-    input, select,textarea {
+    input,
+    select,
+    textarea {
         height: 100%;
         width: 100%;
         background: transparent;
@@ -102,7 +189,6 @@
         color: rgba(0, 0, 0, 0.726);
         appearance: none;
         font-size: 15px;
-
         &:focus {
             outline: 2px solid $lightaccent;
         }
@@ -118,36 +204,45 @@
     option {
         padding-left: 0px !important;
     }
-
 }
-
 
 @mixin plain-form-input {
     display: flex;
     flex-direction: column;
     margin-bottom: 16px;
-
-    
     label {
-        font-size: 14px; 
+        font-size: 15px;
+        //color: darkgrey;
+        font-weight: 400;
         color: darkgrey;
         span {
             color: red;
         }
     }
-    input, textarea, :deep(input){
-        border: 1.5px solid rgba(169, 169, 169, 0.64);
+    .input,
+    input,
+    textarea,
+    select,
+     :deep(input) {
+        border: 1.5px solid #ced4da58 !important;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        //border: 1.5px solid rgba(169, 169, 169, 0.64);
         min-height: 40px;
         border-radius: 5px;
         padding: 8px;
         outline: none;
         font-size: 14px;
-        color: $faint;
+        //color: $faint;
+        color: black;
+        font-weight: 400;
         appearance: none;
-        background-color: rgba(211, 211, 211, 0.046);;
+        background-color: rgba(211, 211, 211, 0.046);
+        ;
         &:focus {
-            outline: $primary;
+            border: 2px solid #ced4da;
         }
-
+    }
+    .input {
+        cursor: pointer;
     }
 }

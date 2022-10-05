@@ -102,7 +102,7 @@
                 <label class="bold-label" for="">Accept traffic to links from: Default()</label>
                 <div style="display: flex; flex-wrap: wrap">
                     <label class="checkbox-label"  v-for="continent in Object.keys(continents)" :key="continent"><input type="checkbox" @change="chooseContinent(continent)">All {{continent}}</label>
-                    <label class="checkbox-label"  v-for="country in countries" :key="country.name"><input type="checkbox" class="countries-choice" :id="'choice_' + country.code.toLowerCase() ">{{country.name}}</label>
+                    <label class="checkbox-label"  v-for="country in countries" :key="country.name"><input type="checkbox" class="countries-choice" :id="'choice_' + country.code.toLowerCase() " @change="checkCountry(country.name)">{{country.name}}</label>
                 </div>
             </div>
            
@@ -207,7 +207,7 @@ export default {
                     //const displayElement = document.createElement('img');
                     //displayElement.src = response.secure_url
                     //editor.append(displayElement)
-                    this.campaign.thumbnail = response.secure_url
+                    vm.campaign.thumbnail = response.secure_url
                 }
     
                 fd.append('upload_preset', "jljh5lxc");

@@ -8,26 +8,60 @@
             </div>
 
             <div class="navbar__logo">
-                <p>Afflee</p>
+                <Logo/>
             </div>
 
             <div class="navbar__ctas">
-                <button>Signup</button>
+                <button v-if="showAuthButtons">Sign Up</button>
+                <button @click="joinCampaign" v-if="showJoinCampaign && !(dontShow && dontShow.includes('join_campaign'))">Join Campaign</button>
             </div>
         </div>
     </div>
 </template>
 
+<script>
+export default {
+    props: ['page', 'dontShow'],
+
+
+    computed: {
+        computedPage() {
+            if (!this.page) {
+                return "Landing"
+            }
+        },
+        showForLinks() {
+            if(['landing'].includes(this.page)) return true;
+            return false;
+        },
+        showAuthButtons() {
+            if (['landing'].includes(this.page)) return true;
+            return false;
+        },
+        showJoinCampaign() {
+            if (['pub-campaign-details'].includes(this.page)) return true;
+            return false;
+        }
+        
+    },
+    methods: {
+        joinCampaign() {
+            this.$emit('onClickJoinCampaign')
+        },
+    },
+}
+</script>
 
 <style lang="scss" scoped>
 .navbar {
+    background: white;
     &__container {
         width: 90%;
         margin: auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 30px 0px;
+        padding: 15px 0px;
 
     }
     &__links {
@@ -52,23 +86,9 @@
 button {
     @include largebutton;
     border-radius: 8px;
-    width: 100px;
+    width: auto !important;
 }
     
 
 </style>
 
-<script>
-    export default {
-        props: ['page'],
-
-
-        computed: {
-            showForLinks() {
-                if(['landing'].includes(this.page)) return true;
-                return false;
-            }
-        }
-    }
-
-</script>

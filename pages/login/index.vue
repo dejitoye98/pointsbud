@@ -1,6 +1,13 @@
 <template>
     <div class="page">
-        <div class="header"></div>
+        <div class="header">
+
+            <div class="header__container">
+                <div class="logo">
+                   <Logo/>
+                </div>
+            </div>
+        </div>
         <template v-if="mode === 'login'">
             <div class="body">
                 <h3 class="body__header">Login</h3>
@@ -51,17 +58,40 @@
             </div>
 
         </template>
+
+        <template v-if="mode === 'activate'">
+            <div class="verify">
+                <span class="error">{{error}}</span>
+                <div class="verify__instruction">Please complete your registration by entering the 4-digit code that was sent to your email address.</div>
+                <div class="verify__inputs">
+                    <input class="verify__inputs__input" v-model="verification_otp[0]" type="text">
+                    <input class="verify__inputs__input" v-model="verification_otp[1]" type="text">
+                    <input class="verify__inputs__input" v-model="verification_otp[2]" type="text">
+                    <input class="verify__inputs__input" v-model="verification_otp[3]" type="text">
+                </div>
+                <div class="button-container">
+
+                    <button @click="activateAccount" :disabled="!verificationOtpFilled || loading">Activate Account</button>
+                </div>
+
+            </div>
+        </template>
     </div>
 </template>
 
 
 <script>
 
+import Cookies from 'js-cookie';
+
 export default {
     data() {
         return {
             mode: 'login',
             error: '',
+
+
+            verification_otp: ['', '', '', '',],
 
 
             loading: false,
@@ -71,32 +101,84 @@ export default {
                 password: '',
             },
             remember: false,
+            logged_in_user: {},
         }
     },
+    computed: {
+        verificationOtpFilled() {
+            let filled = true;
+            this.verification_otp.forEach(digit=> {
+                if (!digit) {
+                    filled = false;
+                }
+            })
+            return filled
+        }
+    },
+    created(){
+        // Execute a function when the user presses a key on the keyboard
+        window.addEventListener("keypress", (event) => {
+        // If the user presses the "Enter" key on the keyboard
+            if (event.key === "Enter") {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Trigger the button element with a click
+                //document.getElementById("myBtn").click();
+                this.login();
+            }
+        });
+    },
     methods: {
+
+        activateAccount() {
+            this.error = ''
+            let payload = {};
+            this.loading = true;
+            this.$api.post("/users/activate", {email: this.logged_in_user.email, token: this.verification_otp.join('')})
+                .then(resp => {
+                    this.loading = false;
+                    this.$router.push({path: '/dashboard/campaigns'})
+                
+
+            }).catch(err=> {
+                console.log(err)
+                this.loading = false;
+                this.error= err.response && err.response.data.data || err
+                //this.$store.dispatch('auth/')
+            })
+        },
+        goHome() {
+            this.$router.push('/')
+        },
         login() {
+            if (!this.payload.email || !this.payload.password) {
+                this.error = "Please enter all fields";
+                return;
+            }
+            this.error = '';
             this.loading = true;
             this.$store.dispatch('auth/login', this.payload)
                 .then(resp => {
                     this.error = '';
                     this.loading = false;
-                    this.$router.push({
-                        path: '/dashboard/campaigns'
-                    })
+                    Cookies.remove('aff-token', {path: ''})
+                    Cookies.set('aff-token', resp.data.data.token)
+                    this.logged_in_user = resp.data.data;
+                    if (this.logged_in_user.email_verified) {
+
+                        this.$router.push({
+                            path: '/dashboard/campaigns'
+                        })
+                    }
+                    else {
+                        this.mode = 'activate'
+                    }
+                    
                 })
                 .catch(err => {
                     this.loading = false;
                     this.error= err.response && err.response.data.data || err
                 })
-            /*this.$api.post('/auth/login', this.payload)
-                .then(resp=> {
-                    this.error = '';
-                    this.loading = false;
-                })
-                .catch(err=> {
-                    this.loading = false;
-                    this.error= err.response && err.response.data.data || err
-                })*/
         },
         changeMode(mode) {
             this.mode = mode;
@@ -127,7 +209,83 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.verify {
+    text-align: center;
+    margin-top: 50px;
+    width: 100%;
 
+    &__instruction {
+        font-size: 16px;
+        font-weight: 300;
+        width: 90%;
+        margin: auto;
+        margin-bottom: 8px;
+    }
+    &__inputs {
+        display: flex;
+        width: 50%;
+        justify-content: space-between;
+        margin: auto;
+
+        input {
+            @include plain-form-input;
+            width: 70px;
+            height: 70px;
+            display: block;
+            border-radius: 5px;
+            text-align:center;
+            border: 2px solid lightgrey;
+
+            @include media("<=t") {
+                width:40px;
+                height: 40px;
+            }
+            &:focus {
+                outline-color: $primary;
+            }
+        }
+    }
+    button {
+        @include largebutton;
+    }
+
+}
+.button-container{ 
+    width: 100%; display: flex; justify-content: center;
+    @include media("<=t") {
+        width: 80% !important;
+        margin:auto;
+    }
+}
+
+.header {
+    //width: 80%;
+    //margin: auto;
+    padding: 16px 0;
+    border-bottom: 0.5px solid rgba(211, 211, 211, 0.442);
+
+    &__container {
+        @include container;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+    }
+}
+ .logo{
+    //margin-bottom: 40px;
+    cursor: pointer;
+    padding: 0 36px;
+
+    img {
+        object-fit: contain;
+        height: auto;
+        margin: auto;
+        margin-bottom: 50px;
+            width: 120px !important;
+        margin: 0;
+    }
+}
 .form-input {
     @include form-input;
 }

@@ -10,7 +10,7 @@
             <h2>further</h2>
             <p>Don't be limited. Let independent affiliate marketers across the internet spread word about your brand/product/offerings in exchange for cash rewards</p>
 
-            <button>Get started</button>
+            <button @click="signup">Get started</button>
           </div>
 
         </div>

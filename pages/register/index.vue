@@ -2,7 +2,9 @@
     <div class="page">
         <div class="header">
             <div class="header__container">
-                <div class="logo">Afflee</div>
+                <div class="logo" @click="goHome">
+                    <Logo/>
+                </div>
 
                 <div class="header__steps header__steps--desktop">
                     <div class="header__steps__item" :class="[step === 1 || step > 1 || step === 'finish'? 'step-active': '']" @click="changeStep(1)">
@@ -10,12 +12,26 @@
                         <p>Who are you</p>
                     </div>
                     <div class="header__steps__divider" ></div>
-                    <div class="header__steps__item" :class="[step === 2 || step > 2 || step === 'finish'? 'step-active': '']"  @click="changeStep(2)">
+
+                    <div v-if="mode === 1" class="header__steps__item" :class="[mode === 1 && (step === 2 || step > 2 || step === 'finish')? 'step-active': '']"  @click="changeStep(2)">
                         <div class="circle circle--filled">2</div>
                         <p>About you</p>
                     </div>
+                    <div v-if="mode === 1" class="header__steps__divider"></div>
+
                     
-                    <div class="header__steps__divider"></div>
+                    <div v-if="mode === 2" class="header__steps__item" :class="[mode === 2 && (step === 2 || step > 2 || step === 'finish')? 'step-active': '']"  @click="changeStep(2)">
+                        <div class="circle circle--filled">2</div>
+                        <p>Personal Information</p>
+                    </div>
+                    <div v-if="mode === 2" class="header__steps__divider"></div>
+
+                    <div v-if="mode === 2" class="header__steps__item" :class="[mode === 2 && (step === 3 || step > 3 || step === 'finish')? 'step-active': '']"  @click="changeStep(2)">
+                        <div class="circle circle--filled">3</div>
+                        <p>Other Information</p>
+                    </div>
+                    <div v-if="mode === 2" class="header__steps__divider"></div>
+
 
                     <div class="header__steps__item" :class="[step === 'finish'? 'step-active': '']" >
                         <div class="circle circle--filled">3</div>
@@ -37,18 +53,29 @@
                     <p class="step1__header">Who are you?</p>
                     <div class="step1__choice">
                         <div class="step1__choice__item" :class="[mode === 1 ? 'step1__selected': '']" @click="selectMode(1)">
-                            <div class="step1__choice__item__header" style="display: flex; justify-content: space-between; align-items:center">
-                                <p>I am a business</p>
-                                <div class="circle"></div>
+                            <!--<div class="step1__choice__item__illustration">
+                                <img src="../../static/cooperation.png" alt="">
+                            </div>-->
+                            <div style="width:100%">
+
+                                <div class="step1__choice__item__header" style="display: flex; justify-content: space-between; align-items:center;">
+                                        <p>I am a business</p>
+                                        <div class="circle"></div>
+
+                                </div>
+                                <p>I want to market my brand and products</p>
                             </div>
-                            <p>I want to market my brand and products</p>
                         </div>
                         <div class="step1__choice__item" :class="[mode === 2 ? 'step1__selected': '']" @click="selectMode(2)">
-                            <div  class="step1__choice__item__header" style="display: flex; justify-content: space-between; align-items:center">
-                                <p>I am a marketer</p>
-                                <div class="circle"></div>
-                            </div>                            
-                            <p>I want to earn money by marketing brands and products</p>
+                            
+                            <div style="width:100%">
+                                <div  class="step1__choice__item__header" style="display: flex; justify-content: space-between; align-items:center">
+                                    <p>I am a marketer</p>
+                                    <div class="circle"></div>
+                                </div>                            
+                                <p>I want to earn money by marketing brands and products</p>
+                            </div>
+                            
                         </div>
                     </div>
 
@@ -56,7 +83,7 @@
                         <button :disabled="!mode" @click="changeStep(2)">Continue</button>
                     </div>
 
-                    <span class="already">Already have an account? <a href="/login">Login</a></span>
+                    <span class="already">Already have an account? <a :href="pageIntent ? `/login?${pageIntent}` : '/login'">Login</a></span>
                 </div>
 
 
@@ -256,6 +283,16 @@
                         
                     </div>
 
+                    <div class="step2__button">
+                        <button @click="register" v-if="(mode === 1 && step ===2) || (mode === 2 && step === 3)">Sign Up</button>
+                        <button @click="changeStep(3)" v-else>Continue</button>
+                    </div>
+
+                </div>
+                <div class="step2" v-else-if="step === 3 && mode === 2">
+                    <span class="error">{{error}}</span>
+
+
                     <div class="step2__item form-item">
                         <div class="left">
                             <p>Professional Information</p>
@@ -287,7 +324,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <!--
                             <div class="platforms-used">
                                 <p>Marketing platforms used</p>
                                 <div class="platforms-used__platforms">
@@ -314,23 +351,86 @@
                                         <label for=""><input type="checkbox" @change="addPlatform('others')">Others</label>
                                     </div>
                                 </div>
-
-
-                            </div>
-                                
+                            </div> -->
                         </div>
-                        
+                    </div>
+
+
+                    <div class="step2__item form-item">
+                        <div class="left">
+                            <p>Social Information</p>
+                            <p>Provide your social info.</p>
+                        </div>
+
+                        <div class="right">
+                            <div class="flex-row">
+
+                                <div class="half">
+                                    <div class="form-input">
+                                        <label for="">Facebook profile</label>
+                                        <input type="text" v-model="marketer.socials.facebook">
+                                    </div>
+                                </div>
+
+                                <div class="half">
+                                    <div class="form-input">
+
+                                        <label for="">Instagram profile</label>
+                                        <input type="text" v-model="marketer.socials.instagram">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-row">
+
+                                <div class="half">
+                                    <div class="form-input">
+                                        <label for="">LinkedIn profile</label>
+                                        <input type="text" v-model="marketer.socials.linkedIn">
+                                    </div>
+                                </div>
+
+                                <div class="half">
+                                    <div class="form-input">
+
+                                        <label for="">Twitter profile</label>
+                                        <input type="text" v-model="marketer.socials.twitter">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-row">
+
+                                <div class="half">
+                                    <div class="form-input">
+                                        <label for="">Tiktok profile</label>
+                                        <input type="text" v-model="marketer.socials.tiktok">
+                                    </div>
+                                </div>
+
+                                <div class="half">
+                                    <div class="form-input">
+
+                                        <label for="">Youtube profile</label>
+                                        <input type="text" v-model="marketer.socials.youtube">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
 
                     <div class="step2__button">
-                        <button @click="register">Sign Up</button>
+                        <button class="back-btn" @click="goBack">Back</button>
+                        <div>
+                            <button @click="register" v-if="(mode === 1 && step ===2) || (mode === 2 && step === 3)">Sign Up</button>
+                            <button @click="changeStep(3)" v-else>Continue</button>
+                        </div>
                     </div>
 
                 </div>
 
                 <div class="finish-step" v-if="step === 'finish'">
 
-                    <div>
+                    <div v-if="!verification_needed">
 
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: rgb(255, 255, 255); display: block; shape-rendering: auto; animation-play-state: running; animation-delay: 0s;" width="200px" height="200px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
                         <circle cx="50" cy="50" r="32" stroke-width="8" stroke="#d94241" stroke-dasharray="50.26548245743669 50.26548245743669" fill="none" stroke-linecap="round" style="animation-play-state: running; animation-delay: 0s;">
@@ -338,9 +438,28 @@
                         </circle>
                         ></svg>
                     </div>
+
+
                     
 
                     <p class="finish-step__status">{{status}}</p>
+                    <template v-if="verification_needed">
+                        <div class="verify">
+                            <div class="verify__inputs">
+                                <input class="verify__inputs__input" v-model="verification_otp[0]" type="text">
+                                <input class="verify__inputs__input" v-model="verification_otp[1]" type="text">
+                                <input class="verify__inputs__input" v-model="verification_otp[2]" type="text">
+                                <input class="verify__inputs__input" v-model="verification_otp[3]" type="text">
+                            </div>
+                            <div style="width: 100%; display: flex; justify-content: center;">
+
+                                <button @click="activateAccount" :disabled="!verificationOtpFilled">Activate Account</button>
+                            </div>
+
+                        </div>
+
+
+                    </template>
                 </div>
             
             </div>
@@ -351,17 +470,23 @@
 
 <script>
 import countries from '../../countries'
+import Cookies from 'js-cookie';
 
 export default {
     
     data() {
         return {
+            can_go_back: true,
             step: 1,
             successful: false,
-            status: '',
+            status: "",
+            verification_needed: false,
+            verification_otp: ["", "", "", ""],
+            created_user: {},
             countries: countries,
 
             is_student: false,
+
            
             error: '',
             errors:{
@@ -398,7 +523,15 @@ export default {
                 confirm_password: '',
                 phone_number: '',
                 country: '',
-                platforms_used: []
+                platforms_used: [],
+                socials: {
+                    linkedIn: '',
+                    twitter: '',
+                    facebook: '',
+                    tiktok: '',
+                    instagram: '',
+                    youtube: ''
+                }
             },
             industries: [
                 'Arts and Entertainment',
@@ -430,8 +563,118 @@ export default {
             ]
         }
     },
-
+    mounted() {
+        //this.setUpPasteAndEnterOtpEvent()
+    },
     methods: {
+        activateAccount() {
+            this.can_go_back = false;
+            this.verification_needed = false;
+            this.status = 'Activating your account';
+            let payload = {};
+            this.$api.post("/users/activate", {email: this.mode === 1 ? this.business.email : this.marketer.email, token: this.verification_otp.join('')})
+                .then(resp => {
+                    if (this.mode === 1)  payload = this.business;
+                    else payload = this.marketer;
+                    this.status = "Account activated. Signing you in"
+                    this.$store.dispatch('auth/login', payload)
+                        .then(resp=> {
+                            this.$router.push({path: '/dashboard/campaigns'})
+                        })
+                        .catch(e => {
+                            console.log(e)
+                        })
+
+            }).catch(err=> {
+                console.log(err)
+                this.verification_needed = true;
+                this.status = 'Please enter the correct verification code to activate your account';
+                //this.$store.dispatch('auth/')
+            })
+        },
+        setUpPasteAndEnterOtpEvent() {
+
+            const verify_inputs = window.document.getElementsByClassName('verify__inputs__input');
+            if (verify_inputs) {
+                for (let i =0; i < verify_inputs.length; i++) {
+                    const input = verify_inputs[i]
+
+
+                    input.addEventListener('focus', (ev) => {
+                        var ctrlDown = false;
+                        input.addEventListener('paste', (event) => {
+                            //input.removeEventListener('keydown')
+                            event.preventDefault();
+                            
+                            const text = window.event && window.event.clipboardData && window.event.clipboardData.getData('Text');
+                            if (text && text.length === 4 && !isNaN(parseInt(text))) {
+                                verify_inputs[0].value = text[0]
+                                verify_inputs[1].value = text[1]
+                                verify_inputs[2].value = text[2]
+                                verify_inputs[3].value = text[3]
+                            }
+                            else if(text.length === 1 && !isNaN(parseInt(text))) {
+                                input.value = text;
+                            }
+                        })
+
+                        input.addEventListener('keyup', (e) => {
+
+                            const keyCode = e.keyCode || e.charCode;
+                            let ctrlKey = 17,
+                            cmdKey = 91
+                            if(keyCode === ctrlKey || keyCode === cmdKey) {
+                                ctrlDown = false
+                            }
+                        })
+                        
+                        input.addEventListener('keydown', (e) => {
+                            const keyCode = e.keyCode || e.charCode;
+                        
+
+                            if (keyCode >= 48 && keyCode <= 57 || e.which == 8 || e.code === "Delete" ) {
+                                // move to the next box;
+                                //input.focus();
+
+                                if (e.which !== 8) {// if not backbutton
+                                    input.focus();
+                                    if (input.value && i !== 3) {
+                                        verify_inputs[i + 1].focus() 
+                                    }
+                                    if (i === 3) {
+                                        if (input.value) {
+                                            e.preventDefault()
+                                        }
+                                    }
+                                }
+                                else {
+
+                                }
+
+                                
+                            }
+                            else {
+                                e.preventDefault()
+                                return
+                            }
+                        
+
+
+                        })
+
+                        
+                    })
+                
+
+                }
+            }
+            
+        },
+        goBack() {
+            if (this.step !== 1 && this.can_go_back) {
+                this.step -= 1
+            }
+        },
         switchMode(is_individual) {
             this.is_individual = is_individual
         },
@@ -491,6 +734,21 @@ export default {
             this.mode = mode;
         },
         changeStep(step) {
+            if (step === 3)  { // 
+
+                let go = true;
+                const fields = ['name', 'email', 'password', 'confirm_password', 'phone_number', 'country']
+
+                fields.forEach(field => {
+                    if (!this.marketer[field]) {
+                        this.errors[field] = `${this.resolveFieldName(field)} cannot be empty`
+                        go = false;
+                    }
+                })
+
+                if (!go) return;
+
+            }
             this.step = step;
         },
         changeIsStudent() {
@@ -561,11 +819,17 @@ export default {
                 this.$api.post('/auth', payload)
                     .then(resp =>{
                         this.successful = true;
+                        this.can_go_back = false;
+
+                        this.setUpPasteAndEnterOtpEvent();
+                        this.verification_needed = true;
                         //login
-                        this.status = 'Successful. Signing you in...'
-                        this.$store.dispatch('auth/login', payload).then(resp=> {
+                        this.status = "We've sent a verification code to your email. Please paste the 4 digit code to complete the creation of your account"
+                        
+
+                        /*this.$store.dispatch('auth/login', payload).then(resp=> {
                             this.$router.push({path: '/dashboard/campaigns'})
-                        })
+                        })*/
                     }).catch(err => {
                         this.successful = false;
                         this.error = err.response && err.response.data.data || err.response.data.message;
@@ -583,15 +847,36 @@ export default {
                 email: this.mode === 1 ? this.business.email : this.marketer.email,
                 password: this.mode === 1 ? this.business.password : this.marketer.password
             }
-
-            this.$api.post('/auth/login', payload)
+            this.$store.dispatch('auth/login', this.payload)
                 .then(resp=> {
                     this.status = 'Redirecting you to the dashboard...'
+                    Cookies.remove('aff-token', {path: ''})
+                    Cookies.set('aff-token', resp.data.data.token)
                 }).catch(err=> {
                     this.status = "Error signing in"
 
                 })
         },
+
+        goHome() {
+            this.$router.push('/')
+        }
+    },
+
+    computed: {
+        pageIntent() {
+            return this.$route.query.intent;
+        },
+        verificationOtpFilled() {
+            let filled = true;
+            this.verification_otp.forEach(digit=> {
+                if (!digit) {
+                    filled = false;
+                }
+            })
+            return filled
+        }
+        
     }
     
     
@@ -600,6 +885,52 @@ export default {
 
 
 <style lang="scss" scoped>
+.verify {
+    width: 100%;
+    &__inputs {
+        display: flex;
+        width: 40%;
+        justify-content: space-between;
+        margin: auto;
+
+        input {
+            @include plain-form-input;
+            width: 70px;
+            height: 70px;
+            display: block;
+            border-radius: 5px;
+            text-align:center;
+            border: 2px solid lightgrey;
+
+            &:focus {
+                outline-color: $primary;
+            }
+        }
+    }
+    button {
+        @include largebutton;
+    }
+}
+.back-btn {
+    background: white !important;
+    color: black !important;
+    border: 1px solid white !important;
+}
+
+ .logo{
+    //margin-bottom: 40px;
+    padding: 0 36px;
+    cursor: pointer;
+
+    img {
+        object-fit: contain;
+        height: auto;
+        margin: auto;
+        margin-bottom: 50px;
+            width: 120px !important;
+        margin: 0;
+    }
+}
 .already {
     display: block;
     font-size: 15px;
@@ -910,19 +1241,33 @@ export default {
             border: 0.5px solid lightgrey;
             border-radius: 10px;
             padding: 16px 20px;
+            display: flex;
+            width: 45%;
+            @include media("<=tablet") {
+                margin-right: 0 !important;
+                margin-bottom: 16px;
+                
+            }
             &:first-of-type {
                 margin-right: 16px;
 
 
             }
 
-            @include media("<=tablet") {
-                margin-right: 0 !important;
-                margin-bottom: 16px;
-                
+            &__illustration {
+                width: 15%;
+                max-height: 180px;
+                margin-right: 16px;
+                img {
+                    object-fit:contain;
+                    width: 100%;
+                    height: 100%;
+                }
             }
 
+
             &__header {
+                width: 100%;
                 p {
                     font-weight: 600;
                     color: black !important;
@@ -1023,7 +1368,7 @@ export default {
 
 .finish-step {
     div {
-        width: 20%;
+        //width: 20%;
         margin: auto;
     }
     svg {
@@ -1031,12 +1376,15 @@ export default {
     }
 
     p {
-        font-weight: 20px;
         @include media("<=t") {
             font-size: 14px;
         }
-        font-weight: 500;
+        margin-top: 30px;
+        font-weight: 400;
+        font-size: 18px;
         text-align: center;
+        margin-bottom: 30px;
+
     }
 }
 </style>

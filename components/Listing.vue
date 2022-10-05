@@ -27,19 +27,34 @@
                     <td data-th="Gross">$115,000,000</td>
                 </tr>
             </table>
-            <pagination :records="10000" v-model="page" :per-page="100" @paginate="callback"></pagination>
+            <div v-if="show_pagination === true || show_pagination === null">
+
+                <pagination :records="10000" v-model="page" :per-page="100" @paginate="callback"></pagination>
+            </div>
         </template>
         <template v-else>
             <table class="table">
-                <tr>
-                    <th v-for="label in Object.keys(labels)" :key="label">{{label}}</th>
+                <tr class="labels">
+                    <th v-for="label in Object.keys(labels)" :key="label">
+                      <template v-if="labels[label].type === 'photo'">
+                      
+                      </template>
+                      <template v-else>{{label}}</template>
+                    </th>
                 </tr>
-                <tr v-for="(record, index) in records" :record="record" :key="index">
-                    <td  v-for="label in Object.keys(labels)" :key="label" data-th="label">{{format(label, record)}}</td>
+                <tr v-for="(record, index) in records" :record="record" :key="index" @click="goToRedirLink(record)">
+                    <td  v-for="(label, idx) in Object.keys(labels)" :key="idx" data-th="label" @click="goToRedirLink(record)">
+                      <img v-if="labels[label].type === 'photo' " :src="format(label, record) || 'https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg'">
+                      <template v-else>{{format(label, record)}}</template>
+                      
+                    </td>
                 </tr>
                 
             </table>
-            <pagination :records="pagination && pagination.total || 0" v-model="page" :per-page="pagination.page_size" @paginate="callback"></pagination>
+            <div  v-if="show_pagination === true || show_pagination === null || typeof(show_pagination) === 'undefined'">
+
+                <pagination :records="pagination && pagination.total || 0" v-model="page" :per-page="pagination.page_size" @paginate="callback"></pagination>
+            </div>
         </template>
     </div>
 
@@ -53,11 +68,14 @@ export default {
     components: {
         Pagination
     },
-    props: [ 'labels', 'records', 'pagination', 'item_link'],
+    props: [ 'show_pagination', 'labels', 'records', 'pagination', 'item_link'],
     data(){
         return {
             page: this.pagination && this.pagination.current_page || 1
         }
+    },
+    computed: {
+        
     },
     methods: {
         callback() {
@@ -73,6 +91,11 @@ export default {
                     //value = record[this.labels[label]['property']]
                     value =  this.formatDate(value)
                 }
+                else if (this.labels[label] && this.labels[label]['type'] === 'money') {
+                    if (this.labels[label] && this.labels[label]['currency']) {
+                      value = record[this.labels[label]['currency']] + ' ' + Intl.NumberFormat('en-US').format(value)
+                    }
+                }
 
                 return value
             }
@@ -87,11 +110,11 @@ export default {
 
                 }
                 else {
-                    this.$router.push({
-                        path: `${split[0]}/${record[param]}`
-                    })
+                  const url = `${split[0]}${record[param]}`
+                  this.$router.push(url)
                 }
             }
+            
         }
     }
 }
@@ -100,6 +123,11 @@ export default {
 
 <style lang="scss" scoped>
 
+img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
 
 :deep(.pagination) {
     display: flex;
@@ -158,6 +186,7 @@ $breakpoint-alpha: 480px; // adjust to your needs
   min-width: 100%; // adjust to your needs
   //color: lightgrey;
     box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
+    backgorund:white;
 
   tr {
     border-top: 1px solid #ddd;
@@ -180,7 +209,7 @@ $breakpoint-alpha: 480px; // adjust to your needs
 
     &:before {
       content: attr(data-th)": "; // who knew you could do this? The internet, that's who.
-      font-weight: bold;
+      //font-weight: bold;
 
       // optional stuff to make it look nicer
       width: 6.5em; // magic number :( adjust according to your own content
@@ -255,7 +284,14 @@ h1 {
     }
   }
   th, td:before {
-    color: grey;
+    //color: grey;
+    color: black;
+    font-weight: 400;
   }
+}
+
+.labels {
+          background: #fafafa !important;
+
 }
 </style>
