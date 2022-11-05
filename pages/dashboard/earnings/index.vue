@@ -1,51 +1,112 @@
 <template>
     <div class="earnings">
         <div class="earnings__overvieww">
-            <div class="panel">
+            <div class="currencies">
+                <div class="currencies__item" :class="[earnings_currency === 'NGN' ? 'selected' : '']" @click="switchCurrency('NGN')">NGN</div>
+                <div class="currencies__item"  :class="[earnings_currency === 'GHS' ? 'selected' : '']" @click="switchCurrency('GHS')">GHS</div>
+                <div class="currencies__item"  :class="[earnings_currency === 'KES' ? 'selected' : '']" @click="switchCurrency('KES')">KES</div>
+                <div class="currencies__item"  :class="[earnings_currency === 'USD' ? 'selected' : '']" @click="switchCurrency('USD')">USD</div>
+            </div>
+            <div class="panel" v-if="loading">
+                <LoadingState/>
+            </div>
+            <div class="panel" v-else>
                 <div class="panel__item">
-                    <p>N3,000</p>
+                    <p>{{earnings_currency}} {{ wallet && wallet[0] ? formatMoney(wallet[0].available_balance) : 0}}</p>
                     <p>Available Balance</p>
                 </div>
                 <div class="panel__item">
-                    <p>N 1,000</p>
+                    <p>{{earnings_currency}} {{earnings_stats.today_earnings && formatMoney(earnings_stats.today_earnings.total) || 0}}</p>
                     <p>Earned today</p>
                 </div>
                 <div class="panel__item">
-                    <p>N 5,000</p>
+                    <p>{{earnings_currency}} {{earnings_stats.week_earnings && formatMoney(earnings_stats.week_earnings.total) || 0}}</p>
                     <p>Earned this week</p>
                 </div>
             </div>
         </div>
 
         <div class="section">
-            <p class="section__title">Transactions</p>
-            <Listing item_link="/dashboard/transactions/:id" :show_pagination="false" :records="transactions" :labels="transaction_listing_labels"/>
+            <p class="section__title">Earnings History</p>
+            <Listing item_link="/dashboard/transactions/:id" :show_pagination="true" :pagination="earnings_page_info" :records="earnings" :labels="earnings_history_labels"/>
         </div>
     </div>
 </template>
 
 
 <script>
+import LoadingState from '../../../components/states/LoadingState'
 export default {
     layout: 'dashboard',
+    components: {LoadingState},
 
     created() {
         this.$store.commit('dashboard/setActive', 'Earnings')
-        this.$store.commit('dashboard/setDashboardTitle', 'Earnings')
+        this.$store.commit('dashboard/setDashboardTitle', 'Earnings');
+        
+        this.getEarnings();
+        this.getWallet();
+        this.getEarningsStats()
     },
+    methods: {
+        formatMoney(value) {
+            return Intl.NumberFormat('en-US').format(value)
 
+        },
+        switchCurrency(currency) {
+            this.earnings_currency = currency
+            this.getWallet();
+            this.getEarningsStats();
+        },
+        getWallet() {
+            this.loading = true;
+            this.$api.get('/wallets?currency=' + this.earnings_currency)
+                .then(resp=> {
+                    this.loading = false;
+                    this.wallet = resp.data.data;
+                }).catch(err=> {
+                    this.loading = false;
+                
+                })
+        },
+        getEarningsStats() {
+            //this.loading = true;
+            this.$api.get('/earnings/stats?currency=' + this.earnings_currency).then(resp=> {
+                this.earnings_stats = resp.data.data;
+               // this.loading = false;
+            }).catch(err=> {
+                //this.loading = false;
+            })
+        },
+        getEarnings() {
+            this.$api.get('/earnings?currency=' + this.earnings_currency).then(resp=> {
+                this.earnings = resp.data.data.list;
+                this.earnings_page_info = resp.data.data.page_info;
+               // this.loading = false;
+            }).catch(err=> {
+                //this.loading = false;
+            })
+        }
+    },
     data() {
         return {
-            transactions: [{id: 1}],
-            transaction_listing_labels: {
-                'Id': {
-                    property: 'id',
-                    type: 'text'
+            wallet: {},
+            loading: true,
+            earnings: [],
+            earnings_currency: "NGN",
+            earnings_stats: {},
+            earnings_history_labels: {
+                'Amount Earned': {
+                    prefix_property: 'currency',                    
+                    property: 'amount_earned',
+                    type: 'money'
                 },
-                'Budget': {property: 'budget', type: 'money'},
-                'Budget Left' : {property:'budget_left', type: 'money'},
-                'Ends At': {property: 'ends_at', type: 'date'}
-            }
+                'From Business': { property: 'business.name', type: 'text'},
+               // 'Balance Before': { prefix_property: 'currency', property: 'balance_before', type: 'money'},
+               // 'Balance After' : {prefix_property: 'currency', property:'balance_after', type: 'money'},
+                'Date': {property: 'createdAt', type: 'date'}
+            },
+            earnings_page_info: {},
         }
     }
 }
@@ -53,9 +114,19 @@ export default {
 
 <style lang="scss" scoped>
 .earnings {
+    
 
 }
-
+.currencies {
+    display: flex;
+    &__item {
+        margin-right: 8px;
+        cursor: pointer;
+    }
+}
+.selected {
+    color: $primary;
+}
 .section {
     margin-top: 50px;
     &__title {

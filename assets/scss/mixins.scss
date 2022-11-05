@@ -1,3 +1,13 @@
+@mixin editbutton {
+    margin-left: 16px;
+    background: transparent;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: $faint;
+    font-size: 14px;
+    border: 1px solid $faint;
+}
+
 @mixin largebutton {
     background: $primary;
     border: 2px solid $primary;
@@ -46,7 +56,7 @@
 @mixin smallbutton {
     background: $primary;
     border: 2px solid $primary;
-    border-radius: 10px;
+    border-radius: 5px;
     box-sizing: border-box;
     color: #FFFFFF;
     cursor: pointer;

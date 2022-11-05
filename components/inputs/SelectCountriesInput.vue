@@ -60,7 +60,7 @@ export default {
         },
         computedSelectedCountries() {
             
-            return this.countries_allowed.join(',');
+            return this.countries_allowed.join(', ');
 
         },
         testCapitalize() {
@@ -153,7 +153,7 @@ export default {
     color: red;
 }
 .form-input {
-    @include plain-form-input;
+    //@include plain-form-input;
     margin-bottom: 2px !important;
 
     select {
@@ -163,17 +163,40 @@ export default {
 
     input {
         cursor: pointer;
+        
     }
 
     label {
-        color: black;
-        font-weight: 600;
+        font-size: 15px;
+        color: $charcoal;
+        font-weight: 400;
+        margin-bottom: 5px;
     }
 }
 .drop_down_closed {
     margin-bottom: 16px !important;
 }
+.input {
+        display: inline-block;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        width: 100%;
+        height: 50px;
+        padding: 6px 30px;
+        padding-left: 10px;
+        font-size: 15px;
+        line-height: 1.4;
+        color: $charcoal;
+        background-color: #fff;
+        //border: 1px solid #ccc;
+        border: 2px solid rgba(211, 211, 211, 0.442);
 
+        border-radius: 4px;
+
+        
+
+        outline-color: rgba(229, 231, 235)
+}
 .dropdown {
 
     width: 100%;

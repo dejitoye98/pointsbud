@@ -1,29 +1,39 @@
 <template>
     <div class="wallet">
         <div class="wallet__overview">
-            <div class="panel">
+            <div class="earnings__overvieww">
+                <div class="currencies">
+                    <div class="currencies__item" :class="[currency === 'NGN' ? 'selected' : '']" @click="switchCurrency('NGN')">NGN</div>
+                    <div class="currencies__item"  :class="[currency === 'GHS' ? 'selected' : '']" @click="switchCurrency('GHS')">GHS</div>
+                    <div class="currencies__item"  :class="[currency === 'KES' ? 'selected' : '']" @click="switchCurrency('KES')">KES</div>
+                    <div class="currencies__item"  :class="[currency === 'USD' ? 'selected' : '']" @click="switchCurrency('USD')">USD</div>
+                </div>
+            </div>
+            <div class="panel" v-if="loading">
+                <LoadingState/>
+            </div>
+            <div class="panel" v-else>
                 <div class="panel__item">
-                    <p>{{userWallet && userWallet.currency}} {{userWallet && Intl.NumberFormat('en-US').format(userWallet.available_balance)}}</p>
+                    <p>{{userWallet && userWallet.currency || currency}} {{userWallet && Intl.NumberFormat('en-US').format(userWallet.available_balance) || 0}}</p>
                     <p>Available Balance</p>
                 </div>
                 <div class="panel__item">
-                    <p>N 1,000</p>
-                    <p>Earned today</p>
+                    <p>{{userWallet && userWallet.currency || currency}} {{userWallet && Intl.NumberFormat('en-US').format(userWallet.witheld_balance) || 0}}</p>
+                    <p>Witheld balance</p>
                 </div>
-                <div class="panel__item">
-                    <p>N 5,000</p>
-                    <p>Earned this week</p>
-                </div>
+                
             </div>
-            <div class="wallet__header">
+            
+            <div class="wallet__header" v-if="userContext === 'business'">
                <!-- <button  @click="initiateFundWallet">Fund Wallet</button>-->
-               <a>Fund Wallet</a>
+               <button @click="initiateFundWallet">Fund</button>
+               <button>Withdraw</button>
             </div>
         </div>
 
         <div class="section">
             <p class="section__title">Transactions</p>
-            <Listing :pagination="transactions_page_info" item_link="/dashboard/transactions/:id" :records="transactions" :labels="transaction_listing_labels"/>
+            <Listing @onPaginationReload="getTransactions" :pagination="transactions_page_info" item_link="/dashboard/transactions/:id" :records="transactions" :labels="transaction_listing_labels" />
         </div>
 
         <Modal title='Fund Wallet' width="half" v-if="actionFundWallet" @close="closeFundWalletModal">
@@ -35,9 +45,13 @@
 
 <script>
 import { mapGetters } from "vuex";
+import LoadingState from '../../../components/states/LoadingState'
+
 
 export default {
     layout: 'dashboard',
+    components: {LoadingState},
+
 
     created() {
         this.$store.commit('dashboard/setActive', 'Wallet')
@@ -46,17 +60,20 @@ export default {
         this.getTransactions()
     },
 
-    computed: {
-        ...mapGetters('dashboard', ['actionFundWallet'])
-    },
+    
 
 
     data() {
         return {
+            currency: "NGN",
             transactions: [{id: 1}],
             transactions_page_info:{},
             transaction_listing_labels: {
-                'Currency' : {property:'currency', type: 'text'},
+                //'Currency' : {property:'currency', type: 'text'},
+                "D/C": {
+                    property: "debit_or_credit",
+                    type: "debit_or_credit"
+                },
                 'Amount': {
                     property: 'amount',
                     type: 'money'
@@ -73,8 +90,12 @@ export default {
         }
     },
     methods: {
+        switchCurrency(currency) {
+            this.currency = currency
+            
+        },
         getWallets() {
-
+            this.loading = true
             this.$api.get('/wallets')
                 .then(resp=> {
                     this.loading = false;
@@ -85,8 +106,10 @@ export default {
                 
                 })
         },
-        getTransactions() {
-            this.$api.get('/transactions')
+        getTransactions(page) {
+            let url = `/transactions/`
+            if (page) url += `?page=${page}`
+            this.$api.get(url)
                 .then(resp => {
                     this.transactions = resp.data.data.list;
                     this.transactions_page_info = resp.data.data.page_info
@@ -101,14 +124,32 @@ export default {
     },
     computed: {
         userWallet() {
-            const wallet = this.wallets.find(a => a.currency === "NGN")
+            const wallet = this.wallets.find(a => a.currency === this.currency)
             return wallet;
+        },
+        userContext() {
+            return window.localStorage.getItem('afContext')
         }
     },
 }
 </script>
 
 <style lang="scss" scoped>
+.earnings {
+    
+
+}
+.currencies {
+    display: flex;
+    &__item {
+        margin-right: 8px;
+        cursor: pointer;
+    }
+}
+
+.selected {
+    color: $primary;
+}
 .wallet {
 
     margin-top:  50px;
@@ -118,6 +159,7 @@ export default {
         justify-content: flex-end;
 
         a {
+            //@include editbutton;
             color: $primary;
             font-size: 15px;
             font-weight: 500;
@@ -125,45 +167,9 @@ export default {
         }
 
         button {
-            @include largebutton;
-            background: #DE5C6E;
-                border: 2px solid #DE5C6E;
-                border-radius: 10px;
-                box-sizing: border-box;
-                color: #FFFFFF;
-                cursor: pointer;
-                display: inline-block;
-                font-size: 16px;
-                font-weight: 500;
-                line-height: normal;
-                margin: 0;
-                min-height: auto;
-                min-width: auto;
-                outline: none;
-                padding: 8px 16px;
-                text-align: center;
-                text-decoration: none;
-                transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
-                -moz-user-select: none;
-                user-select: none;
-                -webkit-user-select: none;
-                touch-action: manipulation;
-                width: auto;
-                will-change: transform;
-                margin-bottom: 8px;
-                height: auto;
-                margin-right: 20px;
-                font-size: 14px;
-                padding: 8px;
-                height: auto !important;
-                font-weight: 400;
-                width: auto !important;
-                color: white;
-                border-radius: 5px;
-                min-height: auto;
-                cursor: pointer;
-                margin-bottom: 0;
+            @include editbutton;
             
+            background: white;
         }
     }
 
@@ -199,7 +205,7 @@ export default {
         border-right: 0.5px solid rgba(211, 211, 211, 0.442);
         height: 100px;
         padding: 16px;
-        width: 30%;
+        width: 50%;
         text-align: left;
         display: flex;
         flex-direction: column;

@@ -1,9 +1,9 @@
 <template>
-    <div class="card card-30">
+    <div class="card">
         <div class="card__stat">
             <BaseDoughnutChart v-if="this.campaign_links && show" :chartData="chartData" :options="options"/>
         </div>
-        <div style="display: flex; flex-direction: column; justify-content: center">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center">
             <p class="card__lead">{{campaign_links && campaign_links.stat && parseInt(campaign_links.stat.accepted_clicks) + parseInt(campaign_links.stat.blocked_clicks)}}</p>
             <p class="card__caption">link clicks</p>
         </div>
@@ -71,9 +71,17 @@ export default {
     //justify-content: space-between;
     flex-direction: column ;
     &__stat {
-        width: 70%;
+        width: 50%;
+        display: flex;
+        justify-content: center;
         margin: auto;
         height: auto;
+
+        &:deep(.chartjs-render-monitor) {
+            position: relative;
+            height: 250px !important;
+            width: 250px !important;
+        }
     }
 
     &__content {

@@ -265,7 +265,7 @@ export default {
             }
 
             &__detail {
-                width: 24%;
+                width: 50%;
                 border-top: 0.5px solid rgba(211, 211, 211, 0.442);
                 border-bottom: 0.5px solid rgba(211, 211, 211, 0.442);
                 padding: 8px 0;

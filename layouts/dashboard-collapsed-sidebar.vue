@@ -3,11 +3,11 @@
         <div class="sidebar">
         <Toast/>
 
-            <AppSidebar :context="userContext"/>
+            <AppSidebar :context="userContext" :collapsed="true"/>
         </div>
-        <div class="main-container">
+        <div class="main-container enlarged">
 
-            <AppDashboardTopbar/>
+            <!--<AppDashboardTopbar :show_create_button="false"/>-->
             <main class="body">
                 <div class="body__container">
                     <Nuxt/>
@@ -19,7 +19,6 @@
 
 <script>
 import Toast from '../components/general/Toast';
-import Cookies from 'js-cookie';
 
 export default {
     components: {
@@ -41,10 +40,6 @@ export default {
             return window.localStorage.getItem('afContext')
         }
     },
-
-    beforeCreate() {
-        Cookies.set("aff-token", window.localStorage.getItem("aff-token"))
-    },
     created() {
         this.getAuthUser()
         this.getNotifications()
@@ -54,15 +49,14 @@ export default {
 
 
 <style lang="scss" scoped>
-
-* {
-	font-family: "Quicksand", sans-serif;
+.enlarged {
+    margin-left:65px !important;
 }
 .main-container {
     z-index: 0;
     width: 100%;
     height: 100%;
-    margin-left: 200px;
+    margin-left: 250px;
 
     @include media('<=dashbreak') {
         margin-left: 0;
@@ -83,10 +77,10 @@ export default {
    width: 100%;
    height: 100%;
    //position: relative;
-   padding: 36px 24px;
+   //padding: 36px 24px;
 
    &__container {
-       height: 100vh;
+       height: 100%;
    }
 }
 </style>

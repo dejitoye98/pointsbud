@@ -5,6 +5,12 @@
                 <div class="modal__header" v-if="typeof(header) === 'undefined' || header === true">
                     <div class="modal__header__container">
                         <p class="modal__header__text">{{title}}</p>
+
+                        <svg  @click.stop="$emit('close')" width="16" height="16" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L7 7" stroke="#808080" stroke-width="0.5" stroke-linecap="round"/>
+                        <path d="M7 1L1 7" stroke="#808080" stroke-width="0.5" stroke-linecap="round"/>
+                        </svg>
+
                     </div>
                 </div>
                 <div class="modal__body">
@@ -46,6 +52,7 @@ export default {
         height: 100%;
         padding: 64px 0;
         position: fixed;
+        margin-left: 120px;;
         background-color: rgba(0, 0, 0, 0.612);
         overflow: scroll;
 
@@ -59,12 +66,19 @@ export default {
             width: 95%;
             margin: auto;
             padding: 16px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            svg {
+                cursor: pointer;
+            }
         }
         &__text {
             color: $faint; 
             font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
+            font-size: 20px;
+           // text-transform: uppercase;
         }
     }
 

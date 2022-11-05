@@ -6,7 +6,7 @@
 
                 </div>
                 <div class="title">
-                    <div class="title__back">
+                    <div class="title__back" @click="goBack">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9.57 5.92993L3.5 11.9999L9.57 18.0699" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M20.5 12H3.67004" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
@@ -20,7 +20,7 @@
             <div class="el__end">
                 <div>
                    <!-- <button v-if="active === 'Campaigns'" @click="createCampaign">Create new campaign</button> -->
-                    <button v-if="userContext === 'business'" @click="createCampaign">Create new campaign</button> 
+                    <button v-if="userContext === 'business' && typeof(show_create_button) ===  'undefined' " @click="createCampaign">Create new campaign</button> 
                 </div>
                 <div class="el__end__notif" @click="openNotification">
                     <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -82,12 +82,13 @@
         position: relative;
         //border: 1px solid black;
         margin-top: -10px;
+        max-height: 90vh;
         //height: 100px;
         z-index: 10;
 
 
         &__item {
-            border: 1px solid lightgrey;
+            //border: 1px solid lightgrey;
             background: white;
             //border: rgba(211, 211, 211, 0.263) 1px solid ;
             box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
@@ -134,7 +135,7 @@
      &__container {
         width: 100%;
         display: flex;
-        padding: 24px 16px;
+        padding: 8px 16px;
         //padding-left: 16px;
         //padding
         justify-content: space-between;
@@ -147,6 +148,10 @@
          justify-self: end;
          display: flex;
          align-items: center;
+
+         button {
+             font-size: 16px !important;
+         }
 
          div {
             margin-right: 15px;
@@ -247,12 +252,16 @@ import { mapGetters } from "vuex";
 import moment from 'moment';
 
 export default {
+    props: ['show_create_button'],
     data() {
         return {
             show_dropdown: '',
         }
     },
     methods: {
+        goBack() {
+            window.history.back()
+        },
         goProfile() {
             this.$router.push('/my-profile')
         },

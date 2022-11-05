@@ -43,13 +43,19 @@
                     </th>
                 </tr>
                 <tr v-for="(record, index) in records" :record="record" :key="index" @click="goToRedirLink(record)">
-                    <td  v-for="(label, idx) in Object.keys(labels)" :key="idx" data-th="label" @click="goToRedirLink(record)">
+                    <td :class="computeClass(label, record)"  v-for="(label, idx) in Object.keys(labels)" :key="idx" data-th="label" @click="goToRedirLink(record)">
                       <img v-if="labels[label].type === 'photo' " :src="format(label, record) || 'https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg'">
+                      <template v-else-if="labels[label].type === 'debit_or_credit'" class="red"> {{format(label, record)}} </template>
+                      
                       <template v-else>{{format(label, record)}}</template>
                       
                     </td>
+                    <td v-for="(action, index) in actions" :key="index">
+                      <button @click="computeOnClick(index, record)" class="action">{{action.title}}</button>
+                    </td>
                 </tr>
                 
+              
             </table>
             <div  v-if="show_pagination === true || show_pagination === null || typeof(show_pagination) === 'undefined'">
 
@@ -68,7 +74,7 @@ export default {
     components: {
         Pagination
     },
-    props: [ 'show_pagination', 'labels', 'records', 'pagination', 'item_link'],
+    props: [ 'show_pagination', 'labels', 'records', 'pagination', 'item_link', 'constants', 'actions'],
     data(){
         return {
             page: this.pagination && this.pagination.current_page || 1
@@ -78,8 +84,48 @@ export default {
         
     },
     methods: {
+        computeOnClick(index, record) {
+          const action = this.actions[index];
+          let param_values = []
+
+          if (action.goToBaseUrl) {
+            action.params.forEach(param => {
+              param_values.push(record[param])
+            }) 
+
+            // split baseUrl by "/" and replace every param with ":" at the beginning
+            let split = action.goToBaseUrl.split('/');
+            split.forEach((token, index)=> {
+              if (token && token[0] ==':') {
+                split[index] = param_values[0];
+                
+                // pop the first param value;
+                if (param_values.length > 1) {
+                  param_values = param_values.slice(1)
+                }
+              }
+            })
+
+            let new_url = split.join('/')
+
+            this.$router.push(new_url)
+          }
+        },
+        computeClass(label, record) {
+            const classes = []
+            if (this.labels[label] && this.labels[label]['type'] === 'debit_or_credit') {
+              if (record[this.labels[label]['property']] == 'Credit') {
+                classes.push('green')
+              }
+              else {
+                classes.push('red')
+              }
+            }
+
+            return classes
+        },
         callback() {
-            return ''
+            return this.$emit('onPaginationReload', this.page)
         },
         formatDate(date) {
             return moment(date).format("DD MMM, yyyy") 
@@ -91,10 +137,20 @@ export default {
                     //value = record[this.labels[label]['property']]
                     value =  this.formatDate(value)
                 }
+               
                 else if (this.labels[label] && this.labels[label]['type'] === 'money') {
-                    if (this.labels[label] && this.labels[label]['currency']) {
-                      value = record[this.labels[label]['currency']] + ' ' + Intl.NumberFormat('en-US').format(value)
+                    
+                    if (record['currency']) {
+                      value = record['currency'] + ' ' + Intl.NumberFormat('en-US').format(value)
                     }
+                    else if  (record['pay_currency']) {
+                      value = record['pay_currency'] + ' ' + Intl.NumberFormat('en-US').format(value)
+                    }
+                    else if (this.constants && this.constants['currency']) {
+                        value = this.constants['currency'] + ' ' + Intl.NumberFormat('en-US').format(value)
+
+                    }
+                    
                 }
 
                 return value
@@ -122,7 +178,15 @@ export default {
 
 
 <style lang="scss" scoped>
-
+button {
+  @include editbutton;
+}
+.red {
+  color: red;
+}
+.green {
+  color: lightseagreen;
+}
 img {
   width: 50px;
   height: 50px;
@@ -291,7 +355,7 @@ h1 {
 }
 
 .labels {
-          background: #fafafa !important;
+          background: white !important;
 
 }
 </style>

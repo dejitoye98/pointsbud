@@ -158,11 +158,12 @@ export default {
             this.error = '';
             this.loading = true;
             this.$store.dispatch('auth/login', this.payload)
-                .then(resp => {
+                .then(async resp => {
                     this.error = '';
                     this.loading = false;
-                    Cookies.remove('aff-token', {path: ''})
-                    Cookies.set('aff-token', resp.data.data.token)
+                    await Cookies.remove('aff-token', {path: ''})
+                    window.localStorage.setItem("aff-token", resp.data.data.token)
+                    //  await Cookies.set('aff-token', resp.data.data.token)
                     this.logged_in_user = resp.data.data;
                     if (this.logged_in_user.email_verified) {
 

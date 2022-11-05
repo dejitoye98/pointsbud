@@ -4,7 +4,17 @@
            <FormCreateCampaign  />
        </Modal>
         <template v-if="userContext === 'business'">
-            <Listing :records="campaigns" item_link="/dashboard/campaigns/:id" :labels="campaignLabels" :pagination="campaigns_page_info"/>
+            <template v-if="campaigns.length === 0 && !loading">
+                <div class="empty-state">
+                    <EmptyState state="NO_DATA" caption="No campaigns" ></EmptyState>
+                    <EmptyState state="NO_DATA" caption="No campaigns" ></EmptyState>
+                    <button @click="goToNewCampaign"> Create a campaign</button>
+                </div>
+            </template>
+            <template v-else-if="loading">
+                <LoadingState/>
+            </template>
+            <Listing v-else-if="campaigns.length > 0" :records="campaigns" item_link="/dashboard/campaigns/:id" :labels="campaignLabels" :pagination="campaigns_page_info"/>
         </template>
         <template v-else>
             <div class="campaigns">
@@ -27,18 +37,25 @@
 
 <script>
 import { mapGetters } from "vuex";
+import EmptyState from '../../../components/states/EmptyState'
+import LoadingState from '../../../components/states/LoadingState'
+
 import CampaignsListing from "../../../components/lists/CampaignsListing";
 import JoinedCampaignModal from '../../../components/modals/JoinedCampaignModal'
 export default {
     layout: 'dashboard',
     components: {
         CampaignsListing,
-        JoinedCampaignModal
+        JoinedCampaignModal,
+        EmptyState,
+        LoadingState
     },
     data() {
         return {
+            lead_stats: {},
             active_tab :'mine',
             create_campaign: false,
+            loading: true,
             campaigns: [],
             campaigns_page_info: {},
             campaignLabels: {
@@ -49,7 +66,8 @@ export default {
                 'Budget': {property: 'budget', type: 'money'},
                 'Budget Left' : {property:'budget_left', type: 'money'},
                 'Ends At': {property: 'ends_at', type: 'date'}
-            }
+            },
+            loading: true,
 
         }
     },
@@ -62,6 +80,19 @@ export default {
     },
 
     methods: {
+        getLeadStats() {
+            this.$api.get('/insights/leads?include=overview,group_by_day,top_countries')
+                .then(resp=> {
+                    this.lead_stats = resp.data.data;
+                })
+                .catch(err=> {
+
+                })
+        },
+
+        goToNewCampaign() {
+            this.$router.push('/dashboard/campaigns/new')
+        },
         changeTab(tab) {
             this.active_tab = tab; 
         },
@@ -75,13 +106,15 @@ export default {
             this.$store.commit('dashboard/setCreateCampaign', false)
         },
         getCampaigns() {
+            this.loading = true;
             this.$api.get('/campaigns')
                 .then(resp => {
                     this.campaigns = resp.data.data.list;
                     this.campaigns_page_info = resp.data.data.page_info;
+                    this.loading = false;
                 })
                 .catch(err=> {
-                    
+                    this.loading = false;
                 })
         },
     },
@@ -96,7 +129,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
 
+    button {
+        @include smallbutton;
+        margin-top: 30px !important;
+        border-radius: 5px !important;
+        text-transform: uppercase;
+    }
+}
 .tab-active {
     color: $primary;
     border-bottom: 2px solid $primary

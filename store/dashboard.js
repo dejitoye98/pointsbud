@@ -10,6 +10,7 @@ export const state = () => ({
     actionAddLink: false,
     actionEditCampaign: false,
     actionFundWallet: false,
+    actionFindMarketers: false,
     notifications: [],
     notification_length: 0,
     unread_notifications_length: 0,
@@ -49,6 +50,9 @@ export const mutations = ({
     },
     setActionEditCampaign(state, value) {
         state.actionEditCampaign = value;
+    },
+    setActionFindMarketers(state, value) {
+        state.actionFindMarketers = value;
     },
     setNotifications(state, value) {
         state.notifications = value;
@@ -127,6 +131,7 @@ export const getters = {
     actionAddLink: state => state.actionAddLink,
     actionEditCampaign: state => state.actionEditCampaign,
     actionFundWallet: state => state.actionFundWallet,
+    actionFindMarketers: state => state.actionFindMarketers,
     notifications: state => state.notifications,
     notification_length: state => state.notification_length,
     unread_notifications_length: state => state.unread_notifications_length,

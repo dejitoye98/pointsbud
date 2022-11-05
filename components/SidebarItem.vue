@@ -1,5 +1,5 @@
 <template>
-    <div class="side__item" @click="setActive">
+    <div class="side__item" :class="[collapsed && collapsed === true ? 'collapsed_side_item' : '']" @click="setActive">
         <nuxt-link class="link"  :to="'/dashboard' + link">
             <div class="side__item__indi" :class="[active === text ? 'active': '']"></div>
             <div class="side__item__icon" v-if="text === 'Earnings'">                      
@@ -51,10 +51,11 @@
 
 
             </div>
-            <div class="side__item__text"  :class="[active === text ? 'active': '']">
+            <div class="side__item__text"  :class="[active === text ? 'active': '']" v-if="!collapsed || collapse === false">
                 <p>{{text}}</p>
             </div>
         </nuxt-link>
+        
     </div>
 </template>
 
@@ -62,7 +63,7 @@
 import { mapGetters } from "vuex";
 
 export default {
-    props: ['text', 'link'],
+    props: ['text', 'link', 'collapsed'],
     computed: {
         ...mapGetters("dashboard", ["active"]),
     },
@@ -84,6 +85,12 @@ export default {
 .active{ 
     opacity: 1 !important;
     color: $sidebar_text_active_color !important;
+}
+
+.collapsed_side_item {
+    padding: 8px 16px !important;
+    //width: 50%;
+    //margin: auto;
 }
 .side__item {
     position: relative;

@@ -77,7 +77,7 @@ export default {
 }
 .green {
     background: lightseagreen !important;
-    color: black;
+    color: white;
 }
 .red {
     background: red !important;

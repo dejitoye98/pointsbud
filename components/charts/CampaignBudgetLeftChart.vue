@@ -1,5 +1,5 @@
 <template>
-    <div class="card card-30">
+    <div class="card">
         <div class="card__stat">
             <BaseDoughnutChart v-if="this.campaign && show" :chartData="chartData" :options="options"/>
         </div>
@@ -26,7 +26,7 @@ export default {
                 },
                 
                 responsive: true, 
-                maintainAspectRatio: true, 
+                maintainAspectRatio: false, 
                 animation: {
                     animateRotate: false
                 }
@@ -86,13 +86,29 @@ export default {
     //justify-content: space-between;
     flex-direction: column ;
     &__stat {
-        width: 70%;
+        width: 90%;
+        display: flex;
+        //flex-grow: 1;
+        min-height: 0;
+        justify-content: center;
+        
         margin: auto;
-        height: auto;
+
+        //height: auto;
+        
+        &:deep(.chartjs-render-monitor) {
+            position: relative;
+            height: 250px !important;
+            width: 250px !important;
+        }
+        
     }
 
     &__content {
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         text-align: center;
     }
 

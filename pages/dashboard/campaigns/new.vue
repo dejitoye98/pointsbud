@@ -1,172 +1,6 @@
 <template>
-    <div class="new">
-        
-        <template>
-            <div class="section">
-                <div class="section__header">
-                    <p>General Details</p>
-                </div>
-                <div class="section__body">
-                    <div class="section__body__container">
-
-                        <div class="form-input">
-                            <span class="error">{{errors.title}}</span>
-                            <label for="">Title of campaign <span class="red">*</span></label>
-                            <input  v-model="campaign.title" type="text">
-                        </div>
-                        <div class="form-input">
-                            <span class="error">{{errors.description}}</span>
-                            <label for="">Description <span class="red">*</span></label>
-                            <textarea v-model="campaign.description"> </textarea>
-                        </div>
-                        <div class="half">
-                            <div class="form-input">
-                                <span class="error">{{errors.budget}}</span>
-                                <label for="">Budget <span class="red">*</span></label>
-                                <!--
-                                <input  v-model="campaign.budget" type="number">-->
-                                <div style="width: 100%">
-
-                                    <CurrencyMoneyInput @onChange="setCampaignBudget"/>
-                                </div>
-                            </div>
-                            <div class="form-input">
-                                <span class="error">{{errors.marketeres_required}}</span>
-                                <label for="">No. of marketers required <span>(Default: unlimited)</span></label>
-                                <input  v-model="campaign.marketers_required" type="number">
-                            </div>
-                        </div>
-
-                        <div class="half">
-                            <div class="form-input">
-                                <span class="error">{{errors.ends_at}}</span>
-                                <label for="">End Date <span class="red">*</span></label>
-                                <DatePicker v-model="campaign.ends_at" />
-                            </div>
-                            <div class="form-input">
-                                <label for="">Display Picture</label>
-                                <input type="file" id="imagefile"  accept="image/*"  @change="addThumbnail">
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-        <template>
-            <div class="section">
-                <div class="section__header">
-                    <p>Links Details</p>
-                </div>
-                <div class="section__body">
-                    <div class="section__body__container">
-
-                        <div class="form-group advert-link"  v-for="(link,index) in campaign.links_to_advertise" :key="index">
-                                <span class="error">{{link_errors[index]}}</span>
-                            <div class="advert-link-head" v-if="index !== 0" @click="removeLink(index)">
-                                <span>Remove</span>
-                            </div>
-                            <div class="form-group form-group--row advert-link-row">
-                                <div class="form-input">
-                                    <label for="">Link URL <span class="red">*</span></label>
-                                        <input type="text" placeholder="https://link-you-want-to-advertise.com" v-model="link.link">
-                                </div>
-                                <div class="form-input">
-                                    <label for="">Cost per click <span class="info">info</span> <span class="red">*</span></label>
-                                    <!--<input type="number" v-model="link.pay_per_click">-->
-                                    <CurrencyMoneyInput :meta="{index: index}" @onChange="setCostPerClick"/>
-
-                                </div>
-                            </div>
-                            <div class="form-input">
-                                <label for="">Advert note <span class="info">info</span> <span class="red">*</span></label>
-                                <textarea :placeholder="'We are selling products. Visit: ' +  link.link" v-model="link.advert_note"></textarea>
-                            </div>
-                        </div>
-                        <div class="add-link">
-                            <p @click="addLink">Add link</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-        <template>
-            <div class="section">
-                <div class="section__header">
-                    <p>Privacy & Settings</p>
-                </div>
-                <div class="section__body">
-                    <div class="section__body__container">
-                        <div class="form-input">
-                            <span class="error" v-if="errors.who_can_join">{{errors.who_can_join}}</span>
-                            <label for="" class="">Who can join this campaign? <span class="red">* </span></label>
-
-                            <div class="flex-row">
-                                <label class="checkbox-label"><input v-model="campaign.who_can_join"  value="0" name="who_can_join" type="radio">Anyone<span></span></label>
-                                <label class="checkbox-label"><input  v-model="campaign.who_can_join" value="1" name="who_can_join" type="radio">Invited marketers<span></span></label>
-                                <label class="checkbox-label"><input  v-model="campaign.who_can_join" value="2" name="who_can_join" type="radio">Applicants<span></span></label>
-                            </div>
-                        </div>
-
-                        <div class="application_questions" v-if="[2, '2'].includes(campaign.who_can_join)">
-                            <div v-for="(q, index) in campaign.application_questions" :key="index" class="form-input">
-                                <span class="error" v-if="index === 0">{{errors.application_questions}}</span>
-                                <label for="">Application Question {{index + 1}} <span class="red" v-if="index === 0">*</span></label>
-                                <input type="text" placeholder="eg: How many clicks can you drive to this campaign?" v-model="campaign.application_questions[index]">
-                            </div>             
-                            <div class="add-link" style="padding-top: 0px !important">
-                                <p @click="addQuestion">Add Question</p>
-                            </div>           
-                        </div>
-
-                        <div class="form-input">
-                            <label for="" class="">Do you intend to add more links to this campaign in the future?</label>
-                            <div class="flex-row">
-                                <label class="checkbox-label"><input v-model="campaign.recurring_links"  value="0" name="intent" type="radio">Yes<span></span></label>
-                                <label class="checkbox-label"><input  v-model="campaign.recurring_links" value="1" name="intent" type="radio">No<span></span></label>
-                            </div>
-                        </div>
-
-                        <!--
-                        <div class="form-input">
-                            <label class="bold-label" for="">Accept traffic to links from: Default()</label>
-                            <div style="display: flex; flex-wrap: wrap">
-                                <label class="checkbox-label"  v-for="continent in Object.keys(continents)" :key="continent"><input type="checkbox" @change="chooseContinent(continent)">All {{continent}}</label>
-                                <label class="checkbox-label"  v-for="country in countries" :key="country.name"><input  type="checkbox" class="countries-choice" :id="'choice_' + country.code.toLowerCase() " @change="checkCountry(country)">{{country.name}}</label>
-                            </div>
-                        </div> -->
-                    </div>
-                    
-                </div>
-            </div>
-        </template>
-        <template>
-            <div class="section">
-                <div class="section__header">
-                    <p>Fraud Prevention</p>
-                </div>
-                <div class="section__body">
-                    <div class="section__body__container">
-                        <SelectCountriesInput @onCountriesSelected="setCountriesAllowed" important="true" label="What countries should you allow traffic from?"/>
-
-
-                        
-                        <!--
-                        <div class="form-input">
-                            <label class="bold-label" for="">Accept traffic to links from: Default()</label>
-                            <div style="display: flex; flex-wrap: wrap">
-                                <label class="checkbox-label"  v-for="continent in Object.keys(continents)" :key="continent"><input type="checkbox" @change="chooseContinent(continent)">All {{continent}}</label>
-                                <label class="checkbox-label"  v-for="country in countries" :key="country.name"><input  type="checkbox" class="countries-choice" :id="'choice_' + country.code.toLowerCase() " @change="checkCountry(country)">{{country.name}}</label>
-                            </div>
-                        </div> -->
-                    </div>
-                    
-                </div>
-            </div>
-        </template>
-        <div class="new__cta">
-            <button @click="createCampaign">Create Campaign!</button>
-        </div>
+    <div>
+        <NewCampaign />
     </div>
 </template>
 
@@ -178,29 +12,56 @@ import continents from '../../../continents'
 import countries from '../../../countries'
 
 import SelectCountriesInput from '../../../components/inputs/SelectCountriesInput';
+import NewCampaign from '../../../components/NewCampaign';
 import CurrencyMoneyInput from '../../../components/inputs/CurrencyMoneyInput';
+import FormCreator from '../../../components/pagebuilder/FormCreator';
 
 import Toast from '../../../components/general/Toast';
  
 import moment from 'moment';
 import SelectCountriesInputVue from '../../../components/inputs/SelectCountriesInput.vue';
 export default {
-    layout: 'dashboard',
+    layout: 'dashboard-collapsed-sidebar',
     components: {
         DatePicker,
         SelectCountriesInput,
         CurrencyMoneyInput,
         Toast,
+        NewCampaign,
+        FormCreator
     },
     created() {
         this.$store.commit('dashboard/setDashboardTitle', "New Campaign")
     },
     data() {
         return {
+            extraInfos: {
+                budget: {
+                    text: "This is the amount of money you're committing to the campaign. Marketers get paid from this budget. When your budget is exhausted, your campaign is put on hold",
+                    visible: false                
+                },
+                marketers_required: {
+                    text: "Default: unlimited",
+                    visible: false,
+                }, 
+                who_can_join: {
+                    text: "Anyone: anyone on Afflee can join. Invited marketers: this campaign won't be publicly listed and will be only accessible to people you invite. Applicants: this allows you to screen interested marketers",
+                    visible: false,
+                },
+                recurring_links: {
+                    text: "Default is 'NO'. 'YES' is best suited to publications/websites that create content regularly",
+                    visible: false,
+                },
+                trying_to_create: {
+                   // text:`A form without`
+                }
+            },
+            mode: "choice",
+            step: 1,
+            canCreateCampaign: false,
             selectedContinents: [],
             continents:continents,
             countries,
-            step: 1,
             success_message: '',
             errors: {
                 title: '',
@@ -220,13 +81,19 @@ export default {
                     {link: '', pay_per_click: '', advert_note: ''}
                 ],
                 join_by_invite: 0,
+                payment_models: [],
                 ends_at: '',
                 thumbnail: '',
                 countries_allowed: [],
                 recurring_links: '',
                 who_can_join: null,
                 pay_currency: 'NGN',
-                application_questions: [""]
+                conversion_media: [],
+                application_questions: [""],
+                categories: ['', '']
+            },
+            template: {
+                payment_models: ['Pay per click', 'Pay per lead', 'Pay per sale'],
             },
             loading: false
         }
@@ -235,6 +102,111 @@ export default {
         
     },
     methods: { 
+        addConversionMedia(medium) {
+            const index = this.campaign.conversion_media.find(a => a === medium);
+            if (index) {
+                this.campaign.conversion_media.splice(index, 1);
+            }
+            else {
+                this.campaign.conversion_media.push(medium)
+            }
+        },
+        previousStep() {
+            if (this.mode === 'click') {
+                if (this.step > 1) {
+                    this.step--;
+                }
+                else {
+                    this.step = null;
+                    this.mode = 'choice';
+                }
+            }
+        },
+        nextStep() {
+            if (this.mode === 'click') {
+                let can_continue = true;
+                if (this.step < 4) {
+                    if (this.step === 1) {
+                        const req_labels = ['title', 'description', 'budget'];
+
+                        for (let i =0 ; i < req_labels.length; i++) {
+                            const key = req_labels[i];
+                            if (!this.campaign[key]) {
+                                this.errors[key] = `${key} cannot be empty`
+                                //return;
+                                can_continue = false;
+                            }
+                            else {
+                                this.errors[key] = ''
+                            }
+                        }
+
+                    }
+                    else if (this.step === 2) {
+                        Object.keys(this.link_errors).forEach(key=> {
+                            this.link_errors[key] = ''
+                        })
+                        this.campaign.links_to_advertise.forEach((link, index) => {
+                            if (!link.link || !link.pay_per_click || !link.advert_note) {
+                                this.$set(this.link_errors, index, "Please enter all fields")
+                                can_continue = false;
+                            }
+                            else if (!link.link.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g)) {
+                                this.$set(this.link_errors, index, "Please provide a valid URL")
+                                can_continue = false
+
+                            }
+                            else if (link.pay_per_click < 0) {
+                                this.$set(this.link_errors, index, "Cost cannot be less than 0")
+                                can_continue = false
+                            }
+                        })
+
+
+                    }
+                    else if (this.step === 3) {
+                        this.errors['who_can_join'] = ''
+                        if (!this.campaign.who_can_join)  {
+                            can_continue = false;
+                            this.errors['who_can_join'] = "Please choose who can join this campaign"
+                        }
+                    }
+                    else if (this.step === 4) {
+                        this.errors['countries_allowed'] = ''
+                        if (!this.countries_allowed) {
+                            this.errors['countries_allowed'] = "Please choose countries"
+                        }
+                    }
+                    if (can_continue) {
+
+                        this.step++;
+                    }
+                }
+            }
+            else if (this.mode === 'sales-lead') {
+                this.step++;
+            }
+
+        },
+        setInfoVisibility(info,) {
+            if (this.extraInfos[info]) {
+                this.extraInfos[info].visible = !this.extraInfos[info].visible
+            }
+            //this.extraInfos[info].visibility = !this.
+        },
+        changeMode(mode) {
+            this.mode = mode;
+            this.step = 1;
+        },
+        addPaymentModel(model) {
+            if (this.campaign.payment_models.find(a => a === a)) {
+                // index 
+                const index = this.campaign.payment_models.indexOf(model);
+                this.campaign.payment_models.splice(index, 1);
+                return
+            }
+            this.campaign.payment_models.push(model)
+        },
         setCostPerClick(meta) {
             this.campaign.links_to_advertise[meta.index].pay_per_click = meta.value;
         },
@@ -464,12 +436,105 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.info {
-    text-decoration: underline;
+.plain-button {
+    background: transparent !important;
+    color: $lightaccent !important;
+    margin-right: 8px !important;
+    border: 0 !important;
 }
+.tabs {
+    display: flex;
+    //background: white;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    &__tab {
+        background: white;
+        border: 1px solid rgb(236, 231, 231);
+        border-right: 0;
+        padding: 6px;
+        cursor: pointer;
+        letter-spacing: 0.25px;
+        width: 25%;
+        &:last-of-type {
+            border-right:1px solid rgb(236, 231, 231); ;
+        }
+        
+        p {
+            color: grey;
+            font-size: 14px;
+        }
+        &--selected {
+            background: $primary;
+            border: 1px solid $primary;
+            p {
+                color: white;
+            }
+        }
+        &--passed {
+            background: $lightaccent;
+            border: 1px solid $lightaccent;
+
+            p {
+
+                color: white !important;
+            }
+        }
+    }
+
+}
+.choice {
+    width: 100%;
+    &__container {
+        width: 100%;
+        margin: auto;
+        @include media("<=t") {
+            width: 90%;
+        }
+    }
+    &__header {
+        p {
+            font-size: 36px;
+            font-weight: 500;
+        }
+    }
+    &__body {
+        display: flex;
+        width: 100%;
+
+        @include media("<=t") {
+            flex-direction: column;
+        }
+    }
+    &__item {
+        background: white;
+        padding: 16px;
+        cursor: pointer;
+        margin-right: 8px;
+        border-radius: 2px;
+        box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
+        padding: 16px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 48%;
+        border-radius: 10px;
+        border: 0.5px solid rgba(211, 211, 211, 0.442);
+        &:hover {
+            box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+            transform: translateY(-2px); 
+        }
+        p {
+            font-size: 18px;
+            font-weight: 400;
+        }
+    }
+}
+
 .new {
-    width: 70%;
+    width: 100%;
     //margin: auto;
+    padding: 50px 16px;
 
     &__cta {
         width: 100%;
@@ -486,6 +551,15 @@ export default {
     }
 }
 
+.section {
+    padding: 24px 0px;
+
+    &__body {
+        margin-bottom: 24px;
+        font-size: 30px;
+    }
+}
+/*
 .section {
     box-shadow: rgba(0, 0, 0, 0.25) 0 1px 1px;
     background: white;
@@ -521,7 +595,7 @@ export default {
         }
     }
 
-}
+}*/
 
 
 .flex-row {
@@ -539,9 +613,12 @@ export default {
     margin-right: 16px;
     position: relative;
     border-radius: 10px;
-    padding: 2px 4px;
+    padding: 4px 8px;
+    font-weight: 300 !important;
+    background: white;
     //border: 1.5px solid rgba(169, 169, 169, 0.64);
-    border: 1.5px solid #ced4da58 !important;
+    //border: 1.5px solid #ced4da58 !important;
+    border: 1px solid rgba(169, 169, 169, 0.64) !important;
 
     margin-bottom: 5px;
 
@@ -568,6 +645,8 @@ export default {
 .half {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    transition: height 2s ease-in;
     .form-input {
     
         width: 48%;
@@ -621,7 +700,8 @@ export default {
     color: $primary;
     font-size: 14px;
     cursor: pointer;
-    text-decoration: underline;
+    //text-decoration: underline;
+    border: 1px dotted grey;
 }
 
 .error {
@@ -629,17 +709,32 @@ export default {
     font-size: 14px;
 }
 
+.question {
+    //width: 20px;
+    //height: 20px; 
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: grey 1px solid 2px solid !important;
+    color: grey !important ;
+}
 .form-group { 
     display: flex;
     flex-direction: column;
+    background: white;
     border: rgba(211, 211, 211, 0.263) 1px solid ;
-    border-radius: 5px;
-    padding: 8px;
+    border-radius: 2px;
+    padding: 16px 16px;
     &--row {
         padding: 0;
         border: none;
         flex-direction: row;
         justify-content: space-between;
+
+        .form-input {
+            width: 45%;
+        }
     }
 }
 .form-input {
@@ -647,31 +742,64 @@ export default {
     display: flex;
     flex-direction: column;
     margin-bottom: 16px;
-
+    
+    &__info {
+        color: grey;
+        font-size: 13px;
+    }
     
     label {
         font-size: 15px; 
-        color: black;
+        //color: $faint;
+        color: grey;
+
         display: flex;
-        flex-direction: align-items;
-        span {
-            color: rgb(1, 1, 75);
-            font-weight: 500;
-            margin-right: 11px;
+        font-weight: 500;
+        align-items: center;
+        letter-spacing: 0.25px; 
+        //border: 1px solid lightgrey;
+        
+        .divider {
+            width: 2px;
+            height: 2px;
+            background: grey;
+            border-radius: 50%;
+            margin: 0 5px;
+        }
+
+        .info {
+            appearance: none;
+            margin-right: 2px;
             cursor: pointer;
-            margin-left: 5px;
+            color: grey;
+            text-decoration: underline;
+            cursor: pointer;
+            display: flex;
+            padding: 0 8px; 
+            font-size: 13px;
+            //background: white;
+            //border: 1px solid lightgrey;
+            border-radius: 5px;
+
+        }
+        .red {
+            margin-left: 2px;
         }
     }
     input, textarea, :deep(input){
-        border: 1.5px solid rgba(169, 169, 169, 0.64);
+        border: 0.5px solid rgba(169, 169, 169, 0.64) !important;
         min-height: 40px;
         border-radius: 5px;
         padding: 8px;
         outline: none;
+        font-weight: 300;
+        letter-spacing: 0.5px;
         font-size: 15px;
-        color: $faint;
+       // color: $faint;
+        color: black;
         appearance: none;
         background-color: rgba(211, 211, 211, 0.046);;
+        background: white;
         &:focus {
             outline: $primary;
         }
@@ -689,6 +817,10 @@ export default {
             cursor: pointer;
         }
     }
+}
+
+.form-group {
+    margin-bottom: 16px;
 }
 .advert-link-row {
     div {

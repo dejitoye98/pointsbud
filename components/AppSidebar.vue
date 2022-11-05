@@ -1,21 +1,22 @@
 <template>
-    <div class="side">
+    <div class="side" :class="[collapsed ? 'collapsed' : '']">
         <div class="side__container">
-            <div class="side__header">
-                <div>
+            <div class="side__header" :class="[collapsed ? 'side__header--collapsed': '']">
+                <div class="side__header__container" :class="[collapsed ? 'side__header__container--collapsed': '']">
 
-                    <img src="../static/logo.svg" alt="">
+                    <img class="logo" src="../static/logo.svg" alt="" v-if="!collapsed">
+                    <img class="collapsed-logo" src="../static/collapsed-logo.svg" alt="" v-else>
                     
                 </div>
 
             </div>
 
             <div class="side__body">
-                <sidebar-item :text="'Overview'" link='/overview'/>
-                <sidebar-item :text="'Campaigns'" link='/campaigns' />
-                <sidebar-item v-if="context==='marketer'" :text="'Earnings'"  link="/earnings"/>
-                <sidebar-item :text="'Wallet'" link='/wallet' />
-                <sidebar-item :text="'Settings'" link='/settings' />
+                <sidebar-item :collapsed="collapsed"  :text="'Overview'" link='/overview'/>
+                <sidebar-item :collapsed="collapsed" :text="'Campaigns'" link='/campaigns' />
+                <sidebar-item :collapsed="collapsed" v-if="context === 'marketer'" :text="'Earnings'"  link="/earnings"/>
+                <sidebar-item :collapsed="collapsed" :text="'Wallet'" link='/wallet' />
+                <sidebar-item :collapsed="collapsed" :text="'Settings'" link='/settings' />
             </div>
         </div>
     </div>
@@ -24,7 +25,7 @@
 
 <script>
 export default {
-    props: ['context'],
+    props: ['context', 'collapsed'],
     data() {
         return {
            // active: 'Overview'
@@ -38,12 +39,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+
+.collapsed{
+    max-width: 65px;
+}
 .side {
-    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+    //box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
     position: fixed;
     height: 100%;
-    width: 250px;
-    //box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;        
+    width: 200px;
     background: white;
     z-index: 20;
 
@@ -60,12 +64,22 @@ export default {
         margin-bottom: 40px;
         padding: 0 36px;
 
+        
+
+        &__container {
+            width: 100px;
+
+            &--collapsed{
+                width: auto;
+            }
+        }
+
         img {
             object-fit: contain;
             height: auto;
             margin: auto;
             margin-bottom: 50px;
-                width: 120px !important;
+            width: 100%;
             margin: 0;
         }
     }

@@ -40,6 +40,46 @@
                 </div>
             </div>
         </div>
+        <div class="section" v-if="context === 'business'">
+            <div class="section__container">
+                
+
+                <div class="section__body">
+                   <div class="section__body__stat section__body__stat--earnings">
+                       <StatisticsChart :chart_data='earnings_chart' type="line" title="Disbursements this week"/>
+                   </div>
+                   <div class="section__body__stat section__body__stat--earnings">
+                       <StatisticsChart :chart_data='earnings_chart' type="list" title="Top grossing campaigns"/>
+                   </div>
+                   
+                  <div class="section__body__stat section__body__stat--earnings">
+                       <StatisticsChart :chart_data='earnings_chart' type="line" title="Sales"/>
+                   </div>
+
+                    <div class="section__body__stat section__body__stat section__body__stat--earnings">
+                       <StatisticsChart :chart_data='earnings_chart' type="bar" title="Clicks by time of the day"/>
+                   </div>
+                    <div class="section__body__stat section__body__stat--50 section__body__stat--earnings">
+                       <ClicksByCountryChart :chart_data='earnings_chart' type="bar" title="Clicks by time of the day"/>
+                   </div>
+
+
+                   <!--
+                   <div class="section__body__stat section__body__stat--earnings">
+                        <StatisticsChart title="Average Earnings">
+                            <div class="most">
+                                <div class="most__item">
+                                    <p>Per Day: N30,000</p>
+                                </div>
+                                <div class="most__item">
+                                    <p>Per week: N40,000</p>
+                                </div>
+                            </div>
+                        </StatisticsChart>
+                   </div>-->
+                </div>
+            </div>
+        </div>
         <div class="section">
             <div class="section__container">
                 <div class="section__header">

@@ -1,12 +1,60 @@
 <template>
     <div class="settings">
         <div class="settings__tabs">
-            <div v-for="tab in tabs" class="settings__tabs__tab" :class="[activeTab == tab ? 'active' : '']" :key="tab" @click="activateTab(tab)">{{tab}}</div>
+            <template v-if="userContext === 'business'">
+                <div v-for="tab in tabs" class="settings__tabs__tab" :class="[activeTab == tab ? 'active' : '']" :key="tab" @click="activateTab(tab)">{{tab}}</div>
+            </template>
+            <template v-else>
+                <div v-for="tab in tabs.filter(t=> t!=='Team')" class="settings__tabs__tab" :class="[activeTab == tab ? 'active' : '']" :key="tab" @click="activateTab(tab)">{{tab}}</div>
+
+            </template>
         </div>
 
         
 
 
+        <template v-if="activeTab == 'Team'">
+
+            <Panel title="Team members" :show_execute_button="false">
+                <div class="flex">
+                    <div class="card card--nopad bank-list">
+                        <div class="empty" v-if="loading_teams">
+
+                            <LoadingState v-if="loading_teams"/>
+                        </div>
+
+                        <div class="empty" v-else-if="!team_members.list || team_members.list.length < 1 && !loading_teams">
+                            <!--No bank accounts added yet-->
+                            
+                            <EmptyState state="NO_DATA" caption="No team members added yet"/>
+                        </div>
+                        <div class="bank-item" v-for="member in team_members.list" :key="member.id">
+                            
+                            <div class="flex flex--between"><p class="bank-item__name">{{member.name}}</p> <!--<span class="remove remove--desktop" @click="deleteAccount(account.id)">Remove</span>--></div>
+                            <p>Joined: {{formatDate(member.createdAt)}} </p>
+                            <!--<span class="remove remove--mobile" >Remove</span>-->
+                        </div>
+                        <div class="bank-item__invitations" v-if="team_members.invitations.length > 0">Invitations</div>
+                        <div class="bank-item" v-for="member in team_members.invitations" :key="member.id">
+                            
+                            <div class="flex flex--between"><p class="bank-item__name">{{member.invited_email}}</p> <!--<span class="remove remove--desktop" @click="deleteAccount(account.id)">Remove</span> --> </div>
+                            <p>Not joined yet</p>
+                            <!--<span class="remove remove--mobile" >Remove</span>-->
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card__header">
+                            <p>Add Team Member</p>
+                        </div>
+                        <AddTeamMemberForm @reloadBankAccountsList="getBankAccounts"/>
+                    </div>
+
+                </div>
+
+            </Panel>
+
+        </template>
         <template v-if="activeTab == 'Bank Account'">
 
             <Panel title="Bank Accounts" :show_execute_button="false">
@@ -100,25 +148,34 @@ import EmptyState from '../../../components/states/EmptyState'
 import LoadingState from '../../../components/states/LoadingState'
 import Panel from '../../../components/general/Panel'
 import PreferencesForm from '../../../components/forms/PreferencesForm'
+import AddTeamMemberForm from '../../../components/forms/AddTeamMember'
+
+import moment from "moment";
+
 export default {
     layout: 'dashboard',
     components: {
         Panel,
         PreferencesForm,
         EmptyState,
-        LoadingState
+        LoadingState,
+        AddTeamMemberForm
     },
     watch: {
         activeTab(value) {
             if (value === 'Preferences' && this.preferences.settings.length < 1) {
                 this.setUpPreferences()
             }
+
+            if (value === 'Team') {
+                this.getTeamMembers()
+            }
         }
     },
     data() {
         return {
-            activeTab: 'Bank Account',
-            tabs: ['Bank Account', 'Password', "Preferences"],
+            activeTab: 'Team',
+            tabs: ['Preferences', 'Team', 'Bank Account', 'Password'],
             mode: '',
             password: {
                 old_password: '',
@@ -135,7 +192,14 @@ export default {
             loading_bank_accounts: true,
             banks_empty: false,
 
-            loading_preferences: true
+            loading_preferences: true,
+
+            team_members: {
+                list: [],
+                invitations: []
+            },
+            loading_teams: true,
+            teams_empty: false,
         }
     },
     computed: {
@@ -147,6 +211,20 @@ export default {
         }
     },
     methods: {
+        formatDate(date) {
+            return moment(date).format("MMM DD, yyyy") 
+        },
+        getTeamMembers() {
+            this.loading_teams = true;
+            this.$api.get('/users/team-members').then(resp=> {
+                this.team_members.list = resp.data.data.members;
+                this.team_members.invitations = resp.data.data.invitations;
+                this.loading_teams = false;
+            }).catch(err=> {
+                this.teams_empty = true;
+                this.loading_teams = false;
+            })
+        },
         changePassword() {
 
         },
@@ -219,6 +297,12 @@ export default {
         if (this.activeTab === 'Bank Account') {
             this.getBankAccounts()
         }
+        if (this.activeTab === 'Preferences') {
+            this.setUpPreferences()
+        }
+        if (this.activeTab === 'Team') {
+            this.getTeamMembers()
+        }
     }
 }
 </script>
@@ -289,6 +373,16 @@ export default {
             font-size: 15px !important;
             color: black !important;
             font-weight: 500 !important;
+        }
+    }
+    &__invitations {
+        background: rgba(211, 211, 211, 0.442);
+        padding: 16px;
+        font-size: 14px; 
+        //margin-top: 8px;
+        color: $lightaccent;
+        &:hover {
+            background-color: lightgrey;
         }
     }
 }

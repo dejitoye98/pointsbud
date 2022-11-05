@@ -13,7 +13,7 @@
         </div>
 
         <div class="card__body">
-            <Listing v-if="type === 'list'" />
+            <Listing v-if="type === 'list'" :records="listing_records" :labels="listing_labels" show_pagination="listing_pagination" />
             <BaseLineChart v-if="type === 'line'" :options='chart_options || default_chart_options' :chartData="chart_data" />
             <BaseBarChart v-if="type === 'bar'" :options='chart_options || default_chart_options' :chartData="chart_data" />
             <BaseDoughnutChart v-if="type === 'pie'" :options='chart_options || default_chart_options'  :chartData="chart_data" />
@@ -34,10 +34,12 @@ export default {
         BaseDoughnutChart,
         BaseBarChart
     },
-    props: ['title', 'type', 'filter_options', 'chart_options', 'chart_data'],
+    props: ['title', 'type', 'filter_options', 'chart_options', 'chart_data', 'listing_records', 'listing_labels', 'listing_pagination'],
     data() {
         return {
             default_chart_options: {
+                scaleBeginAtZero: true,
+
 
                 legend: {
                     position: 'top'
@@ -112,7 +114,7 @@ export default {
 
     &__body {
        // height: 200px;
-       padding: 16px;
+       padding: 2px;
     }
 
     
