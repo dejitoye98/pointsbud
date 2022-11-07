@@ -225,6 +225,10 @@
 
             </div>
         </div>
+
+        <div class="" v-else-if="activeTab === 'Products'">
+            <Products :campaign_id="campaign_id"/>
+        </div>
     </div>
     
 </template>
@@ -240,6 +244,7 @@ import CampaignBudgetLeftChart from '../../../../components/charts/CampaignBudge
 import StatisticsChart from '../../../../components/charts/StatisticsChart'
 import CampaignLinksChart from '../../../../components/charts/CampaignLinksChart'
 import SwitchComponent from '../../../../components/inputs/SwitchComponent'
+import Products from '../../../../components/Products'
 import FindMarketersModal from '../../../../components/modals/FindMarketersModal'
 export default {
     layout: 'dashboard',
@@ -248,12 +253,13 @@ export default {
         CampaignLinksChart,
         SwitchComponent,
         FindMarketersModal,
-        StatisticsChart
+        StatisticsChart,
+        Products
     },
     data() {
         return {
-            activeTab: "Links",
-            tabs: ['Overview', 'Marketers', 'Links'],
+            activeTab: "Products",
+            tabs: ['Overview', 'Products', 'Marketers', 'Links'],
 
             campaign: {},
             campaign_id: this.$route.params.id,

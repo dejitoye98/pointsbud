@@ -1,89 +1,11 @@
 <template>
-    <div class="container">
 
-        <template v-if="mode === 'choice'">
-            <div class="section">
-                <div class="section__title">
-                    <p>New Campaign</p>
-                    <span> Choose objective:</span>
-                </div>
-                <div class="section__body">
-
-                    <div class="new-card" @click="changeMode('traffic')">
-
-                        <div class="svg-container">
-                            
-                            <img src="../static/traffic.png" alt=""/>
-                        </div>        
-
-                        <p>Drive traffic</p>
-                        <span>Create awareness</span>
-
-                    </div>
-                    <div class="new-card">
-
-                        <div class="svg-container">
-                            
-                            <img src="../static/generate-leads.png" alt=""/>
-                        </div>        
-
-                        <p>Generate Leads</p>
-                        <span>Attract new customers</span>
-
-                    </div>
-                    <div class="new-card" @click="changeMode('sell')">
-
-                        <div class="svg-container">
-                            
-                            <img src="../static/generate-sales.png" alt=""/>
-                        </div>        
-
-                        <p>Sell</p>
-                        <span>Sell a product or service</span>
-
-                    </div>
-                </div>
-            </div>
-            <div class="section" v-if="drafts && drafts.length">
-                <div class="section__title section__title--drafts">
-                    <p>Pick up from where you left off</p>
-                </div>
-
-                <div class="section__body">
-                    <div class="draft draft-card" v-for="(draft, index) in drafts" :key="index">
-                        <div class="draft-card__header">
-                            <p>Draft</p>
-                            <button>Remove</button>
-                        </div>
-                        <div class="draft-card__body">
-
-                            <p>{{}}</p>
-                            <p>Last edited: Nov 12, 2022</p>
-                        </div>
-                    </div>
-                   
-                    
-                </div>
-            </div>
-        </template>
-        
-
-
-
-
-
-
-
-
-
-
-
-        <template v-if="mode === 'traffic'">
-            <div class="center"><p>Create a Per-Per-Click Campaign</p></div>
+        <div>
+            <div class="center"><p>Create a Pay-Per-Sale Campaign</p></div>
             <div class="traffic">
                 
                 <div class="steps">
-                    <div class="steps__step" @click="showGeneralDetails">
+                    <div class="steps__step" >
 
                         <div class="step-card">
 
@@ -99,7 +21,7 @@
                                     <div class="form__container">
 
                                         <div class="form-input">
-                                            <span class="error">{{errors.title}}</span>
+                                            <span class="error" v-if="errors">{{errors.title}}</span>
                                             <label for="">Campaign Title <span class="red">*</span> </label>
                                             <input  v-model="campaign.title" type="text">
                                         </div>
@@ -119,17 +41,7 @@
 
                                         </div>-->
                                         <div class="half">
-                                            <div class="form-input">
-                                                <span class="error">{{errors.budget}}</span>
-                                                <label for="">Budget <span class="red">*</span> <span class="info" @click="setInfoVisibility('budget')">info</span> </label>
-                                                <!--<input  v-model="campaign.budget" type="number"-->
-                                                <div style="width: 98%; height:50px; border-radius:4px;        ">
-                                                    <div class="form-input__info" v-if="extraInfos['budget'].visible">
-                                                        <p> {{extraInfos['budget'].text}} </p>
-                                                    </div>
-                                                    <CurrencyMoneyInput @onChange="setCampaignBudget"/>
-                                                </div>
-                                            </div>
+                                            
                                             <div class="form-input">
                                                 <span class="error">{{errors.marketeres_required}}</span>
                                                 <label for="">No. of Marketers Required <span class="info" @click="setInfoVisibility('marketers_required')">info</span></label>
@@ -138,6 +50,17 @@
                                                 </div>
                                                 <input  v-model="campaign.marketers_required" type="number">
                                             </div>
+
+                                            <div class="form-input">
+                                                <span class="error">{{errors.marketeres_required}}</span>
+                                                <label for="">Do you want to host your products on Afflee? <span class="info" @click="setInfoVisibility('marketers_required')">info</span></label>
+                                                <div class="flex-row flex-row--w-50">
+                                                    <label class="checkbox-label"><input @change="changeProductHosting(1)" :value="parseInt('0')" name="who_can_join" type="radio" :checked="campaign.products.hosted">Yes<span></span></label>
+                                                    <label class="checkbox-label"><input  @change="changeProductHosting(0)" :value="parseInt('1')" name="who_can_join" type="radio"  :checked="!campaign.products.hosted">No I have my own website<span></span></label>
+                                                </div>
+                                            </div>
+
+                                            
                                         </div>
 
                                         <div class="half">
@@ -158,60 +81,172 @@
                                 </div> 
                             </div>             
                         </div>
+                    </div>
                         
 
                     </div>
-                    
-                    
-                    
-                    <div class="steps__step">
+                </div>
 
-                        <div class="step-card">
+                <div class="steps__step">
 
-                            <div class="steps__step__header">
+                    <div class="step-card">
 
-                                <div class="steps__step__header__container">
-                                    <p>Link Details</p>
-                                    <span>Title, description, budget, display picture...</span>
-                                </div>
-                                
+                        <div class="steps__step__header">
+
+                            <div class="steps__step__header__container">
+                                <p>Product Details</p>
+                                <span>Title, description, budget, display picture...</span>
                             </div>
+                            
+                        </div>
 
-                            <div class="form">
-                                <div class="form__container">
+                        <div class="form">
+                            <div class="form__container">
 
-                                    <div class="form-group advert-link"  v-for="(link,index) in campaign.links_to_advertise" :key="index">
-                                            <span class="error">{{link_errors[index]}}</span>
-                                        <div class="advert-link-head" v-if="index !== 0" @click="removeLink(index)">
-                                            <span>Remove</span>
+                                <div class="form-group advert-link"  v-for="(product,index) in campaign.products.list" :key="index">
+                                    <div class="advert-link-head" v-if="index !== 0" @click="removeProduct(index)">
+                                        <span>Remove</span>
+                                    </div>
+                                    <div class="form-group form-group--row advert-link-row">
+                                        <div class="form-input">
+                                            <label for="">Product Name <span class="red">*</span></label>
+                                                <input type="text" placeholder="Afflee's marketing software" v-model="product.name">
                                         </div>
-                                        <div class="form-group form-group--row advert-link-row">
-                                            <div class="form-input">
-                                                <label for="">Link URL <span class="red">*</span></label>
-                                                    <input type="text" placeholder="https://link-you-want-to-advertise.com" v-model="link.link">
-                                            </div>
-                                            <div class="form-input" style="border-radius: 4px; ">
-                                                <label for="">Cost per click <span class="info">info</span> <span class="red">*</span></label>
-                                                <!--<input type="number" v-model="link.pay_per_click">-->
-                                                <CurrencyMoneyInput :meta="{index: index}" @onChange="setCostPerClick"/>
-
-                                            </div>
+                                        <div class="form-input">
+                                            <label for="">Product Description <span class="red">*</span></label>
+                                                <textarea type="text" placeholder="" v-model="product.description"> </textarea>
                                         </div>
                                         <div class="form-input">
                                             <label for="">Advert note <span class="info">info</span> <span class="red">*</span></label>
-                                            <textarea placeholder="This is the text that marketers will use in advertising this link to their audience" v-model="link.advert_note"></textarea>
+                                            <textarea placeholder="This is the text that marketers will use in advertising this link to their audience" v-model="product.advert_note"></textarea>
                                         </div>
-                                    </div>
-                                    <div class="add-link">
-                                        <button @click="addLink">Add link</button>
-                                    </div>
-                                </div>
-                        </div>
-                    
-                        </div>
-                        
 
+                                        <div class="form-input" v-if="!campaign.products.hosted">
+                                                <label for="">Link to Product <span class="red">*</span></label>
+                                                <input type="text" placeholder="Afflee's marketing software" v-model="product.link">
+                                        </div>
+                                      
+
+                                        <div class="half" v-if="campaign.products.hosted">
+                                            <div class="form-input">
+                                                <label for="">Quantity Available <span class="red">*</span></label>
+                                                <input type="number" v-model="product.qty">
+                                            </div>
+                                            
+                                            <div class="form-input">
+                                                <label for="">Quantity Per Unit</label>
+                                                <input type="number" value="1" v-model="product.qty_per_unit">
+                                            </div>
+                                        </div>
+
+                                        <div class="half">
+                                            <div class="form-input">
+                                                <span class="error">{{errors.budget}}</span>
+                                                <label for="">Price Per Unit <span class="red">*</span> <span class="info" @click="setInfoVisibility('budget')">info</span> </label>
+                                                <!--<input  v-model="campaign.budget" type="number"-->
+                                                <div style="width: 98%; height:50px; border-radius:4px;        ">
+                                                    <div class="form-input__info" v-if="extraInfos['budget'].visible">
+                                                        <p> {{extraInfos['budget'].text}} </p>
+                                                    </div>
+                                                    <CurrencyMoneyInput @onChange="setPricePerUnit" :meta="{index: index}"/>
+                                                </div>
+                                            </div>
+
+                                             <div class="form-input">
+                                                <label for="">Discount (%)</label>
+                                                <input type="number" v-model="product.discount">
+                                            </div>
+                                        </div>
+
+                                        <div class="half">
+                                            <div class="form-input">
+                                                <span class="error">{{errors.budget}}</span>
+                                                <label for="">Marketer Commission Amount <span class="red">*</span> <span class="info" @click="setInfoVisibility('budget')">info</span> </label>
+                                                <!--<input  v-model="campaign.budget" type="number"-->
+                                                <div style="width: 98%; height:50px; border-radius:4px;        ">
+                                                    <div class="form-input__info" v-if="extraInfos['budget'].visible">
+                                                        <p> {{extraInfos['budget'].text}} </p>
+                                                    </div>
+                                                    <input type="number" v-model="product.marketer_commission"> 
+                                                </div>
+                                            </div>
+                                            <div class="form-input">
+                                                <label for="">Market Commission Type</label>
+                                                <select v-model="product.marketer_commission_type">
+                                                    <option value="flat">Flat</option>
+                                                    <option value="percent">Percent</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div v-if="campaign.products.list[index].meta.length > 0" class="advert-link form-group">
+                                        <div class="form-group__header">
+                                            <p>Product Qualities</p>
+                                            <svg  @click="deleteProductMeta(index)" width="16" height="16" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 1L7 7" stroke="#808080" stroke-width="0.5" stroke-linecap="round"/>
+                                            <path d="M7 1L1 7" stroke="#808080" stroke-width="0.5" stroke-linecap="round"/>
+                                            </svg>
+                                        </div>
+                                        <div class="form-input" v-for="(meta, meta_index) in campaign.products.list[index].meta" :key="meta_index">
+                                            <div class="half"> 
+                                                <input type="text" width="50%" :placeholder="meta.name_placeholder"  v-model="meta.name">
+                                                <input type="" width="50%" :placeholder="meta.value_placeholder" v-model="meta.value">
+                                            </div>
+                                        </div>
+
+
+                                        <svg @click="addProductMeta(index)" width="20" height="29" viewBox="0 0 76 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <line x1="39" y1="1" x2="39" y2="74" stroke="#D94241" stroke-width="10" stroke-linecap="round"/>
+                                            <line x1="74.5" y1="38.5" x2="1.5" y2="38.5" stroke="#D94241" stroke-width="10" stroke-linecap="round"/>
+                                        </svg>
+
+
+                                    </div>
+                                    <div v-if="campaign.products.list[index].delivery_details.length > 0" class="advert-link form-group">
+                                        <div class="form-group__header">
+                                            <p>Delivery Details</p>
+                                            <svg  @click="deleteProductDeliveryDetails(index)" width="16" height="16" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 1L7 7" stroke="#808080" stroke-width="0.5" stroke-linecap="round"/>
+                                            <path d="M7 1L1 7" stroke="#808080" stroke-width="0.5" stroke-linecap="round"/>
+                                            </svg>
+                                        </div>
+                                        <div class="form-input" v-for="(meta, meta_index) in campaign.products.list[index].delivery_details" :key="meta_index">
+                                            <div class="half"> 
+                                                <input type="text" width="50%" :placeholder="meta.name_placeholder"  v-model="meta.name">
+                                                <input type="" width="50%" :placeholder="meta.value_placeholder" v-model="meta.value">
+                                            </div>
+                                        </div>
+
+
+                                        <svg @click="addProductDeliveryDetails(index)" width="20" height="29" viewBox="0 0 76 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <line x1="39" y1="1" x2="39" y2="74" stroke="#D94241" stroke-width="10" stroke-linecap="round"/>
+                                            <line x1="74.5" y1="38.5" x2="1.5" y2="38.5" stroke="#D94241" stroke-width="10" stroke-linecap="round"/>
+                                        </svg>
+
+
+                                    </div>
+                                    <div class="product-actions" v-if="campaign.products.hosted">
+                                        <button @click="addProductMeta(index)" v-if="campaign.products.list[index].meta.length < 1">Add Product Qualities</button>
+                                        <button @click="addProductDeliveryDetails(index)">Add Delivery Details</button>
+                                        <button @click="addVariationMeta">Add Product Variations</button>
+                                    </div>
+                                    
+                                </div>
+                                <div class="add-link">
+                                    <button @click="addProduct">New Product</button>
+                                </div>
+                            </div>
+
+                        </div>
+                
                     </div>
+                    
+                    
+
+                </div>
+
                     <div class="steps__step">
 
                         <div class="step-card">
@@ -245,12 +280,12 @@
                                             <input type="text" placeholder="eg: How many clicks can you drive to this campaign?" v-model="campaign.application_questions[index]">
                                         </div>             
                                         <div class="add-link" style="padding-top: 0px !important">
-                                            <p @click="addQuestion">Add Question</p>
+                                            <button click="addQuestion">Add Question</button>
                                         </div>           
                                     </div>
 
                                     <div class="form-input">
-                                        <label for="" class="">Do you intend to add more links to this campaign in the future? <span @click="setInfoVisibility('recurring_links')" class="info">info</span></label>
+                                        <label for="" class="">Do you intend to add more products to this campaign in the future? <span @click="setInfoVisibility('recurring_links')" class="info">info</span></label>
                                             <div class="form-input__info" v-if="extraInfos['recurring_links'].visible">
                                                 <p> {{extraInfos['recurring_links'].text}} </p>
                                             </div>
@@ -276,59 +311,11 @@
                         </div>
                         
 
-                    </div>
-                    <div class="steps__step">
-
-                        <div class="step-card">
-
-                            <div class="steps__step__header">
-                                <div class="steps__step__header__container">
-
-                                    <p>Fraud Prevention </p>
-                                    <span>Title, description, budget, display picture...</span>
-                                </div>
-
-                                <div class="form">
-                                    <div class="form__container">
-                                        <SelectCountriesInput @onCountriesSelected="setCountriesAllowed" important="true" label="What countries should you allow traffic from?"/>
-
-                                    </div>
-                                </div>
-                            
-                            
-                            </div>
-                            
-                            
-                        </div>
-                        
-
-                    </div>
-                    <div class="create-container">
-                        <button @click="createCampaign">Create Campaign</button>
-                    </div>
+                    </div>                
+                <div class="create-button">
+                    <button @click="createCampaign"> Create Campaign</button>
                 </div>
-            </div>
-
-        </template>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <template v-if="mode === 'sell'">
-            <PayPerSaleCampaign/>
-        </template>
-    </div>
+        </div>
 </template>
 
 
@@ -345,15 +332,13 @@ import countries from '../countries'
 import NewCampaign from  '../components/NewCampaign'; //'../../../components/NewCampaign';
 import CurrencyMoneyInput from '../components/inputs/CurrencyMoneyInput';
 
-
-import PayPerSaleCampaign from '../components/PayPerSaleCampaign';
 import SelectCountriesInput from '../components/inputs/SelectCountriesInput';
 export default {
     components: {
         SelectCountriesInput,
         CurrencyMoneyInput,
-        DatePicker,
-        PayPerSaleCampaign
+        DatePicker
+
     },
     computed: {
         drafts() {
@@ -383,8 +368,6 @@ export default {
                    // text:`A form without`
                 }
             },
-            mode: "choice",
-            step: 1,
             canCreateCampaign: false,
             selectedContinents: [],
             continents:continents,
@@ -399,6 +382,7 @@ export default {
                 application_questions: ''
             },
             link_errors:[""],
+            product_errors: [""],
             can_continue: true,
             campaign: {
                 title: '',
@@ -407,23 +391,38 @@ export default {
                 links_to_advertise: [
                     {link: '', pay_per_click: '', advert_note: ''}
                 ],
-                join_by_invite: 0,
-                payment_models: [],
                 ends_at: '',
                 thumbnail: '',
                 countries_allowed: [],
                 recurring_links: '',
                 who_can_join: null,
                 pay_currency: 'NGN',
-                conversion_media: [],
                 application_questions: [""],
                 categories: ['', ''],
 
                 products: {
-                    hosted: '',
+                    hosted: 1,
                     list: [
                         {
+                            link: '',
+                            name: '',
+                            description: '',
+                            marketer_commission: '',
+                            marketer_commission_type: '',
+                            thumbnail: '',
+                            images: [],
+                            advert_note: "",
                             
+                            delivery_details: [],
+                            
+                            variation_details: {},
+                            meta: [],
+                            qty: {},
+                            qty_per_unit: 1,
+                            unit_price: 0,
+                            currency: '',
+                            discount: 0,
+                            discount_type: '', 
                         }
                     ]
                 },
@@ -440,9 +439,17 @@ export default {
                 thumbnail: '',
                 images: [],
                 advert_note: "",
-                delivery_details: {},
+                
+                delivery_details: {
+                    medium: '',
+                    days: '',
+                    locations:  '',
+                },
+                
                 variation_details: {},
-                meta: {},
+                meta: {
+
+                },
                 qty: {},
                 unit_price: 0,
                 currency: '',
@@ -466,6 +473,43 @@ export default {
        
     },
     methods: {
+        setPricePerUnit(meta) {
+            this.campaign.products.list[meta.index].unit_price = meta.value
+
+        },
+        changeProductHosting(value) {
+           const s =  this.$set(this.campaign.products, 'hosted', value)
+
+        },
+        deleteProductMeta(index) {
+          this.campaign.products.list[index].meta = []  
+        },
+        addProductMeta(index) {
+            if (this.campaign.products.list[index].meta.length == 0)
+                this.campaign.products.list[index].meta.push({name: '', name_placeholder: "eg: (Size of product)",  value: '', value_placeholder: 'Value'})
+            else 
+                this.campaign.products.list[index].meta.push({name: '', name_placeholder: "eg: (Size of product)",  value: '', value_placeholder: 'Value'})
+
+        },
+        deleteProductDeliveryDetails(index) {
+          this.campaign.products.list[index].delivery_details = []  
+        },
+        addProductDeliveryDetails(index) {
+            if (this.campaign.products.list[index].delivery_details.length == 0)
+                this.campaign.products.list[index].delivery_details.push({name: '', name_placeholder: "",  value: '', value_placeholder: 'Value'})
+            else 
+                this.campaign.products.list[index].delivery_details.push({name: '', name_placeholder: "",  value: '', value_placeholder: 'Value'})
+
+        },
+        addDeliveryMeta(index) {
+            if (this.campaign.products.list[index].delivery_details.length == 0)
+                this.campaign.products.list[index].delivery_details.push({name: '', name_placeholder: "eg: (Delivery Date)",  value: '', value_placeholder: 'Value'})
+            else 
+                this.campaign.products.list[index].delivery_details.push({name: '', name_placeholder: "eg: (Size of product)",  value: '', value_placeholder: 'Value'})
+        },
+        addVariationMeta(index) {
+            
+        },
         autoSave() {
             if (this.mode === 'choice') return;
             console.log('autosaving')
@@ -486,98 +530,8 @@ export default {
             drafts = JSON.stringify(drafts)
             window.localStorage.setItem('drafts', drafts);
         },
-        changeMode(mode) {
-            this.mode = mode;
-        },
-        showGeneralDetails() {
-            this.show_general_details = !this.show_general_details;
-        },
-        addConversionMedia(medium) {
-            const index = this.campaign.conversion_media.find(a => a === medium);
-            if (index) {
-                this.campaign.conversion_media.splice(index, 1);
-            }
-            else {
-                this.campaign.conversion_media.push(medium)
-            }
-        },
-        previousStep() {
-            if (this.mode === 'click') {
-                if (this.step > 1) {
-                    this.step--;
-                }
-                else {
-                    this.step = null;
-                    this.mode = 'choice';
-                }
-            }
-        },
-        nextStep() {
-            if (this.mode === 'click') {
-                let can_continue = true;
-                if (this.step < 4) {
-                    if (this.step === 1) {
-                        const req_labels = ['title', 'description', 'budget'];
-
-                        for (let i =0 ; i < req_labels.length; i++) {
-                            const key = req_labels[i];
-                            if (!this.campaign[key]) {
-                                this.errors[key] = `${key} cannot be empty`
-                                //return;
-                                can_continue = false;
-                            }
-                            else {
-                                this.errors[key] = ''
-                            }
-                        }
-
-                    }
-                    else if (this.step === 2) {
-                        Object.keys(this.link_errors).forEach(key=> {
-                            this.link_errors[key] = ''
-                        })
-                        this.campaign.links_to_advertise.forEach((link, index) => {
-                            if (!link.link || !link.pay_per_click || !link.advert_note) {
-                                this.$set(this.link_errors, index, "Please enter all fields")
-                                can_continue = false;
-                            }
-                            else if (!link.link.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g)) {
-                                this.$set(this.link_errors, index, "Please provide a valid URL")
-                                can_continue = false
-
-                            }
-                            else if (link.pay_per_click < 0) {
-                                this.$set(this.link_errors, index, "Cost cannot be less than 0")
-                                can_continue = false
-                            }
-                        })
-
-
-                    }
-                    else if (this.step === 3) {
-                        this.errors['who_can_join'] = ''
-                        if (!this.campaign.who_can_join)  {
-                            can_continue = false;
-                            this.errors['who_can_join'] = "Please choose who can join this campaign"
-                        }
-                    }
-                    else if (this.step === 4) {
-                        this.errors['countries_allowed'] = ''
-                        if (!this.countries_allowed) {
-                            this.errors['countries_allowed'] = "Please choose countries"
-                        }
-                    }
-                    if (can_continue) {
-
-                        this.step++;
-                    }
-                }
-            }
-            else if (this.mode === 'sales-lead') {
-                this.step++;
-            }
-
-        },
+        
+        
         setInfoVisibility(info,) {
             if (this.extraInfos[info]) {
                 this.extraInfos[info].visible = !this.extraInfos[info].visible
@@ -588,15 +542,7 @@ export default {
             this.mode = mode;
             this.step = 1;
         },
-        addPaymentModel(model) {
-            if (this.campaign.payment_models.find(a => a === a)) {
-                // index 
-                const index = this.campaign.payment_models.indexOf(model);
-                this.campaign.payment_models.splice(index, 1);
-                return
-            }
-            this.campaign.payment_models.push(model)
-        },
+       
         setCostPerClick(meta) {
             this.campaign.links_to_advertise[meta.index].pay_per_click = meta.value;
         },
@@ -623,7 +569,7 @@ export default {
             }
         },
         createCampaign() {
-            this.validateSteps()
+            //this.validateSteps()
 
             if (this.can_continue) {
                 this.campaign.recurring_links = this.campaign.recurring_links ? parseInt(this.campaign.recurring_links) : '';
@@ -730,97 +676,33 @@ export default {
             
         },
 
-        removeLink(index) {
-            this.campaign.links_to_advertise.splice(index, 1);
-            this.link_errors.splice(index, 1)
+        removeProduct(index) {
+            this.campaign.products.list.splice(index, 1);
+            this.product_errors.splice(index, 1)
         },
 
-        addLink() {
-            this.campaign.links_to_advertise.push({
-                link: '',
-                pay_per_click: '',
-                advert_note: ''
-            })
-            this.link_errors.push("")
-        },
-        validateSteps() {
-            
-            // clear errors first =
-
-            Object.keys(this.errors).forEach(key => {
-                this.errors[key] = ''
-            });
-
-            Object.keys(this.link_errors).forEach(key=> {
-                this.link_errors[key] = ''
-            })
-
-            this.can_continue = true;
-           
-
-            const fields = {
-                1: ['title', 'description', 'budget', 'ends_at']
-            }
-            for (let i = 0; i < fields[1].length; i++) {
-                const key = fields[1][i];
-                if (!this.campaign[key]) {
-                    this.errors[key] = `${key} cannot be empty`
-                    this.can_continue = false;
-                }
-                else {
-                    this.errors[key] = ''
-                }
-            }
-            
-            this.validateStep2()
-            
-            this.validateStep3()
-            
-            
-        },
-        
-        validateStep2() {
-            let can_continue = true
-            this.campaign.links_to_advertise.forEach((link, index) => {
-                if (!link.link || !link.pay_per_click || !link.advert_note) {
-                    //alert(link)
-                    this.$set(this.link_errors, index, "Please enter all fields")
-                    //this.link_errors[index] =  "Please enter all fields for all links"
-                    //if (!this.link_errors[index]) this.link_errors[index] = ""
-                    //this.link_errors[index] =   "Please enter all fields"
-                    this.can_continue = false;
-                }
-                else if (!link.link.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g)) {
-                    this.$set(this.link_errors, index, "Please provide a valid URL")
-
-                }
-                else if (link.pay_per_click < 0) {
-                    this.$set(this.link_errors, index, "Cost cannot be less than 0")
-                }
-            })
-
-            return can_continue
-        },
-        validateStep3() { // privacy;
-            // sanitize
-
-            if (!this.campaign.who_can_join) {
-                this.errors.who_can_join = "Please select who can join"
-                this.can_continue = false
-                return
-            }
-            if (this.campaign.who_can_join !==2 && this.campaign.who_can_join !== '2') {
-                this.campaign.application_questions = [""]
-                return true
-            }
-            else if (this.campaign.application_questions[0] === "")  {
-                this.errors.application_questions = "Please enter at least one question to ask applicatnts"
-                this.can_continue = false;
-                return
+        addProduct() {
+            this.campaign.products.list.push(                        {
+                name: '',
+                description: '',
+                marketer_commission: '',
+                marketer_commission_type: '',
+                thumbnail: '',
+                images: [],
+                advert_note: "",
                 
-            }
-
-        }
+                delivery_details: [],
+                
+                variation_details: {},
+                meta: [],
+                qty: {},
+                unit_price: 0,
+                currency: '',
+                discount: 0,
+                discount_type: '', 
+            })
+            this.product_errors.push("")
+        },
     }
 
 }
@@ -828,10 +710,33 @@ export default {
 
 
 <style lang="scss" scoped>
-.error {
+.create-button {
+    //border: 1px solid grey;
+    margin-left: 50px;
+    widtH: 100%;
+
+    button {
+        @include largebutton;
+        width: 100%;
+    }
+}
+.product-actions {
+    display: grid;
+    //flex-direction: column;
+    grid-template-columns: 30% 30% 30%;
+    width: 100%;
+    button {
+        @include editbutton;
+        margin-left:0;
+        margin-right: 8px;
+    }
+}
+.error, .red {
     font-size: 12px;
     color: red;
 }
+
+
 .create-container {
     //border: 1px solid grey;
     display: flex;
@@ -891,6 +796,7 @@ export default {
 
             input {
                 width: 20% !important;
+                border: 0 !important;
             }
             
         }
@@ -910,7 +816,7 @@ export default {
     border-radius: 10px;
     //padding: 4px 8px;
     font-weight: 300 !important;
-    background: white;
+    //background: white;
     //border: 1.5px solid rgba(169, 169, 169, 0.64);
     //border: 1.5px solid #ced4da58 !important;
     //border: 1px solid rgba(169, 169, 169, 0.64) !important;
@@ -923,6 +829,7 @@ export default {
         min-height: 20px !important;
         appearance: auto !important;
         width: 10% !important;
+        border: 0 !important;
         
        
        
@@ -1025,6 +932,20 @@ export default {
     }
 }
 
+.form-group {
+    margin-bottom: 16px;
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        //border-bottom: 0.2px lightgrey solid;
+        margin-bottom: 8px;
+    }
+    p {
+        font-size: 15px;
+        font-weight: 600;
+    }
+}
+
 .traffic {
     width: 100%;
     margin: auto;
@@ -1044,7 +965,7 @@ export default {
     display: flex;
     justify-content: flex-end;
     button {
-        background: $lightaccent;
+        background: lightgray;
         color: white;
         display: block;
         border-radius: 4px;
@@ -1098,7 +1019,7 @@ export default {
 .form-input {
     display: flex;
     flex-direction: column;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
 
         &:deep(.mx-datepicker) {
             height: 50px !important;
@@ -1116,12 +1037,12 @@ export default {
     label {
         font-size: 15px;
         color: $charcoal;
-        font-weight: 600;
+        font-weight: 400;
         margin-bottom: 5px;
     }
 
     input, select,textarea {
-        display: inline-block;
+        /*display: inline-block;
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
         width: 100%;
@@ -1139,7 +1060,27 @@ export default {
 
         
 
-        outline-color: rgba(229, 231, 235)
+        outline-color: rgba(229, 231, 235)*/
+
+
+        position: relative;
+        cursor: text;
+        font-size: 14px;
+        line-height: 20px;
+        padding: 8px 16px;
+        height: 48px;
+        background-color: #fff;
+        border: 1px solid #d6d6e7;
+        border-radius: 3px;
+        color: rgb(35, 38, 59);
+        box-shadow: inset 0 1px 4px 0 rgb(227 160 158 / 20%);
+        overflow: hidden;
+        transition: all 100ms ease-in-out;
+        :focus {
+            border-color: #3c4fe0;
+            box-shadow: 0 1px 0 0 rgb(35 38 59 / 5%);
+        }
+    
 
     }
 
@@ -1234,4 +1175,4 @@ export default {
         }
     }
 }
-</style>
+</style> 

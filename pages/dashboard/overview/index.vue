@@ -42,14 +42,75 @@
         </div>
         <div class="section" v-if="context === 'business'">
             <div class="section__container">
-                
+                <div class="section__body">
+                    <div class="l-card">
+                        <div class="l-card__body">
+                            <div class="l-card__header">
 
+                                <p>Lifetime Disbursements</p>
+                            </div>
+                            <div class="l-card__content">
+                                <div class="l-card__content__item">
+                                    <label for="">Volume</label>
+                                    <p>NGN 30,000</p>
+                                </div>
+                                <div class="l-card__content__item">
+                                    <label for="">Value</label>
+                                    <p>NGN 30,000</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="l-card">
+                        <div class="l-card__body">
+                            <div class="l-card__header">
+
+                                <p>Lifetime Sales</p>
+                            </div>
+                            <div class="l-card__content">
+                                <div class="l-card__content__item">
+                                    <label for="">Volume</label>
+                                    <p>NGN 30,000</p>
+                                </div>
+                                <div class="l-card__content__item">
+                                    <label for="">Value</label>
+                                    <p>NGN 30,000</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="l-card">
+                        <div class="l-card__body">
+                            <div class="l-card__header">
+
+                                <p>Lifetime Sales</p>
+                            </div>
+                            <div class="l-card__content">
+                                <div class="l-card__content__item">
+                                    <label for="">Volume</label>
+                                    <p>NGN 30,000</p>
+                                </div>
+                                <div class="l-card__content__item">
+                                    <label for="">Value</label>
+                                    <p>NGN 30,000</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="section__container">
                 <div class="section__body">
                    <div class="section__body__stat section__body__stat--earnings">
-                       <StatisticsChart :chart_data='earnings_chart' type="line" title="Disbursements this week"/>
+                       <StatisticsChart :chart_data='earnings_chart' type="line" title="Disbursements"/>
                    </div>
                    <div class="section__body__stat section__body__stat--earnings">
                        <StatisticsChart :chart_data='earnings_chart' type="list" title="Top grossing campaigns"/>
+                   </div>
+
+                   <div class="section__body__stat section__body__stat--earnings">
+                       <StatisticsChart />
                    </div>
                    
                   <div class="section__body__stat section__body__stat--earnings">
@@ -154,6 +215,50 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.l-card {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    margin-bottom: 50px;
+
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+    &__header {
+        font-size: 25px;
+        color: $charcoal;
+        padding: 0 16px;
+    }
+    &__content {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        
+
+        &__item {
+            margin-top: 16px;
+            padding: 0 16px;;
+            &:first-of-type {
+                border-right: 0.2px solid lightgrey;
+                label {
+                    color: $lightaccent
+                }
+            }
+            label {
+                color: lightseagreen;
+                font-weight: 500;
+                font-size: 16px;
+
+            }
+            p {
+                color: grey;
+                font-size: 16px;
+            }
+        }
+
+    }
+    &__body {
+        display: flex;
+        flex-direction: column;
+    }
+}
 .overview {
     
 }
@@ -171,13 +276,14 @@ export default {
     }
 
     &__body {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+
+        grid-template-columns: 30% 30% 30%;
         justify-content: space-between;
 
 
         &__stat {
-            width: 30%;
+            width: 100%;
             margin-bottom: 20px;
             
             @include media("<=dashbreak") {

@@ -39,12 +39,13 @@
                       <template v-if="labels[label].type === 'photo'">
                       
                       </template>
+
                       <template v-else>{{label}}</template>
                     </th>
                 </tr>
                 <tr v-for="(record, index) in records" :record="record" :key="index" @click="goToRedirLink(record)">
                     <td :class="computeClass(label, record)"  v-for="(label, idx) in Object.keys(labels)" :key="idx" data-th="label" @click="goToRedirLink(record)">
-                      <img v-if="labels[label].type === 'photo' " :src="format(label, record) || 'https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg'">
+                      <img v-if="labels[label].type === 'photo' " :class="[labels[label].shape === 'rectangle' ? 'rectangle': '']" :src="format(label, record) || labels[label].placeholder ||  'https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg'">
                       <template v-else-if="labels[label].type === 'debit_or_credit'" class="red"> {{format(label, record)}} </template>
                       
                       <template v-else>{{format(label, record)}}</template>
@@ -191,6 +192,11 @@ img {
   width: 50px;
   height: 50px;
   border-radius: 50%;
+}
+.rectangle {
+  width: 50px !important;
+  height: 50px !important;
+  
 }
 
 :deep(.pagination) {

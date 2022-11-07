@@ -17,6 +17,10 @@
 
             </div>
 
+            <div class="business-name">
+                <p>{{userDetails.name}}</p>
+            </div>
+
             <div class="el__end">
                 <div>
                    <!-- <button v-if="active === 'Campaigns'" @click="createCampaign">Create new campaign</button> -->
@@ -56,6 +60,10 @@
 </template>
 
 <style lang="scss" scoped>
+.business-name {
+    font-size: 20px;
+    font-weight: 500;
+}
 #see-all {
     background:  #e3a09e62;
     color: black;
@@ -91,8 +99,10 @@
             //border: 1px solid lightgrey;
             background: white;
             //border: rgba(211, 211, 211, 0.263) 1px solid ;
-            box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+            //box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
             transition:all 0.3s ease-in-out;
+            border: 0.5px solid lightgray;
+
             
 
 
@@ -306,7 +316,10 @@ export default {
         }
     }, 
     computed: {
-                
+        userDetails() {
+            return window.localStorage.getItem('afUserDetails') && JSON.parse(window.localStorage.getItem('afUserDetails'))
+            
+        },
         userContext() {
             return window.localStorage.getItem('afContext')
         },

@@ -3,10 +3,13 @@
        <Modal title='Create campaign' v-if="createCampaign" @close="closeCreateCampaignModal">
            <FormCreateCampaign  />
        </Modal>
+
+
+
+
         <template v-if="userContext === 'business'">
             <template v-if="campaigns.length === 0 && !loading">
                 <div class="empty-state">
-                    <EmptyState state="NO_DATA" caption="No campaigns" ></EmptyState>
                     <EmptyState state="NO_DATA" caption="No campaigns" ></EmptyState>
                     <button @click="goToNewCampaign"> Create a campaign</button>
                 </div>
@@ -14,8 +17,16 @@
             <template v-else-if="loading">
                 <LoadingState/>
             </template>
-            <Listing v-else-if="campaigns.length > 0" :records="campaigns" item_link="/dashboard/campaigns/:id" :labels="campaignLabels" :pagination="campaigns_page_info"/>
+
+            <div v-else-if="campaigns.length> 0" class="campaigns__header">
+                <p class="header">Your Campaigns</p>
+                <Listing :records="campaigns" item_link="/dashboard/campaigns/:id" :labels="campaignLabels" :pagination="campaigns_page_info"/>
+            </div>
         </template>
+
+
+
+
         <template v-else>
             <div class="campaigns">
                 <div class="campaigns__tabs">
@@ -59,6 +70,12 @@ export default {
             campaigns: [],
             campaigns_page_info: {},
             campaignLabels: {
+                "" : {
+                    property: "thumbnail",
+                    type: "photo",
+                    shape: 'rectangle',
+                    placeholder: 'https://t3.ftcdn.net/jpg/02/68/55/60/360_F_268556012_c1WBaKFN5rjRxR2eyV33znK4qnYeKZjm.jpg'
+                },
                 'Title': {
                     property: 'title',
                     type: 'text'

@@ -2,12 +2,13 @@
     <div class="card">
         <div class="card__header">
             <div class="card__header__text">
-                <p>{{title}}</p>
+                <p>{{computedTitle}}</p>
             </div>
-            <div class="filter card__filter" v-if="filter_options">
-                <select name="" id="">
-                    <option>This week</option>
-                    <option>This month</option>
+            <div class="filter card__filter">
+                <select  v-model="filter" name="" id="">
+                    <option value="week" selected>This week</option>
+                    <option value="month">This month</option>
+                    <option value="today">Today</option>
                 </select>
             </div>
         </div>
@@ -37,6 +38,7 @@ export default {
     props: ['title', 'type', 'filter_options', 'chart_options', 'chart_data', 'listing_records', 'listing_labels', 'listing_pagination'],
     data() {
         return {
+            filter: "",
             default_chart_options: {
                 scaleBeginAtZero: true,
 
@@ -54,11 +56,30 @@ export default {
             filter_default: this.filter_options && this.filter_options.default
         }
     },
+    watch: {
+        filter(value) {
+            
+        }
+    },
     computed: {
+        computedTitle() {
+            const title = this.title;
+            if (['month', 'week'].includes(this.filter)){
+                return title + " this " + this.filter
+            }
+            else if (this.filter === 'today') {
+                return title + " today"
+            }
+
+            return title
+        }
+
         
     },
     methods: {
-        
+        fetch() {
+            
+        }
     },
     
     created() {
@@ -83,7 +104,10 @@ export default {
 
 
 <style lang="scss" scoped>
-
+select {
+    background: transparent;
+    outline-color: black;
+}
 .card {
     height: auto;
     border-radius: 5px;
@@ -125,6 +149,7 @@ export default {
         height: 50px;
         border-radius: 5px;
         background: #fafafa;
+        padding: 24px 24px;
 
         //border-bottom: 0.5px solid rgba(211, 211, 211, 0.368);
         button {
@@ -143,7 +168,7 @@ export default {
                 font-size: 16px !important;
                 text-transform: none;
                 font-weight: 400;
-                text-align: center;
+                //text-align: center;
                 display: block;
                 width: 100%;
             }
