@@ -106,7 +106,7 @@ export default {
 <style lang="scss" scoped>
 .grayscale {
   filter: grayscale(1);
-  background: rgba(128, 128, 128, 0.404);
+  background: rgba(211, 211, 211, 0.247);
   border-radius: 1px;
   //height: 200px;
   width: 200px;
@@ -119,6 +119,7 @@ export default {
   img {
     height: 100%;
     object-fit: contain;
+    width: 100%;
   }
   input {
     opacity: 0;
@@ -137,7 +138,7 @@ export default {
     width: 100%;
     display: block;
     text-align: center;
-    background: grey;
+    background: rgba(128, 128, 128, 0.404);
     color: white;
     font-size: 400;
     font-size: 15px;

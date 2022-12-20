@@ -1063,7 +1063,7 @@ export default {
   position: relative;
   padding: 5px 0;
   display: grid;
-  grid-template-columns: 24% 24% 24% 24%;
+  grid-template-columns: 48%;
   justify-content: space-between;
   //margin-bottom: 32px;
 }
