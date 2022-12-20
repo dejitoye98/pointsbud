@@ -50,7 +50,7 @@
             :class="computeClass(label, record)"
             v-for="(label, idx) in Object.keys(labels)"
             :key="idx"
-            data-th="label"
+            :data-th="label"
             @click="goToRedirLink(record)"
           >
             <template v-if="labels[label].type == 'status'">{{format(label, record)}}</template>
