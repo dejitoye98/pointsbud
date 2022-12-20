@@ -58,7 +58,8 @@ export default {
             this.loading = true;
             this.error = '';
             this.success = false;
-
+            this.payload.email = decodeURIComponent(this.payload.email)
+            
             if (!this.payload.password || !this.payload.confirm_password) {
                 this.error = "Passwords must be provided"
                 this.loading = false;
@@ -74,6 +75,7 @@ export default {
                 .then(resp => {
                     this.loading = false;
                     this.success = true;
+                    this.$router.push('/login')
                 })
                 .catch(err=> {
                     this.loading = false;

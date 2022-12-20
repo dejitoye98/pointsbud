@@ -7,7 +7,7 @@
         </div>
         <div class="main-container">
 
-            <AppDashboardTopbar/>
+            <AppDashboardTopbar :context="userContext"/>
             <main class="body">
                 <div class="body__container">
                     <Nuxt/>
@@ -19,7 +19,6 @@
 
 <script>
 import Toast from '../components/general/Toast';
-import Cookies from 'js-cookie';
 
 export default {
     components: {
@@ -43,7 +42,7 @@ export default {
     },
 
     beforeCreate() {
-        Cookies.set("aff-token", window.localStorage.getItem("aff-token"))
+        this.$cookies.set("aff-token", window.localStorage.getItem("aff-token"))
     },
     created() {
         this.getAuthUser()
@@ -61,7 +60,8 @@ export default {
 .main-container {
     z-index: 0;
     width: 100%;
-    height: 100%;
+    //height: 100%;
+    min-height: 100vh;
     margin-left: 200px;
 
     @include media('<=dashbreak') {
@@ -86,7 +86,7 @@ export default {
    padding: 36px 24px;
 
    &__container {
-       height: 100vh;
+       height: 100%;
    }
 }
 </style>

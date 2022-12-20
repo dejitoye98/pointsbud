@@ -5,7 +5,7 @@
                 {{setting.name}}
             </label>
             <template v-if="setting.input_type === 'text'">
-                <input type="text" :value="getPreferenceValue(setting.id) " @change="change($event, setting.id)">
+                <input type="text" :value="getPreferenceValue(setting.id)" @change="change($event, setting.id)">
             </template>
             <template v-if="setting.input_type === 'radio' && setting.input_options === 'yes,no'">
                 <div class="flex-row">
@@ -27,8 +27,20 @@ export default {
             let value;
             const pref = this.preferences.find(pref => pref.setting.id === setting_id)
             if (pref) value = pref.value;
-            return value;
-       }
+            return value || this.settings.find(s => s.id === setting_id).default_value;
+       },
+       
+    },
+    computed: {
+        userDetails() {
+            let details = window.localStorage.getItem('afUserDetails');
+            if (details) {
+                details = JSON.parse(details)
+                return details
+            }
+            return {}
+            
+        }
     }
     
 }

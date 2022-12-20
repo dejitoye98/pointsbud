@@ -44,7 +44,6 @@
 
 <script>
 
-import Cookies from 'js-cookie';
 
 export default {
     data() {
@@ -98,7 +97,7 @@ export default {
                     this.loading = false;
                     this.$store.dispatch('dashboard/actionShowSuccessToast', {message: "You've successfully signed up on Afflee"});
                     this.$router.push('/login')
-                    Cookies.remove('aff-token', {path: ''})
+                    this.$cookies.remove('aff-token', {path: ''})
                     
                     
                 })

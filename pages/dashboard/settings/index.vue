@@ -1,6 +1,6 @@
 <template>
     <div class="settings">
-        <div class="settings__tabs">
+        <!--<div class="settings__tabs">
             <template v-if="userContext === 'business'">
                 <div v-for="tab in tabs" class="settings__tabs__tab" :class="[activeTab == tab ? 'active' : '']" :key="tab" @click="activateTab(tab)">{{tab}}</div>
             </template>
@@ -8,7 +8,9 @@
                 <div v-for="tab in tabs.filter(t=> t!=='Team')" class="settings__tabs__tab" :class="[activeTab == tab ? 'active' : '']" :key="tab" @click="activateTab(tab)">{{tab}}</div>
 
             </template>
-        </div>
+        </div>-->
+
+        <SettingsTabs></SettingsTabs>
 
         
 
@@ -55,8 +57,10 @@
             </Panel>
 
         </template>
-        <template v-if="activeTab == 'Bank Account'">
 
+
+
+        <template v-if="activeTab == 'Bank Account'">
             <Panel title="Bank Accounts" :show_execute_button="false">
                 <div class="flex">
                     <div class="card card--nopad bank-list">
@@ -174,7 +178,7 @@ export default {
     },
     data() {
         return {
-            activeTab: 'Team',
+            activeTab: 'Preferences',
             tabs: ['Preferences', 'Team', 'Bank Account', 'Password'],
             mode: '',
             password: {
@@ -206,6 +210,9 @@ export default {
         userContext() {
             return window.localStorage.getItem('afContext');
         },
+        userDetails() {
+            return JSON.parse(window.localStorage.getItem('afUserDetails'));
+        },
         canChangePassword() {
             return this.password.old_password && this.password.new_password && this.password.confirm_password && (this.password.new_password === this.password.confirm_password);
         }
@@ -226,6 +233,15 @@ export default {
             })
         },
         changePassword() {
+            this.$api.put('/auth/change-password',
+             {email: this.userDetails.email,
+                ...this.password}).then(resp=> {
+                this.$store.dispatch('dashboard/actionShowSuccessToast', {message: "Password successfully changed"})
+
+            }).catch(e=> {
+                this.$store.dispatch('dashboard/actionShowErrorToast', {message: e.response && e.response.data.data || e})
+
+            })
 
         },
         changePreferences(data) {
@@ -392,8 +408,11 @@ export default {
 }
 .settings {
     padding: 0 24px;
+    background: white;
+    margin-bottom: 50px;
 
     &__tabs {
+
         display: flex;
         margin-bottom: 16px;
         //justify-content: space-between;
@@ -401,7 +420,7 @@ export default {
         &__tab {
             padding: 16px;
             text-align: center;
-            color: grey;
+            color: $charcoal;
             cursor: pointer;
             
         }

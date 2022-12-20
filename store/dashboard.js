@@ -10,6 +10,7 @@ export const state = () => ({
     actionAddLink: false,
     actionEditCampaign: false,
     actionFundWallet: false,
+    actionWidthrawWallet: false,
     actionFindMarketers: false,
     notifications: [],
     notification_length: 0,

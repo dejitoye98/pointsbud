@@ -3,46 +3,56 @@
         <div class="panel">
             <div class="panel__item">
                 <p>Amount</p>
-                <p>N3000</p>
+                <p> {{transaction.currency||'NGN'}} {{transaction.amount}}</p>
             </div>
             <div class="panel__item">
                 <p>Status</p>
-                <p>Ongoing</p>
+                <p>{{transaction.status}}</p>
             </div>
             <div class="panel__item">
                 <p>Initiation Date</p>
-                <p>Sep 20, 2022</p>
+                <p>{{formatDate(transaction.createdAt)}}</p>
             </div>
             <div class="panel__item">
                 <p>Arrival Date</p>
-                <p>Sep 29, 2022</p>
+                <p>{{formatDate(transaction.createdAt)}}</p>
             </div>
             <div class="panel__item">
                 <p>Reference</p>
-                <p>Earned this week</p>
+                <p>{{transaction.tx_ref}}</p>
             </div>
-            <div class="panel__item">
-                <p>N 5,000</p>
-                <p>Earned this week</p>
-            </div>
+            
         </div>
     </div>
 </template>
 
 
 <script>
+import moment from "moment";
 export default {
     layout: 'dashboard',
     data() {
         return {
-            transaction_id: this.$route.params.id
+            transaction_id: this.$route.params.id,
+            transaction: {}
         }
     },
     created() {
         this.$store.commit('dashboard/setDashboardTitle', `Transaction - ${this.transaction_id}`)
         this.$store.commit('dashboard/setActive', 'Earnings')
-        //this.getCampaign()
+        this.getTransaction()
     },
+
+    methods: {
+        getTransaction() {
+            this.$api.get(`/transactions/${this.$route.params.id}`).then(resp=> {
+                this.transaction = resp.data.data;
+            })
+        },
+        formatDate(date) {
+            return moment().format("YYYY-MM-DD HH:MM:SS")
+        }
+    }
 }
 
 </script>

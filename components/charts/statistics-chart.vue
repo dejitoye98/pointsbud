@@ -5,19 +5,19 @@
                 <p>{{computedTitle}}</p>
             </div>
             <div class="filter card__filter">
-                <select  v-model="filter" name="" id="">
-                    <option value="week" selected>This week</option>
-                    <option value="month">This month</option>
-                    <option value="today">Today</option>
+                <select  v-model="local_filter" name="" id="">
+                    <option value="week" :selected="filter && filter.by === 'week'">This week</option>
+                    <option  value="month"  :selected="filter && filter.by === 'month'">This month</option>
+                    <option value="today" :selected="filter && filter.by === 'today'">Today</option>
                 </select>
             </div>
         </div>
 
         <div class="card__body">
             <Listing v-if="type === 'list'" :records="listing_records" :labels="listing_labels" show_pagination="listing_pagination" />
-            <BaseLineChart v-if="type === 'line'" :options='chart_options || default_chart_options' :chartData="chart_data" />
-            <BaseBarChart v-if="type === 'bar'" :options='chart_options || default_chart_options' :chartData="chart_data" />
-            <BaseDoughnutChart v-if="type === 'pie'" :options='chart_options || default_chart_options'  :chartData="chart_data" />
+            <BaseLineChart v-if="type === 'line' && !isLoading" :options='chart_options || default_chart_options' :chartData="chart_data" />
+            <BaseBarChart v-if="type === 'bar' && !isLoading" :options='chart_options || default_chart_options' :chartData="chart_data" />
+            <BaseDoughnutChart v-if="type === 'pie' && isLoading" :options='chart_options || default_chart_options'  :chartData="chart_data" />
             <slot></slot>
         </div>
     </div>
@@ -35,10 +35,10 @@ export default {
         BaseDoughnutChart,
         BaseBarChart
     },
-    props: ['title', 'type', 'filter_options', 'chart_options', 'chart_data', 'listing_records', 'listing_labels', 'listing_pagination'],
+    props: ['loading', 'name','title', 'type', 'filter', 'chart_options', 'chart_data', 'listing_records', 'listing_labels', 'listing_pagination'],
     data() {
         return {
-            filter: "",
+            local_filter: '',
             default_chart_options: {
                 scaleBeginAtZero: true,
 
@@ -57,17 +57,26 @@ export default {
         }
     },
     watch: {
-        filter(value) {
-            
+        local_filter(val) {
+            this.$emit('onFilterChanged', {name: this.name, filter: val})
         }
     },
     computed: {
+        isLoading() {
+            if(typeof(this.loading) !== 'undefined' && this.loading === false) {
+                return false
+            } 
+            else if (typeof(this.loading) !== 'undefined' && this.loading === true) {
+                return true
+            }
+            return false
+        },
         computedTitle() {
             const title = this.title;
-            if (['month', 'week'].includes(this.filter)){
-                return title + " this " + this.filter
+            if (this.filter && this.filter.by && ['month', 'week'].includes(this.filter.by)){
+                return title + " this " + this.filter.by
             }
-            else if (this.filter === 'today') {
+            else if (this.filter && this.filter.by === 'today') {
                 return title + " today"
             }
 
@@ -76,7 +85,12 @@ export default {
 
         
     },
-    methods: {
+    methods: { 
+        changeFilter() {
+            alert("somethin")
+            this.$emit('onFilterChanged', {filter: this.local_filter, name: this.name})
+        },
+    
         fetch() {
             
         }
@@ -106,14 +120,15 @@ export default {
 <style lang="scss" scoped>
 select {
     background: transparent;
-    outline-color: black;
+    outline: none;
+    font-size: 14px;
+    color: $faint;
 }
 .card {
     height: auto;
     border-radius: 5px;
     width: 100%;
-    box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
-    //padding: 16px;
+        box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
     border: 0.5px solid rgba(211, 211, 211, 0.442);
     background: white;
     display: flex;
@@ -146,10 +161,12 @@ select {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        height: 50px;
+        //height: 50px;
+
         border-radius: 5px;
         background: #fafafa;
         padding: 24px 24px;
+        color: $charcoal;
 
         //border-bottom: 0.5px solid rgba(211, 211, 211, 0.368);
         button {
@@ -164,8 +181,8 @@ select {
             width: 100%;
 
             p {
-                color: black;
-                font-size: 16px !important;
+                color: $faint !important;
+                font-size: 14px !important;
                 text-transform: none;
                 font-weight: 400;
                 //text-align: center;

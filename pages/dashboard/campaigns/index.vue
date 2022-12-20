@@ -18,9 +18,9 @@
                 <LoadingState/>
             </template>
 
-            <div v-else-if="campaigns.length> 0" class="campaigns__header">
+            <div v-else-if="campaigns.length> 0" class="campaigns-list">
                 <p class="header">Your Campaigns</p>
-                <Listing :records="campaigns" item_link="/dashboard/campaigns/:id" :labels="campaignLabels" :pagination="campaigns_page_info"/>
+                <Listing :records="campaigns" item_link="/dashboard/campaigns/:id" :labels="campaignLabels" :show_pagination="true" :pagination="campaigns_page_info"/>
             </div>
         </template>
 
@@ -64,7 +64,7 @@ export default {
     data() {
         return {
             lead_stats: {},
-            active_tab :'mine',
+            active_tab :'find',
             create_campaign: false,
             loading: true,
             campaigns: [],
@@ -82,6 +82,7 @@ export default {
                 },
                 'Budget': {property: 'budget', type: 'money'},
                 'Budget Left' : {property:'budget_left', type: 'money'},
+                'Status':{property: 'is_active', success_value: 1, failure_value: 0, type: 'status'},
                 'Ends At': {property: 'ends_at', type: 'date'}
             },
             loading: true,
@@ -146,6 +147,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.campaigns-list {
+    width: 80%;
+    //margin: auto;
+}
 .empty-state {
     display: flex;
     flex-direction: column;
@@ -156,7 +161,7 @@ export default {
         @include smallbutton;
         margin-top: 30px !important;
         border-radius: 5px !important;
-        text-transform: uppercase;
+        //text-transform: uppercase;
     }
 }
 .tab-active {
@@ -177,14 +182,18 @@ export default {
             //padding-left: 0;
             display: flex;
             justify-content: center;
+            color: $charcoal;
 
             &:hover {
-                color: grey !important;
+                color: black !important;
             }
 
             p {
                 text-align: center;
                 font-size: 18px;
+                @include media('<=dashbreak'){
+                    font-size: 14px;
+                }
                 
             }
         }

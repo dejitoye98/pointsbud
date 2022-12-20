@@ -1,234 +1,236 @@
 <template>
     <div>
-         <div class="settings__tabs">
+         <CampaignTabs :params="{id: campaign_id}"/>
 
-            <div v-for="tab in tabs" class="settings__tabs__tab" :class="[activeTab == tab ? 'active' : '']" :key="tab" @click="activateTab(tab)">{{tab}}</div>
 
-        </div>
+        <template>
+            <template v-if="userContext === 'marketer' && (!loading.campaign && campaign && campaign.campaign_marketers.length > 0)">
+                <div class="campaign-section-title">
+                    Your Links
+                </div>
+                <MarketerCampaignLinks :campaign="campaign"></MarketerCampaignLinks>
+            </template>
 
-        
+            <div class="campaign">
 
-        <div class="campaign" v-if="activeTab === 'Overview'">
-            <div class="campaign-section-title">
-                Campaign Details
-            </div>
 
-            <div class="page">
-                <div class="page__header">
-                    <div class="page__header__content"> 
-                        <!--<p>Status:</p>-->
+                
+                <div class="campaign-section-title">
+                    Campaign Details
+                </div>
 
-                        <div class="page__header__status">
-                            <div class="page__header__status__indicator green-fill" v-if="campaign.is_active"></div>
-                            <div class="page__header__status__indicator red-fill" v-else></div>
+                <div class="page">
+                    <template v-if="!loading.campaign">
+                        <div class="page__header">
+                            <div class="page__header__content"> 
+                                <!--<p>Status:</p>-->
 
-                            <p class="green" v-if="campaign.is_active">Active</p>
-                            <p class="red" v-else>Inactive</p>
+                                <div class="page__header__status" v-if="userContext === 'business'">
+                                    <div class="page__header__status__indicator green-fill" v-if="campaign.is_active"></div>
+                                    <div class="page__header__status__indicator red-fill" v-else></div>
+
+                                    <p class="green" v-if="campaign.is_active">Active</p>
+                                    <p class="red" v-else>Inactive</p>
+
+                                </div>
+                            </div>
+                            
+
+                            <div class="page__header__ctas" v-if="userContext === 'business'">
+                                <SwitchComponent v-on:execute="changeCampaignStatus" :checked="campaign.is_active"/>
+                            <!--  <button @click="editCampaign">Edit</button>-->
+                            </div>
+                        </div>
+                        
+
+                        <div class="page__content">
+                            <div class="page__content__item">
+                                <p>Title</p>
+                                <p>{{campaign.title}}</p>
+                            </div>
+                            <div class="page__content__item">
+                                <p>Description</p>
+                                <p>{{truncateText(campaign.description)}}</p>
+                            </div>
+                            <div class="page__content__item">
+                                <p>Public URL</p>
+                                <a :href="computedUrl">https://afflee.com/{{campaign.slug}}</a>
+                            </div>
+                        
+                            <div class="page__content__item">
+                                <p>Budget</p>
+                                <p>{{campaign.currency + ' ' +Intl.NumberFormat('en-US').format(campaign.budget)}}</p>
+                    
+                            </div>
+                            <div class="page__content__item">
+                                <p>Budget Left</p>
+                                <p>{{campaign.currency + ' ' +Intl.NumberFormat('en-US').format(campaign.budget_left)}}</p>
+                            </div>
+                            <div class="page__content__item">
+                                <p>Started At</p>
+                                <p>{{formatDate(campaign.started_at)}}</p>
+                            </div>
+                            <div class="page__content__item">
+                                <p>Ends At</p>
+                                <p>{{formatDate(campaign.ends_at)}}</p>
+                            </div>
+                            <div class="page__content__item">
+                                <p>Marketers Required</p>
+                                <p>{{campaign.marketers_required || 'unlimited'}} </p>
+                            </div>
+                            <div class="page__content__item">
+                                <p>Purpose</p>
+                                <p>{{campaign.purpose}}</p>
+                            </div>
+                            <div class="page__content__item">
+                                <p>Categories</p>
+                                <p>{{campaignCategories}}</p>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template v-else>
+                        <LoadingState/>
+                    </template>
+                </div>
+                                            
+                <template v-if="(userContext === 'marketer' && userIsCampaignMarketer) || (userContext === 'business')">
+
+                    <template>
+                        <div class="campaign-section-title" >
+                            Overview
+                        </div>
+                        <div class="campaign__overview">   
+                            <div class="flex-column">
+
+                                <!--
+                                <div class="card">
+                                    <div class="card__header">
+                                        <p v-if="userContext === 'marketer'">Your Leads</p>
+                                        <p v-else>Leads</p>
+                                    </div>
+                                    <div class="card__body">
+
+                                        <div class="card__body__detail">
+                                            <p>0</p>
+                                            <p>Total</p>
+                                        </div>
+                                        <div class="card__body__divider"></div>
+
+                                        <div class="card__body__detail">
+                                            <p>NGN 0</p>
+                                            <p>Disbursements</p>
+                                        </div>
+                                    </div>
+                                </div> -->
+
+                                <div class="card" v-if="userContext === 'marketer'">
+                                    <div class="card__header">
+                                        <p v-if="userContext === 'marketer'">Your Clicks</p>
+                                        <p v-else>Clicks</p>
+                                    </div>
+                                    <div class="card__body">
+
+                                        <div class="card__body__detail"> 
+                                            <p>{{calculatedClicks.volume}} units</p>
+                                            <p>Total</p>
+                                        </div>
+
+                                        <div class="card__body__divider"></div>
+                                        <div class="card__body__detail">
+                                            <p>NGN{{formatMoney(calculatedClicks.value)}}</p>
+                                            <p>Value</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                 <div class="card" >
+                                    <div class="card__header">
+                                        <p v-if="userContext === 'marketer'">Your Sales</p>
+                                        <p v-else>Sales</p>
+                                    </div>
+                                    <div class="card__body">
+
+                                        <div class="card__body__detail">
+                                            <p>{{calculatedSales.volume}} units</p>
+                                            <p>Total</p>
+                                        </div>
+
+                                        <div class="card__body__divider"></div>
+                                        <div class="card__body__detail">
+                                            <p>NGN{{formatMoney(calculatedSales.value)}}</p>
+                                            <p>Value</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <template v-if="userContext === 'business'"> 
+            
+                                <CampaignBudgetLeftChart  :show="show_campaign_budget_chart" :campaign="campaign"/>
+                            
+
+                                <CampaignLinksChart :show="show_campaign_links_chart" :campaign_links="campaign_links"/>
+                            </template>
+
+                            
+
 
                         </div>
-                    </div>
+                    </template>
+
+
+                    <template>
+
+                        <div class="campaign-section-title">
+                        Click Insights
+                        </div>
+                        <div>
+                        <GroupedCampaignClicksCharts v-if="!loading.campaign" :campaign="campaign"/>
+                        </div>
+                    </template>
+
+                    <template>
+                        <div class="campaign-section-title">
+                            Sales Insights
+                        </div>
+                        <div>
+                            <GroupedCampaignSalesCharts v-if="!loading.campaign" :campaign="campaign"/>
+                        </div>
+                    </template>
                     
 
-                    <div class="page__header__ctas">
-                        <SwitchComponent v-on:execute="changeCampaignStatus" :checked="campaign.is_active"/>
-                        <!--<button @click="editCampaign">Edit</button>-->
-                    </div>
+                </template>
+                <!--
+                <div class="campaign-section-title">
+                    Lead Insights
                 </div>
-
-                <div class="page__content">
-                    <div class="page__content__item">
-                        <p>Title</p>
-                        <p>{{campaign.title}}</p>
+                <div class="lead-insights">
+                    <div class="stat_item">
+                        <StatisticsChart v-if="leadGainedGroupByDayChart" title="Generated Leads" type='bar' :chart_data="leadGainedGroupByDayChart"/>
                     </div>
-                    <div class="page__content__item">
-                        <p>Description</p>
-                        <p>{{truncateText(campaign.description)}}</p>
+                    <div class="stat_item">
+                        <StatisticsChart v-if="leadDisbursementsGroupByDayChart" title="Disbursements" type='line' :chart_data="leadDisbursementsGroupByDayChart"/>
                     </div>
-                    <div class="page__content__item">
-                        <p>Public URL</p>
-                        <p>https://afflee.com/{{campaign.slug}}</p>
+                    <div class="stat_item">
+                        <StatisticsChart v-if="lead_stats.top_referrers" title="Top Sources" type='list' :listing_records="lead_stats.top_referrers" :listing_labels="top_referrers_labels" />
                     </div>
-                
-                    <div class="page__content__item">
-                        <p>Budget</p>
-                        <p>{{campaign.currency + ' ' +Intl.NumberFormat('en-US').format(campaign.budget)}}</p>
-            
-                    </div>
-                    <div class="page__content__item">
-                        <p>Budget Left</p>
-                        <p>{{campaign.currency + ' ' +Intl.NumberFormat('en-US').format(campaign.budget_left)}}</p>
-                    </div>
-                    <div class="page__content__item">
-                        <p>Started At</p>
-                        <p>{{formatDate(campaign.started_at)}}</p>
-                    </div>
-                    <div class="page__content__item">
-                        <p>Ends At</p>
-                        <p>{{formatDate(campaign.ends_at)}}</p>
-                    </div>
-                    <div class="page__content__item">
-                        <p>Marketers Required</p>
-                        <p>{{campaign.marketers_required || 'unlimited'}} </p>
-                    </div>
-                    <div class="page__content__item">
-                        <p>Purpose</p>
-                        <p>{{campaign.purpose}}</p>
-                    </div>
-                    <div class="page__content__item">
-                        <p>Categories</p>
-                        <p>{{campaignCategories}}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="campaign-section-title">
-                Overview
-            </div>
-            <div class="campaign__overview">   
-                <div class="flex-column">
-                    <div class="card">
-                        <div class="card__header">
-                            <p>Leads</p>
-                        </div>
-                        <div class="card__body">
-
-                            <div class="card__body__detail">
-                                <p>16</p>
-                                <p>Total</p>
-                            </div>
-                            <div class="card__body__divider"></div>
-
-                            <div class="card__body__detail">
-                                <p>NGN 57,000</p>
-                                <p>Disbursements</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card__header">
-                            <p>Sales</p>
-                        </div>
-                        <div class="card__body">
-
-                            <div class="card__body__detail">
-                                <p>6,000 units</p>
-                                <p>Total</p>
-                            </div>
-
-                            <div class="card__body__divider"></div>
-                            <div class="card__body__detail">
-                                <p>NGN 30,0000</p>
-                                <p>Disbursements</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
- 
-                <CampaignBudgetLeftChart v-if="campaign.budget" :show="show_campaign_budget_chart" :campaign="campaign"/>
-              
-
-                <CampaignLinksChart :show="show_campaign_links_chart" :campaign_links="campaign_links"/>
-
-                
-
-
-            </div>
-        
-            <div class="campaign-section-title">
-                Lead Insights
-            </div>
-            <div class="lead-insights">
-                <div class="stat_item">
-                    <StatisticsChart v-if="leadGainedGroupByDayChart" title="Generated Leads" type='bar' :chart_data="leadGainedGroupByDayChart"/>
-                </div>
-                <div class="stat_item">
-                    <StatisticsChart v-if="leadDisbursementsGroupByDayChart" title="Disbursements" type='line' :chart_data="leadDisbursementsGroupByDayChart"/>
-                </div>
-                <div class="stat_item">
-                    <StatisticsChart v-if="lead_stats.top_referrers" title="Top Sources" type='list' :listing_records="lead_stats.top_referrers" :listing_labels="top_referrers_labels" />
-                </div>
-            </div>
-            <div class="campaign-section-title">
-                Sales Insights
-            </div>
-            <div class="lead-insights">
-                <div class="stat_item">
-                    <StatisticsChart v-if="leadGainedGroupByDayChart" title="Generated Leads" type='bar' :chart_data="leadGainedGroupByDayChart"/>
-                </div>
-                <div class="stat_item">
-                    <StatisticsChart v-if="leadDisbursementsGroupByDayChart" title="Disbursements" type='line' :chart_data="leadDisbursementsGroupByDayChart"/>
-                </div>
-                <div class="stat_item">
-                    <StatisticsChart v-if="lead_stats.top_referrers" title="Top Sources" type='list' :listing_records="lead_stats.top_referrers" :listing_labels="top_referrers_labels" />
-                </div>
-            </div>
-            
-
-
-
-            <Modal width='half' @close="closeInviteModal" title="Invite marketers" v-if="actionInviteMarketers">
-                <FormInviteMarketers/>
-            
-            </Modal>
-
-
-            <Modal @close="closeEditCampaignModal" title="Edit Campaign" v-if="actionEditCampaign">
-                <FormEditCampaign :campaign="campaign"/>
-            </Modal>
-
-        </div>
-
-        <div class="marketers" v-else-if="activeTab === 'Marketers'">
+                </div> -->
 
                 <Modal width='half' @close="closeInviteModal" title="Invite marketers" v-if="actionInviteMarketers">
-                    <FormInviteMarketers :campaign_id="campaign_id"/>
+                    <FormInviteMarketers/>
                 
                 </Modal>
 
-                <FindMarketersModal @close="closeFindMarketersModal" :show="actionFindMarketers"  v-if="actionFindMarketers" :campaign="campaign"/>
 
-                <div class="campaign__marketers">
-                    <div class="section__header">
-
-                        <div></div>
-                        <div class="">
-                            <button @click="findMarketers">Find Marketers</button>
-                            <button @click="inviteMarketers">Invite</button>
-                        </div>
-                    </div>
-                    <Listing :records="campaign_marketers.list" :pagination="campaign_marketers.page_info" :labels="campaign_marketers.labels" :constants="computedConstants"></Listing>
-                </div>
-        </div>
-
-        <div class="links" v-else-if="activeTab === 'Links'">
-
-            <Modal width='half' @close="closeAddLinkModal" title="Add Campaign Link" v-if="actionAddLink">
-                <FormAddLink/>
-            </Modal>
-            <div class="section">
-                <div class="campaign__marketers section__item">
-                    <div class="section__header">
-
-                        <p class="campaign-section-title">Campaign Links</p>
-                    </div>
-                    <Listing 
-                        :records="campaign_links.list" 
-                        :labels="campaign_links.labels"
-                        :pagination="campaign_links.page_info"
-                        :actions="campaign_links.list_actions"
-                    ></Listing>
-                </div>
-                <div style="display: flex; justify-content:center; width: 100%">
-                    <button class="add-link"  @click="addLink">Add link</button>
-                </div>
-
+                <Modal @close="closeEditCampaignModal" title="Edit Campaign" v-if="actionEditCampaign">
+                    <FormEditCampaign :campaign="campaign"/>
+                </Modal>
 
             </div>
-        </div>
+        </template>
 
-        <div class="" v-else-if="activeTab === 'Products'">
-            <Products :campaign_id="campaign_id"/>
-        </div>
+        
     </div>
     
 </template>
@@ -240,31 +242,44 @@
 import { mapGetters } from 'vuex';
 import  moment from 'moment';
 
-import CampaignBudgetLeftChart from '../../../../components/charts/CampaignBudgetLeftChart'
-import StatisticsChart from '../../../../components/charts/StatisticsChart'
-import CampaignLinksChart from '../../../../components/charts/CampaignLinksChart'
-import SwitchComponent from '../../../../components/inputs/SwitchComponent'
-import Products from '../../../../components/Products'
-import FindMarketersModal from '../../../../components/modals/FindMarketersModal'
+
 export default {
     layout: 'dashboard',
-    components: {
-        CampaignBudgetLeftChart,
-        CampaignLinksChart,
-        SwitchComponent,
-        FindMarketersModal,
-        StatisticsChart,
-        Products
-    },
+    
     data() {
         return {
-            activeTab: "Products",
+            share_campaign_link_modal: true,
+            loading: {
+              marketers: true,  
+              campaign: true,
+              details: true,
+            },
+            clicks: {
+                group_by_day: [],
+                filter: {by: 'week'},
+                today: {},
+                chart: {
+                    labels: [],
+                    datasets: [{
+                        label: ['Amount in NGN'],
+                        borderColor: ['#DE5C6E'],
+                        fill: false,
+                        data: []
+                    }]
+
+                },            
+            },
+            one_info_ready: false,
+            activeTab: "Overview",
             tabs: ['Overview', 'Products', 'Marketers', 'Links'],
 
             campaign: {},
             campaign_id: this.$route.params.id,
             stat_filter: "week",
             lead_stats: {},
+            click_stats: {
+                group_by_day: []
+            },
 
             top_referrers_labels: {
                     "Source": {property: "referrer"}, 
@@ -288,6 +303,10 @@ export default {
                 list: [],
                 page_info: {}
             },
+
+            campaign_clicks: {
+                stat: null,
+            },
             
             campaign_links: {
                 list: [],
@@ -296,8 +315,8 @@ export default {
                 labels: {
                     "URL": {property: "link", type: "text"},
                     "Cost Per Click": {property: "pay_per_click", currency: "pay_currency", type: "money"},
-                    "Cost Per Lead": {property: "pay_per_click", currency: "pay_currency", type: "money"},
-                    "Cost Per Sale": {property: "pay_per_click", currency: "pay_currency", type: "money"},
+                    "Cost Per Lead": {property: "pay_per_lead", currency: "pay_currency", type: "money"},
+                    "Cost Per Sale": {property: "pay_per_sale", currency: "pay_currency", type: "money"},
                 },
                 list_actions: [
                     {
@@ -309,7 +328,9 @@ export default {
             },
 
             show_campaign_budget_chart: false,
-            show_campaign_links_chart: false
+            show_campaign_links_chart: false,
+            show_campaign_clicks_chart: false,
+            products: [],
             
         }
     },
@@ -320,18 +341,28 @@ export default {
         },
         campaign_links(value) {
             this.show_campaign_links_chart = true
+        },
+        campaign_clicks(value) {
+            this.show_campaign_clicks = true
         }
     },
     created() {
         this.$store.commit('dashboard/setDashboardTitle', `Campaign - ${this.campaign_id}`)
         this.$store.commit('dashboard/setActive', 'Campaigns')
         this.getCampaign()
-        this.getCampaignMarketers()
-        this.getCampaignLinks();
-        this.getLeadStats()
-        this.getCampaignInvitations();
+        
     },
     methods: {
+        getProducts() {
+            this.$api.get('/products?campaign_id=' + this.campaign_id)
+                .then(resp => {
+                    this.one_info_ready = true
+                    this.products = resp.data.data.list;
+                })
+                .catch(err=> {
+                    //this.
+                })
+        },
         getCampaignInvitations() {
             this.$api.get(`/campaigns/${this.campaign_id}/invitations`).then(resp=> {
                 this.campaign_invitations = resp.data.data;
@@ -382,10 +413,21 @@ export default {
         },
         getCampaign() {
             const campaign_id = this.$route.params.id;
-            // get campaign 
-            this.$api.get('/campaigns/' + campaign_id).then(resp=> {
-                this.campaign = resp.data.data;
+
+            this.$store.dispatch('campaign/getCampaign', campaign_id).then(resp=> {
+                this.campaign = resp;
+                this.loading.campaign= false;
+                this.products = resp.products;
+            }).finally(() => {
+                this.loading.campaign = false;
+        
             })
+            // get campaign 
+            /*this.$api.get('/campaigns/' + campaign_id).then(resp=> {
+                                    this.one_info_ready = true
+
+                this.campaign = resp.data.data;
+            })*/
         },
         closeInviteModal() {
             this.$store.commit('dashboard/setActionInviteMarketers', false);
@@ -397,17 +439,21 @@ export default {
             this.$store.commit('dashboard/setActionEditCampaign', false);
         },
         getCampaignMarketers() {
+            this.loading.marketers = true
             this.$api.get(`/campaigns/${this.campaign_id}/marketers`)
                 .then(resp=> {
+                    this.one_info_ready = true;
+                    this.loading.marketers = false;
                     this.campaign_marketers.list = resp.data.data.list;
                     this.campaign_marketers.page_info = resp.data.data.page_info
                 }).catch(err=> {
-
+                    this.loading.marketers = false;
                 })
         },
         getCampaignLinks(){
             this.$api.get(`/campaigns/${this.campaign_id}/links`)
                 .then(resp=> {
+                    this.one_info_ready = true;
                     this.campaign_links.list = resp.data.data.list;
                     this.campaign_links.page_info = resp.data.data.page_info
                     this.campaign_links.stat = resp.data.data.stat
@@ -424,6 +470,10 @@ export default {
             }
             return ""
         },
+        formatMoney(value) {
+            return Intl.NumberFormat('en-US').format(value)
+
+        },
         getLeadStats() {
             this.$api.get(`/insights/leads?campaign_id=${this.campaign_id}&include=overview,group_by_day,top_countries,top_referrers`)
                 .then(resp=> {
@@ -437,6 +487,64 @@ export default {
         
     },
     computed: {
+        userIsCampaignMarketer() {
+            if (this.campaign && Object.keys(this.campaign).length > 0) {
+                //alert(JSON.stringify(this.campaign.campaign_marketers));
+                return this.campaign.campaign_marketers.length > 0
+            }
+            
+        },
+        userContext() {
+            return window.localStorage.getItem('afContext')
+        },
+        computedUrl(){ 
+            return "https://afflee.com/" + this.campaign.slug;
+        },
+        calculatedSales() {
+            let obj = {
+                value: 0,
+                volume: 0,
+            }
+            if (this.userContext === 'business' ) {
+                   
+                if (this.products && this.products.length > 0) {
+                    this.products.forEach(p => {
+                        obj.value += p.sales_amount;
+                        obj.volume += p.sales
+                    })
+                }
+            }
+            
+            else {
+                if (this.campaign.campaign_marketers && this.campaign.campaign_marketers.length > 0) {
+                    const marketer_data = this.campaign.campaign_marketers[0];
+                    obj.value = marketer_data.earned_from_sales;
+                    obj.volume = marketer_data.clicks_driven
+                }
+                
+            }
+            return obj
+        },
+        calculatedClicks() {
+            let obj = {
+                value: 0,
+                volume: 0,
+            }
+            if (this.userContext === 'business' ) {
+                   
+                
+            }
+            
+            else {
+                if (this.campaign.campaign_marketers && this.campaign.campaign_marketers.length > 0) {
+                    const marketer_data = this.campaign.campaign_marketers[0];
+                    obj.value = marketer_data.earned_from_clicks;
+                    obj.volume = marketer_data.clicks_driven
+                }
+                
+            }
+            return obj
+        },
         computedConstants() {
             return {
                 currency: this.campaign && this.campaign.currency,
@@ -454,7 +562,37 @@ export default {
                         if (stat.date) {
                             const day = moment(stat.date).day();
                             // populate day
-                            values[day] = stat.disbursements
+                            values[day] = stat.amount
+                        }
+                    })
+                }
+
+                return {
+                    labels: days,
+                    datasets: [{
+                        label: [`Amount in NGN`],
+                        borderColor: ['#DE5C6E'],
+                        fill: false,
+                        data: values
+
+                    }]
+                }
+
+            }
+            return null
+             
+        },
+        clickDisbursementsGroupByDayChart() {
+            const days = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
+            const values = [0, 0, 0, 0, 0, 0, 0];
+
+            if (this.lead_stats && this.lead_stats.group_by_day) {
+                if (this.stat_filter === "week") { 
+                    this.lead_stats.group_by_day.forEach(stat=> {
+                        if (stat.date) {
+                            const day = moment(stat.date).day();
+                            // populate day
+                            values[day] = stat.amount
                         }
                     })
                 }
@@ -537,7 +675,7 @@ export default {
         campaignCategories() {
             if (this.campaign && this.campaign.campaign_categories && this.campaign.campaign_categories.length > 0) {
 
-                return this.campaign.campaign_categories.map(c => c.category.name).join(", ")
+                return this.campaign.campaign_categories.map(c => c && c.category && c.category.name).join(", ")
             }
             else {
                 return ""
@@ -567,6 +705,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+.share-item {
+    background: $dashboard-background-color;
+    width: 150px;
+    cursor: pointer;
+    height: 150px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+   // background: $dashboard-background-color;
+
+
+    
+    
+}
+.loading {
+    width: 100%;
+    height: 100%;;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $charcoal;
+    font-size: 15px;;
+}
 
 .add-link {
     @include smallbutton;
@@ -655,6 +819,10 @@ export default {
         grid-template-columns: 30% 30% 30%;
         justify-content: space-between;
         margin-bottom: 100px;
+
+        @include media("<=dashbreak") {
+            grid-template-columns: 100%;
+        }
     }
 }
 
@@ -807,13 +975,18 @@ export default {
 
 .page {
     background: white;
-    border: 0.5px solid rgba(211, 211, 211, 0.24);
+   // border: 0.5px solid rgba(211, 211, 211, 0.24);
     margin-bottom: 10px;
+        box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
+    border: 0.5px solid rgba(211, 211, 211, 0.442);
+        padding: 8px 24px;
+
+
     &__header {
         font-size: 16px;
         padding: 16px;
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
 
         &__status {
             display: flex;
@@ -831,6 +1004,9 @@ export default {
         &__content {
             display: flex;
             align-items: center;
+            margin-right: 16px;
+            
+           
         }
         &__ctas{
             display: flex;
@@ -845,10 +1021,15 @@ export default {
         
     }
     &__content {
-        padding: 8px 24px;
         display: grid;
         justify-content: space-between;
         grid-template-columns: 19% 19% 19% 19% 19%;
+
+         @include media('<=dashbreak') {
+            display: grid;
+            grid-template-columns: 45% 45%;
+            justify-content: space-between;
+        }
         &__item {
             //border: 1px solid lightgray;
             font-size: 14px;

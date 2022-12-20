@@ -99,6 +99,10 @@ export default {
     cursor: pointer;
     align-items:center;
     margin-bottom: $sidebar_item_margin;
+
+    @include media("<=dashbreak") {
+        padding: 8px 16px;
+    }
     
     div {
         height: 100%;
@@ -135,11 +139,24 @@ export default {
 
     &__icon {
         margin-right: 16px;
+
+        @include media('<=dashbreak'){
+            width: 20px;
+            height: 20px;
+            svg {
+                height: 20px;
+                height: 20px;
+            }
+        }
     }
     &__text {
         font-weight: 400;
         color: $sidebar_text_color;
         font-size: $sidebar_text_font_size;
+
+        @include media('<=dashbreak'){
+            font-size: 13px;
+        }
 
         &:hover {
             color: black;

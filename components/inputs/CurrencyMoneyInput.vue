@@ -12,7 +12,7 @@ import country_currencies from '../../country_currencies'
 
 
 export default {
-    props: ['country', 'meta'],
+    props: ['country', 'meta', 'classes'],
     data() {
         return {
             country_currencies,

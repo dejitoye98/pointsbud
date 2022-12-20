@@ -44,6 +44,7 @@
                     </div>
                 </div>
             </div>
+            <!--
             <div class="section" v-if="drafts && drafts.length">
                 <div class="section__title section__title--drafts">
                     <p>Pick up from where you left off</p>
@@ -64,7 +65,7 @@
                    
                     
                 </div>
-            </div>
+            </div> -->
         </template>
         
 
@@ -79,235 +80,7 @@
 
 
         <template v-if="mode === 'traffic'">
-            <div class="center"><p>Create a Per-Per-Click Campaign</p></div>
-            <div class="traffic">
-                
-                <div class="steps">
-                    <div class="steps__step" @click="showGeneralDetails">
-
-                        <div class="step-card">
-
-                            <div class="steps__step__header">
-
-                                <div class="steps__step__header__container">
-                                    <p>General Details</p>
-                                    <span>Title, description, budget, display picture...</span>
-                                </div>
-                            </div>   
-                            <div class="steps__step__body">
-                                <div class="form">
-                                    <div class="form__container">
-
-                                        <div class="form-input">
-                                            <span class="error">{{errors.title}}</span>
-                                            <label for="">Campaign Title <span class="red">*</span> </label>
-                                            <input  v-model="campaign.title" type="text">
-                                        </div>
-                                        <div class="form-input">
-                                            <span class="error">{{errors.description}}</span>
-                                            <label for="">Description <span class="red">*</span></label>
-                                            <textarea v-model="campaign.description"> </textarea>
-                                        </div>
-                                        <!--
-                                        <div class="form-input">
-                                            <span class="error">{{errors.title}}</span>
-                                            <label for="">Payment model <span class="red">*</span></label>
-                                            <div class="flex-row">
-                                                <label class="checkbox-label" v-for="(model, index) in template.payment_models" :key="index"><input @change="addPaymentModel(model)"  type="checkbox"/>{{model}}</label>
-                                            
-                                            </div>
-
-                                        </div>-->
-                                        <div class="half">
-                                            <div class="form-input">
-                                                <span class="error">{{errors.budget}}</span>
-                                                <label for="">Budget <span class="red">*</span> <span class="info" @click="setInfoVisibility('budget')">info</span> </label>
-                                                <!--<input  v-model="campaign.budget" type="number"-->
-                                                <div style="width: 98%; height:50px; border-radius:4px;        ">
-                                                    <div class="form-input__info" v-if="extraInfos['budget'].visible">
-                                                        <p> {{extraInfos['budget'].text}} </p>
-                                                    </div>
-                                                    <CurrencyMoneyInput @onChange="setCampaignBudget"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-input">
-                                                <span class="error">{{errors.marketeres_required}}</span>
-                                                <label for="">No. of Marketers Required <span class="info" @click="setInfoVisibility('marketers_required')">info</span></label>
-                                                <div class="form-input__info" v-if="extraInfos['marketers_required'].visible">
-                                                    <p> {{extraInfos['marketers_required'].text}} </p>
-                                                </div>
-                                                <input  v-model="campaign.marketers_required" type="number">
-                                            </div>
-                                        </div>
-
-                                        <div class="half">
-                                            <div class="form-input">
-                                                <span class="error">{{errors.ends_at}}</span>
-                                                <label for="">End Date </label>
-                                                <DatePicker v-model="campaign.ends_at" />
-                                            </div>
-                                            <div class="form-input">
-                                                <label for="">Display Picture</label>
-                                                <input type="file" id="imagefile"  accept="image/*"  @change="addThumbnail">
-                                            </div>
-
-                                        </div>
-
-
-                                    </div>
-                                </div> 
-                            </div>             
-                        </div>
-                        
-
-                    </div>
-                    
-                    
-                    
-                    <div class="steps__step">
-
-                        <div class="step-card">
-
-                            <div class="steps__step__header">
-
-                                <div class="steps__step__header__container">
-                                    <p>Link Details</p>
-                                    <span>Title, description, budget, display picture...</span>
-                                </div>
-                                
-                            </div>
-
-                            <div class="form">
-                                <div class="form__container">
-
-                                    <div class="form-group advert-link"  v-for="(link,index) in campaign.links_to_advertise" :key="index">
-                                            <span class="error">{{link_errors[index]}}</span>
-                                        <div class="advert-link-head" v-if="index !== 0" @click="removeLink(index)">
-                                            <span>Remove</span>
-                                        </div>
-                                        <div class="form-group form-group--row advert-link-row">
-                                            <div class="form-input">
-                                                <label for="">Link URL <span class="red">*</span></label>
-                                                    <input type="text" placeholder="https://link-you-want-to-advertise.com" v-model="link.link">
-                                            </div>
-                                            <div class="form-input" style="border-radius: 4px; ">
-                                                <label for="">Cost per click <span class="info">info</span> <span class="red">*</span></label>
-                                                <!--<input type="number" v-model="link.pay_per_click">-->
-                                                <CurrencyMoneyInput :meta="{index: index}" @onChange="setCostPerClick"/>
-
-                                            </div>
-                                        </div>
-                                        <div class="form-input">
-                                            <label for="">Advert note <span class="info">info</span> <span class="red">*</span></label>
-                                            <textarea placeholder="This is the text that marketers will use in advertising this link to their audience" v-model="link.advert_note"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="add-link">
-                                        <button @click="addLink">Add link</button>
-                                    </div>
-                                </div>
-                        </div>
-                    
-                        </div>
-                        
-
-                    </div>
-                    <div class="steps__step">
-
-                        <div class="step-card">
-
-                            <div class="steps__step__header">
-                                <div class="steps__step__header__container">
-
-                                    <p>Privacy & Settings </p>
-                                    <!--<span>Title, description, budget, display picture...</span>-->
-                                </div>
-                            </div>
-                            <div class="form">
-                                <div class="form__container">
-                                    <div class="form-input">
-                                        <span class="error" v-if="errors.who_can_join">{{errors.who_can_join}}</span>
-                                        <label for="" class="">Who can join this campaign? <span class="red">* </span>  <span class="info" @click="setInfoVisibility('who_can_join')"> info</span></label>
-                                                <div class="form-input__info" v-if="extraInfos['who_can_join'].visible">
-                                                    <p> {{extraInfos['who_can_join'].text}} </p>
-                                                </div>
-                                        <div class="flex-row">
-                                            <label class="checkbox-label"><input v-model="campaign.who_can_join"  value="0" name="who_can_join" type="radio">Anyone<span></span></label>
-                                            <label class="checkbox-label"><input  v-model="campaign.who_can_join" value="1" name="who_can_join" type="radio">Invited marketers<span></span></label>
-                                            <label class="checkbox-label"><input  v-model="campaign.who_can_join" value="2" name="who_can_join" type="radio">Applicants<span></span></label>
-                                        </div>
-                                    </div>
-
-                                    <div class="application_questions" v-if="[2, '2'].includes(campaign.who_can_join)">
-                                        <div v-for="(q, index) in campaign.application_questions" :key="index" class="form-input">
-                                            <span class="error" v-if="index === 0">{{errors.application_questions}}</span>
-                                            <label for="">Application Question {{index + 1}} <span class="red" v-if="index === 0">*</span></label>
-                                            <input type="text" placeholder="eg: How many clicks can you drive to this campaign?" v-model="campaign.application_questions[index]">
-                                        </div>             
-                                        <div class="add-link" style="padding-top: 0px !important">
-                                            <p @click="addQuestion">Add Question</p>
-                                        </div>           
-                                    </div>
-
-                                    <div class="form-input">
-                                        <label for="" class="">Do you intend to add more links to this campaign in the future? <span @click="setInfoVisibility('recurring_links')" class="info">info</span></label>
-                                            <div class="form-input__info" v-if="extraInfos['recurring_links'].visible">
-                                                <p> {{extraInfos['recurring_links'].text}} </p>
-                                            </div>
-                                        <div class="flex-row">
-                                            <label class="checkbox-label"><input v-model="campaign.recurring_links"  value="0" name="intent" type="radio">Yes<span></span></label>
-                                            <label class="checkbox-label"><input  v-model="campaign.recurring_links" value="1" name="intent" type="radio">No<span></span></label>
-                                        </div>
-                                    </div>
-
-                                <!--
-                                <div class="form-input">
-                                    <label class="bold-label" for="">Accept traffic to links from: Default()</label>
-                                    <div style="display: flex; flex-wrap: wrap">
-                                        <label class="checkbox-label"  v-for="continent in Object.keys(continents)" :key="continent"><input type="checkbox" @change="chooseContinent(continent)">All {{continent}}</label>
-                                        <label class="checkbox-label"  v-for="country in countries" :key="country.name"><input  type="checkbox" class="countries-choice" :id="'choice_' + country.code.toLowerCase() " @change="checkCountry(country)">{{country.name}}</label>
-                                    </div>
-                                </div> -->
-                            </div>
-                            
-                        </div>
-                            
-                            
-                        </div>
-                        
-
-                    </div>
-                    <div class="steps__step">
-
-                        <div class="step-card">
-
-                            <div class="steps__step__header">
-                                <div class="steps__step__header__container">
-
-                                    <p>Fraud Prevention </p>
-                                    <span>Title, description, budget, display picture...</span>
-                                </div>
-
-                                <div class="form">
-                                    <div class="form__container">
-                                        <SelectCountriesInput @onCountriesSelected="setCountriesAllowed" important="true" label="What countries should you allow traffic from?"/>
-
-                                    </div>
-                                </div>
-                            
-                            
-                            </div>
-                            
-                            
-                        </div>
-                        
-
-                    </div>
-                    <div class="create-container">
-                        <button @click="createCampaign">Create Campaign</button>
-                    </div>
-                </div>
-            </div>
+            <PayPerClickCampaign/>
 
         </template>
 
@@ -346,14 +119,17 @@ import NewCampaign from  '../components/NewCampaign'; //'../../../components/New
 import CurrencyMoneyInput from '../components/inputs/CurrencyMoneyInput';
 
 
+
 import PayPerSaleCampaign from '../components/PayPerSaleCampaign';
+import PayPerClickCampaign from '../components/PayPerClickCampaign';
 import SelectCountriesInput from '../components/inputs/SelectCountriesInput';
 export default {
     components: {
         SelectCountriesInput,
         CurrencyMoneyInput,
         DatePicker,
-        PayPerSaleCampaign
+        PayPerSaleCampaign,
+        PayPerClickCampaign
     },
     computed: {
         drafts() {
@@ -828,6 +604,61 @@ export default {
 
 
 <style lang="scss" scoped>
+.red {
+    color: red;
+}
+.radio-label {
+    position: relative;
+    
+    display: flex;
+    padding: 8px 8px;
+    align-items: center;
+    border: 1px solid #d6d6e7;
+    border-radius: 3px;
+    margin-right: 8px;;
+    box-shadow: inset 0 1px 4px 0 rgb(227 160 158 / 20%);
+    transition: all 100ms ease-in-out;
+    height:50px;
+
+
+    //background: none !important;
+    
+    //border: 1px solid grey;
+
+    &:hover{
+        background: rgba(211, 211, 211, 0.382);;
+    }
+    &:focus-within {
+        //background: lightgray;
+    }
+    input {
+        cursor: pointer;
+        border: 0;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        background: none !important;
+    }
+
+    .radio-indicator {
+        width: 20px;
+        height: 20px;
+        margin-right: 16px;
+        border-radius: 50%;
+        background: lightgrey;
+        display: block;
+        
+    }
+    .radio-text {
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    input:checked + .radio-indicator {
+        background: $primary;
+    }
+}
 .error {
     font-size: 12px;
     color: red;
@@ -1044,8 +875,8 @@ export default {
     display: flex;
     justify-content: flex-end;
     button {
-        background: $lightaccent;
-        color: white;
+        //background: $lightaccent;
+        color: $primary;
         display: block;
         border-radius: 4px;
         padding: 8px;
@@ -1175,7 +1006,7 @@ export default {
             min-height: 100px;
             border-radius: 5px;
             width: 100%;
-            border: 0.5px solid rgba(211, 211, 211, 0.442);
+            border: 10px solid rgba(211, 211, 211, 0.442);
 
             box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
             //padding: 16px;
@@ -1185,20 +1016,7 @@ export default {
             justify-content: center;
             //padding: 24px;
             margin-left: 50px;
-            &:after {
-                content: attr(data-content);
-                position: absolute;
-                width: 50px;
-                height: 50px;
-                left: -58px;
-                top: 25;
-                background-color: #fff;
-                border: 3px solid rgba(211, 211, 211, 0.442);
-                border-radius: 50%;
-                z-index: 1000;
-                display: flex; justify-content: center;
-                align-items: center;
-            }
+        
             /*&:after {
                 content: "";
                 position: absolute;
@@ -1232,6 +1050,13 @@ export default {
         .step-card {
         
         }
+    }
+}
+
+.form-input-file {
+    position: relative;
+    input {
+
     }
 }
 </style>

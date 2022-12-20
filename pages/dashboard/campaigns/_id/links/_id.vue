@@ -3,7 +3,7 @@
 
         <p class="title">Link Details</p>
         <div class="page">
-            <div class="page__header">
+            <div class="page__header" v-if="details && Object.keys(details).length > 0">
                     <div class="page__header__content"> 
                         <!--<p>Status:</p>-->
 
@@ -151,12 +151,10 @@
 </style>
 
 <script>
-import SwitchComponent from '../../../../../components/inputs/SwitchComponent'
 
 export default {
     layout: 'dashboard',
     components: {
-        SwitchComponent
     },
     data() {
         return {

@@ -1,11 +1,11 @@
 <template>
     <div class="card">
         <div class="card__stat">
-            <BaseDoughnutChart v-if="this.campaign_links && show" :chartData="chartData" :options="options"/>
+            <BaseDoughnutChart v-if="this.campaign && show" :chartData="chartData" :options="options"/>
         </div>
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center">
-            <p class="card__lead">{{campaign_links && campaign_links.stat && parseInt(campaign_links.stat.accepted_clicks) + parseInt(campaign_links.stat.blocked_clicks)}}</p>
-            <p class="card__caption">link clicks</p>
+        <div class="card__content">
+            <p class="card__lead">{{        campaignBudgetLeftInPercentage }}%</p>
+            <p class="card__caption">of budget spent</p>
         </div>
     </div>
 </template>
@@ -16,7 +16,7 @@ export default {
     components: {
         BaseDoughnutChart
     },
-    props:['campaign_links', 'show'],
+    props:['campaign', 'show'],
     data() {
         return {
             options: {
@@ -26,7 +26,7 @@ export default {
                 },
                 
                 responsive: true, 
-                maintainAspectRatio: true, 
+                maintainAspectRatio: false, 
                 animation: {
                     animateRotate: false
                 }
@@ -34,16 +34,32 @@ export default {
         };
     },
     computed: {
-        
-        
+        budgetUsedPercentage() {
+            if (this.campaign) {
+                return 100 - this.campaignBudgetLeftInPercentage
+            }
+        },
+        campaignBudgetLeftInPercentage() {
+            const budget = this.campaign.budget;
+            const budget_left = this.campaign.budget_left;
+            
+
+            if (budget_left) {
+                const percentage = parseFloat(parseFloat(budget_left)/parseFloat(budget)).toFixed(2) * 100
+                return percentage
+            }
+
+            else return 100
+            
+        },
         chartData() {
-            if (this.campaign_links) {
+            if (this.campaign) {
                 return {
-                    labels: ['Accepted Clicks', "Disallowed Clicks"],
+                    labels: ['Budget Spent', "Budget Left"],
                     datasets: [
                     {
-                        backgroundColor: ['lightseagreen', "#DE5C6E"],
-                        data: [parseInt(this.campaign_links.stat.accepted_clicks), parseInt(this.campaign_links.stat.blocked_clicks)],
+                        backgroundColor: ['lightseagreen', '#DE5C6E', ],
+                        data: [this.campaign.budget - this.campaign.budget_left || 0, this.campaign.budget_left ],
                      } ]
                 }
             }
@@ -71,21 +87,29 @@ export default {
     //justify-content: space-between;
     flex-direction: column ;
     &__stat {
-        width: 50%;
+        width: 90%;
         display: flex;
+        //flex-grow: 1;
+        min-height: 0;
         justify-content: center;
+        
         margin: auto;
-        height: auto;
 
+        //height: auto;
+        
         &:deep(.chartjs-render-monitor) {
             position: relative;
             height: 250px !important;
             width: 250px !important;
         }
+        
     }
 
     &__content {
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         text-align: center;
     }
 

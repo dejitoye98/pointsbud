@@ -148,16 +148,19 @@ export default {
     box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
      border: 0.5px solid rgba(211, 211, 211, 0.442);
     background: white;
+    box-sizing: border-box;
 
     @include media("<=t") {
         
     }
     
     &__item {
+        box-sizing: border-box;
         border-right: 0.5px solid rgba(211, 211, 211, 0.442);
         height: 100px;
         padding: 16px;
         width: 30%;
+        min-height: 200px;
         text-align: left;
         display: flex;
         flex-direction: column;

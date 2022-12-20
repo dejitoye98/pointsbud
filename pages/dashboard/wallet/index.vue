@@ -39,6 +39,7 @@
         <Modal title='Fund Wallet' width="half" v-if="actionFundWallet" @close="closeFundWalletModal">
            <FormFundWallet />
        </Modal>
+        
     </div>
 </template>
 
@@ -123,6 +124,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('dashboard', ["actionFundWallet", "actionWithdrawWallet"]),
         userWallet() {
             const wallet = this.wallets.find(a => a.currency === this.currency)
             return wallet;

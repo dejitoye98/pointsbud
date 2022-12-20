@@ -2,13 +2,13 @@
     <div class="container">
         <JoinedCampaignModal :campaign="campaign_just_joined"/>
 
-        <div class="header">
-            <div class="sort">
+        <div class="header desktop">
+            <!--<div class="sort">
                 <p>Sort By: </p>
                 <select v-model="sort_by">
                     <option @click="changeSortBy(type)" v-for="(type, index) in sort_types" :key="index">{{type}}</option>
                 </select>
-            </div>
+            </div> -->
             <div class="search">
                 <div class="search__container">
 
@@ -23,7 +23,7 @@
             
         </div>
         <div class="body">
-            <div class="filter">
+            <div class="filter desktop">
                 <div class="filter__header">
                     <p>Filter</p>
                 </div>
@@ -56,10 +56,53 @@
                     </div>
                 </div>
             </div>
+
+            <div class="mobile-filter mobile">
+                <div class="mobile-filter__header" @click="showMobileFilter"> 
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.40002 2.09998H18.6C19.7 2.09998 20.6 2.99998 20.6 4.09998V6.29998C20.6 7.09998 20.1 8.09998 19.6 8.59998L15.3 12.4C14.7 12.9 14.3 13.9 14.3 14.7V19C14.3 19.6 13.9 20.4 13.4 20.7L12 21.6C10.7 22.4 8.90002 21.5 8.90002 19.9V14.6C8.90002 13.9 8.50002 13 8.10002 12.5L4.30002 8.49998C3.80002 7.99998 3.40002 7.09998 3.40002 6.49998V4.19998C3.40002 2.99998 4.30002 2.09998 5.40002 2.09998Z" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10.93 2.09998L6 9.99998" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <p>Filter</p>
+
+                </div>
+
+                <div class="mobile-filter__body" v-if="show_mobile_filter">
+                    <div class="filter__item">
+                        <label for="">Business Name</label>
+                        <input v-model="filter.business_name" type="text">
+                    </div>
+                   
+                    <div class="filter__item">
+                        <label for="">Campaign Title</label>
+                        <input v-model="filter.campaign_title" type="text">
+                    </div>
+                    <div class="filter__item">
+                        <label for="">Budget</label>
+                        <div class="filter__flex">
+                            <input v-model="filter.min_budget" type="number" placeholder="min">
+                            <input v-model="filter.max_budget" type="number" placeholder="max">
+                        </div>
+                    </div>
+                    <div class="filter__item">
+                        <label for="">Average Pay Per Click</label>
+                        <div class="filter__flex">
+                            <input v-model="filter.min_avg_ppc" type="number" placeholder="min">
+                            <input v-model="filter.max_avg_ppc" type="number" placeholder="max">
+                        </div>
+                    </div>
+                    <div class="mobile-filter__cta">
+                        <button @click="applyFilter">Filter</button>
+                    </div>
+                </div>
+
+            </div>
+
+            
             <template v-if="tab === 'mine' && !my_campaign_indicators.loading && !my_campaign_indicators.empty
                  || tab === 'find' && !find_campaign_indicators.loading && !find_campaign_indicators.empty">
                 <div class="list">
-                    <div class="card" v-for="(campaign, index) in campaigns" :key="index">
+                    <div class="card" v-for="(campaign, index) in campaigns" :key="index" @click="open(campaign.id)">
                         <div class="card__image">
                             <img :src="campaign.thumbnail" alt="">
                         </div>
@@ -67,11 +110,11 @@
                         <div class="card__body">
                             <div class="card__body__header">
                                 <p>{{campaign.title}}</p>
-                                <template v-if="userContext === 'marketer' && tab !== 'mine' && campaign.who_can_join !== 2 && campaign.campaign_marketers.length < 1 ">
-                                    <button @click="join(index)">Join</button>
+                                <template v-if="userContext === 'marketer' && tab !== 'mine' && campaign.who_can_join !== 2 && campaign.campaign_marketers && campaign.campaign_marketers.length < 1 ">
+                                    <button @click.stop="join(index)">Join</button>
                                 </template>
-                                <template v-if="userContext === 'marketer' && tab !== 'mine' && campaign.who_can_join === 2 && campaign.campaign_marketers.length < 1">
-                                    <button>Apply</button>
+                                <template v-if="userContext === 'marketer' && tab !== 'mine' && campaign.who_can_join === 2 && campaign.campaign_marketers &&  campaign.campaign_marketers.length < 1">
+                                    <button @click.stop>Apply</button>
                                 </template>
                                 <template v-else-if="userContext === 'marketer' && (tab === 'mine' || campaign.campaign_marketers.length >0)">
                                     <span>Joined {{daysAgo(campaign && campaign.campaign_marketers.length > 0 && campaign.campaign_marketers[0].createdAt)}}</span>
@@ -134,7 +177,7 @@
                         </div>
                     </div>
                     <div style="width: 100%">
-                        <pagination :records="campaigns_page_info && campaigns_page_info.total || 0" v-model="campaigns_page_info.current_page" :per-page="campaigns_page_info.page_size" @paginate="()=>{}"></pagination>
+                        <pagination :records="campaigns_page_info && campaigns_page_info.total || 0" v-model="current_page" :per-page="campaigns_page_info.page_size" @paginate="applyFilter"></pagination>
                     </div>
                 </div>
             </template>
@@ -146,8 +189,8 @@
             </template>
 
             <template v-else >
-                 <EmptyState  v-if="tab==='mine'" caption="You haven't joined any campaigns"/>
-                 <EmptyState  v-else caption="No campaigns to show"/>
+                 <EmptyState :classes="['white-background']" :show_illustration="false"  v-if="tab==='mine'" caption="You haven't joined any campaigns"/>
+                 <EmptyState :classes="['white-background']"  :show_illustration="false"   v-else caption="No campaigns to show"/>
                  <!--<EmptyState v-else caption="No campaigns to show"/>-->
             </template>
         </div>
@@ -176,6 +219,7 @@ export default {
     },
     data() {
         return {
+            current_page: this.$route.params.page || null,
             campaign_just_joined: {},
             campaigns: {},
             campaigns_page_info: {},
@@ -198,7 +242,8 @@ export default {
             find_campaign_indicators: {
                 loading: true,
                 empty: false
-            }
+            },
+            show_mobile_filter: false,
         }
     },
 
@@ -207,6 +252,12 @@ export default {
     },
 
     methods: {
+        open(id) {
+            this.$router.push('/dashboard/campaigns/' + id)
+        },
+        showMobileFilter() {
+            this.show_mobile_filter = !this.show_mobile_filter
+        },
 
         join(index) {
             this.$api.post(`/campaigns/${this.campaigns[index].id}/join`).then(resp=> {
@@ -263,6 +314,7 @@ export default {
                     this.loading = false
                     this.campaigns = resp.data.data.list;
                     this.campaigns_page_info = resp.data.data.page_info;
+                    this.current_page = resp.data.data.page_info.current_page;
                     if (my_campaigns) {
                         this.my_campaign_indicators.loading = false;
                         if (this.campaigns.length < 1) this.my_campaign_indicators.empty = true
@@ -295,7 +347,7 @@ export default {
             return window.localStorage.getItem('afContext')
         },
         computedQueryString() {
-            return '?' + this.filterQueryString + this.computedSortQuery
+            return '?' + this.computedPageQuery + this.filterQueryString + this.computedSortQuery
         },
         computedSortQuery() {
             let query = 'sort_by='
@@ -315,6 +367,11 @@ export default {
             }
             return query;
         },
+
+        computedPageQuery() {
+            if(this.current_page) return `page=${this.current_page}&`
+            return''
+        },
         filterQueryString() {
             let query = ''
             Object.keys(this.filter).forEach(item => {
@@ -330,7 +387,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.desktop {
+    display: none !important;
+    @include media(">=dashbreak") {
+        display: block !important
+    }
+}
 
+.mobile {
+    display: block !important;
+    @include media(">=dashbreak") {
+        display: none !important
+    }
+}
 input, select{
     background: white !important;
     border: 1.5px solid #ced4da58 !important;
@@ -350,11 +419,21 @@ input, select{
     //position: relative;
     background: white;
 
+    @include media('<=dashbreak') {
+        background: transparent;
+    }
+
 }
 
 
 .body {
     display:flex;
+    //border: 0.5px solid rgba(53, 3, 3, 0.129);
+
+    @include media("<=dashbreak") {
+        flex-direction: column;
+    }
+
 }
 
 .header {
@@ -404,17 +483,30 @@ input, select{
         padding: 16px 16px;
         color: grey;
         font-size: 16px;
+        background: $dashboard-background-color;
         font-weight: 500;
+        //border: $dashboard-background-color;
+        //border: 0.5px solid rgba(53, 3, 3, 0.129);
+        border-right: 0;
+        border-top: 0;
+        border-bottom: 0;
+
         //border-bottom: 0.5px solid rgba(211, 211, 211, 0.442);
     }
 
     button {
-        @include smallbutton-white;
+        @include largebutton;
         max-width: auto !important;
         width: 100% !important;
         //font-size: 14px !;
         border-radius: 5px;
         margin: auto !important;
+        height: 40px !important;
+        max-height: 40px !important;
+        border: 0;
+        color: white;
+        padding: 0;
+
     }
 
     &__item {
@@ -434,7 +526,9 @@ input, select{
             color: grey;
             border-radius: 5px;
             font-size: 15px;
-            border: 1.5px solid rgba(211, 211, 211, 0.442);
+            border: 0.5px solid rgba(53, 3, 3, 0.129);
+            appearance: none;
+            -webkit-appearance: none;
         }
     }
     &__flex {
@@ -447,8 +541,46 @@ input, select{
     }
 }
 
+.mobile-filter {
+    display: block;
+    &__header {
+        padding: 16px 16px;
+        color: $charcoal;
+        background: white;
+        display: flex;
+        justify-content: center;
+        cursor: pointer;
+        &:hover {
+            background: $dashboard-background-color;
+        }
+        svg {
+            margin-right: 10px;
+        }
+    }
+    &__body {
+        background: white;
+        //padding: 16px 0px;
+    }
+    &__cta {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        padding: 8px 16px;
+        
+        button {
+            
+            @include smallbutton;
+        }
+    }
+}
+
 .list {
     width: 80%;
+
+    //max-height: 200vh;
+    @include media("<=dashbreak") {
+        width: 100%;
+    }
 }
 
 .sort {
@@ -464,7 +596,7 @@ input, select{
         appearance: none;
         color: grey;
         font-size: 15px;
-        border: 1.5px solid rgba(211, 211, 211, 0.442);
+        border: 0.5px solid rgba(53, 3, 3, 0.129);
         border-radius: 5px;
         padding: 10px;
     }
@@ -477,7 +609,7 @@ input, select{
     margin: auto;
     //box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
     padding: 16px 16px;
-    border: 0.5px solid rgba(211, 211, 211, 0.442);
+        border: 0.5px solid rgba(53, 3, 3, 0.129);
     background: white !important;
     display: flex;
     flex-direction: row;
@@ -488,10 +620,18 @@ input, select{
 
     &:first-of-type {
         border-top: 0;
+        @include media("<=dashbreak"){
+            border: 0.5px solid rgba(53, 3, 3, 0.129);
+        }
+    }
+    @include media("<=dashbreak"){
+        flex-direction: column;
+        margin-bottom: 8px;
+        background: transparent;
     }
 
     @include media('<=t') {
-        width: 90%;
+        width: 100%;
     }
     //justify-content: space-between;
     &__image {
@@ -501,6 +641,10 @@ input, select{
         justify-content: center;
         background-color: rgba(211, 211, 211, 0.372);
         margin-right: 10px;
+        @include media("<=dashbreak"){
+            width: 100%;
+            
+        }
 
 
         //margin-right: 16px;
@@ -508,6 +652,9 @@ input, select{
             //width: 50%;
             height: auto;
             object-fit: contain;
+            @include media("<=dashbreak"){
+                object-fit: cover;
+            }
         }
     }
     &__body {
@@ -520,7 +667,12 @@ input, select{
             font-size: 16px;
             margin: 8px 0;
             font-weight: 300;
-            color: grey;
+            color: $charcoal;
+            @include media('<=dashbreak') {
+                font-size: 14px;
+                margin-top: 0;
+                margin: 8px 0;
+            }
         }
         &__header {
             display: flex;
@@ -528,6 +680,12 @@ input, select{
             position: relative;
             //border: 1px solid grey;
             justify-content: space-between;
+       
+            @include media("<=dashbreak") {
+                padding-top: 16px;
+                align-items: center;
+            }
+
 
             p {
                 color: black;
@@ -536,13 +694,17 @@ input, select{
                 //display: block;
                 width: 80%;
 
-                @include media('<=t') {
-                    font-size: 26px;
+                @include media('<=dashbreak') {
+                    font-size: 16px;
                 }
             }
             span {
                 color: $primary;
                 font-size: 15px;
+                text-align: end;
+                @include media('<=dashbreak') {
+                    font-size: 14px;
+                }
             }
 
 
@@ -555,6 +717,15 @@ input, select{
                 font-weight: 400;
                 border-radius: 5px;
                 right: 0;
+
+                @include media('<=dashbreak') {
+                    position: relative;
+                    min-height: auto;
+                    height: 30px;
+                    display: flex;
+                    align-items:center;
+
+                }
             }
         }
 
@@ -576,17 +747,27 @@ input, select{
                 //border-top: 0.5px solid rgba(211, 211, 211, 0.442);
                 //border-bottom: 0.5px solid rgba(211, 211, 211, 0.442);
                 padding: 0px 0;
+                 @include media('<=dashbreak') {
+                    width: 45%;
+                    margin-bottom: 8px;
+                }
 
                 label {
-                    color: grey;
+                    color: $charcoal;
                     font-weight: 400;
                     font-size: 15px;;
+                    @include media('<=dashbreak') {
+                        font-size: 13px;
+                    }
                 }
                 
                 p {
                     font-size: 15px;
-                    color: grey;
+                    color: $charcoal;
                     font-weight: 300;
+                    @include media('<=dashbreak') {
+                        font-size: 13px;
+                    }
                 }
                 
             }

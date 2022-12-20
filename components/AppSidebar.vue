@@ -1,22 +1,25 @@
 <template>
-    <div class="side" :class="[collapsed ? 'collapsed' : '']">
-        <div class="side__container">
-            <div class="side__header" :class="[collapsed ? 'side__header--collapsed': '']">
-                <div class="side__header__container" :class="[collapsed ? 'side__header__container--collapsed': '']">
+    <div>
 
-                    <img class="logo" src="../static/logo.svg" alt="" v-if="!collapsed">
-                    <img class="collapsed-logo" src="../static/collapsed-logo.svg" alt="" v-else>
-                    
+        <div class="side desktop"  :class="[collapsed ? 'collapsed' : '']">
+            <div class="side__container">
+                <div class="side__header" :class="[collapsed ? 'side__header--collapsed': '']">
+                    <div class="side__header__container" :class="[collapsed ? 'side__header__container--collapsed': '']">
+
+                        <img class="logo" src="../static/logo.svg" alt="" v-if="!collapsed">
+                        <img class="collapsed-logo" src="../static/collapsed-logo.svg" alt="" v-else>
+                        
+                    </div>
+
                 </div>
 
-            </div>
-
-            <div class="side__body">
-                <sidebar-item :collapsed="collapsed"  :text="'Overview'" link='/overview'/>
-                <sidebar-item :collapsed="collapsed" :text="'Campaigns'" link='/campaigns' />
-                <sidebar-item :collapsed="collapsed" v-if="context === 'marketer'" :text="'Earnings'"  link="/earnings"/>
-                <sidebar-item :collapsed="collapsed" :text="'Wallet'" link='/wallet' />
-                <sidebar-item :collapsed="collapsed" :text="'Settings'" link='/settings' />
+                <div class="side__body">
+                    <sidebar-item :collapsed="collapsed"  :text="'Overview'" link='/overview'/>
+                    <sidebar-item :collapsed="collapsed" :text="'Campaigns'" link='/campaigns' />
+                    <sidebar-item :collapsed="collapsed" v-if="context === 'marketer'" :text="'Earnings'"  link="/earnings"/>
+                    <sidebar-item :collapsed="collapsed" :text="'Wallet'" link='/wallet' />
+                    <sidebar-item :collapsed="collapsed" :text="'Settings'" link='/settings' />
+                </div>
             </div>
         </div>
     </div>
@@ -39,7 +42,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+.desktop {
+    display: none !important;
+    @include media(">=dashbreak") {
+        display: flex !important
+    }
+}
 .collapsed{
     max-width: 65px;
 }

@@ -35,7 +35,7 @@
         <template v-else>
             <table class="table">
                 <tr class="labels">
-                    <th v-for="label in Object.keys(labels)" :key="label">
+                    <th :data-th="label" v-for="(label, index) in Object.keys(labels)" :key="index">
                       <template v-if="labels[label].type === 'photo'">
                       
                       </template>
@@ -45,7 +45,8 @@
                 </tr>
                 <tr v-for="(record, index) in records" :record="record" :key="index" @click="goToRedirLink(record)">
                     <td :class="computeClass(label, record)"  v-for="(label, idx) in Object.keys(labels)" :key="idx" data-th="label" @click="goToRedirLink(record)">
-                      <img v-if="labels[label].type === 'photo' " :class="[labels[label].shape === 'rectangle' ? 'rectangle': '']" :src="format(label, record) || labels[label].placeholder ||  'https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg'">
+                      <template v-if="labels[label].type == 'status'"> {{format(label, record)}} </template>
+                      <img v-else-if="labels[label].type === 'photo' " :class="[labels[label].shape === 'rectangle' ? 'rectangle': '']" :src="format(label, record) || labels[label].placeholder ||  'https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg'">
                       <template v-else-if="labels[label].type === 'debit_or_credit'" class="red"> {{format(label, record)}} </template>
                       
                       <template v-else>{{format(label, record)}}</template>
@@ -122,6 +123,24 @@ export default {
                 classes.push('red')
               }
             }
+            if (this.labels[label] && this.labels[label]['type'] === 'status') {
+              if (record[this.labels[label]['property']] == "Purchased") {
+                classes.push('green')
+              }
+              else if (label === 'Status' && this.labels[label]['property'] === 'is_active') {
+                if (record['is_active'] === 1) {
+                  classes.push('green')
+                }
+                else {
+                  classes.push('red')
+                }
+              }
+              
+              else {
+                classes.push('red')
+              }
+              
+            }
 
             return classes
         },
@@ -153,6 +172,12 @@ export default {
                     }
                     
                 }
+                else if (label === 'Status' && this.labels[label]['type'] === 'status' && record['is_active'] === 1) {
+                    return "Active"
+                }
+                else if  (label === 'Status' && this.labels[label]['type'] === 'status' && record['is_active'] === 0) {
+                  return "Inactive"
+                }
 
                 return value
             }
@@ -179,6 +204,21 @@ export default {
 
 
 <style lang="scss" scoped>
+.green {
+    color: lightseagreen;
+
+}
+.green-fill {
+    background: lightseagreen;
+
+}
+
+.red {
+    color: red;
+}
+.red-fill {
+    background: red;
+}
 button {
   @include editbutton;
 }
@@ -264,6 +304,7 @@ $breakpoint-alpha: 480px; // adjust to your needs
   }
   
   th {
+    min-height: 55px !important;
     display: none; // for accessibility, use a visually hidden method here instead! Thanks, reddit!   
   }
   
@@ -339,7 +380,7 @@ h1 {
   border-radius: .4em;
   overflow: hidden;
   font-size: 15px !important;
- border: 0.5px solid rgba(211, 211, 211, 0.368);
+ //border: 0.5px solid rgba(211, 211, 211, 0.368);
 
   tr {
     border-color: rgba(211, 211, 211, 0.368);
@@ -361,7 +402,8 @@ h1 {
 }
 
 .labels {
-          background: white !important;
+        min-height: 70px;;
+          background:#fafafa;
 
 }
 </style>

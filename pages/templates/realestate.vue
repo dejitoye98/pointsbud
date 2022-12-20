@@ -20,6 +20,10 @@
             <div>
                 
             </div>
+            <p class="section-title">What we offer? </p>
+            <div>
+                
+            </div>
         </div>
     </div>
 </template>

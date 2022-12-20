@@ -62,6 +62,7 @@
                 <div class="advert-link-head" v-if="index !== 0" @click="removeLink(index)">
                     <span>Remove</span>
                 </div>
+                <div class="form-group form-group--row advert-link-row">
                     <div class="form-input">
                         <label for="">Link URL <span>*</span></label>
                             <input type="text" placeholder="https://link-you-want-to-advertise.com" v-model="link.link">
@@ -70,6 +71,7 @@
                         <label for="">Pay per click <span>*</span></label>
                         <input type="number" v-model="link.pay_per_click">
                     </div>
+                </div>
                 <div class="form-input">
                     <label for="">Advert note <span>*</span></label>
                     <textarea :placeholder="'We are selling products. Visit: ' +  link.link" v-model="link.advert_note"></textarea>

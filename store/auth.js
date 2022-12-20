@@ -18,13 +18,13 @@ export const mutations = ({
 
 export const actions = {
     login({ dispatch, commit }, payload) {
-        Cookies.remove('aff-token', { path: '' })
+        this.$cookies.remove('aff-token', { path: '' })
         return new Promise((resolve, reject) => {
             this.$api.post(`/auth/login`, payload)
                 .then(resp => {
                     commit('setLoggedIn', true)
                     commit('setToken', resp.data.data.token)
-                    Cookies.set('aff-token', resp.data.data.token);
+                    this.$cookies.set('aff-token', resp.data.data.token);
                     window.localStorage.setItem('afContext', resp.data.data.context)
 
                     resolve(resp)

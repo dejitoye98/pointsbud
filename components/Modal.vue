@@ -1,5 +1,5 @@
 <template>
-    <div class="modal">
+    <div class="modal" :class="[classes? classes: '']">
         <div class="modal__mask" @click.stop="$emit('close')">
             <div class="modal__container" @click.stop  :class="computedStyles" >
                 <div class="modal__header" v-if="typeof(header) === 'undefined' || header === true">
@@ -23,7 +23,7 @@
 
 <script>
 export default {
-    props: ['title', 'width', 'close', 'header'],
+    props: ['title', 'width', 'close', 'header', 'classes'],
     computed: {
         computedStyles() {
             const styles = [];
@@ -38,8 +38,25 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.sixty-body {
+    .modal__container{
+        width: 60% !important;
+    }
+}
+.full-mask {
+    .modal__mask {
+        margin-left: 0 !important;
+
+    }
+}
+
+.half-body {
+    .modal__container{
+        width: 50% !important;
+    }
+}
 .modal {
-    z-index: 1000;
+    z-index: 10000000000000;
     height: 100vh;
     width: 100%;
     position: fixed;
@@ -55,6 +72,10 @@ export default {
         margin-left: 120px;;
         background-color: rgba(0, 0, 0, 0.612);
         overflow: scroll;
+
+        @include media('<=dashbreak') {
+            margin-left: 0 !important;;
+        }
 
     }
 
@@ -76,8 +97,8 @@ export default {
         }
         &__text {
             color: $faint; 
-            font-weight: 600;
-            font-size: 20px;
+            font-weight: 500;
+            font-size: 18px;
            // text-transform: uppercase;
         }
     }

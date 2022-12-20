@@ -39,7 +39,7 @@
                         <input type="text" v-model="profile.contact_phone_number">
                     </div>
                 </div>
-                <div class="form-item">
+                <!--<div class="form-item">
                     <div class="form-input">
                         <label for="">Occupation</label>
                         <input type="text" v-model="profile.occupation">
@@ -50,7 +50,7 @@
                         <input type="text" v-model="profile.industry">
 
                     </div>
-                </div>
+                </div>-->
 
                 <div class="form-input form-input--full">
                     <label>Bio</label>
@@ -285,7 +285,7 @@ export default {
     position: relative;
 
     @include media('<=dashbreak') {
-        width: 90%;
+        width: 100%;
     }
 }
 .profile {
@@ -369,12 +369,18 @@ export default {
             margin-bottom: 10px;
             text-align: center;
 
+            @include media('<=dashbreak') {
+                //width: 100%;
+                text-align: left;
+            }
+
             label {
                 color: black;
                 font-weight: 500;
+                font-size: 15px;
             }
             p {
-                color: grey;
+                color: $charcoal;
             }
         }
     }

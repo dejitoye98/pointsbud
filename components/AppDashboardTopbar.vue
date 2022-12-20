@@ -1,6 +1,6 @@
 <template>
     <div class="el">
-        <div class="el__container">
+        <div class="el__container desktop">
             <div class="lead">
                 <div class="back">
 
@@ -18,7 +18,7 @@
             </div>
 
             <div class="business-name">
-                <p>{{userDetails.name}}</p>
+                <p>{{userDetails && userDetails.name}}</p>
             </div>
 
             <div class="el__end">
@@ -38,6 +38,61 @@
                     <img src="https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg'" alt="">
                 </div>
             </div>
+
+        </div>
+        <div class="el__container el__container--mobile mobile">
+                <div @click="toggleMobileMenu" class="menu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 7H21" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M3 12H21" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M3 17H21" stroke="#292D32" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="logo">
+                    <img  src="../static/logo.svg" alt="">
+
+                </div>
+                <div class="end">
+                    <div>
+                    <!-- <button v-if="active === 'Campaigns'" @click="createCampaign">Create new campaign</button> -->
+                        <button v-if="userContext === 'business' && typeof(show_create_button) ===  'undefined' " @click="createCampaign">Create new campaign</button> 
+                    </div>
+                    <div class="notif" @click="openNotification">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.02 2.90991C8.70997 2.90991 6.01997 5.59991 6.01997 8.90991V11.7999C6.01997 12.4099 5.75997 13.3399 5.44997 13.8599L4.29997 15.7699C3.58997 16.9499 4.07997 18.2599 5.37997 18.6999C9.68997 20.1399 14.34 20.1399 18.65 18.6999C19.86 18.2999 20.39 16.8699 19.73 15.7699L18.58 13.8599C18.28 13.3399 18.02 12.4099 18.02 11.7999V8.90991C18.02 5.60991 15.32 2.90991 12.02 2.90991Z" stroke="grey" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"/>
+                        <path d="M13.87 3.19994C13.56 3.10994 13.24 3.03994 12.91 2.99994C11.95 2.87994 11.03 2.94994 10.17 3.19994C10.46 2.45994 11.18 1.93994 12.02 1.93994C12.86 1.93994 13.58 2.45994 13.87 3.19994Z" stroke="grey" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M15.02 19.0601C15.02 20.7101 13.67 22.0601 12.02 22.0601C11.2 22.0601 10.44 21.7201 9.90002 21.1801C9.36002 20.6401 9.02002 19.8801 9.02002 19.0601" stroke="grey" stroke-width="1.5" stroke-miterlimit="10"/>
+                        </svg>
+                        <span v-if="unread_notifications_length > 0">{{unread_notifications_length}}</span>
+                    </div>
+                </div>
+
+
+                <div class="mobile-menu" @click.stop="toggleMobileMenu"  v-if="show_mobile_menu">
+                    <div class="mobile-menu__container">
+                        <div class="mobile-menu__header">
+                            <div class="mobile-menu__header__image">
+
+                                <img src="https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg" alt="">
+                            </div>
+                            <div class="mobile-menu__header__detail">
+                                <p>Deji Atoyebi</p>
+                                <p>itisdeji@gmail.com</p>
+                                <a href="/dashboard/my-profile" style="text-decoration:underline">View profile</a>
+                                &middot;
+                                <a @click="logout" style="text-decoration:underline">Logout</a>
+                            </div>
+
+                        </div>
+                        <div class="mobile-menu__body">
+                            <sidebar-item  :text="'Overview'" link='/overview'/>
+                            <sidebar-item  :text="'Campaigns'" link='/campaigns' />
+                            <sidebar-item  v-if="context === 'marketer'" :text="'Earnings'"  link="/earnings"/>
+                            <sidebar-item  :text="'Wallet'" link='/wallet' />
+                            <sidebar-item :text="'Settings'" link='/settings' />
+                        </div>
+                    </div>
+                </div>
 
         </div>
         <div class="el__dropdown">
@@ -60,6 +115,20 @@
 </template>
 
 <style lang="scss" scoped>
+.desktop {
+    display: none !important;
+    @include media(">=dashbreak") {
+        display: flex !important
+    }
+}
+
+.mobile {
+    display: none !important;
+    @include media("<=dashbreak") {
+        display: flex !important
+    }
+}
+
 .business-name {
     font-size: 20px;
     font-weight: 500;
@@ -90,7 +159,7 @@
         position: relative;
         //border: 1px solid black;
         margin-top: -10px;
-        max-height: 90vh;
+        //max-height: 90vh;
         //height: 100px;
         z-index: 10;
 
@@ -150,6 +219,8 @@
         //padding
         justify-content: space-between;
         align-items: center;
+
+        
          
          
      }
@@ -252,23 +323,108 @@
         //letter-spacing: 0.10rem;
     }
 }
+
+.el__container--mobile {
+    .menu {
+        width: 20%
+    }
+    .logo {
+        width:60%;
+        margin:auto;
+        display: flex;
+        justify-content: center;
+        img {
+            width: 100px;
+        }
+    }
+    .end {
+        width: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    .notif {
+        
+    }
+    .mobile-menu {
+        position: fixed;
+        padding: 16px 16px;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        height: 100%;
+        width: 100%;
+        background: transparent;
+        display: flex;
+
+        &__container {
+            min-width: 50%;
+            min-height: 100vh;
+            position: absolute;
+            top: 0;
+            box-sizing: border-box;
+            left: 0;
+            background: white;
+            //padding: 16px;
+            box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+        }
+
+        &__header{
+            //height: 400px;
+            display: flex;
+            align-items: center;
+            border-bottom: 0.5px solid rgba(211, 211, 211, 0.21);;
+            margin-top: 20px;
+            padding: 24px 16px 24px 16px;
+
+            &__detail {
+                font-size: 13px;
+                color: $charcoal;
+                margin-left: 5px;
+                a {
+                    color: $primary;
+                }
+            }
+
+            &__image {
+                //idth: 50%;
+                margin-right: 5px;
+
+                img {
+
+                    border-radius: 50%;
+                    width: 50px;
+                    height: 50px;
+                    object-fit: cover;
+                }
+            }
+        }
+
+        &__body {
+            padding-top: 36px;
+        }
+    }
+}
 </style>
 
 <script>
-import Cookies from 'js-cookie';
 
 import { mapGetters } from "vuex";
 
 import moment from 'moment';
 
 export default {
-    props: ['show_create_button'],
+    props: ['show_create_button', 'context'],
     data() {
         return {
             show_dropdown: '',
+            show_mobile_menu: false,
         }
     },
     methods: {
+        toggleMobileMenu() {
+            this.show_mobile_menu = !this.show_mobile_menu;
+        },
         goBack() {
             window.history.back()
         },
@@ -307,7 +463,8 @@ export default {
         },
         logout() {
             this.$api.post('/auth/logout').then(resp=> {
-                Cookies.remove('aff-token');
+                window.localStorage.removeItem('afUserDetails')
+                this.$cookies.remove('aff-token');
 
                 this.$router.push('/login')
             }).catch(err=> {
