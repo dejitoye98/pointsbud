@@ -341,7 +341,7 @@ $breakpoint-alpha: 480px; // adjust to your needs
     }
 
     &:before {
-      content: attr(data-th) ": "; // who knew you could do this? The internet, that's who.
+      content: attr(data-th) " "; // who knew you could do this? The internet, that's who.
       //font-weight: bold;
 
       // optional stuff to make it look nicer
