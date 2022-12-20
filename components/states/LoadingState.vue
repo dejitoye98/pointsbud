@@ -1,17 +1,17 @@
 <template>
-    <div class="container">
-        <div class="lds-hourglass"></div>
-
-    </div>
+  <div class="container">
+    <div class="lds-hourglass"></div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 .container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 16px;
 }
 
 .lds-hourglass {

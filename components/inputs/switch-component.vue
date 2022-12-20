@@ -1,21 +1,40 @@
 <template>
-            <!-- Rounded switch -->
-        <label class="switch">
-          <input :checked="checked" type="checkbox" @change="execute">
-          <span class="slider round"></span>
-        </label>
+  <!-- Rounded switch -->
+  <label class="switch">
+    <input
+      :checked="checked"
+      v-if="local_checked === true"
+      type="checkbox"
+      v-model="local_checked"
+      @change="execute(false)"
+    />
+    <input :checked="checked" v-else type="checkbox" @change="execute(true)" />
+    <span class="slider round"></span>
+  </label>
 </template>
 
 <script>
 export default {
-  props: ['checked'],
+  props: ["checked"],
+  data() {
+    return {
+      local_checked: null
+    };
+  },
+  watch: {
+    checked(value) {
+      this.local_checked = this.value;
+    }
+  },
+  created() {
+    this.local_checked = this.checked;
+  },
   methods: {
-    execute() {
-      this.$emit('execute')
-    },
+    execute(state) {
+      this.$emit("execute", state);
+    }
   }
-    
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -42,8 +61,8 @@ export default {
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .slider:before {
@@ -54,8 +73,8 @@ export default {
   left: 4px;
   bottom: 4px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {

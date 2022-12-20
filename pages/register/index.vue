@@ -164,11 +164,13 @@
                   </div>
                 </div>
               </div>
-              <div class="form-input-file">
-                <div class="file-container">
-                  <label id="display-picture-label">Upload Logo</label>
-                  <input @change="uploadLogo" type="file" id="display-picture" accept="image/*" />
-                </div>
+              <div class="image-container">
+                <ImageUpload
+                  product_index="1"
+                  image_index="1"
+                  @onImageUploaded="imageUploaded"
+                  label="Upload Logo"
+                />
               </div>
             </div>
           </div>
@@ -553,14 +555,21 @@
           <template v-if="verification_needed">
             <div class="verify">
               <div class="verify__inputs">
-                <input class="verify__inputs__input" v-model="verification_otp[0]" type="text" />
+                <input class="verify__inputs__input" v-model="verification_otp" type="text" />
+
+                <!--<input class="verify__inputs__input" v-model="verification_otp[0]" type="text" />
                 <input class="verify__inputs__input" v-model="verification_otp[1]" type="text" />
                 <input class="verify__inputs__input" v-model="verification_otp[2]" type="text" />
-                <input class="verify__inputs__input" v-model="verification_otp[3]" type="text" />
+                <input class="verify__inputs__input" v-model="verification_otp[3]" type="text" />-->
               </div>
               <div style="width: 100%; display: flex; justify-content: center;">
                 <button @click="activateAccount" :disabled="!verificationOtpFilled">Activate Account</button>
               </div>
+              <p class="verify__resend" v-if="can_attempt_resend">
+                Didn't get an email?
+                <span class="red" @click="resendOtp">Resend OTP</span>
+              </p>
+              <p class="verify__resend" v-else>You can attempt resend in {{reattempt_in}} seconds</p>
             </div>
           </template>
         </div>
@@ -579,9 +588,6 @@ export default {
   components: {
     VuePhoneNumberInput
   },
-  middleware({ redirect }) {
-    return redirect("/");
-  },
 
   data() {
     return {
@@ -591,9 +597,12 @@ export default {
       successful: false,
       status: "",
       verification_needed: false,
-      verification_otp: ["", "", "", ""],
+      verification_otp: "",
       created_user: {},
       countries: countries,
+      can_attempt_resend: false,
+      reattempt_in: 30,
+      attemptInterval: null,
 
       is_student: false,
 
@@ -676,6 +685,45 @@ export default {
     this.setUpPasteAndEnterOtpEvent();
   },
   methods: {
+    imageUploaded(meta) {
+      if (vm.mode === 1) {
+        this.business.profile_photo = meta.image;
+      } else {
+        this.marketer.profile_photo = meta.image;
+      }
+    },
+    setReAttemptTimeout() {
+      const vm = this;
+      vm.can_attempt_resend = false;
+      vm.reattempt_in = 30;
+      this.attemptInterval = setInterval(() => {
+        if (vm.reattempt_in !== 0) {
+          vm.reattempt_in -= 1;
+        } else {
+          vm.can_attempt_resend = true;
+          clearInterval(this.attemptInterval);
+        }
+      }, 1000);
+    },
+    resendOtp() {
+      this.setReAttemptTimeout();
+
+      this.$api
+        .post("/users/resend-otp", {
+          email: this.business.email || this.marketer.email
+        })
+        .then(resp => {
+          this.$store.dispatch("dashboard/actionShowSuccessToast", {
+            message: "An email with your OTP has been sent"
+          });
+        })
+        .catch(err => {
+          const error = (err.response && err.response.data.data) || err;
+          this.$store.dispatch("dashboard/actionShowErrorToast", {
+            message: error
+          }); // show error
+        });
+    },
     uploadLogo() {
       let input = document.getElementById("display-picture");
 
@@ -744,7 +792,7 @@ export default {
       this.$api
         .post("/users/activate", {
           email: this.mode === 1 ? this.business.email : this.marketer.email,
-          token: this.verification_otp.join("")
+          token: this.verification_otp
         })
         .then(resp => {
           if (this.mode === 1) payload = this.business;
@@ -918,7 +966,8 @@ export default {
       return false;
     },
 
-    register() {
+    register(e) {
+      e.preventDefault();
       this.validateInformation();
 
       this.canFinish();
@@ -942,8 +991,10 @@ export default {
             this.successful = true;
             this.can_go_back = false;
 
-            this.setUpPasteAndEnterOtpEvent();
+            //this.setUpPasteAndEnterOtpEvent();
             this.verification_needed = true;
+            this.setReAttemptTimeout();
+
             //login
             this.status =
               "We've sent a verification code to your email. Please paste the 4 digit code to complete the creation of your account";
@@ -1000,13 +1051,7 @@ export default {
       return this.$route.query.intent;
     },
     verificationOtpFilled() {
-      let filled = true;
-      this.verification_otp.forEach(digit => {
-        if (!digit) {
-          filled = false;
-        }
-      });
-      return filled;
+      return this.verification_otp.length === 4;
     }
   }
 };
@@ -1014,7 +1059,15 @@ export default {
 
 
 <style lang="scss" scoped>
-.required {
+.image-container {
+  position: relative;
+  padding: 5px 0;
+  display: grid;
+  grid-template-columns: 24% 24% 24% 24%;
+  justify-content: space-between;
+  //margin-bottom: 32px;
+}
+.ad .required {
   color: red;
   margin-left: 5px;
 }
@@ -1135,6 +1188,19 @@ export default {
 }
 .verify {
   width: 100%;
+  &__resend {
+    font-size: 15px;
+    color: $faint;
+    font-weight: 300;
+    width: 90%;
+    margin: auto;
+    margin-bottom: 8px;
+    cursor: pointer;
+
+    span {
+      color: $primary;
+    }
+  }
   &__inputs {
     display: flex;
     width: 40%;
@@ -1143,7 +1209,7 @@ export default {
 
     input {
       @include plain-form-input;
-      width: 70px;
+      width: 100%;
       height: 70px;
       display: block;
       border-radius: 5px;
@@ -1493,6 +1559,8 @@ export default {
     &__item {
       cursor: pointer;
       border: 0.5px solid lightgrey;
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+
       border-radius: 10px;
       padding: 16px 20px;
       display: flex;
@@ -1500,6 +1568,7 @@ export default {
       @include media("<=tablet") {
         margin-right: 0 !important;
         margin-bottom: 16px;
+        width: 100%;
       }
       &:first-of-type {
         margin-right: 16px;

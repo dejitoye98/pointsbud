@@ -1,5 +1,7 @@
 <template>
   <div class="page">
+    <Toast />
+
     <div class="header">
       <div class="header__container">
         <div class="logo">
@@ -23,9 +25,9 @@
               <input v-model="payload.password" type="password" />
             </div>
             <div class="flex-row">
-              <label for class="check-label">
+              <!--<label for class="check-label">
                 <input v-model="remember" type="checkbox" />Remember me
-              </label>
+              </label>-->
               <a href="#" @click="changeMode('forgot')">Forgot password</a>
             </div>
 
@@ -77,10 +79,12 @@
           class="verify__instruction"
         >Please complete your registration by entering the 4-digit code that was sent to your email address.</div>
         <div class="verify__inputs">
+          <input type="text" class="verify__inputs__input" v-model="verification_otp" />
+          <!--
           <input class="verify__inputs__input" v-model="verification_otp[0]" type="text" />
           <input class="verify__inputs__input" v-model="verification_otp[1]" type="text" />
           <input class="verify__inputs__input" v-model="verification_otp[2]" type="text" />
-          <input class="verify__inputs__input" v-model="verification_otp[3]" type="text" />
+          <input class="verify__inputs__input" v-model="verification_otp[3]" type="text" />-->
         </div>
         <div class="button-container">
           <button
@@ -88,6 +92,11 @@
             :disabled="!verificationOtpFilled || loading"
           >Activate Account</button>
         </div>
+        <p class="verify__resend" v-if="can_attempt_resend">
+          Didn't get an email?
+          <span class="red" @click="resendOtp">Resend OTP</span>
+        </p>
+        <p class="verify__resend" v-else>You can attempt resend in {{reattempt_in}} seconds</p>
       </div>
     </template>
   </div>
@@ -96,24 +105,25 @@
 
 <script>
 export default {
-  middleware({ redirect }) {
-    return redirect("/");
-  },
   data() {
     return {
       mode: "login",
       error: "",
 
-      verification_otp: ["", "", "", ""],
+      verification_otp: "",
 
       loading: false,
+      can_attempt_resend: false,
       forgot_success: false,
+      reattempt_in: 30,
       payload: {
         email: "",
         password: ""
       },
       remember: false,
-      logged_in_user: {}
+      logged_in_user: {},
+      attemptInterval: null,
+      resending: false
     };
   },
   computed: {
@@ -121,13 +131,7 @@ export default {
       return this.$route.query.intent;
     },
     verificationOtpFilled() {
-      let filled = true;
-      this.verification_otp.forEach(digit => {
-        if (!digit) {
-          filled = false;
-        }
-      });
-      return filled;
+      return this.verification_otp.length === 4;
     }
   },
   created() {
@@ -144,6 +148,38 @@ export default {
     });
   },
   methods: {
+    setReAttemptTimeout() {
+      const vm = this;
+      vm.can_attempt_resend = false;
+      vm.reattempt_in = 30;
+      this.attemptInterval = setInterval(() => {
+        if (vm.reattempt_in !== 0) {
+          vm.reattempt_in -= 1;
+        } else {
+          vm.can_attempt_resend = true;
+          clearInterval(this.attemptInterval);
+        }
+      }, 1000);
+    },
+    resendOtp() {
+      this.setReAttemptTimeout();
+
+      this.$api
+        .post("/users/resend-otp", {
+          email: this.payload.email
+        })
+        .then(resp => {
+          this.$store.dispatch("dashboard/actionShowSuccessToast", {
+            message: "An email with your OTP has been sent"
+          });
+        })
+        .catch(err => {
+          const error = (err.response && err.response.data.data) || err;
+          this.$store.dispatch("dashboard/actionShowErrorToast", {
+            message: error
+          }); // show error
+        });
+    },
     setUpPasteAndEnterOtpEvent() {
       const verify_inputs = window.document.getElementsByClassName(
         "verify__inputs__input"
@@ -180,11 +216,12 @@ export default {
       this.$api
         .post("/users/activate", {
           email: this.logged_in_user.email,
-          token: this.verification_otp.join("")
+          token: this.verification_otp
         })
         .then(resp => {
           this.loading = false;
-          this.$router.push({ path: "/dashboard/campaigns" });
+          this.login();
+          // this.$router.push({ path: "/dashboard/campaigns" });
         })
         .catch(err => {
           console.log(err);
@@ -196,7 +233,10 @@ export default {
     goHome() {
       this.$router.push("/");
     },
-    login() {
+    login(e = null) {
+      if (e) {
+        e.preventDefault();
+      }
       if (!this.payload.email || !this.payload.password) {
         this.error = "Please enter all fields";
         return;
@@ -215,11 +255,9 @@ export default {
 
           this.logged_in_user = resp.data.data;
           if (this.logged_in_user.email_verified) {
-            /*this.$router.push({
-                            path: '/dashboard/campaigns'
-                        })*/
             window.open("/dashboard/campaigns", "_self");
           } else {
+            this.resendOtp();
             this.mode = "activate";
             //dthis.setUpPasteAndEnterOtpEvent()
           }
@@ -274,6 +312,20 @@ export default {
   margin-top: 50px;
   width: 100%;
 
+  &__resend {
+    font-size: 15px;
+    color: $faint;
+    font-weight: 300;
+    width: 90%;
+    margin: auto;
+    margin-bottom: 8px;
+    cursor: pointer;
+
+    span {
+      color: $primary;
+    }
+  }
+
   &__instruction {
     font-size: 16px;
     font-weight: 300;
@@ -289,7 +341,7 @@ export default {
 
     input {
       @include plain-form-input;
-      width: 70px;
+      width: 100%;
       height: 70px;
       display: block;
       border-radius: 5px;
