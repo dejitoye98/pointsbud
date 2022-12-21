@@ -155,9 +155,15 @@
             <div class="mobile-menu__header__detail">
               <p>Deji Atoyebi</p>
               <p>itisdeji@gmail.com</p>
-              <a href="/dashboard/my-profile" style="text-decoration:underline">View profile</a>
-              &middot;
-              <a @click="logout" style="text-decoration:underline">Logout</a>
+              <template v-if="userContext === 'marketer'">
+                <a
+                  href="/dashboard/my-profile"
+                  v-if="userContext === 'marketer'"
+                  style="cursor:pointer"
+                >View profile</a>
+                &middot;
+              </template>
+              <a @click="logout" style="cursor:pointer">Logout</a>
             </div>
           </div>
           <div class="mobile-menu__body">
@@ -422,6 +428,28 @@
     justify-content: flex-end;
   }
   .notif {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    svg {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+    }
+    span {
+      position: absolute;
+      width: 15px;
+      background: red;
+      border-radius: 50%;
+      height: 15px;
+      bottom: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      color: white;
+      align-items: center;
+      font-size: 13px;
+    }
   }
   .mobile-menu {
     position: fixed;
@@ -520,6 +548,7 @@ export default {
     },
 
     openNotification() {
+      this.$router.push("/dashboard/notifications");
       if (this.show_dropdown == "notification") {
         this.show_dropdown = "";
         return;

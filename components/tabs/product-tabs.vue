@@ -1,44 +1,53 @@
 <template>
-    <div>
-        <base-tabs 
-            :params="params"
-            :business_tabs="business_tabs"
-            ></base-tabs>
-    </div>
+  <div>
+    <base-tabs
+      v-if="params && Object.keys(params).length > 0"
+      :params="params"
+      :business_tabs="business_tabs"
+    ></base-tabs>
+  </div>
 </template>
 
 <script>
 export default {
-    props: ["params"],
-    data() {
-        return{
-            
-            marketer_tabs: [],
-            business_tabs: [{
-                name: 'Info',
-                route: '/dashboard/products/:id'
-
-            }, {
-                name:"Orders",
-                route: '/dashboard/products/:id/orders'
-
-            }, {
-                name: "Sales",
-                route: '/dashboard/products/:id/sales'
-
-            }, ]
-        }
-    },
-    computed: {
-        userContext() {
-            return window.localStorage.getItem('afContext');
+  props: ["params"],
+  data() {
+    return {
+      marketer_tabs: [],
+      business_tabs: [
+        {
+          name: "Info",
+          route: "/dashboard/products/:id",
+          show: true
         },
-        userDetails() {
-            return JSON.parse(window.localStorage.getItem('afUserDetails'));
+        {
+          name: "Orders",
+          route: "/dashboard/products/:id/orders",
+          show: true
         },
-        canChangePassword() {
-            return this.password.old_password && this.password.new_password && this.password.confirm_password && (this.password.new_password === this.password.confirm_password);
+        {
+          name: "Sales",
+          route: "/dashboard/products/:id/sales",
+          show: true
         }
+      ]
+    };
+  },
+  computed: {
+    userContext() {
+      return window.localStorage.getItem("afContext");
     },
-}
+    userDetails() {
+      return JSON.parse(window.localStorage.getItem("afUserDetails"));
+    },
+    canChangePassword() {
+      return (
+        this.password.old_password &&
+        this.password.new_password &&
+        this.password.confirm_password &&
+        this.password.new_password === this.password.confirm_password
+      );
+    }
+  }
+};
 </script>

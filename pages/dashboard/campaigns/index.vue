@@ -148,7 +148,7 @@ export default {
 
 <style lang="scss" scoped>
 .campaigns-list {
-    width: 80%;
+    width: 100%;
     //margin: auto;
 }
 .empty-state {
