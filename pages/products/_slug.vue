@@ -357,7 +357,6 @@ export default {
     p {
       text-align: center;
       @include media("<=t") {
-        text-align: left;
       }
       color: $faint;
       font-size: 14px;
