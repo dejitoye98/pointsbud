@@ -42,8 +42,6 @@ export default {
             route = tab.route.replace(":" + key, this.params[key]);
           }
         });
-      } else {
-        alert("params doesn't exist");
       }
       return route;
     },

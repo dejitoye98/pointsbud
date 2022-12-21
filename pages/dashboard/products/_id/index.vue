@@ -130,6 +130,13 @@
               <p>{{product.description}}</p>
             </div>
             <div class="page__content__item">
+              <p>Public URL</p>
+              <a
+                class="link"
+                :href="'https://afflee.com/products/' + product.slug"
+              >afflee.com/products/{{product.slug}}</a>
+            </div>
+            <div class="page__content__item">
               <p>Advert Note</p>
               <p>{{product.advert_note}}</p>
             </div>
@@ -404,6 +411,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.link {
+  text-decoration: underline;
+  color: $primary;
+}
 .share-product {
   &__detail {
     margin-bottom: 16px;
