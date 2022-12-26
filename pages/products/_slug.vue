@@ -546,6 +546,10 @@ export default {
       display: flex;
       justify-content: flex-start;
 
+      @include media("<=t") {
+        height: 300px;
+      }
+
       img {
         object-fit: cover;
         width: 100%;
@@ -562,6 +566,10 @@ export default {
       justify-content: flex-start;
       //border: 1px solid grey;
       //@debugheight: 150px;
+      @include media("<=t") {
+        grid-template-columns: 29% 29% 29%;
+        justify-content: space-between;
+      }
       &__item {
         margin-bottom: 20px;
         height: 100px;
