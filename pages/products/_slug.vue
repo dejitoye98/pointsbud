@@ -439,8 +439,8 @@ export default {
   justify-content: space-between;
 
   @include media("<=t") {
-    padding: 0;
-    width: 85%;
+    padding: 0 32px;
+
     margin: auto;
   }
 
