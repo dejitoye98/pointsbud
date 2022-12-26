@@ -134,27 +134,25 @@
         </div>
 
         <div class="tabbed-content__body" v-if="activeTab === 'Description'">
-          <div class>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-          </div>
+          <div class>{{product.description}}</div>
         </div>
         <div class="tabbed-content__body" v-if="activeTab === 'Features'">
-          <div class>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+          <div class="tab-content__body__item tab-content__body__item--features">
+            <ul>
+              <li v-for="(f, index) in productFeatures" :key="index">{{f}}</li>
+            </ul>
           </div>
         </div>
         <div class="tabbed-content__body" v-if="activeTab === 'Delivery Details'">
-          <div class>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-            It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+          <div class="tab-content__body__item tab-content__body__item--delivery">
+            <div
+              v-for="(d, index) in productDeliveryDetails"
+              :key="index"
+              style="margin-bottom: 16px"
+            >
+              <label style="font-weight:800">{{d.name}}</label>
+              <p>{{d.value}}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -173,6 +171,13 @@ export default {
     this.getProduct();
   },
   computed: {
+    productFeatures() {
+      if (this.product && this.product.meta) {
+        const features = JSON.parse(this.product.meta);
+        return features;
+      }
+      return [];
+    },
     computedPrice() {
       if (this.product) {
         if (this.qty === 1) {
@@ -187,13 +192,20 @@ export default {
     productImages() {
       if (this.product && this.product.images)
         return JSON.parse(this.product.images);
+    },
+    productDeliveryDetails() {
+      if (this.product && this.product.delivery_details) {
+        return JSON.parse(this.product.delivery_details);
+      } else {
+        return [];
+      }
     }
   },
 
   data() {
     return {
       activeTab: "Description",
-      tabs: ["Description", "Features", "Delivery Details", "Variations"],
+      tabs: ["Description", "Features", "Delivery Details"],
       /*images: [
                 "https://media-cdn.tripadvisor.com/media/photo-w/15/db/e4/ae/photo0jpg.jpg",
                 "https://media-cdn.tripadvisor.com/media/photo-o/19/e8/66/c9/img-20191030-wa0014-largejpg.jpg",
@@ -336,6 +348,9 @@ export default {
   &__container {
     width: 70%;
     margin: auto;
+    @include media("<=t") {
+      width: 95%;
+    }
   }
   &__tab {
     width: 100%;
@@ -371,6 +386,20 @@ export default {
     font-weight: 300;
     line-height: 30px;
     text-align: justify;
+
+    &__item {
+      &--features {
+        ul {
+        }
+      }
+      &--delivery {
+        div {
+          label {
+            font-weight: 700;
+          }
+        }
+      }
+    }
   }
 }
 .header {
@@ -408,6 +437,12 @@ export default {
   //border-bottom: 1px solid grey;
 
   justify-content: space-between;
+
+  @include media("<=t") {
+    padding: 0;
+    width: 85%;
+    margin: auto;
+  }
 
   &__choosequantity {
     display: flex;
@@ -494,7 +529,7 @@ export default {
     grid-template-columns: 45% 45%;
     justify-content: space-between;
 
-    @include media {
+    @include media("<=t") {
       display: grid;
       grid-template-columns: 100%;
     }
