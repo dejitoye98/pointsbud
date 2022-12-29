@@ -1065,8 +1065,15 @@ if (process.browser) {
 export default {
   head() {
     return {
-      title: "The performance marketing platform for Africa",
-      meta: [] // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+      title: "Afflee | Africa's No.1 Influencer Marketing Platform",
+      meta: [
+        {
+          hid: "description",
+          name: "descripton",
+          content:
+            "We connect businesses with influencers, micro-influencers and content creators to push their campaigns"
+        }
+      ] // hid is used as unique identifier. Do not use `vmid` for it as it will not work
     };
   },
   data() {
