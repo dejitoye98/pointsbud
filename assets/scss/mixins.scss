@@ -254,7 +254,7 @@
         outline: none;
         font-size: 14px;
         //color: $faint;
-        color: black;
+        color: $charcoal;
         font-weight: 400;
         appearance: none;
         background-color: rgba(211, 211, 211, 0.046);
@@ -266,4 +266,55 @@
     .input {
         cursor: pointer;
     }
+}
+
+@mixin radio-label {
+  position: relative;
+
+  display: flex;
+  padding: 8px 8px;
+  align-items: center;
+  border: 1.5px solid #ced4da58 !important;
+  border-radius: 3px;
+  margin-right: 8px;
+  transition: all 100ms ease-in-out;
+  height: 50px;
+
+  //background: none !important;
+
+  //border: 1px solid grey;
+
+  &:hover {
+    background: rgba(211, 211, 211, 0.382);
+  }
+  &:focus-within {
+    //background: lightgray;
+  }
+  input {
+    cursor: pointer;
+    border: 0;
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0;
+    background: none !important;
+  }
+
+  .radio-indicator {
+    width: 20px;
+    height: 20px;
+    margin-right: 16px;
+    border-radius: 50%;
+    background: lightgrey;
+    display: block;
+  }
+  .radio-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: $faint;
+  } 
+  input:checked + .radio-indicator {
+    background: $primary;
+  }
+    
 }

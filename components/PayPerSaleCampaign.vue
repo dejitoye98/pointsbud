@@ -230,7 +230,7 @@
                     </div>
                   </div>
                   <div class="form-input">
-                    <label for>Market Commission Type</label>
+                    <label for>Marketer Commission Type</label>
                     <select v-model="product.marketer_commission_type">
                       <option value="flat">Flat</option>
                       <option value="percent">Percent</option>
@@ -468,7 +468,10 @@
             <div class="form-input">
               <label for class>
                 Do you intend to add more products to this campaign in the future?
-                <span @click="setInfoVisibility('recurring_links')" class="info">info</span>
+                <span
+                  @click="setInfoVisibility('recurring_links')"
+                  class="info"
+                >info</span>
               </label>
               <div class="form-input__info" v-if="extraInfos['recurring_links'].visible">
                 <p>{{extraInfos['recurring_links'].text}}</p>

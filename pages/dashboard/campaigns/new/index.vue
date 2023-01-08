@@ -1,125 +1,37 @@
 <template>
-  <div class="container">
-    <template v-if="mode === 'choice'">
-      <div class="section">
-        <div class="section__title">
-          <p>New Campaign</p>
-          <span>Choose objective</span>
-        </div>
-        <div class="section__body">
-          <div class="new-card" @click="changeMode('traffic')">
-            <div class="svg-container">
-              <img src="../static/traffic.png" alt />
-            </div>
-
-            <p>Drive traffic</p>
-            <span>Create awareness</span>
-          </div>
-
-          <!--
-          <div class="new-card">
-            <div class="svg-container">
-              <img src="../static/generate-leads.png" alt />
-            </div>
-
-            <p>Generate Leads</p>
-            <span>Attract new customers</span>
-          </div>-->
-          <div class="new-card" @click="changeMode('sell')">
-            <div class="svg-container">
-              <img src="../static/generate-sales.png" alt />
-            </div>
-
-            <p>Sell Product</p>
-            <span>Sell a product</span>
-          </div>
-
-          <div class="new-card" @click="changeMode('reservations')">
-            <div class="svg-container">
-              <img src="../static/reservations.svg" alt />
-            </div>
-
-            <p>Host Reservations</p>
-            <span>Typically for restaurants, hotels, etc</span>
-          </div>
-
-          <div class="new-card" @click="changeMode('reservations')">
-            <div class="svg-container">
-              <img src="../static/service-bookings.svg" alt />
-            </div>
-
-            <p>Service Bookings</p>
-            <span>Typically for service providers</span>
-          </div>
-        </div>
-      </div>
-      <!--
-            <div class="section" v-if="drafts && drafts.length">
-                <div class="section__title section__title--drafts">
-                    <p>Pick up from where you left off</p>
-                </div>
-
-                <div class="section__body">
-                    <div class="draft draft-card" v-for="(draft, index) in drafts" :key="index">
-                        <div class="draft-card__header">
-                            <p>Draft</p>
-                            <button>Remove</button>
-                        </div>
-                        <div class="draft-card__body">
-
-                            <p>{{}}</p>
-                            <p>Last edited: Nov 12, 2022</p>
-                        </div>
-                    </div>
-                   
-                    
-                </div>
-      </div>-->
-    </template>
-
-    <template v-if="mode === 'traffic'">
-      <PayPerClickCampaign />
-    </template>
-
-    <template v-if="mode === 'sell'">
-      <PayPerSaleCampaign />
-    </template>
+  <div>
+    <NewCampaign />
   </div>
 </template>
-
-
-
-
 
 <script>
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
 
-import continents from "../continents"; //'../../continents'
-import countries from "../countries";
+import continents from "../../../../continents";
+import countries from "../../../../countries";
 
-import NewCampaign from "../components/NewCampaign"; //'../../../components/NewCampaign';
-import CurrencyMoneyInput from "../components/inputs/CurrencyMoneyInput";
+import SelectCountriesInput from "../../../../components/inputs/SelectCountriesInput";
+import NewCampaign from "../../../../components/NewCampaign";
+import CurrencyMoneyInput from "../../../../components/inputs/CurrencyMoneyInput";
+import FormCreator from "../../../../components/pagebuilder/FormCreator";
 
-import PayPerSaleCampaign from "../components/PayPerSaleCampaign";
-import PayPerClickCampaign from "../components/PayPerClickCampaign";
-import SelectCountriesInput from "../components/inputs/SelectCountriesInput";
+import Toast from "../../../../components/general/Toast";
+
+import moment from "moment";
+import SelectCountriesInputVue from "../../../../components/inputs/SelectCountriesInput.vue";
 export default {
+  layout: "dashboard-collapsed-sidebar",
   components: {
+    DatePicker,
     SelectCountriesInput,
     CurrencyMoneyInput,
-    DatePicker,
-    PayPerSaleCampaign,
-    PayPerClickCampaign
+    Toast,
+    NewCampaign,
+    FormCreator
   },
-  computed: {
-    drafts() {
-      return (
-        (window.localStorage.getItem("drafts") &&
-          JSON.stringify(window.localStorage.getItem("drafts"))) ||
-        []
-      );
-    }
+  created() {
+    this.$store.commit("dashboard/setDashboardTitle", "New Campaign");
   },
   data() {
     return {
@@ -179,78 +91,16 @@ export default {
         pay_currency: "NGN",
         conversion_media: [],
         application_questions: [""],
-        categories: ["", ""],
-
-        products: {
-          hosted: "",
-          list: [{}]
-        }
+        categories: ["", ""]
       },
       template: {
         payment_models: ["Pay per click", "Pay per lead", "Pay per sale"]
       },
-      loading: false,
-      product_template: {
-        name: "",
-        description: "",
-        marketer_commission: "",
-        marketer_commission_type: "",
-        thumbnail: "",
-        images: [],
-        advert_note: "",
-        delivery_details: {},
-        variation_details: {},
-        meta: {},
-        qty: {},
-        unit_price: 0,
-        currency: "",
-        discount: 0,
-        discount_type: ""
-        //refund_details:
-      },
-
-      draftId: this.$route.query["draft"] || ""
+      loading: false
     };
   },
-  mounted() {
-    if (!this.draftId) {
-      this.draftId = Date.now();
-    }
-
-    // save every 2 seconds
-  },
+  computed: {},
   methods: {
-    autoSave() {
-      if (this.mode === "choice") return;
-      console.log("autosaving");
-      let draft = {
-        id: this.draftId,
-        campaign: this.campaign
-      };
-      let drafts =
-        (window.localStorage.getItem("drafts") &&
-          JSON.parse(window.localStorage.getItem("drafts"))) ||
-        [];
-
-      const draft_exists = drafts.find(d => d.id === this.draftId);
-      if (draft_exists) {
-        const index = drafts.indexOf(draft_exists);
-        drafts[index] = draft;
-      } else {
-        drafts.push(draft);
-      }
-      drafts = JSON.stringify(drafts);
-      window.localStorage.setItem("drafts", drafts);
-    },
-    changeMode(mode) {
-      this.mode = mode;
-      if (this.mode == "reservations") {
-        this.$router.push("/dashboard/campaigns/new/reservations");
-      }
-    },
-    showGeneralDetails() {
-      this.show_general_details = !this.show_general_details;
-    },
     addConversionMedia(medium) {
       const index = this.campaign.conversion_media.find(a => a === medium);
       if (index) {
@@ -341,10 +191,10 @@ export default {
       }
       //this.extraInfos[info].visibility = !this.
     },
-    /*changeMode(mode) {
+    changeMode(mode) {
       this.mode = mode;
       this.step = 1;
-    },*/
+    },
     addPaymentModel(model) {
       if (this.campaign.payment_models.find(a => a === a)) {
         // index
@@ -394,7 +244,6 @@ export default {
           .post("/campaigns", payload)
           .then(resp => {
             this.loading = false;
-            this.$router.push("/dashboard/campaigns");
             this.$store.dispatch("dashboard/actionShowSuccessToast", {
               message: "Campaign was successfully created"
             });
@@ -584,130 +433,168 @@ export default {
 };
 </script>
 
-
 <style lang="scss" scoped>
-.red {
-  color: red;
+.plain-button {
+  background: transparent !important;
+  color: $lightaccent !important;
+  margin-right: 8px !important;
+  border: 0 !important;
 }
-.radio-label {
-  position: relative;
-
+.tabs {
   display: flex;
-  padding: 8px 8px;
-  align-items: center;
-  border: 1px solid #d6d6e7;
-  border-radius: 3px;
-  margin-right: 8px;
-  box-shadow: inset 0 1px 4px 0 rgb(227 160 158 / 20%);
-  transition: all 100ms ease-in-out;
-  height: 50px;
+  //background: white;
+  flex-wrap: wrap;
+  justify-content: space-between;
 
-  //background: none !important;
-
-  //border: 1px solid grey;
-
-  &:hover {
-    background: rgba(211, 211, 211, 0.382);
-  }
-  &:focus-within {
-    //background: lightgray;
-  }
-  input {
+  &__tab {
+    background: white;
+    border: 1px solid rgb(236, 231, 231);
+    border-right: 0;
+    padding: 6px;
     cursor: pointer;
-    border: 0;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    background: none !important;
-  }
+    letter-spacing: 0.25px;
+    width: 25%;
+    &:last-of-type {
+      border-right: 1px solid rgb(236, 231, 231);
+    }
 
-  .radio-indicator {
-    width: 20px;
-    height: 20px;
-    margin-right: 16px;
-    border-radius: 50%;
-    background: lightgrey;
-    display: block;
-  }
-  .radio-text {
-    font-size: 14px;
-    font-weight: 400;
-  }
+    p {
+      color: grey;
+      font-size: 14px;
+    }
+    &--selected {
+      background: $primary;
+      border: 1px solid $primary;
+      p {
+        color: white;
+      }
+    }
+    &--passed {
+      background: $lightaccent;
+      border: 1px solid $lightaccent;
 
-  input:checked + .radio-indicator {
-    background: $primary;
+      p {
+        color: white !important;
+      }
+    }
   }
 }
-.error {
-  font-size: 12px;
-  color: red;
-}
-.create-container {
-  //border: 1px solid grey;
-  display: flex;
-  justify-content: flex-end;
-  margin-left: 55px;
+.choice {
   width: 100%;
+  &__container {
+    width: 100%;
+    margin: auto;
+    @include media("<=t") {
+      width: 90%;
+    }
+  }
+  &__header {
+    p {
+      font-size: 36px;
+      font-weight: 500;
+    }
+  }
+  &__body {
+    display: flex;
+    width: 100%;
 
-  button {
-    @include largebutton;
-    width: 200px;
-    padding: 8px;
-    border-radius: 4px;
+    @include media("<=t") {
+      flex-direction: column;
+    }
+  }
+  &__item {
+    background: white;
+    padding: 16px;
+    cursor: pointer;
+    margin-right: 8px;
+    border-radius: 2px;
+    box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48%;
+    border-radius: 10px;
+    border: 0.5px solid rgba(211, 211, 211, 0.442);
+    &:hover {
+      box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+      transform: translateY(-2px);
+    }
+    p {
+      font-size: 18px;
+      font-weight: 400;
+    }
   }
 }
-.container {
-  width: 60%;
-  padding: 75px 24px;
-  margin: auto;
 
-  @include media("<=t") {
-    width: 90%;
+.new {
+  width: 100%;
+  //margin: auto;
+  padding: 50px 16px;
+
+  &__cta {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      @include largebutton;
+      min-height: auto;
+      min-width: auto;
+      width: 200px;
+    }
   }
 }
 
 .section {
-  &__title {
-    color: lightgrey;
-    font-size: 25px;
-    text-align: center;
-    margin-bottom: 16px;
-    //margin-bottom: 16px;
+  padding: 24px 0px;
 
-    span {
-      font-size: 16px;
-      color: $charcoal;
-      margin-top: 16px;
-      font-weight: 400;
-      color: $faint;
-    }
-
-    &--drafts {
-      margin-top: 50px;
-    }
-  }
   &__body {
-    display: grid;
-    grid-template-columns: 49%49%;
-    justify-content: space-between;
+    margin-bottom: 24px;
+    font-size: 30px;
   }
 }
+/*
+.section {
+    box-shadow: rgba(0, 0, 0, 0.25) 0 1px 1px;
+    background: white;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    margin-bottom: 40px;
+
+    &__header {
+        
+        //background:  #e3a09e6a;
+        background: #fafafa;
+        //border-top: 2px solid  #857c7c2c;;
+        border-bottom: 2px solid  #857c7c2c;;
+
+        color: black;
+        font-size: 16px; 
+        padding: 16px 0;
+        font-weight: 500;   
+
+        p {
+            width: 95%;
+            margin: auto;
+            display: block;
+        }
+    }
+
+    &__body {
+        &__container {
+            padding: 16px 0;
+            width: 95%;
+            margin: auto;
+        }
+    }
+
+}*/
 
 .flex-row {
-  display: grid;
-  grid-template-columns: 30% 30% 30%;
-
-  width: 100%;
-
-  &--w-50 {
-    grid-template-columns: 49% 49% !important;
-    .checkbox-label {
-      input {
-        width: 20% !important;
-      }
-    }
-  }
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .bold-label {
@@ -720,304 +607,233 @@ export default {
   margin-right: 16px;
   position: relative;
   border-radius: 10px;
-  //padding: 4px 8px;
+  padding: 4px 8px;
   font-weight: 300 !important;
   background: white;
   //border: 1.5px solid rgba(169, 169, 169, 0.64);
   //border: 1.5px solid #ced4da58 !important;
-  //border: 1px solid rgba(169, 169, 169, 0.64) !important;
+  border: 1px solid rgba(169, 169, 169, 0.64) !important;
 
   margin-bottom: 5px;
 
   input {
     margin-right: 8px;
-    min-height: 20px !important;
+    min-height: 25px !important;
     appearance: auto !important;
-    width: 10% !important;
   }
 }
-.new-card {
-  height: auto;
-  cursor: pointer;
-  border-radius: 5px;
-  width: 100%;
-  box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
-  //padding: 16px;
-  border: 1.5px solid rgba(211, 211, 211, 0.442);
-  background: white !important;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 24px;
-  margin-bottom: 20px;
-  &:hover {
-    border: 1px solid $lightaccent;
+.step-active {
+  .circle {
+    background: $lightaccent;
+    border: $lightaccent;
   }
-  //margin-top: 50px;
-
-  .svg-container {
-    width: 50%;
-    margin: auto;
-    margin-bottom: 8px;
-  }
-
   p {
-    color: $charcoal;
-    font-size: 18px;
-    text-align: center;
-  }
-
-  span {
-    color: darkgrey;
-    font-size: 13px;
-    text-align: center;
+    color: $lightaccent !important;
   }
 }
-.draft-card {
-  cursor: pointer;
+.half {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: height 2s ease-in;
+  .form-input {
+    width: 48%;
 
-  height: auto;
-  border-radius: 5px;
-  width: 100%;
-  box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
-  //padding: 16px;
-  border: 1.5px solid rgba(211, 211, 211, 0.442);
+    &:deep(div) {
+      width: 100%;
+      min-height: 40px;
+    }
+  }
+}
+.circle {
   background: white;
+  border: 1px solid lightgrey;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+
+  &--filled {
+    background: lightgrey;
+    height: 20px;
+    width: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+  }
+  @include media("<=t") {
+    font-size: 12px;
+  }
+}
+
+.red {
+  color: red !important;
+  cursor: hi;
+}
+
+.add-link {
+  padding: 16px 0px;
+  color: $primary;
+  font-size: 14px;
+  cursor: pointer;
+  //text-decoration: underline;
+  border: 1px dotted grey;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+}
+
+.question {
+  //width: 20px;
+  //height: 20px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: grey 1px solid 2px solid !important;
+  color: grey !important ;
+}
+.form-group {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding: 24px;
-
-  &__body {
-    // height: 200px;
-    padding: 8px 0px;
-    color: $charcoal;
-    p {
-      &:first-of-type {
-        font-weight: 700;
-      }
-    }
-  }
-
-  &__header {
-    display: flex;
+  background: white;
+  border: rgba(211, 211, 211, 0.263) 1px solid;
+  border-radius: 2px;
+  padding: 16px 16px;
+  &--row {
+    padding: 0;
+    border: none;
+    flex-direction: row;
     justify-content: space-between;
-    align-items: center;
 
-    //border-bottom: 0.5px solid rgba(211, 211, 211, 0.368);
-    button {
-      @include editbutton;
-      width: auto;
-      border: 0.5px solid lightgray;
-      color: lightgray;
-      height: auto;
-      min-height: auto;
-      padding: 2px 5px;
-    }
-
-    p {
-      color: $charcoal;
-      font-size: 16px !important;
-      text-transform: none;
-      font-weight: 700;
-      display: block;
-      width: 100%;
+    .form-input {
+      width: 45%;
     }
   }
 }
-
-.traffic {
-  width: 100%;
-  margin: auto;
-}
-.center {
-  width: 100%;
-  text-align: center;
-  color: $charcoal;
-  font-size: 20px;
-  margin-left: 50px;
-  margin-bottom: 50px;
-}
-.add-link {
-  margin-top: 16px;
-  margin-bottom: 16px;
+.form-input {
+  @include plain-form-input;
   display: flex;
-  justify-content: flex-end;
-  button {
-    //background: $lightaccent;
-    color: $primary;
-    display: block;
-    border-radius: 4px;
+  flex-direction: column;
+  margin-bottom: 16px;
+
+  &__info {
+    color: grey;
+    font-size: 13px;
+  }
+
+  label {
+    font-size: 15px;
+    //color: $faint;
+    color: grey;
+
+    display: flex;
+    font-weight: 500;
+    align-items: center;
+    letter-spacing: 0.25px;
+    //border: 1px solid lightgrey;
+
+    .divider {
+      width: 2px;
+      height: 2px;
+      background: grey;
+      border-radius: 50%;
+      margin: 0 5px;
+    }
+
+    .info {
+      appearance: none;
+      margin-right: 2px;
+      cursor: pointer;
+      color: grey;
+      text-decoration: underline;
+      cursor: pointer;
+      display: flex;
+      padding: 0 8px;
+      font-size: 13px;
+      //background: white;
+      //border: 1px solid lightgrey;
+      border-radius: 5px;
+    }
+    .red {
+      margin-left: 2px;
+    }
+  }
+  input,
+  textarea,
+  :deep(input) {
+    border: 0.5px solid rgba(169, 169, 169, 0.64) !important;
+    min-height: 40px;
+    border-radius: 5px;
     padding: 8px;
+    outline: none;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    font-size: 15px;
+    // color: $faint;
+    color: black;
+    appearance: none;
+    background-color: rgba(211, 211, 211, 0.046);
+    background: white;
+    &:focus {
+      outline: $primary;
+    }
   }
 }
 .advert-link {
-  display: flex;
-  flex-direction: column;
-  border: 0.5px solid rgba(211, 211, 211, 0.442);
-  padding: 10px;
+  margin-bottom: 8px;
   &-head {
     display: flex;
     justify-content: flex-end;
-
     span {
       color: $lightaccent;
+      font-size: 12px;
       cursor: pointer;
     }
   }
 }
 
-.half {
+.form-group {
+  margin-bottom: 16px;
+}
+.advert-link-row {
+  div {
+    width: 20%;
+    &:first-of-type {
+      width: 79% !important;
+    }
+  }
+}
+.form-section-title {
+  padding: 20px 0 10px;
+  font-weight: 600;
+  font-size: 14px;
+  color: $primary;
+  text-transform: uppercase;
+}
+
+.cta {
   display: flex;
   justify-content: space-between;
-  width: 100% !important;
-  .form-input {
-    width: 100% !important;
+  align-items: center;
 
-    input,
-    select,
-    textarea {
-      width: 98% !important;
-    }
-
-    input[type="radio"] {
-      width: 50px !important;
-      height: 50px;
+  .back {
+    p {
+      font-weight: 500;
+      color: $faint;
+      cursor: pointer;
     }
   }
-}
-
-.form {
-  margin-top: 30px;
-  &__container {
-    padding: 16px 24px;
-  }
-}
-
-.form-input {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 16px;
-
-  &:deep(.mx-datepicker) {
-    height: 50px !important;
-    width: 98%;
-  }
-  &:deep(.mx-input-wrapper) {
-    height: 50px !important;
-  }
-  &:deep(.mx-input) {
-    height: 50px !important;
-  }
-
-  label {
-    font-size: 15px;
-    color: $charcoal;
-    font-weight: 600;
-    margin-bottom: 5px;
-  }
-
-  input,
-  select,
-  textarea {
-    display: inline-block;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    width: 100%;
-    height: 50px;
-    padding: 6px 30px;
-    padding-left: 10px;
-    font-size: 15px;
-    line-height: 1.4;
-    color: $charcoal;
-    background-color: #fff;
-    //border: 1px solid #ccc;
-    border: 2px solid rgba(211, 211, 211, 0.442);
-
-    border-radius: 4px;
-
-    outline-color: rgba(229, 231, 235);
-  }
-
-  textarea {
-    height: 200px;
-  }
-}
-
-.steps {
-  width: 100%;
-  display: relative;
-  /*
-    &:after {
-        content: "";
-        position: absolute;
-        width: 3px;
-        background-color: #fff;
-        top: 0;
-        background: rgb(90 97 129 / 5%);
-        border-radius: 6px;
-        z-index: -1;
-        bottom: 0;
-        height: 100%;
-        margin-top: 150px;;
-    }*/
-
-  &__step {
-    margin-bottom: 20px;
-
-    position: relative;
-    cursor: pointer;
-    min-height: 100px;
-    border-radius: 5px;
-    width: 100%;
-
-    box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
-    //padding: 16px;
-    background: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    //padding: 24px;
-    margin-left: 50px;
-
-    /*&:after {
-                content: "";
-                position: absolute;
-                width: 6px;
-                background-color: #fff;
-                top: 0;
-                left: -2px;
-                background: #03ca6f;
-                border-radius: 6px;
-                z-index: -1;
-            }*/
-
-    &__body {
-      padding-bottom: 24px;
-    }
-    &__header {
-      color: $charcoal;
-      font-weight: 400;
-      border-bottom: 1px solid rgba(26, 26, 26, 0.1) !important;
-      //padding-bottom: 16px;
-      &__container {
-        padding: 24px;
-      }
-      span {
-        color: $faint;
-        font-weight: 300;
-        font-size: 12px !important;
-      }
-    }
-
-    .step-card {
-    }
-  }
-}
-
-.form-input-file {
-  position: relative;
-  input {
+  button {
+    @include largebutton;
+    height: 40px;
+    padding: 8px 16px;
+    width: auto;
+    margin-left: 16px;
   }
 }
 </style>
