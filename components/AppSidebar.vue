@@ -15,6 +15,9 @@
         <div class="side__body">
           <sidebar-item :collapsed="collapsed" :text="'Overview'" link="/overview" />
           <sidebar-item :collapsed="collapsed" :text="'Campaigns'" link="/campaigns" />
+          <sidebar-item :collapsed="collapsed" :text="'Products'" link="/products" />
+          <sidebar-item :collapsed="collapsed" :text="'Reservations'" link="/reservations/list" />
+          <sidebar-item :collapsed="collapsed" :text="'Bookings'" link="/bookings" />
           <sidebar-item
             :collapsed="collapsed"
             v-if="context === 'marketer'"

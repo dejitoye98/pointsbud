@@ -24,7 +24,7 @@
     border: 2px solid $primary;
     border-radius: 5px;
     box-sizing: border-box;
-    color: #FFFFFF;
+    color: #ffffff;
     cursor: pointer;
     display: inline-block;
     font-size: 16px;
@@ -37,7 +37,7 @@
     padding: 16px 24px;
     text-align: center;
     text-decoration: none;
-    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
@@ -69,7 +69,7 @@
     border: 2px solid $primary;
     border-radius: 5px;
     box-sizing: border-box;
-    color: #FFFFFF;
+    color: #ffffff;
     cursor: pointer;
     display: inline-block;
     font-size: 16px;
@@ -82,7 +82,7 @@
     padding: 8px 16px;
     text-align: center;
     text-decoration: none;
-    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
@@ -128,7 +128,7 @@
     padding: 8px 16px;
     text-align: center;
     text-decoration: none;
-    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    transition: all 300ms cubic-bezier(0.23, 1, 0.32, 1);
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
@@ -187,7 +187,7 @@
     }
     label {
         font-size: 12px;
-        color: grey;
+        color: $charcoal !important;
         font-weight: 600;
         position: absolute;
         top: 0;
@@ -235,7 +235,7 @@
         font-size: 15px;
         //color: darkgrey;
         font-weight: 400;
-        color: darkgrey;
+        color: $charcoal;
         span {
             color: red;
         }
@@ -244,9 +244,9 @@
     input,
     textarea,
     select,
-     :deep(input) {
-        border: 1.5px solid #ced4da58 !important;
-        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    :deep(input) {
+        border: 0.5px solid lightgrey !important;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         //border: 1.5px solid rgba(169, 169, 169, 0.64);
         min-height: 40px;
         border-radius: 5px;
@@ -258,9 +258,8 @@
         font-weight: 400;
         appearance: none;
         background-color: rgba(211, 211, 211, 0.046);
-        ;
         &:focus {
-            outline: 2px solid #ced4da;
+            outline: 2px solid $lightaccent;
         }
     }
     .input {
@@ -269,52 +268,51 @@
 }
 
 @mixin radio-label {
-  position: relative;
+    position: relative;
 
-  display: flex;
-  padding: 8px 8px;
-  align-items: center;
-  border: 1.5px solid #ced4da58 !important;
-  border-radius: 3px;
-  margin-right: 8px;
-  transition: all 100ms ease-in-out;
-  height: 50px;
+    display: flex;
+    padding: 8px 8px;
+    align-items: center;
+    border: 1.5px solid #ced4da58 !important;
+    border-radius: 3px;
+    margin-right: 8px;
+    transition: all 100ms ease-in-out;
+    height: 50px;
 
-  //background: none !important;
+    //background: none !important;
 
-  //border: 1px solid grey;
+    //border: 1px solid grey;
 
-  &:hover {
-    background: rgba(211, 211, 211, 0.382);
-  }
-  &:focus-within {
-    //background: lightgray;
-  }
-  input {
-    cursor: pointer;
-    border: 0;
-    position: absolute !important;
-    width: 100% !important;
-    height: 100% !important;
-    opacity: 0;
-    background: none !important;
-  }
+    &:hover {
+        background: rgba(211, 211, 211, 0.382);
+    }
+    &:focus-within {
+        //background: lightgray;
+    }
+    input {
+        cursor: pointer;
+        border: 0;
+        position: absolute !important;
+        width: 100% !important;
+        height: 100% !important;
+        opacity: 0;
+        background: none !important;
+    }
 
-  .radio-indicator {
-    width: 20px;
-    height: 20px;
-    margin-right: 16px;
-    border-radius: 50%;
-    background: lightgrey;
-    display: block;
-  }
-  .radio-text {
-    font-size: 14px;
-    font-weight: 400;
-    color: $faint;
-  } 
-  input:checked + .radio-indicator {
-    background: $primary;
-  }
-    
+    .radio-indicator {
+        width: 20px;
+        height: 20px;
+        margin-right: 16px;
+        border-radius: 50%;
+        background: lightgrey;
+        display: block;
+    }
+    .radio-text {
+        font-size: 14px;
+        font-weight: 400;
+        color: $faint;
+    }
+    input:checked + .radio-indicator {
+        background: $primary;
+    }
 }

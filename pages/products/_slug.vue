@@ -279,7 +279,7 @@ export default {
         },
         narration: `Purchase ${this.product.name}`,
         customer: {
-          email: this.form.email || this.form["Email Address"],
+          email: this.form.email  || this.form.email_address || this.form["Email Address"],
           phone_number: this.form.phone_number,
           name: this.form["Full Name"]
             ? this.form["Full Name"]
@@ -296,6 +296,7 @@ export default {
             type: "purchase",
             referrer: this.$route.query.referrer,
             order_id: this.order.id,
+            product_id: this.product.id,
             ...data
           };
           this.$api.post("/transactions/verify-flw", payload);

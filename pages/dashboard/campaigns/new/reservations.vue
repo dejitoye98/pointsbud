@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <ReservationCampaign />
-  </div>
+    <div>
+        <ReservationCampaign />
+    </div>
 </template>
 <script>
 export default {
-  layout: "dashboard-collapsed-sidebar"
+    layout: "dashboard",
 };
 </script>

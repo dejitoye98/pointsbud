@@ -1,51 +1,57 @@
 <template>
     <div class="page">
         <div class="sidebar">
-            <ElementsSelector/>
+            <ElementsSelector />
         </div>
 
         <div class="body">
             <div class="topbar">
-                <div v-for="(item, index) in builderOptions" :key="index" class="creator-options">
-                    <BuilderCreatorOption :image="item.image" :name="item.name"/>
+                <div
+                    v-for="(item, index) in builderOptions"
+                    :key="index"
+                    class="creator-options"
+                >
+                    <BuilderCreatorOption
+                        :image="item.image"
+                        :name="item.name"
+                    />
                 </div>
             </div>
         </div>
-        
-        
     </div>
 </template>
 
-
 <script>
-import BuilderCreatorOption from "../../../components/pagebuilder/BuilderCreatorOption"
-import ElementsSelector from "../../../components/pagebuilder/ElementsSelector"
+import BuilderCreatorOption from "../../../components/pagebuilder/BuilderCreatorOption";
+import ElementsSelector from "../../../components/pagebuilder/ElementsSelector";
 export default {
-    layout: 'dashboard-collapsed-sidebar',
+    layout: "dashboard",
     components: {
         BuilderCreatorOption,
-        ElementsSelector
+        ElementsSelector,
     },
     data() {
         return {
             builderOptions: [
-                {name: 'Form', image: "./../../static/form.png" },
-                {name: 'Landing Page', image: "../../static/landing-page.png" },
-                {name: 'Sales Page', image: "./../../static/sales-page.png" },
-            ]
-        }
+                { name: "Form", image: "./../../static/form.png" },
+                {
+                    name: "Landing Page",
+                    image: "../../static/landing-page.png",
+                },
+                { name: "Sales Page", image: "./../../static/sales-page.png" },
+            ],
+        };
     },
     created() {
-        this.$store.commit('dashboard/setDashboardTitle', 'Page Builder');
-    }
-}
+        this.$store.commit("dashboard/setDashboardTitle", "Page Builder");
+    },
+};
 </script>
 
 <style lang="scss" scoped>
 .creator-options {
-    display: flex; 
+    display: flex;
     //padding: 8px 16px;
-
 }
 .page {
     display: flex;
@@ -71,6 +77,4 @@ export default {
     width: 90%;
     background: white;
 }
-
-
 </style>

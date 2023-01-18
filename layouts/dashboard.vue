@@ -33,6 +33,10 @@ export default {
         getNotifications() {
             this.$store.dispatch('dashboard/getNotifications', 10)
         },
+        getUpdateCounts() {
+            this.$store.dispatch('updates/getUpdates')
+
+        }
     },
     computed: {
         
@@ -46,7 +50,8 @@ export default {
     },
     created() {
         this.getAuthUser()
-        this.getNotifications()
+        this.getNotifications();
+        this.getUpdateCounts();
     },
 }
 </script>
