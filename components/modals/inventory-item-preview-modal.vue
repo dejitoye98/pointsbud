@@ -54,17 +54,12 @@
             <img :src="product.thumbnail" alt />
           </div>
           <div class="images__more">
-            <div class="images__more__item">
-              <img :src="product.thumbnail" alt />
-            </div>
-            <div class="images__more__item">
-              <img :src="product.thumbnail" alt />
-            </div>
-            <div class="images__more__item">
-              <img :src="product.thumbnail" alt />
-            </div>
-            <div class="images__more__item">
-              <img :src="product.thumbnail" alt />
+            <div
+              class="images__more__item"
+              v-for="(image, im_index) in product.images"
+              :key="im_index"
+            >
+              <img :src="image" alt />
             </div>
           </div>
           <div class="details">

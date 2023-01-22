@@ -127,7 +127,7 @@ export default {
             }).then(resp=> {
                 this.created_inventory = resp.data.data;
                 this.show_created_modal =true;
-                this.$store.dispatch('dashboard/actionShowSuccessToast', {message: "Created your inventory " + this.inventory.name});
+                //this.$store.dispatch('dashboard/actionShowSuccessToast', {message: "Created your inventory " + this.inventory.name});
             }).catch(err=> {
                 const error = err.response && err.response.data.data || err
                 this.$store.dispatch('dashboard/actionShowErrorToast', {message: error}); // show error
