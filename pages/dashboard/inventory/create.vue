@@ -196,7 +196,7 @@ export default {
     width: 50%;
     margin: auto;
     @include media("<=t") {
-        width: 90%;
+        width: 95%;
     }
 }
 .footer {
@@ -218,7 +218,7 @@ export default {
 }
 
 .inventory {
-    padding: 16px;
+    padding: 16px 0;
     display: grid;
     grid-template-columns: 32% 32% 32%;
     justify-content: space-between;
@@ -226,7 +226,7 @@ export default {
     &__item {
         border: 3px solid whitesmoke;
         width: 100%;
-        height: 200px;
+        height: 170px;
         margin-bottom: 16px;
         display: flex;
         justify-content: center;

@@ -64,6 +64,9 @@ export default {
     padding:8px 16px;
     width: 50%;
     margin: auto;
+    @include media("<=t") {
+        width: 100%;
+    }
     h1 {
         text-align: center;
         font-size: 20px;
