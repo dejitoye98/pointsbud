@@ -56,7 +56,7 @@
           <div class="images__more">
             <div
               class="images__more__item"
-              v-for="(image, im_index) in product.images"
+              v-for="(image, im_index) in JSON.parse(product.images)"
               :key="im_index"
             >
               <img :src="image" alt />
