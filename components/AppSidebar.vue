@@ -15,14 +15,35 @@
         <div class="side__body">
           <sidebar-item :collapsed="collapsed" :text="'Overview'" link="/overview" />
           <sidebar-item :collapsed="collapsed" :text="'Campaigns'" link="/campaigns" />
-          <sidebar-item :collapsed="collapsed" :text="'Products'" link="/products" />
-          <sidebar-item :collapsed="collapsed" :text="'Reservations'" link="/reservations/list" />
-          <sidebar-item :collapsed="collapsed" :text="'Bookings'" link="/bookings" />
+          <sidebar-item
+            :collapsed="collapsed"
+            :text="'Products'"
+            v-if="context === 'business'"
+            link="/products"
+          />
+          <sidebar-item
+            :collapsed="collapsed"
+            :text="'Reservations'"
+            v-if="context === 'business'"
+            link="/reservations/list"
+          />
+          <sidebar-item
+            :collapsed="collapsed"
+            :text="'Bookings'"
+            v-if="context === 'business'"
+            link="/bookings"
+          />
           <sidebar-item
             :collapsed="collapsed"
             v-if="context === 'marketer'"
             :text="'Earnings'"
             link="/earnings"
+          />
+          <sidebar-item
+            :collapsed="collapsed"
+            v-if="context === 'marketer'"
+            :text="'Bio Links'"
+            link="/inventory"
           />
           <sidebar-item :collapsed="collapsed" :text="'Wallet'" link="/wallet" />
           <sidebar-item :collapsed="collapsed" :text="'Settings'" link="/settings" />

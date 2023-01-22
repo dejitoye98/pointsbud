@@ -1,11 +1,11 @@
 <template>
-  <div class="container">
+  <div class="ld-container">
     <div class="lds-hourglass"></div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.container {
+.ld-container {
   width: 100%;
   height: 100%;
   display: flex;

@@ -30,7 +30,7 @@
     font-size: 16px;
     font-weight: 500;
     line-height: normal;
-    margin: 0;
+    //margin: 0;
     min-height: 60px;
     min-width: 0;
     outline: none;
@@ -65,6 +65,60 @@
 }
 
 @mixin smallbutton {
+   
+      appearance: none;
+      background-color: $primary;
+      border: 1px solid rgba(27, 31, 35, .15);
+      border-radius: 6px;
+      box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+      box-sizing: border-box;
+      color: #fff;
+      cursor: pointer;
+      display: inline-block;
+      font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      padding: 6px 16px;
+      position: relative;
+      text-align: center;
+      text-decoration: none;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      vertical-align: middle;
+      white-space: nowrap;
+
+      &:focus:not(:focus-visible):not(.focus-visible) {
+        box-shadow: none;
+        outline: none;
+      }
+      
+      &:hover {
+        background-color: $darkshade;
+      }
+      
+      &:focus {
+        box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+        outline: none;
+      }
+      
+      &:disabled {
+        background-color: lightgrey;
+        border-color: rgba(27, 31, 35, .1);
+        color: rgba(255, 255, 255, .8);
+        cursor: default;
+      }
+      
+      &:active {
+        background-color: $darkshade;
+        box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+      }
+  
+    }
+    
+    
+    /*
     background: $primary;
     border: 2px solid $primary;
     border-radius: 5px;
@@ -107,8 +161,8 @@
         background: lightgrey;
         border: 2px solid lightgrey;
         box-shadow: none;
-    }
-}
+    }*/
+
 
 @mixin smallbutton-white {
     background: white !important;
@@ -245,7 +299,7 @@
     textarea,
     select,
     :deep(input) {
-        border: 0.5px solid lightgrey !important;
+        border: 1.5px solid lightgrey !important;
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         //border: 1.5px solid rgba(169, 169, 169, 0.64);
         min-height: 40px;
@@ -259,7 +313,7 @@
         appearance: none;
         background-color: rgba(211, 211, 211, 0.046);
         &:focus {
-            outline: 2px solid $lightaccent;
+            border: 2px solid $lightaccent;
         }
     }
     .input {

@@ -686,7 +686,7 @@ export default {
   },
   methods: {
     imageUploaded(meta) {
-      if (vm.mode === 1) {
+      if (this.mode === 1) {
         this.business.profile_photo = meta.image;
       } else {
         this.marketer.profile_photo = meta.image;

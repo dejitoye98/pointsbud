@@ -1,11 +1,10 @@
 <template>
   <div>
     <CreatedCampaignModal :show="show_success_modal" @close="show_success_modal=false" />
-
     <div class="center">
       <p>Create a Pay-Per-Sale Campaign</p>
     </div>
-    <div class="traffic">
+    <div class="traffic" v-if="step === 1">
       <div class="steps">
         <div class="steps__step">
           <div class="step-card">
@@ -48,12 +47,11 @@
                     <div class="form-input">
                       <span class="error">{{errors.marketeres_required}}</span>
                       <label for>No. of Marketers Required</label>
-                      <div class="form-input__info" v-if="extraInfos['marketers_required'].visible">
-                        <p>{{extraInfos['marketers_required'].text}}</p>
-                      </div>
+
                       <input v-model="campaign.marketers_required" type="number" />
                     </div>
-
+                  </div>
+                  <div class="half">
                     <div class="form-input">
                       <span class="error">{{errors.marketeres_required}}</span>
                       <label for>Do you want to host your products on Afflee?</label>
@@ -112,12 +110,12 @@
       </div>
     </div>
 
-    <div class="steps__step">
+    <div class="steps__step" v-else-if="step === 2">
       <div class="step-card">
         <div class="steps__step__header">
           <div class="steps__step__header__container">
             <p>Product Details</p>
-            <span>Title, description, budget, display picture...</span>
+            <span>Details of the product.</span>
           </div>
         </div>
 
@@ -152,11 +150,7 @@
                   <textarea type="text" placeholder v-model="product.description"></textarea>
                 </div>
                 <div class="form-input">
-                  <label for>
-                    Advert note
-                    <span class="info">info</span>
-                    <span class="red">*</span>
-                  </label>
+                  <label for>Advert note</label>
                   <textarea
                     placeholder="This is the text that marketers will use in advertising this link to their audience"
                     v-model="product.advert_note"
@@ -193,16 +187,9 @@
                 <div class="half">
                   <div class="form-input">
                     <span class="error">{{errors.budget}}</span>
-                    <label for>
-                      Price Per Unit
-                      <span class="red">*</span>
-                      <span class="info" @click="setInfoVisibility('budget')">info</span>
-                    </label>
+                    <label for>Price Per Unit</label>
                     <!--<input  v-model="campaign.budget" type="number"-->
                     <div style="width: 98%; height:50px; border-radius:4px;        ">
-                      <div class="form-input__info" v-if="extraInfos['budget'].visible">
-                        <p>{{extraInfos['budget'].text}}</p>
-                      </div>
                       <CurrencyMoneyInput @onChange="setPricePerUnit" :meta="{index: index}" />
                     </div>
                   </div>
@@ -216,11 +203,7 @@
                 <div class="half">
                   <div class="form-input">
                     <span class="error">{{errors.budget}}</span>
-                    <label for>
-                      Marketer Commission Amount
-                      <span class="red">*</span>
-                      <span class="info" @click="setInfoVisibility('budget')">info</span>
-                    </label>
+                    <label for>Marketer Commission Amount</label>
                     <!--<input  v-model="campaign.budget" type="number"-->
                     <div style="width: 98%; height:50px; border-radius:4px;        ">
                       <div class="form-input__info" v-if="extraInfos['budget'].visible">
@@ -237,17 +220,26 @@
                     </select>
                   </div>
                 </div>
-                <div class="form-input form-input-file">
+                <div class="form-input">
                   <label for>Product Images</label>
 
-                  <!-- <label :id="`product-${index}-images-label`">Choose file</label>-->
-                  <button
-                    @click="showProductImagesModal(index)"
-                    @onImageUpdate="updateProductImages"
-                    :id="`product-${index}-images`"
-                  >Choose files</button>
+                  <div class="product-images">
+                    <div
+                      class="product-images__image"
+                      v-for="(image, image_index) in product.images"
+                      :key="image_index"
+                    >
+                      <ImageUpload
+                        @onImageUploaded="addProductImages"
+                        :image_index="image_index"
+                        label="Add image"
+                        :product_index="index"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
+
               <div
                 v-if="campaign.products.list[index].meta.length > 0"
                 class="advert-link form-group"
@@ -306,20 +298,54 @@
                   <a @click="addProductDeliveryDetails(index)">+ Add detail</a>
                 </div>
               </div>
+              <!--
+              <div
+                v-if="campaign.products.list[index].delivery_details.length > 0"
+                class="advert-link form-group variation"
+              >
+                <div class="form-group__header">
+                  <p>Variation</p>
+                </div>
+                <div
+                  class="form-input"
+                  v-for="(v, v_index) in Object.keys(campaign.products.list[index].variation_details)"
+                  :key="v_index"
+                >
+                  <input
+                    type="text"
+                    style="display: block; width: 49%; margin-bottom: 5px;"
+                    width="100%"
+                    placeholder="eg. Colors"
+                  />
+
+                  <div class="form-group advert-link">
+                    <div class="form-group__header"></div>
+                    <div class="form-input">
+                      <label for>Color Name</label>
+                      <input />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="add-link">
+                  <a @click="addProductDeliveryDetails(index)">+ New Variation</a>
+                </div>
+              </div>-->
               <!---<div class="product-actions" v-if="campaign.products.hosted">-->
               <!--<button @click="addProductMeta(index)" v-if="campaign.products.list[index].meta.length < 1">Add Product Features</button> -->
               <!-- <button @click="addProductDeliveryDetails(index)">Add Delivery Details</button>-->
               <!--<button @click="addVariationMeta">Add Product Variations</button>-->
               <!--</div>-->
             </div>
-            <div class="add-link">
-              <button @click="addProduct">Add Product</button>
-            </div>
           </div>
         </div>
       </div>
+      <div class="add-product" @click="addProduct">
+        Add Product
+        <!--<button @click="addProduct">Add Product</button>-->
+      </div>
     </div>
-    <div class="steps__step">
+    <div class="steps__step" v-else-if="step === 3">
       <div class="step-card">
         <div class="steps__step__header">
           <div class="steps__step__header__container">
@@ -361,7 +387,7 @@
                   style="margin-bottom: 5px;"
                 >
                   <option
-                    v-for="(type, type_index) in ['text', 'number', 'date', 'one-choice option', 'multi-choice options']"
+                    v-for="(type, type_index) in ['text', 'number', 'date', 'one-choice option', 'multi-choice option']"
                     :key="type_index"
                   >{{type}}</option>
                 </select>
@@ -377,7 +403,7 @@
                     v-for="(option , option_index) in campaign.order_form[field_index].field_options"
                     :key="option_index"
                   />
-                  <button class="add-link" @click="addOptionToField(field_index)">Add Option</button>
+                  <button class="add-option" @click="addOptionToField(field_index)">Add Option</button>
                 </template>
               </template>
             </div>
@@ -398,7 +424,7 @@
       </div>
     </div>
 
-    <div class="steps__step">
+    <div class="steps__step" v-else-if="step === 4">
       <div class="step-card">
         <div class="steps__step__header">
           <div class="steps__step__header__container">
@@ -455,7 +481,7 @@
                 />
                 <select>
                   <option
-                    v-for="(type, q_index) in ['text', 'number', 'date', 'one-choice option', 'multi-choice options']"
+                    v-for="(type, q_index) in ['text', 'number', 'date', 'one-choice option', 'multi-choice option']"
                     :key="q_index"
                   >{{q_index}}</option>
                 </select>
@@ -502,7 +528,9 @@
     </div>
 
     <div class="create-button">
-      <button @click="createCampaign">Create Campaign</button>
+      <button class="btn btn--default" v-if="step !== 1" @click="step--">Go Back</button>
+      <button class="btn btn--primary" @click="createCampaign" v-if="step === 4">Create Campaign</button>
+      <button class="btn btn--primary" @click="nextStep" v-else>Next Step</button>
     </div>
 
     <template v-if="show_product_images_modal">
@@ -553,6 +581,7 @@ export default {
   },
   data() {
     return {
+      step: 1,
       show_success_modal: false,
       product_index_in_view: 0,
       extraInfos: {
@@ -634,7 +663,7 @@ export default {
               marketer_commission: "",
               marketer_commission_type: "",
               thumbnail: "",
-              images: [],
+              images: ['', '', '', '', ''],
               temp_images: [],
               advert_note: "",
 
@@ -642,7 +671,11 @@ export default {
                 { name: "Delivery Medium", value: "Email Address" }
               ],
 
-              variation_details: {},
+              variation_details: {
+                variation_1: {
+
+                }
+              },
               meta: [""],
               qty: {},
               qty_per_unit: 1,
@@ -674,6 +707,9 @@ export default {
     addOptionToField(field_index) {
       this.campaign.order_form[field_index].field_options.push("");
     },
+    nextStep(){
+      this.step++;
+    },
     removeFieldFromOrderForm(index) {
       this.campaign.order_form.splice(index, 1);
     },
@@ -696,30 +732,7 @@ export default {
       this.product_index_in_view = product_index;
     },
     removeProductImage(index, product_index) {},
-    handleMultipleFilesAndUpload(element, product_index) {
-      const product_images = document.getElementById(element);
-      const vm = this;
-      if (product_images) {
-        for (let i = 0; i < product_images.files.length; i++) {
-          const image = product_images.files[i];
-          var reader = new FileReader();
-          reader.onload = function() {
-            vm.campaign.products.list[product_index].images.push({
-              image: reader.result,
-              loading: true
-            });
-
-            // start upload
-            const result = vm.uploadProductImage(image, product_index, i);
-            /* if (result) {
-                             vm.campaign.products.list[product_index].temp_images[i].loading = false
-                        }*/
-          };
-
-          reader.readAsDataURL(product_images.files[i]);
-        }
-      }
-    },
+   
     getFileName(element) {
       let el = document.getElementById(element);
 
@@ -737,6 +750,8 @@ export default {
         if (label) {
           label.innerText = filename;
         }
+
+        this.addThumbnail()
       }
     },
     setPricePerUnit(meta) {
@@ -853,11 +868,7 @@ export default {
         const payload = this.campaign;
         this.loading = true;
 
-        this.campaign.products.list.forEach(p => {
-          if (p.images && p.images.length > 0) {
-            return (p.images = p.images.map(image => image && image.url));
-          }
-        });
+        
         this.$api
           .post("/campaigns", payload)
           .then(resp => {
@@ -882,47 +893,10 @@ export default {
         });
       }
     },
-    uploadProductImage(file, product_indext, image_index) {
-      const vm = this;
-
-      const cloudinary_url =
-        "https://api.cloudinary.com/v1_1/dx9vdtrxz/image/upload";
-      try {
-        var xhr = new XMLHttpRequest();
-        var fd = new FormData();
-        const vm = this;
-
-        xhr.open("POST", cloudinary_url, true);
-        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-
-        return (xhr.onreadystatechange = function(e) {
-          if (xhr.readyState == 4 && xhr.status == 200) {
-            // File uploaded successfully
-            var response = JSON.parse(xhr.responseText);
-            // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
-          }
-
-          //const displayElement = document.createElement('img');
-          //displayElement.src = response.secure_url
-          //editor.append(displayElement)
-
-          //vm.campaign.thumbnail = response.secure_url
-          vm.campaign.products.list[product_index].images[
-            image_index
-          ].loading = false;
-        });
-
-        fd.append("upload_preset", "jljh5lxc");
-        fd.append("tags", "browser_upload"); // Optional - add tag for image admin in Cloudinary
-        fd.append("file", file);
-        xhr.send(fd);
-      } catch (e) {
-        console.log(e);
-      }
-    },
+    
 
     addThumbnail() {
-      const input = document.getElementById("imagefile");
+      const input = document.getElementById("display-picture");
       const file = input.files && input.files[0];
       const vm = this;
 
@@ -1006,10 +980,9 @@ export default {
     },
 
     addProductImages(obj) {
-      alert(Object.keys(obj));
+      //alert(Object.keys(obj));
       if (typeof obj.product_index !== "undefined") {
-        alert("erere");
-        this.campaign.products.list[obj.product_index].images = obj.images;
+        this.campaign.products.list[obj.product_index].images[obj.image_index] = obj.image;
         //this.campaign.products.list[obj.product_index].images = obj.images;
       }
     },
@@ -1021,7 +994,7 @@ export default {
         marketer_commission: "",
         marketer_commission_type: "",
         thumbnail: "",
-        images: [],
+        images: ['' , '', '', '',''],
         advert_note: "",
 
         delivery_details: [{ name: "Delivery Medium", value: "Email Address" }],
@@ -1042,6 +1015,9 @@ export default {
 
 
 <style lang="scss" scoped>
+.variation {
+  background: whitesmoke;
+}
 .field-header {
   //border: 1px solid grey;
   display: flex !important;
@@ -1054,12 +1030,25 @@ export default {
   }
 }
 .create-button {
-  //border: 1px solid grey;
-  margin-left: 50px;
-  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+
+  .btn {
+    @include smallbutton;
+    padding: 16px 0;
+    
+    &--default {
+      background :white;
+      color: $charcoal;
+      margin-right: 16px;
+      &:hover {
+        background: whitesmoke;
+      }
+    }
+  }
 
   button {
-    @include largebutton;
+    @include smallbutton;
     width: 100%;
   }
 }
@@ -1260,7 +1249,6 @@ export default {
 }
 
 .form-group {
-  margin-bottom: 16px;
   &__header {
     display: flex;
     justify-content: space-between;
@@ -1268,8 +1256,8 @@ export default {
     margin-bottom: 8px;
   }
   p {
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 700;
     color: $charcoal;
   }
 }
@@ -1290,7 +1278,10 @@ export default {
   margin-top: 16px;
   margin-bottom: 16px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  width: 100%;
+  background: whitesmoke;
+  padding: 8px ;
   button {
     background: $darkaccent;
     color: white;
@@ -1303,11 +1294,17 @@ export default {
     font-size: 13px;
   }
 }
+.add-option {
+  background: whitesmoke;
+  padding: 8px;
+  font-size: 14px;
+  color: $primary;
+}
 .advert-link {
   display: flex;
   flex-direction: column;
-  border: 2px solid rgba(211, 211, 211, 0.442);
-  padding: 10px;
+  border: 0.5px solid whitesmoke;
+  padding: 8px;
   margin-bottom: 50px;
   &-head {
     display: flex;
@@ -1352,6 +1349,8 @@ export default {
   flex-direction: column;
   margin-bottom: 24px;
 
+  @include plain-form-input;
+
   &:deep(.mx-datepicker) {
     height: 50px !important;
     width: 98%;
@@ -1364,7 +1363,7 @@ export default {
   }
 
   label {
-    font-size: 13px;
+    font-size: 16px;
     color: $faint;
     font-weight: 400;
     margin-bottom: 5px;
@@ -1392,7 +1391,7 @@ export default {
         
 
         outline-color: rgba(229, 231, 235)*/
-
+    /*
     position: relative;
     cursor: text;
     font-size: 14px;
@@ -1409,7 +1408,7 @@ export default {
     :focus {
       border-color: #3c4fe0;
       box-shadow: 0 1px 0 0 rgb(35 38 59 / 5%);
-    }
+    }*/
   }
 
   textarea {
@@ -1452,26 +1451,11 @@ export default {
     border-radius: 5px;
     width: 100%;
 
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; //padding: 16px;
     //padding: 16px;
-    background: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    //padding: 24px;
-    margin-left: 50px;
-
-    /*&:after {
-                content: "";
-                position: absolute;
-                width: 6px;
-                background-color: #fff;
-                top: 0;
-                left: -2px;
-                background: #03ca6f;
-                border-radius: 6px;
-                z-index: -1;
-            }*/
+    
 
     &__body {
       padding-bottom: 24px;
@@ -1484,14 +1468,31 @@ export default {
       &__container {
         padding: 24px;
       }
+      p {
+        font-size: 18px;
+      }
       span {
         color: $faint;
         font-weight: 300;
-        font-size: 12px !important;
+        font-size: 15px !important;
       }
     }
 
     .step-card {
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; //padding: 16px;
+
+      background: white;
+
+    }
+    .add-product {
+      padding: 16px 0px;
+      font-weight: 500;
+      color: white;
+      text-align: center;
+      background: lightgrey;
+      margin-top: 16px;
+      font-size: 18px;
+      border: 1px solid lightgrey;
     }
   }
 
@@ -1624,6 +1625,13 @@ export default {
 
       //position: absolute;
     }
+  }
+}
+.product-images {
+  display: grid;
+  grid-template-columns: 18% 18% 18% 18% 18%;
+  justify-content: space-between;
+  &__image {
   }
 }
 </style> 

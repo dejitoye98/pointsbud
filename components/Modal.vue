@@ -44,6 +44,18 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@keyframes fadeIn {
+  0% {
+    background: rgba(0, 0, 0, 0);
+  }
+  100% {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+
+.modal__container {
+  visibility: hidden;
+}
 .sixty-body {
   .modal__container {
     width: 60% !important;
@@ -73,6 +85,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
+  transform: scale(1);
 
   &__mask {
     width: 100%;
@@ -80,8 +93,11 @@ export default {
     padding: 64px 0;
     position: fixed;
     margin-left: 120px;
-    background-color: rgba(0, 0, 0, 0.612);
     overflow: scroll;
+
+    //animation
+    background: rgba(0, 0, 0, 0);
+    animation: fadeIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 
     @include media("<=dashbreak") {
       margin-left: 0 !important;

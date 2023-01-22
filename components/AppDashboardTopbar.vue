@@ -1,49 +1,49 @@
 <template>
-    <div class="el">
-        <div class="el__container desktop">
-            <div class="lead">
-                <div class="back"></div>
-                <div class="title">
-                    <div class="title__back" @click="goBack">
-                        <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M9.57 5.92993L3.5 11.9999L9.57 18.0699"
-                                stroke="#292D32"
-                                stroke-width="1.5"
-                                stroke-miterlimit="10"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            />
-                            <path
-                                d="M20.5 12H3.67004"
-                                stroke="#292D32"
-                                stroke-width="1.5"
-                                stroke-miterlimit="10"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            />
-                        </svg>
-                    </div>
-                    <p class="title__text">{{ dashboardTitle }}</p>
-                </div>
-            </div>
+  <div class="el">
+    <div class="el__container desktop">
+      <div class="lead">
+        <div class="back"></div>
+        <div class="title">
+          <div class="title__back" @click="goBack">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.57 5.92993L3.5 11.9999L9.57 18.0699"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-miterlimit="10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M20.5 12H3.67004"
+                stroke="#292D32"
+                stroke-width="1.5"
+                stroke-miterlimit="10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <p class="title__text">{{ dashboardTitle }}</p>
+        </div>
+      </div>
 
-            <div class="business-name">
-                <p>{{ userDetails && userDetails.name }}</p>
-            </div>
+      <div class="business-name">
+        <p>{{ userDetails && userDetails.name }}</p>
+      </div>
 
-            <div class="el__end">
-                <div>
-                    <!-- <button v-if="active === 'Campaigns'" @click="createCampaign">Create new campaign</button> -->
-                    <!-- <button v-if="userContext === 'business' && typeof(show_create_button) ===  'undefined' " @click="createCampaign">Create new campaign</button> -->
-                </div>
-                <!--<div class="el__end__notif" @click="openNotification">
+      <div class="el__end">
+        <div>
+          <!-- <button v-if="active === 'Campaigns'" @click="createCampaign">Create new campaign</button> -->
+          <!-- <button v-if="userContext === 'business' && typeof(show_create_button) ===  'undefined' " @click="createCampaign">Create new campaign</button> -->
+        </div>
+        <!--<div class="el__end__notif" @click="openNotification">
                     <svg
                         width="30"
                         height="30"
@@ -76,177 +76,152 @@
                     <span v-if="unread_notifications_length > 0">{{
                         unread_notifications_length
                     }}</span>
-                </div>-->
-                <div class="el__end__image" @click="openImageDropdown">
-                    <img
-                        src="https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg'"
-                        alt
-                    />
-                </div>
-            </div>
+        </div>-->
+        <div class="el__end__image" @click="openImageDropdown">
+          <img
+            src="https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg'"
+            alt
+          />
         </div>
-        <div class="el__container el__container--mobile mobile">
-            <div @click="toggleMobileMenu" class="menu">
-                <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        d="M3 7H21"
-                        stroke="#292D32"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                    />
-                    <path
-                        d="M3 12H21"
-                        stroke="#292D32"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                    />
-                    <path
-                        d="M3 17H21"
-                        stroke="#292D32"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                    />
-                </svg>
-            </div>
-            <div class="logo">
-                <img src="../static/logo.svg" alt />
-            </div>
-            <div class="end">
-                <div>
-                    <!-- <button v-if="active === 'Campaigns'" @click="createCampaign">Create new campaign</button> -->
-                    <!--
+      </div>
+    </div>
+    <div class="el__container el__container--mobile mobile">
+      <div @click="toggleMobileMenu" class="menu">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M3 7H21" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" />
+          <path d="M3 12H21" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" />
+          <path d="M3 17H21" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="logo">
+        <img src="../static/logo.svg" alt />
+      </div>
+      <div class="end">
+        <div>
+          <!-- <button v-if="active === 'Campaigns'" @click="createCampaign">Create new campaign</button> -->
+          <!--
           <button
             v-if="userContext === 'business' && typeof(show_create_button) ===  'undefined' "
             @click="createCampaign"
           >Create new campaign</button>-->
-                </div>
-                <div class="notif" @click="openNotification">
-                    <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            d="M12.02 2.90991C8.70997 2.90991 6.01997 5.59991 6.01997 8.90991V11.7999C6.01997 12.4099 5.75997 13.3399 5.44997 13.8599L4.29997 15.7699C3.58997 16.9499 4.07997 18.2599 5.37997 18.6999C9.68997 20.1399 14.34 20.1399 18.65 18.6999C19.86 18.2999 20.39 16.8699 19.73 15.7699L18.58 13.8599C18.28 13.3399 18.02 12.4099 18.02 11.7999V8.90991C18.02 5.60991 15.32 2.90991 12.02 2.90991Z"
-                            stroke="grey"
-                            stroke-width="1.5"
-                            stroke-miterlimit="10"
-                            stroke-linecap="round"
-                        />
-                        <path
-                            d="M13.87 3.19994C13.56 3.10994 13.24 3.03994 12.91 2.99994C11.95 2.87994 11.03 2.94994 10.17 3.19994C10.46 2.45994 11.18 1.93994 12.02 1.93994C12.86 1.93994 13.58 2.45994 13.87 3.19994Z"
-                            stroke="grey"
-                            stroke-width="1.5"
-                            stroke-miterlimit="10"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-                        <path
-                            d="M15.02 19.0601C15.02 20.7101 13.67 22.0601 12.02 22.0601C11.2 22.0601 10.44 21.7201 9.90002 21.1801C9.36002 20.6401 9.02002 19.8801 9.02002 19.0601"
-                            stroke="grey"
-                            stroke-width="1.5"
-                            stroke-miterlimit="10"
-                        />
-                    </svg>
-                    <span v-if="unread_notifications_length > 0">{{
-                        unread_notifications_length
-                    }}</span>
-                </div>
-            </div>
-
-            <div
-                class="mobile-menu"
-                @click.stop="toggleMobileMenu"
-                v-if="show_mobile_menu"
-            >
-                <div class="mobile-menu__container">
-                    <div class="mobile-menu__header">
-                        <div class="mobile-menu__header__image">
-                            <img
-                                src="https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg"
-                                alt
-                            />
-                        </div>
-                        <div class="mobile-menu__header__detail">
-                            <p>Deji Atoyebi</p>
-                            <p>itisdeji@gmail.com</p>
-                            <template v-if="userContext === 'marketer'">
-                                <a
-                                    href="/dashboard/my-profile"
-                                    v-if="userContext === 'marketer'"
-                                    style="cursor: pointer"
-                                    >View profile</a
-                                >
-                                &middot;
-                            </template>
-                            <a @click="logout" style="cursor: pointer"
-                                >Logout</a
-                            >
-                        </div>
-                    </div>
-                    <div class="mobile-menu__body">
-                        <sidebar-item :text="'Overview'" link="/overview" />
-                        <sidebar-item :text="'Campaigns'" link="/campaigns" />
-                        <sidebar-item
-                            v-if="context === 'marketer'"
-                            :text="'Earnings'"
-                            link="/earnings"
-                        />
-                        <sidebar-item :text="'Wallet'" link="/wallet" />
-                        <sidebar-item :text="'Settings'" link="/settings" />
-                    </div>
-                </div>
-            </div>
         </div>
-        <div class="el__dropdown">
-            <div
-                id="image"
-                class="el__dropdown__item el__dropdown__item--image"
-                v-if="show_dropdown === 'image'"
-            >
-                <ul>
-                    <li @click="goProfile">Profile</li>
-                    <li @click="logout">Logout</li>
-                </ul>
+        <div class="notif" @click="openNotification">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12.02 2.90991C8.70997 2.90991 6.01997 5.59991 6.01997 8.90991V11.7999C6.01997 12.4099 5.75997 13.3399 5.44997 13.8599L4.29997 15.7699C3.58997 16.9499 4.07997 18.2599 5.37997 18.6999C9.68997 20.1399 14.34 20.1399 18.65 18.6999C19.86 18.2999 20.39 16.8699 19.73 15.7699L18.58 13.8599C18.28 13.3399 18.02 12.4099 18.02 11.7999V8.90991C18.02 5.60991 15.32 2.90991 12.02 2.90991Z"
+              stroke="grey"
+              stroke-width="1.5"
+              stroke-miterlimit="10"
+              stroke-linecap="round"
+            />
+            <path
+              d="M13.87 3.19994C13.56 3.10994 13.24 3.03994 12.91 2.99994C11.95 2.87994 11.03 2.94994 10.17 3.19994C10.46 2.45994 11.18 1.93994 12.02 1.93994C12.86 1.93994 13.58 2.45994 13.87 3.19994Z"
+              stroke="grey"
+              stroke-width="1.5"
+              stroke-miterlimit="10"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M15.02 19.0601C15.02 20.7101 13.67 22.0601 12.02 22.0601C11.2 22.0601 10.44 21.7201 9.90002 21.1801C9.36002 20.6401 9.02002 19.8801 9.02002 19.0601"
+              stroke="grey"
+              stroke-width="1.5"
+              stroke-miterlimit="10"
+            />
+          </svg>
+          <span v-if="unread_notifications_length > 0">
+            {{
+            unread_notifications_length
+            }}
+          </span>
+        </div>
+      </div>
+
+      <div class="mobile-menu" @click.stop="toggleMobileMenu" v-if="show_mobile_menu">
+        <div class="mobile-menu__container">
+          <div class="mobile-menu__header">
+            <div class="mobile-menu__header__image">
+              <img
+                src="https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg"
+                alt
+              />
             </div>
-            <div
-                id="notification"
-                class="el__dropdown__item el__dropdown__item--notification"
-                v-else-if="show_dropdown === 'notification'"
-            >
-                <ul>
-                    <li
-                        v-for="notification in notifications"
-                        :key="notification.id"
-                        :class="[notification.read == 0 ? 'unread' : '']"
-                    >
-                        {{ notification.notification_text }}
-                        <span>{{ formatDate(notification.createdAt) }}</span>
-                    </li>
-                    <li
-                        v-if="
+            <div class="mobile-menu__header__detail">
+              <p>Deji Atoyebi</p>
+              <p>itisdeji@gmail.com</p>
+              <template v-if="userContext === 'marketer'">
+                <a
+                  href="/dashboard/my-profile"
+                  v-if="userContext === 'marketer'"
+                  style="cursor: pointer"
+                >View profile</a>
+                &middot;
+              </template>
+              <a @click="logout" style="cursor: pointer">Logout</a>
+            </div>
+          </div>
+          <div class="mobile-menu__body">
+            <sidebar-item :text="'Overview'" link="/overview" />
+            <sidebar-item :text="'Campaigns'" link="/campaigns" />
+            <sidebar-item v-if="context === 'marketer'" :text="'Earnings'" link="/earnings" />
+            <sidebar-item v-if="context === 'marketer'" :text="'Bio Links'" link="/inventory" />
+            <sidebar-item :text="'Wallet'" link="/wallet" />
+            <sidebar-item :text="'Settings'" link="/settings" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="el__dropdown">
+      <div
+        id="image"
+        class="el__dropdown__item el__dropdown__item--image"
+        v-if="show_dropdown === 'image'"
+      >
+        <ul>
+          <li @click="goProfile">Profile</li>
+          <li @click="logout">Logout</li>
+        </ul>
+      </div>
+      <div
+        id="notification"
+        class="el__dropdown__item el__dropdown__item--notification"
+        v-else-if="show_dropdown === 'notification'"
+      >
+        <ul>
+          <li
+            v-for="notification in notifications"
+            :key="notification.id"
+            :class="[notification.read == 0 ? 'unread' : '']"
+          >
+            {{ notification.notification_text }}
+            <span>{{ formatDate(notification.createdAt) }}</span>
+          </li>
+          <li
+            v-if="
                             notifications.length <
                                 static_unread_notifications_length ||
                             notifications.length < notification_length
                         "
-                        style="text-align: center; cursor: pointer"
-                        id="see-all"
-                        @click="triggerSeeAllNotifications"
-                    >
-                        See all notifications
-                    </li>
-                </ul>
-            </div>
-        </div>
+            style="text-align: center; cursor: pointer"
+            id="see-all"
+            @click="triggerSeeAllNotifications"
+          >See all notifications</li>
+        </ul>
+      </div>
     </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>

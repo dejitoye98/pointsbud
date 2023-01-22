@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="stuff">
     <div class="image">
       <input @change="addImage" type="file" accept="image/*" />
 
@@ -104,6 +104,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.container {
+  width :100%;
+  //height: 200px;
+}
 .grayscale {
   filter: grayscale(1);
   background: rgba(211, 211, 211, 0.247);

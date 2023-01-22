@@ -1,10 +1,13 @@
 export default {
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
+    env: {
+        baseUrl: process.env.BASE_URL || '//localhost:9000/api/v1'
+    },
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
-        title: "afillee",
+        title: "Afflee",
         htmlAttrs: {
             lang: "en",
         },
@@ -35,7 +38,7 @@ export default {
     css: ["~assets/scss/colors.scss"],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: [{ src: "~/plugins/api", ssr: true }, "@/plugins/money.js"],
+    plugins: [{ src: "~/plugins/api", ssr: true }, "@/plugins/money.js", "@/plugins/input.js"],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: [

@@ -10,7 +10,7 @@ export const mutations = ({
     setItems(state, value) {
         state.updateItems = value;
     },
-   
+
 })
 
 
@@ -18,7 +18,7 @@ export const mutations = ({
 export const actions = {
     getUpdates({ dispatch, commit },) {
         return new Promise((resolve, reject) => {
-            this.$api.get(`/update-counts`, )
+            this.$api.get(`/update-counts`,)
                 .then(resp => {
                     commit('setItems', resp.data.data)
                     resolve(resp)
@@ -44,7 +44,7 @@ export const actions = {
                 });
         })
     },
-    
+
 }
 
 export const getters = {
