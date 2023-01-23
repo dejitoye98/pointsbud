@@ -1,28 +1,26 @@
 <template>
-    <div class="find">
-        <template>
-            <div class="container">
-                <div class="find__body">
-                    <div class="filter">
-                        <div class="filter__header">Filter</div>
-                        <div class="filter__item">
-                            <label for>Name</label>
-                            <input v-model="filter.name" type="text" />
-                        </div>
-                        <div class="filter__item">
-                            <label for>Industry</label>
-                            <select type="text" v-model="filter.industry">
-                                <option selected></option>
-                                <option
-                                    v-for="(industry, index) in industries"
-                                    :key="index"
-                                    :value="industry.id"
-                                >
-                                    {{ industry.name }}
-                                </option>
-                            </select>
-                        </div>
-                        <!--
+  <div class="find">
+    <template>
+      <div class="container">
+        <div class="find__body">
+          <div class="filter">
+            <div class="filter__header">Filter</div>
+            <div class="filter__item">
+              <label for>Name</label>
+              <input v-model="filter.name" type="text" />
+            </div>
+            <div class="filter__item">
+              <label for>Industry</label>
+              <select type="text" v-model="filter.industry">
+                <option selected></option>
+                <option
+                  v-for="(industry, index) in industries"
+                  :key="index"
+                  :value="industry.id"
+                >{{ industry.name }}</option>
+              </select>
+            </div>
+            <!--
                             <div class="filter__item">
                                 <label for="" class="grand">Score</label>
                                 <div class="flex-row">
@@ -49,85 +47,72 @@
                                     <option>Youtube</option>
                                 </select>
             </div>-->
-                        <button @click="actionFilter">Filter</button>
-                    </div>
-                    <div class="content">
-                        <div class="content__container">
-                            <template v-if="!loading">
-                                <div
-                                    class="content__item"
-                                    v-for="(marketer, index) in marketers"
-                                    :key="index"
-                                    @click="openProfile(marketer)"
-                                >
-                                    <div
-                                        class="content__item__image"
-                                        style="margin-right: 10px"
-                                    >
-                                        <img
-                                            v-if="marketer.profile_photo"
-                                            :src="marketer.profile_photo"
-                                            alt
-                                        />
-                                        <img
-                                            v-else
-                                            src="https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg'"
-                                            alt
-                                        />
-                                    </div>
-                                    <div class="content__item__details">
-                                        <p>{{ marketer.name }}</p>
-                                        <p>{{ marketer.bio }}</p>
-                                    </div>
+            <button @click="actionFilter">Filter</button>
+          </div>
+          <div class="content">
+            <div class="content__container">
+              <template v-if="!loading">
+                <div
+                  class="content__item"
+                  v-for="(marketer, index) in marketers"
+                  :key="index"
+                  @click="openProfile(marketer)"
+                >
+                  <div class="content__item__image" style="margin-right: 10px">
+                    <img v-if="marketer.profile_photo" :src="marketer.profile_photo" alt />
+                    <img
+                      v-else
+                      src="https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg'"
+                      alt
+                    />
+                  </div>
+                  <div class="content__item__details">
+                    <p>{{ marketer.name }}</p>
+                    <p>{{ marketer.bio }}</p>
+                  </div>
 
-                                    <div class="content__item__cta">
-                                        <button
-                                            @click="inviteMarketer(marketer.id)"
-                                        >
-                                            Invite
-                                        </button>
-                                    </div>
-                                </div>
-                            </template>
-                            <template>
-                                <div style="height: 100%">
-                                    <Loading
-                                        :show="loading"
-                                        :cancel_interval="!loading"
-                                    />
-                                </div>
-                            </template>
-                        </div>
-                        <div style="padding-left: 16px">
-                            <pagination
-                                v-if="current_page"
-                                :records="(page_info && page_info.total) || 0"
-                                v-model="current_page"
-                                :per-page="page_info.page_size"
-                                @paginate="paginate"
-                            ></pagination>
-                        </div>
-                    </div>
-
-                    <div class="profile-view">
-                        <ProfileView
-                            v-if="selected_user_id"
-                            user_type="marketer"
-                            :user_id="selected_user_id"
-                            @onAction="inviteMarketer"
-                        />
-                    </div>
+                  <div class="content__item__cta">
+                    <button @click="inviteMarketer(marketer.id)">Invite</button>
+                  </div>
                 </div>
+              </template>
+              <template>
+                <div style="height: 100%">
+                  <Loading :show="loading" :cancel_interval="!loading" />
+                </div>
+              </template>
             </div>
-        </template>
-    </div>
+            <div style="padding-left: 16px">
+              <pagination
+                v-if="current_page"
+                :records="(page_info && page_info.total) || 0"
+                v-model="current_page"
+                :per-page="page_info.page_size"
+                @paginate="paginate"
+              ></pagination>
+            </div>
+          </div>
+
+          <div class="profile-view">
+            <ProfileView
+              v-if="selected_user_id"
+              user_type="marketer"
+              :user="selected_user"
+              :user_id="selected_user_id"
+              @onAction="inviteMarketer"
+            />
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
 </template>
 
 <script>
 import Pagination from "vue-pagination-2";
 
 export default {
-    layout: "dashboard-with-topbar",
+    layout: "dashboard",
     name: "FindMarketersModal",
     props: ["campaign", "show", "invitations"],
 
@@ -155,6 +140,7 @@ export default {
                 name: "",
                 industry: "",
             },
+            selected_user: {},
             campaign_id: this.$route.params.id,
             selected_user_id: null,
             loading: true,
@@ -191,6 +177,7 @@ export default {
         },
         openProfile(user) {
             this.selected_user_id = user.id;
+            this.selected_user = user;
         },
         computeQuery() {
             let querystring = "";
@@ -329,8 +316,9 @@ export default {
     //width: 90%;
     //margin: auto;
     //background: white;
-    padding: 50px 32px;
-    max-width: 100% !important;
+    //padding: 50px 32px;
+    padding: 16px 0;
+    width: 100% !important;
 }
 
 .flex-row {
@@ -340,7 +328,7 @@ export default {
     }
 }
 .filter {
-    max-width: 20%;
+    //max-width: 20%;
     padding: 0 16px;
     border-right: 0.5px solid rgba(211, 211, 211, 0.275);
     font-size: 14px;
@@ -396,7 +384,7 @@ export default {
     &__container {
         padding: 0 24px 0;
         width: 100%;
-        max-height: 75vh;
+        max-height: 95vh;
         overflow: scroll;
         box-sizing: border-box;
     }

@@ -183,410 +183,405 @@
 
 
 <script>
-import StarRating from 'vue-star-rating';
-
+import StarRating from "vue-star-rating";
 
 export default {
-	components: {
-		StarRating,
+  components: {
+    StarRating
+  },
+  fetchOnServer: true,
+  computed: {
+    totalPrice() {
+      return this.order.quantity * this.product.unitprice;
     },
-    fetchOnServer: true,
-    computed:{
-        totalPrice() {
-            return this.order.quantity * this.product.unitprice;
+    imageInView() {
+      if (!this.image_in_view) {
+        return this.product.thumbnail;
+      } else {
+        return this.image_in_view;
+      }
+    }
+  },
+  watch: {},
+  data() {
+    return {
+      make_purchase: false,
+      variations: {
+        color: {
+          items: [],
+          selected: ""
         },
-        imageInView() {
-            if (!this.image_in_view) {
-                return this.product.thumbnail
-            }
-            else {
-                return this.image_in_view
-            }
+        size: {
+          items: [],
+          selected: ""
         }
-    },
-    watch: {
-       
-    },
-	data() {
-		return {
-            make_purchase: false,
-			variations: {
-				color: {
-					items: [],
-					selected:''
-				},
-				size: {
-					items: [],
-					selected:''
-				}
-			},
-            rating: 5,
-            order: {
-                quantity: 1,
-            },
-            image_in_view: null,
-		}
-    },
-    async asyncData({route, router, $api}) {
-        const slug = route.params.slug;
-        const product = await $api
-            .get("/products/pub/" + slug)
-            .then(async product => {
-                return product.data.data;
-            
-            })
-            .catch(err => {
-                alert(err)
-            });
-        let marketer = null;
-         if (route.query.m_uid) {
-              marketer = await $api.get(`/marketers/uid/${route.query.m_uid}?product_id=${product.id}&campaign_id=${product.campaign_id}`).then(resp=> {
-              return resp.data.data;
-            })
-          }
-        if (marketer)  {
-          route.query.ref = marketer.redir_links[0].redir_link;
-        }
+      },
+      rating: 5,
+      order: {
+        quantity: 1
+      },
+      image_in_view: null
+    };
+  },
+  async asyncData({ route, router, $api }) {
+    const slug = route.params.slug;
+    const product = await $api
+      .get("/products/pub/" + slug)
+      .then(async product => {
+        return product.data.data;
+      })
+      .catch(err => {
+        alert(err);
+      });
+    let marketer = null;
+    if (route.query.m_uid) {
+      marketer = await $api
+        .get(
+          `/marketers/uid/${route.query.m_uid}?product_id=${product.id}&campaign_id=${product.campaign_id}`
+        )
+        .then(resp => {
+          return resp.data.data;
+        });
+    }
+    if (marketer) {
+      route.query.ref = marketer.redir_links[0].redir_link;
+    }
 
-        return {
-            product,
-            marketer
-        }
+    // try to get brandAssets
+    let brand_assets;
 
+    brand_assets = await $api.get("/brand-assets").then(resp => {
+      return resp.data.data;
+    });
+
+    return {
+      product,
+      marketer,
+      brand_assets
+    };
+  },
+  mounted() {},
+  methods: {
+    showImage(image) {
+      this.image_in_view = image;
     },
-    mounted() {
+    increaseQuantity() {
+      if (this.order.quantity < this.product.qty) {
+        this.order.quantity++;
+      }
     },
-	methods: {
-        showImage(image){
-            this.image_in_view = image;
-        },
-        increaseQuantity() {
-            if (this.order.quantity < this.product.qty) {
-                this.order.quantity++
-            }
-        },
-        decreaseQuantity() {
-            if (this.order.quantity > 0) {
-                this.order.quantity--
-            }
-        },
-		isNumber: function(evt) {
-			evt = (evt) ? evt : window.event;
-			var charCode = (evt.which) ? evt.which : evt.keyCode;
-			if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-				evt.preventDefault();;
-			} else {
-				return true;
-			}
-        },
-        triggerPurchase() {
-            this.make_purchase = !this.make_purchase;
-        },
-		alertMe(){
-			alert("yeee")
-		},
-		getClass(color) {
-			if (this.variations.color.selected === color) {
-				return 'chosen-fill'
-			}
-		}
-	}
-	
-}
+    decreaseQuantity() {
+      if (this.order.quantity > 0) {
+        this.order.quantity--;
+      }
+    },
+    isNumber: function(evt) {
+      evt = evt ? evt : window.event;
+      var charCode = evt.which ? evt.which : evt.keyCode;
+      if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46
+      ) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
+    triggerPurchase() {
+      this.make_purchase = !this.make_purchase;
+    },
+    alertMe() {
+      alert("yeee");
+    },
+    getClass(color) {
+      if (this.variations.color.selected === color) {
+        return "chosen-fill";
+      }
+    }
+  }
+};
 </script>
 <style lang="scss" scoped>
-
 $primary: #540a18;
 body {
-    background: url('https://www.toptal.com/designers/subtlepatterns/uploads/groovepaper.png');
+  background: url("https://www.toptal.com/designers/subtlepatterns/uploads/groovepaper.png");
 }
 .image-details {
-	height: 100px;
-	height: 200ps;
-	border: 1px solid grey;
+  height: 100px;
+  height: 200ps;
+  border: 1px solid grey;
 }
 .chosen-fill {
-	background: $primary;
-	border: 1.8px solid $primary;
-	color: white;
+  background: $primary;
+  border: 1.8px solid $primary;
+  color: white;
 }
 h3 {
-	font-size: 15px !important;
-	color: $charcoal;
-	margin: 8px 0;
-
+  font-size: 15px !important;
+  color: $charcoal;
+  margin: 8px 0;
 }
 
 .section {
-	margin: 24px 0;
+  margin: 24px 0;
 }
 
-.variations{
-	display: grid;
-	grid-template-columns: 20% 20% 20% 20%;
-	justify-content: space-between;
+.variations {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20%;
+  justify-content: space-between;
 }
 
-.checkbox{
-	position: relative;
-	width:75px;
-	height: 40px;
-	border: 1.8px solid $charcoal;
-	border-radius: 5px;
-	padding: 8px;
-	display: flex;
-	align-items: center;
-	text-align: center;
-	justify-content: center;
-	cursor: pointer;
-	font-size: 16px;
-	font-weight: 600;
+.checkbox {
+  position: relative;
+  width: 75px;
+  height: 40px;
+  border: 1.8px solid $charcoal;
+  border-radius: 5px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
 
-	&:hover {
-		background: $primary;
-		border: 2px solid $primary;
-		color: white;
+  &:hover {
+    background: $primary;
+    border: 2px solid $primary;
+    color: white;
+  }
 
-		
-	}
-	
-	
-	input {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top:0;
-		left: 0;
-		visibility: hidden;
-	}
+  input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+  }
 }
 .container {
-	width: 90%;
-	margin: auto;
+  width: 90%;
+  margin: auto;
 }
 
 .top {
-	width: 100%;
+  width: 100%;
 
-	//padding: 16px 24px;
+  //padding: 16px 24px;
 
-	&__container {
-		width: 90%;
-		margin: auto;
-		display: grid;
-		grid-template-columns: 18% 60% 18%;
-		justify-content: space-between;
-		padding: 16px;
-		align-items: center;
+  &__container {
+    width: 90%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 18% 60% 18%;
+    justify-content: space-between;
+    padding: 16px;
+    align-items: center;
     @include media("<=t") {
       grid-template-columns: 100%;
     }
-	}
+  }
 
-	&__logo {
-		font-size: 24px;
+  &__logo {
+    font-size: 24px;
 
-		font-weight: 600;
+    font-weight: 600;
     @include media("<=t") {
       display: flex;
       justify-content: center;
     }
-	}
+  }
 
-	&__links {
-		text-align: center;
+  &__links {
+    text-align: center;
 
-		a {
-			cursor: pointer;
-			margin-right: 16px;
-			font-size: 18px;
-		}
-	}
-	&__actions{ 
-		display: flex;
-		justify-content: flex-end;
-		button {
-			@include smallbutton;
-		}
+    a {
+      cursor: pointer;
+      margin-right: 16px;
+      font-size: 18px;
+    }
+  }
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    button {
+      @include smallbutton;
+    }
     @include media("<=t") {
       display: none;
     }
-	}
-
-
-
-
+  }
 }
 
 .main {
-	display: grid;
-	width: 90%;
-	margin: auto;
-	grid-template-columns: 49% 49%;
-	justify-content: space-between;
-	margin-top: 60px;
+  display: grid;
+  width: 90%;
+  margin: auto;
+  grid-template-columns: 49% 49%;
+  justify-content: space-between;
+  margin-top: 60px;
   @include media("<=t") {
     grid-template-columns: 100%;
     margin-top: 20px;
   }
-	&__pictures {
-		&__image {
-			width: 100%;
-			height: 80%;
-			img {
-				height: auto;
-				width: auto;
-				object-fit: cover;
-				border-radius: 4px;
+  &__pictures {
+    &__image {
+      width: 100%;
+      height: 80%;
+      img {
+        height: auto;
+        width: auto;
+        object-fit: cover;
+        border-radius: 4px;
 
-          @include media("<=t") {
-            height: 100%;
-          }
-			}
-		}
+        @include media("<=t") {
+          height: 100%;
+        }
+      }
+    }
 
-		&__more {
-			height: 100px;
-			display: grid;
-			grid-template-columns: 22% 22% 22% 22%;
-			justify-content: space-between;
-			margin: 8px 0;
+    &__more {
+      height: 100px;
+      display: grid;
+      grid-template-columns: 22% 22% 22% 22%;
+      justify-content: space-between;
+      margin: 8px 0;
 
       @include media("<=t") {
         margin: 8px 0;
         margin-bottom: 16px;
       }
-			&__item {
-				height :100px;
-				width: 100%;
-				cursor: pointer;
+      &__item {
+        height: 100px;
+        width: 100%;
+        cursor: pointer;
 
-				img {
-					height: 100%;
-					width: 100%;
-					object-fit: cover;
-					border-radius: 5px;
-				}
-			}
-		}
-	}
-
-	&__details {
-		max-width: 500px;
-		&__title {
-            h2 {
-                font-size: 30px;
-                font-weight: 700;
-            }
-            p {
-                font-size: 18px;
-                color: $primary;
-            }
-        
-		}
-		&__review  {
-			display: flex;;
-			margin: 0px 0 8px 0px;
-			align-items: center;
-			a {
-				color: $primary;
-				text-decoration: underline;
-				text-decoration-color: $primary;
-				display: block;
-				line-height: 14px;
-				
-			}
-
-			.stars {
-				margin-right: 16px;
-			}
-		}
-
-		&__description {
-			color:$charcoal;
-			margin: 8px 0;
-			line-height: 1.8;
-		}
-		&__quantity {
-			label {
-				margin-top: 8px;
-				display: block;
-				font-size: 18px;
-				color: $charcoal;
-				margin-bottom: 8px;
-			}
-			button {
-				width: 40px;
-				height: 40px;
-				border-radius: 5px;
-				background: $primary;
-				color: white;
-			}
-			input {
-				height: 40px;
-				border: 1px solid $charcoal;
-				border-radius: 5px;
-				text-align: center;
-				color: black;
-				max-width: 60px;
-				appearance: none !important;
-				-webkit-appearance: none !important;
-				-moz-appearance: textfield;
-			
-				&:focus{
-					outline: 0;
-				}
-			}
+        img {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+          border-radius: 5px;
         }
-        
-        &__offers {
-            color: darkgrey;
+      }
+    }
+  }
+
+  &__details {
+    max-width: 500px;
+    &__title {
+      h2 {
+        font-size: 30px;
+        font-weight: 700;
+      }
+      p {
+        font-size: 18px;
+        color: $primary;
+      }
+    }
+    &__review {
+      display: flex;
+      margin: 0px 0 8px 0px;
+      align-items: center;
+      a {
+        color: $primary;
+        text-decoration: underline;
+        text-decoration-color: $primary;
+        display: block;
+        line-height: 14px;
+      }
+
+      .stars {
+        margin-right: 16px;
+      }
+    }
+
+    &__description {
+      color: $charcoal;
+      margin: 8px 0;
+      line-height: 1.8;
+    }
+    &__quantity {
+      label {
+        margin-top: 8px;
+        display: block;
+        font-size: 18px;
+        color: $charcoal;
+        margin-bottom: 8px;
+      }
+      button {
+        width: 40px;
+        height: 40px;
+        border-radius: 5px;
+        background: $primary;
+        color: white;
+      }
+      input {
+        height: 40px;
+        border: 1px solid $charcoal;
+        border-radius: 5px;
+        text-align: center;
+        color: black;
+        max-width: 60px;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: textfield;
+
+        &:focus {
+          outline: 0;
         }
+      }
+    }
 
-		&__variations {
-			h3 {
-				font-size: 18px;
-			}
-		}
+    &__offers {
+      color: darkgrey;
+    }
 
-		&__pricing{
-			border-top: 1px solid lightgrey;
-			border-bottom: 1px solid lightgrey;
-			padding: 16px 0px;
-			margin: 24px 0;
-			display: flex; 
-			justify-content: space-between;
-			margin-bottom: 8px;
-			align-items: center;
-			
-			&__price {
-				margin-right: 24px;
-				display: flex;
-				font-size: 20px;
-				font-weight: 600;
-				align-items: flex-start;
-				span {
-					font-size: 14px;
-				}
-			}
-			&__cta{
-				position: relative ;
-				left: 0;
-				top: 0;
-				background: $primary;
-				font-size: 15px;
-				color:white;
-				@include smallbutton;
-				padding: 8px 36px;
-				display: flex;
-				align-items: center;
-				svg {
-					margin-right: 8px;
-				}
-				
+    &__variations {
+      h3 {
+        font-size: 18px;
+      }
+    }
 
-			}
-		}
-	}
+    &__pricing {
+      border-top: 1px solid lightgrey;
+      border-bottom: 1px solid lightgrey;
+      padding: 16px 0px;
+      margin: 24px 0;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      align-items: center;
+
+      &__price {
+        margin-right: 24px;
+        display: flex;
+        font-size: 20px;
+        font-weight: 600;
+        align-items: flex-start;
+        span {
+          font-size: 14px;
+        }
+      }
+      &__cta {
+        position: relative;
+        left: 0;
+        top: 0;
+        background: $primary;
+        font-size: 15px;
+        color: white;
+        @include smallbutton;
+        padding: 8px 36px;
+        display: flex;
+        align-items: center;
+        svg {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
 }
 </style>

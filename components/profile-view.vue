@@ -76,7 +76,7 @@
 
 <script>
 export default {
-  props: ["user_type", "user_id"],
+  props: ["user_type", "user_id", "user"],
   data() {
     return {
       loading: false,
@@ -97,16 +97,21 @@ export default {
     },
     getUser() {
       this.loading = true;
-      this.$api
-        .get(`/users?type=${this.user_type}&id=${this.user_id}`)
-        .then(resp => {
-          this.user = resp.data.data;
-          this.loading = false;
-          //alert(JSON.stringify(resp))
-        })
-        .catch(err => {
-          this.loading = false;
-        });
+      if (!this.user) {
+        this.$api
+          .get(`/users?type=${this.user_type}&id=${this.user_id}`)
+          .then(resp => {
+            this.user = resp.data.data;
+            this.loading = false;
+            //alert(JSON.stringify(resp))
+          })
+          .catch(err => {
+            this.loading = false;
+          });
+      }
+      else {
+        this.loading = false;
+      }
     }
   }
 };
