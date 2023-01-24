@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <PurchaseModal
+      :color="primaryColor"
       @close="triggerPurchase"
       v-if="make_purchase && product"
       :marketer="marketer"
@@ -12,18 +13,15 @@
     <div class="top">
       <div class="top__container">
         <div class="top__logo">
-          <img
-            src="data:image/jpeg;base64,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aAyD+fxaVtH9TW0f1NbJ9aXk9v5rnZgpbTKNbUW1vcae6hfN1exdquQ4HeBr21mJObuA20oac74q2j+praP6mucEt5/pD//EACcQAQABAwIFBQEBAQAAAAAAAAERACExQVEQYXGBkTChsdHwIGDB/9oACAEBAAE/If8AAwRfNx4KRC3m/XUu5LOnb1xIAlax3GLAc3/OIbCRISpxvbV+jnSAIyPq4CqB3X/nBKm4ZY5pRZau7PsZefKszJDwmXyh129vUh7JPWLUqst3WjTAGAlpt+zBLuSY60lu1yXkZsZ0mive24i+Bpv04MMwR6Vj8+ogMpPHQERy9PtT17CEaGJic+aPsfGEDdNW3TbgmeBPD1MynfRIoQ4f1jhIaCcNZLfFQwECJqS1CeCwz14KiNT6Y949VpihukP2eHOw904dfz9tJbWAlWrZBuhpt2ete3svsUYnarImUw+OE9wOAY80FrSEMdGnpHtKowFYLx6UghO060ek3loRBGRpui8gw7VfrcTQTWH7Lj0UzUAlXSrVsTL1HvQ+/mJDypS0QALtQS9mjeKgVuop7H9fobqOyHvC3pIyWZTfPnvVnyjz03mo1gflfZ9UgDTtL91KleLtxppoANjdPiiSSV/F/fvUQ6nhVuYoWbyULviyqbOaNot5rK3eoj8w03s/oGRPli6VdfwNczvRCtNYLJafNNc9IFgTKZvVrs1EIwh7xuUqLxk+KBIlUYyUrA2EkYdO9EzgDLwxNBywWQnN2qGjxKAB5XKYJYJl5K9HW93Tsoylu+MOP9SlZOk1P6HxU/ofFDq8r6obNxkJ7rYoYSgIWy+8+0c6AhsEAtAlw3moLiXkFDfnptTAsaIF+HTSrEErRU3PNKcbmZxJvYqfzPip/M+KUXMoX1/kP//aAAwDAQACAAMAAAAQ88888888888888y98888888c01e888887OJ23888888ck4c888888myC00888gEU0YE0888tNsc8Nd8888888888888888888888/8QAIREBAAICAQMFAAAAAAAAAAAAAQARITEgMEBhEFFxkfD/2gAIAQMBAT8Q6wCxfURGnoCDzPzAlUhXfICRjrERbbEu2ICzkNZhCIrr4lCr2gXGjmvbHlCbYOxuHhPh6Ll9v//EABwRAQADAAIDAAAAAAAAAAAAAAEAETEgMBBBUP/aAAgBAgEBPxDus6fRAWDUG+TnjcmuilTMdgo5pcCpTfm//8QAJxABAAICAgEEAgIDAQAAAAAAAREhADFBUWEQMHGBkbEgoWDB0fH/2gAIAQEAAT8Q/wABd62MH5kTPw6AfnNSMSi+RsfZ782wjtXgDlWgN5OTr5CQ3fSvneFaqevRhIS4rsSzJJ1GkNxXf5DmdglhSIyJ7rGFDFHT9wyPhefRb92GBIq1joYkWDIPaK1KCGDgZlBCrCVB0TJIxTydPPow6Y65YfuSPDHHuOmj41L9oxAqtp5eXHDMrCAS+LxUyAThZRktyINURjmxxgNEsBCSyRuMQTXxTzoNQBHyWIguNm+TG/VL6w17YcKKnQi/0OO3BREUSxGEwYqmnb1j868vkwGVsiuxAJHS33GCRhFbEjVCJNIoT6TVsKduB7f9kT4X7xCJSeyH/v36AhYtRBIuxcMJsgQsHZ/R+MTINVCshypt8B6SQr0KOP7f4PuoPHCSBADmCvAHh9JrKePkf6H0iP8A7/8Ajg5kyQtAcuAgNF0RKHkk3yq9e6kkOMgxLZO4WvgTwZDVNtpaBv0Gf/AFIIBKSODABWgFF2cDza98e0sz54ESq8AYsFrx/wC8CnRs3IDwhUMdkaAT/bhthSIyJ3gD/VAoG9tI/eLY3RMzRLzgWFGRdggty1irTLQAtV4MYn0vKqCjT8mRTKWgBlc0j94J670owB5VxBAUaM+raMjZ0YqaOWz8/wA61ihw00AzRBPEYyAeeQ/CMlPlzkaDMK4JiMbLmPrAYnSxybrJUB0mWBhjCsK4mz46sN8EfYR/DlbibmKY+JGrxzqbawJfNJ7RFKDUKHLtEP8AWD02eQQJypJ95D7n6syOoMM+MbE7zbnH4KXTppw6E5VBlpuUMfY2P8oDgmC0BeLcayRZipMA29YGlzs1wQHC0Gg1mgAdEYSiN3DD2Kh1icLBNrKuAcY0CIgEDqqx4w5drhK7OoVgeE6xYFcJQgbNjWCklKFKC2xLGCWAiLULobbytCWBMTJCXWMDRpMBI7ROCCYqPkrlzvADBGJgr2MEJzTuf5awo0UE+cZq+/IcuYkaPjFDebMRYgs0nr5KyYtIWLiiMQAgPyMLCWZuWEEbpLC4KHJAQ9lYBCW0ibcJiwnRvUQRS8pE+VzcMEDLgNrHt3EUYSAgSkDVDfSD36xMiYnKzWPE+2g6/wAF/9k="
-            alt
-          />
+          <img :src="assets && assets.logo" alt />
         </div>
         <div class="top__links">
-          <a>Website</a>
-          <a>Shop</a>
-          <a>Reviews</a>
+          <a :style="{'color': primaryColor}">Website</a>
+          <a :style="{'color': primaryColor}">Shop</a>
+          <a :style="{'color': primaryColor}">Reviews</a>
         </div>
         <div class="top__actions">
-          <button>Go to Afflee</button>
+          <button :style="{'backgroundColor': primaryColor}">Is this safe?</button>
         </div>
       </div>
     </div>
@@ -48,7 +46,7 @@
       <div class="main__details">
         <div class="main__details__title">
           <h2>{{product.name}}</h2>
-          <p>by {{product.business.name}}</p>
+          <p :style="{color:  primaryColor}">by {{product.business.name}}</p>
         </div>
         <div class="main__details__review">
           <div class="stars">
@@ -61,61 +59,61 @@
               />
             </no-ssr>
           </div>
-          <a href>{{product.reviews || 0}} reviews</a>
+          <a
+            href
+            :style="{'color':  accentColor, 'text-decoration-color': accentColor}"
+          >{{product.reviews || 0}} reviews</a>
         </div>
 
         <div class="main__details__description">
           <TruncatedText :text="product.description" limit="230"></TruncatedText>
         </div>
-        <div class="main__details__variations section">
-          <h3>Choose Color</h3>
 
-          <div class="variations">
-            <label
-              class="checkbox"
-              :class="[variations.color.selected === 'green' ? 'chosen-fill':'' ]"
-            >
-              <input type="radio" v-model="variations.color.selected" value="green" />Green
-            </label>
-            <label
-              class="checkbox"
-              :class="[variations.color.selected === 'gold' ? 'chosen-fill':'' ]"
-            >
-              <input type="radio" value="gold" v-model="variations.color.selected" />Gold
-            </label>
-            <label
-              class="checkbox"
-              :class="[variations.color.selected === 'red' ? 'chosen-fill':'' ]"
-            >
-              <input type="radio" value="red" v-model="variations.color.selected" />Red
-            </label>
+        <!--- start of variations -->
+        <template v-if="Object.keys(variations).length >0">
+          <div
+            class="main__details__variations section"
+            v-for="(variation, v_index) in Object.keys(variations)"
+            :key="v_index"
+          >
+            <h3>{{variation | uppercase}}</h3>
+
+            <div class="variations">
+              <label
+                class="checkbox"
+                :style="variationSelectedStyle(variation, item.name)"
+                v-for="(item, i_index) in variations[variation].items"
+                :key="i_index"
+              >
+                <input
+                  type="radio"
+                  :value="item.name"
+                  @change="selectVariation(variation, item.name)"
+                />
+                {{item.name}}
+              </label>
+            </div>
           </div>
-        </div>
-        <div class="main__details__variations section">
-          <h3>Choose Size</h3>
-          <div class="variations">
-            <label class="checkbox">
-              <input type="checkbox" />1.4x
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" />1.8x
-            </label>
-            <label class="checkbox">
-              <input type="checkbox" />1.9x
-            </label>
-          </div>
-        </div>
+        </template>
+
+        <!--- end of variations -->
 
         <div class="main__details__quantity section">
           <h3>Quantity</h3>
-          <button @click="decreaseQuantity">-</button>
+          <button
+            :style="{'backgroundColor': assets && assets.primary_color}"
+            @click="decreaseQuantity"
+          >-</button>
           <input
             type="text"
             inputmode="numeric"
             v-model="order.quantity"
             @keypress="isNumber($event)"
           />
-          <button @click="increaseQuantity">+</button>
+          <button
+            :style="{'backgroundColor': assets && assets.primary_color}"
+            @click="increaseQuantity"
+          >+</button>
         </div>
 
         <div class="main__details__pricing">
@@ -125,7 +123,11 @@
               {{totalPrice | money}}
             </p>
           </div>
-          <div class="main__details__pricing__cta" @click="make_purchase = true">
+          <div
+            class="main__details__pricing__cta"
+            :style="{'backgroundColor': assets && assets.primary_color}"
+            @click="make_purchase = true"
+          >
             <svg
               width="24"
               height="24"
@@ -191,6 +193,15 @@ export default {
   },
   fetchOnServer: true,
   computed: {
+    primaryColor() {
+      return this.assets.primary_color;
+    },
+    accentColor() {
+      return this.assets.accent_color || this.assets.primary_color;
+    },
+    assets() {
+      return this.brand_assets || {};
+    },
     totalPrice() {
       return this.order.quantity * this.product.unitprice;
     },
@@ -208,7 +219,10 @@ export default {
       make_purchase: false,
       variations: {
         color: {
-          items: [],
+          items: [
+            { name: "Green", images: [] },
+            { name: "Pink", images: [] }
+          ],
           selected: ""
         },
         size: {
@@ -250,9 +264,11 @@ export default {
     // try to get brandAssets
     let brand_assets;
 
-    brand_assets = await $api.get("/brand-assets").then(resp => {
-      return resp.data.data;
-    });
+    brand_assets = await $api
+      .get("/brand-assets?business_id=" + product.business_id)
+      .then(resp => {
+        return resp.data.data;
+      });
 
     return {
       product,
@@ -261,7 +277,26 @@ export default {
     };
   },
   mounted() {},
+  filters: {
+    uppercase: function(v) {
+      return v.toUpperCase();
+    }
+  },
   methods: {
+    selectVariation(variation_name, variation_item_name) {
+      this.variations[variation_name].selected = variation_item_name;
+    },
+    variationSelectedStyle(variation_name, variation_item_name) {
+      const variation = this.variations[variation_name];
+      const selected = variation.selected;
+      const style = {};
+      if (variation && selected === variation_item_name) {
+        style["backgroundColor"] = this.primaryColor;
+        style["color"] = "white";
+      }
+      return style;
+    },
+    chooseVariation() {},
     showImage(image) {
       this.image_in_view = image;
     },
@@ -303,7 +338,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-$primary: #540a18;
 body {
   background: url("https://www.toptal.com/designers/subtlepatterns/uploads/groovepaper.png");
 }
@@ -349,9 +383,9 @@ h3 {
   font-weight: 600;
 
   &:hover {
-    background: $primary;
-    border: 2px solid $primary;
-    color: white;
+    //background: $primary;
+    //border: 2px solid $primary;
+    color: $charcoal;
   }
 
   input {

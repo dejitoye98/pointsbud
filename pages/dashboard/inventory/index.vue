@@ -18,83 +18,86 @@
 
 <style lang="scss" scoped>
 .container {
-    width: 50%;
+  width: 50%;
 
-    @include media("<=t") {
-        width: 100%;
-    }
-
+  @include media("<=t") {
+    width: 100%;
+  }
 }
 .header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    align-items: center; 
-    p {
-        font-size: 18px;
-        color: $faint;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  align-items: center;
+  @include media("<=t") {
+    flex-wrap: wrap;
+  }
+  p {
+    font-size: 18px;
+    color: $faint;
+  }
+  button {
+    @include smallbutton;
+    @include media("<=t") {
+      margin-top: 8px;
     }
-    button {
-        @include smallbutton;
-        
-    }
+  }
 }
 .card {
-    background: white;
-    @include card;
-    padding: 16px;
-    border-radius: 5px;
-    margin-bottom: 8px;
-    @include media("<=t") {
-        width: 100%;
-    }
-    &__header {
-        font-size: 18px;
-        font-weight: 500;
-    }
-    &__link {
-        color: $lightaccent;
-        font-size: 14px;
-        display: inline-block;
-    }
-    &__details {
-        color: $charcoal;
-        font-size: 14px;
-    }
+  background: white;
+  @include card;
+  padding: 16px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+  @include media("<=t") {
+    width: 100%;
+  }
+  &__header {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  &__link {
+    color: $lightaccent;
+    font-size: 14px;
+    display: inline-block;
+  }
+  &__details {
+    color: $charcoal;
+    font-size: 14px;
+  }
 }
 </style>
 <script>
-import moment from "moment"
+import moment from "moment";
 export default {
-    layout: 'dashboard',
-    data() {
-        return {
-            inventories: []
-        }
+  layout: "dashboard",
+  data() {
+    return {
+      inventories: []
+    };
+  },
+  created() {
+    this.getData();
+  },
+  methods: {
+    goTo(iv) {
+      this.$router.push("/dashboard/inventory/" + iv.slug);
     },
-    created() {
-        this.getData();
+    daysAgo(time) {
+      const diff = moment().diff(moment(time), "days");
+      if (diff === 0) {
+        return "today";
+      } else if (diff === 1) {
+        return "yesterday";
+      }
+
+      return d + " days ago";
     },
-    methods: {
-        goTo(iv) {
-            this.$router.push('/dashboard/inventory/' + iv.slug);
-        },
-        daysAgo(time) {
-            const diff = moment().diff(moment(time), 'days');
-            if (diff === 0) {
-                return "today"
-            }
-            else if (diff === 1) {
-                return 'yesterday'
-            }
-            
-            return d + " days ago"
-        },
-        getData() {
-            this.$api.get('/inventory').then(resp=> {
-                this.inventories = resp.data.data;
-            })
-        }
+    getData() {
+      this.$api.get("/inventory").then(resp => {
+        this.inventories = resp.data.data;
+      });
     }
-}
+  }
+};
 </script>

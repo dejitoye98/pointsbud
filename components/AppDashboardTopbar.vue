@@ -159,8 +159,8 @@
               />
             </div>
             <div class="mobile-menu__header__detail">
-              <p>Deji Atoyebi</p>
-              <p>itisdeji@gmail.com</p>
+              <p>{{userDetails && userDetails.name}}</p>
+              <p>{{userDetails && userDetails.email}}</p>
               <template v-if="userContext === 'marketer'">
                 <a
                   href="/dashboard/my-profile"
@@ -226,302 +226,305 @@
 
 <style lang="scss" scoped>
 .desktop {
-    display: none !important;
-    @include media(">=dashbreak") {
-        display: flex !important;
-    }
+  display: none !important;
+  @include media(">=dashbreak") {
+    display: flex !important;
+  }
 }
 
 .mobile {
-    display: none !important;
-    @include media("<=dashbreak") {
-        display: flex !important;
-    }
+  display: none !important;
+  @include media("<=dashbreak") {
+    display: flex !important;
+  }
 }
 
 .business-name {
-    font-size: 16px;
-    font-weight: 500;
+  font-size: 16px;
+  font-weight: 500;
 }
 #see-all {
-    background: #e3a09e62;
-    color: black;
-    font-size: 16px;
+  background: #e3a09e62;
+  color: black;
+  font-size: 16px;
 }
 .active-dropdown {
-    opacity: 1 !important;
+  opacity: 1 !important;
 }
 .unread {
-    background: rgba(255, 186, 186, 0.212);
+  background: rgba(255, 186, 186, 0.212);
 }
 .el {
-    width: 100%;
-    //background: white;
-    //box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-    z-index: 1000000000000000;
-    background: white !important;
-    //margin-left: -20px;
-    position: sticky;
-    top: 0;
-    left: 0;
+  width: 100%;
+  //background: white;
+  //box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  z-index: 1000000000000000;
+  background: white !important;
+  //margin-left: -20px;
+  position: sticky;
+  top: 0;
+  left: 0;
 
-    &__dropdown {
-        position: relative;
-        //border: 1px solid black;
-        margin-top: -10px;
-        //max-height: 90vh;
-        //height: 100px;
-        z-index: 10;
+  &__dropdown {
+    position: relative;
+    //border: 1px solid black;
+    margin-top: -10px;
+    //max-height: 90vh;
+    //height: 100px;
+    z-index: 10;
 
-        &__item {
-            //border: 1px solid lightgrey;
-            background: white;
-            //border: rgba(211, 211, 211, 0.263) 1px solid ;
-            //box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
-            transition: all 0.3s ease-in-out;
-            border: 0.5px solid lightgray;
+    &__item {
+      //border: 1px solid lightgrey;
+      background: white;
+      //border: rgba(211, 211, 211, 0.263) 1px solid ;
+      //box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+      transition: all 0.3s ease-in-out;
+      border: 0.5px solid lightgray;
 
-            &--image {
-                position: absolute;
-                top: 20;
-                right: 0px;
-            }
-            &--notification {
-                position: absolute;
-                top: 20;
-                right: 15px;
-                color: grey;
+      &--image {
+        position: absolute;
+        top: 20;
+        right: 0px;
+      }
+      &--notification {
+        position: absolute;
+        top: 20;
+        right: 15px;
+        color: grey;
 
-                li {
-                    padding: 20px 30px !important;
-                    display: flex;
-                    flex-direction: column;
-                    color: black;
+        li {
+          padding: 20px 30px !important;
+          display: flex;
+          flex-direction: column;
+          color: black;
 
-                    span {
-                        font-size: 13px;
-                        color: grey;
-                    }
-                }
-
-                &--unread {
-                    background: $lightaccent;
-                }
-            }
-            li {
-                cursor: pointer;
-                padding: 10px 50px;
-                border-bottom: rgba(211, 211, 211, 0.263) 1px solid;
-            }
-        }
-    }
-
-    &__container {
-        width: 100%;
-        display: flex;
-        padding: 2px 16px;
-        //padding-left: 16px;
-        //padding
-        justify-content: space-between;
-        align-items: center;
-    }
-    &__end {
-        height: 100%;
-        justify-self: end;
-        display: flex;
-        align-items: center;
-
-        button {
-            font-size: 16px !important;
+          span {
+            font-size: 13px;
+            color: grey;
+          }
         }
 
-        div {
-            margin-right: 15px;
-            cursor: pointer;
-            &:last-of-type {
-                margin-right: 0;
-            }
+        &--unread {
+          background: $lightaccent;
         }
-
-        &__notif {
-            position: relative;
-            //border: 1px solid black;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            svg {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                display: block;
-                z-index: 99;
-            }
-            span {
-                width: 25px;
-                height: 25px;
-                background: $darkshade;
-                cursor: pointer;
-                z-index: 100;
-                position: absolute;
-                right: 0;
-                top: 0;
-                border-radius: 50%;
-                color: white;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-        }
-
-        &__image {
-            width: 30px;
-            height: 30px;
-
-            img {
-                object-fit: cover;
-                border-radius: 50%;
-            }
-        }
-    }
-
-    button {
-        @include smallbutton;
-        //width: 50px;
-        margin-right: 20px;
-        font-size: 14px;
-        padding: 8px;
-        height: auto !important;
-        font-weight: 400;
-        width: auto !important;
-        color: white;
-        border-radius: 5px;
-        min-height: auto;
+      }
+      li {
         cursor: pointer;
-        margin-bottom: 0;
+        padding: 10px 50px;
+        border-bottom: rgba(211, 211, 211, 0.263) 1px solid;
+      }
     }
-}
+  }
 
-.title {
-    padding: 8px 16px;
+  &__container {
+    width: 100%;
+    display: flex;
+    padding: 2px 16px;
+    //padding-left: 16px;
+    //padding
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__end {
+    height: 100%;
+    justify-self: end;
     display: flex;
     align-items: center;
 
-    &__back {
-        margin-right: 10px;
+    button {
+      font-size: 16px !important;
+    }
+
+    div {
+      margin-right: 15px;
+      cursor: pointer;
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+
+    &__notif {
+      position: relative;
+      //border: 1px solid black;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        z-index: 99;
+      }
+      span {
+        width: 25px;
+        height: 25px;
+        background: $darkshade;
         cursor: pointer;
+        z-index: 100;
+        position: absolute;
+        right: 0;
+        top: 0;
+        border-radius: 50%;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     }
-    &__text {
-        font-size: 16px;
-        color: $faint;
-        font-weight: 300;
-        //letter-spacing: 0.10rem;
+
+    &__image {
+      width: 30px;
+      height: 30px;
+
+      img {
+        object-fit: cover;
+        border-radius: 50%;
+      }
     }
+  }
+
+  button {
+    @include smallbutton;
+    //width: 50px;
+    margin-right: 20px;
+    font-size: 14px;
+    padding: 8px;
+    height: auto !important;
+    font-weight: 400;
+    width: auto !important;
+    color: white;
+    border-radius: 5px;
+    min-height: auto;
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+}
+
+.title {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+
+  &__back {
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  &__text {
+    font-size: 16px;
+    color: $faint;
+    font-weight: 300;
+    //letter-spacing: 0.10rem;
+  }
 }
 
 .el__container--mobile {
-    .menu {
-        width: 20%;
+  @include card;
+
+  .menu {
+    width: 20%;
+  }
+  .logo {
+    width: 60%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    padding: 8px 0;
+    img {
+      width: 100px;
     }
-    .logo {
-        width: 60%;
-        margin: auto;
-        display: flex;
-        justify-content: center;
+  }
+  .end {
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .notif {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    svg {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+    }
+    span {
+      position: absolute;
+      width: 15px;
+      background: red;
+      border-radius: 50%;
+      height: 15px;
+      bottom: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      color: white;
+      align-items: center;
+      font-size: 13px;
+    }
+  }
+  .mobile-menu {
+    position: fixed;
+    padding: 16px 16px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    display: flex;
+
+    &__container {
+      min-width: 50%;
+      min-height: 100vh;
+      position: absolute;
+      top: 0;
+      box-sizing: border-box;
+      left: 0;
+      background: white;
+      //padding: 16px;
+      box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
+        rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+    }
+
+    &__header {
+      //height: 400px;
+      display: flex;
+      align-items: center;
+      border-bottom: 0.5px solid rgba(211, 211, 211, 0.21);
+      margin-top: 20px;
+      padding: 24px 16px 24px 16px;
+
+      &__detail {
+        font-size: 13px;
+        color: $charcoal;
+        margin-left: 5px;
+        a {
+          color: $primary;
+        }
+      }
+
+      &__image {
+        //idth: 50%;
+        margin-right: 5px;
+
         img {
-            width: 100px;
+          border-radius: 50%;
+          width: 50px;
+          height: 50px;
+          object-fit: cover;
         }
+      }
     }
-    .end {
-        width: 20%;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
+
+    &__body {
+      padding-top: 36px;
     }
-    .notif {
-        position: relative;
-        width: 30px;
-        height: 30px;
-        svg {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-        span {
-            position: absolute;
-            width: 15px;
-            background: red;
-            border-radius: 50%;
-            height: 15px;
-            bottom: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            color: white;
-            align-items: center;
-            font-size: 13px;
-        }
-    }
-    .mobile-menu {
-        position: fixed;
-        padding: 16px 16px;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        height: 100%;
-        width: 100%;
-        background: transparent;
-        display: flex;
-
-        &__container {
-            min-width: 50%;
-            min-height: 100vh;
-            position: absolute;
-            top: 0;
-            box-sizing: border-box;
-            left: 0;
-            background: white;
-            //padding: 16px;
-            box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
-                rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
-        }
-
-        &__header {
-            //height: 400px;
-            display: flex;
-            align-items: center;
-            border-bottom: 0.5px solid rgba(211, 211, 211, 0.21);
-            margin-top: 20px;
-            padding: 24px 16px 24px 16px;
-
-            &__detail {
-                font-size: 13px;
-                color: $charcoal;
-                margin-left: 5px;
-                a {
-                    color: $primary;
-                }
-            }
-
-            &__image {
-                //idth: 50%;
-                margin-right: 5px;
-
-                img {
-                    border-radius: 50%;
-                    width: 50px;
-                    height: 50px;
-                    object-fit: cover;
-                }
-            }
-        }
-
-        &__body {
-            padding-top: 36px;
-        }
-    }
+  }
 }
 </style>
 
@@ -531,91 +534,91 @@ import { mapGetters } from "vuex";
 import moment from "moment";
 
 export default {
-    props: ["show_create_button", "context"],
-    data() {
-        return {
-            show_dropdown: "",
-            show_mobile_menu: false,
-        };
+  props: ["show_create_button", "context"],
+  data() {
+    return {
+      show_dropdown: "",
+      show_mobile_menu: false
+    };
+  },
+  methods: {
+    toggleMobileMenu() {
+      this.show_mobile_menu = !this.show_mobile_menu;
     },
-    methods: {
-        toggleMobileMenu() {
-            this.show_mobile_menu = !this.show_mobile_menu;
-        },
-        goBack() {
-            window.history.back();
-        },
-        goProfile() {
-            this.$router.push("/my-profile");
-        },
-        triggerSeeAllNotifications() {
-            this.$router.push("/dashboard/notifications");
-        },
-        formatDate(date) {
-            return moment(date).format("MMM DD, YYYY");
-        },
-
-        createCampaign() {
-            // this.$store.commit('dashboard/setCreateCampaign', true)
-            this.$router.push("/dashboard/campaigns/new");
-        },
-
-        openNotification() {
-            this.$router.push("/dashboard/notifications");
-            if (this.show_dropdown == "notification") {
-                this.show_dropdown = "";
-                return;
-            }
-            this.show_dropdown = "notification";
-            this.$store.dispatch("dashboard/readNotifications", {
-                notifs: this.getUnreadNotificaitionIds,
-            });
-        },
-        openImageDropdown() {
-            if (this.show_dropdown == "image") {
-                this.show_dropdown = "";
-
-                return;
-            } else {
-                this.show_dropdown = "image";
-            }
-        },
-        logout() {
-            this.$api
-                .post("/auth/logout")
-                .then((resp) => {
-                    window.localStorage.removeItem("afUserDetails");
-                    this.$cookies.remove("aff-token");
-
-                    this.$router.push("/login");
-                })
-                .catch((err) => {});
-        },
+    goBack() {
+      window.history.back();
     },
-    computed: {
-        userDetails() {
-            return (
-                window.localStorage.getItem("afUserDetails") &&
-                JSON.parse(window.localStorage.getItem("afUserDetails"))
-            );
-        },
-        userContext() {
-            return window.localStorage.getItem("afContext");
-        },
-        ...mapGetters("dashboard", [
-            "dashboardTitle",
-            "active",
-            "notifications",
-            "notification_length",
-            "unread_notifications_length",
-            "static_unread_notifications_length",
-        ]),
-        getUnreadNotificaitionIds() {
-            const notifs = this.notifications;
-            const unread = notifs.filter((n) => n.read === 0);
-            const ids = unread.map((i) => i.id);
-            return ids;
-        },
+    goProfile() {
+      this.$router.push("/my-profile");
     },
+    triggerSeeAllNotifications() {
+      this.$router.push("/dashboard/notifications");
+    },
+    formatDate(date) {
+      return moment(date).format("MMM DD, YYYY");
+    },
+
+    createCampaign() {
+      // this.$store.commit('dashboard/setCreateCampaign', true)
+      this.$router.push("/dashboard/campaigns/new");
+    },
+
+    openNotification() {
+      this.$router.push("/dashboard/notifications");
+      if (this.show_dropdown == "notification") {
+        this.show_dropdown = "";
+        return;
+      }
+      this.show_dropdown = "notification";
+      this.$store.dispatch("dashboard/readNotifications", {
+        notifs: this.getUnreadNotificaitionIds
+      });
+    },
+    openImageDropdown() {
+      if (this.show_dropdown == "image") {
+        this.show_dropdown = "";
+
+        return;
+      } else {
+        this.show_dropdown = "image";
+      }
+    },
+    logout() {
+      this.$api
+        .post("/auth/logout")
+        .then(resp => {
+          window.localStorage.removeItem("afUserDetails");
+          this.$cookies.remove("aff-token");
+
+          this.$router.push("/login");
+        })
+        .catch(err => {});
+    }
+  },
+  computed: {
+    userDetails() {
+      return (
+        window.localStorage.getItem("afUserDetails") &&
+        JSON.parse(window.localStorage.getItem("afUserDetails"))
+      );
+    },
+    userContext() {
+      return window.localStorage.getItem("afContext");
+    },
+    ...mapGetters("dashboard", [
+      "dashboardTitle",
+      "active",
+      "notifications",
+      "notification_length",
+      "unread_notifications_length",
+      "static_unread_notifications_length"
+    ]),
+    getUnreadNotificaitionIds() {
+      const notifs = this.notifications;
+      const unread = notifs.filter(n => n.read === 0);
+      const ids = unread.map(i => i.id);
+      return ids;
+    }
+  }
 };
 </script>

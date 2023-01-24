@@ -1,6 +1,6 @@
 <template>
   <div>
-    <base-tabs :business_tabs="business_tabs"></base-tabs>
+    <base-tabs :business_tabs="business_tabs" :marketer_tabs="marketer_tabs"></base-tabs>
   </div>
 </template>
 
@@ -14,12 +14,30 @@ export default {
           route: "/dashboard/settings/preferences"
         },
         {
+          name: "Brand Assets",
+          route: "/dashboard/settings/brand-assets"
+        },
+        {
           name: "Team",
           route: "/dashboard/settings/team"
         },
         {
           name: "Integration",
           route: "/dashboard/settings/integration"
+        },
+        {
+          name: "Bank Account",
+          route: "/dashboard/settings/bank-accounts"
+        },
+        {
+          name: "Password",
+          route: "/dashboard/settings/password"
+        }
+      ],
+      marketer_tabs: [
+        {
+          name: "Preferences",
+          route: "/dashboard/settings/preferences"
         },
         {
           name: "Bank Account",
