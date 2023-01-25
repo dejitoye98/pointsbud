@@ -1,5 +1,8 @@
 <template>
   <div class="container">
+    <AffleeCheckoutToast />
+
+    <!-- Purchase Modal -->
     <PurchaseModal
       :color="primaryColor"
       @close="triggerPurchase"
@@ -10,6 +13,10 @@
       :product="product"
       :quantity="order.quantity"
     ></PurchaseModal>
+
+    <!--- Refunds Modal --->
+    <RefundsAlertsModal v-if="somthin" />
+
     <div class="top">
       <div class="top__container">
         <div class="top__logo">
@@ -17,7 +24,11 @@
         </div>
         <div class="top__links">
           <a :style="{'color': primaryColor}">Website</a>
-          <a :style="{'color': primaryColor}">Shop</a>
+          <a
+            v-if="product && product.campaign_id"
+            :style="{'color': primaryColor}"
+            :href="`/shop/${product.campaign_id}`"
+          >Shop</a>
           <a :style="{'color': primaryColor}">Reviews</a>
         </div>
         <div class="top__actions">
@@ -177,6 +188,98 @@
         </div>
       </div>
     </div>
+    <div class="features">
+      <div class="section-title">
+        <h2>Features</h2>
+      </div>
+      <div class="features__container">
+        <ul>
+          <li
+            class="features__item"
+            v-for="(feature, index) in productFeatures"
+            :key="index"
+          >{{feature}}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="delivery">
+      <div class="section-title">
+        <h2>Delivery Details</h2>
+      </div>
+      <div class="delivery__container">
+        <div class="delivery__item" v-for="(detail, index) in deliveryDetails" :key="index">
+          <p class="delivery__item__name">{{detail.name}}:</p>
+          <p class="delivery__item__value">{{detail.value}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="reviews" id="reviews">
+      <div class="section-title">
+        <h2>Reviews</h2>
+      </div>
+      <div class="reviews__container">
+        <div class="review">
+          <div class="review__container">
+            <no-ssr>
+              <star-rating
+                star-size="15"
+                :show-rating="false"
+                v-model="product.rating || 0"
+                :read-only="true"
+              />
+            </no-ssr>
+            <p class="review__comment">This product was the absolute best</p>
+            <div class="review__author">
+              <img
+                src="https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg"
+                alt
+              />
+              <p class="review__author__name">Deji Atoyebi</p>
+            </div>
+          </div>
+        </div>
+        <div class="review">
+          <div class="review__container">
+            <no-ssr>
+              <star-rating
+                star-size="15"
+                :show-rating="false"
+                v-model="product.rating || 0"
+                :read-only="true"
+              />
+            </no-ssr>
+            <p class="review__comment">This product was the absolute best</p>
+            <div class="review__author">
+              <img
+                src="https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg"
+                alt
+              />
+              <p class="review__author__name">Deji Atoyebi</p>
+            </div>
+          </div>
+        </div>
+        <div class="review">
+          <div class="review__container">
+            <no-ssr>
+              <star-rating
+                star-size="15"
+                :show-rating="false"
+                v-model="product.rating || 0"
+                :read-only="true"
+              />
+            </no-ssr>
+            <p class="review__comment">This product was the absolute best</p>
+            <div class="review__author">
+              <img
+                src="https://st4.depositphotos.com/1012074/25277/v/600/depositphotos_252773324-stock-illustration-young-avatar-face-with-sunglasses.jpg"
+                alt
+              />
+              <p class="review__author__name">Deji Atoyebi</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -188,6 +291,7 @@
 import StarRating from "vue-star-rating";
 
 export default {
+  layout: "customer-dashboard",
   components: {
     StarRating
   },
@@ -211,6 +315,12 @@ export default {
       } else {
         return this.image_in_view;
       }
+    },
+    productFeatures() {
+      return JSON.parse(this.product.meta);
+    },
+    deliveryDetails() {
+      return JSON.parse(this.product.delivery_details);
     }
   },
   watch: {},
@@ -218,13 +328,13 @@ export default {
     return {
       make_purchase: false,
       variations: {
-        color: {
+        /*color: {
           items: [
             { name: "Green", images: [] },
             { name: "Pink", images: [] }
           ],
           selected: ""
-        },
+        },*/
         size: {
           items: [],
           selected: ""
@@ -239,6 +349,18 @@ export default {
   },
   async asyncData({ route, router, $api }) {
     const slug = route.params.slug;
+    let triggered_order,
+      triggered_customer = null;
+
+    if (route.query.intent === "order") {
+      const order_id = route.query.order_id;
+      // get the order
+      await $api.get("/customers/orders/" + order_id).then(resp => {
+        triggered_order = resp.data.data.order;
+        triggered_customer = resp.data.data.customer;
+      });
+    }
+
     const product = await $api
       .get("/products/pub/" + slug)
       .then(async product => {
@@ -247,6 +369,7 @@ export default {
       .catch(err => {
         alert(err);
       });
+
     let marketer = null;
     if (route.query.m_uid) {
       marketer = await $api
@@ -273,10 +396,54 @@ export default {
     return {
       product,
       marketer,
-      brand_assets
+      brand_assets,
+      triggered_order,
+      triggered_customer
     };
   },
-  mounted() {},
+  mounted() {
+    if (this.triggered_order) {
+      // if an order triggered page reload, start the checkout
+      FlutterwaveCheckout({
+        public_key:
+          process.env.FLW_PUBLIC_KEY ||
+          "FLWPUBK_TEST-ad1d316f90548fca239af66bd32bd954-X",
+        tx_ref: `aftx_${Date.now()}`,
+        amount: this.triggered_order.amount_paid,
+        currency: "NGN",
+        payment_options: "card, banktransfer, ussd",
+        //redirect_url: "https://ae83-102-89-45-99.ngrok.io/api/v1/transactions/verify-flw",
+        meta: {
+          //customer_id: this.userDetails.business ? this.userDetails.business.id : this.userDetails.id,
+          //is_business: this.userDetails.business? 1 : 0
+          order_id: this.triggered_order.id
+        },
+        narration: `Purchase ${this.triggered_order.name ||
+          "Product " + this.triggered_order.id}`,
+        customer: {
+          email: this.triggered_customer.email,
+          phone_number: this.triggered_customer.phone,
+          name: this.triggered_customer.name
+        },
+        customizations: {
+          title: "Afflee",
+          logo:
+            "https://www.logolynx.com/images/logolynx/22/2239ca38f5505fbfce7e55bbc0604386.jpeg"
+        },
+        callback: data => {
+          //this.$store.commit('dashboard/setActionFundWallet', false);
+          let payload = {
+            type: "purchase",
+            referrer: this.$route.query.referrer,
+            order_id: this.triggered_order.id,
+            product_id: this.triggered_order.product_id,
+            ...data
+          };
+          this.$api.post("/transactions/verify-flw", payload);
+        }
+      });
+    }
+  },
   filters: {
     uppercase: function(v) {
       return v.toUpperCase();
@@ -400,6 +567,7 @@ h3 {
 .container {
   width: 90%;
   margin: auto;
+  padding-bottom: 150px;
 }
 
 .top {
@@ -572,6 +740,9 @@ h3 {
 
     &__offers {
       color: darkgrey;
+      display: flex;
+      justify-content: center;
+      font-size: 14px;
     }
 
     &__variations {
@@ -616,6 +787,124 @@ h3 {
         }
       }
     }
+  }
+}
+
+.reviews {
+  width: 90%;
+  margin: auto;
+  &__container {
+    display: grid;
+    grid-template-columns: 30% 30% 30%;
+    justify-content: space-between;
+    @include media("<=t") {
+      grid-template-columns: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  .review {
+    @include card;
+    @include media("<=t") {
+      margin-bottom: 8px;
+    }
+    &__container {
+      padding: 16px;
+    }
+    &__comment {
+      font-size: 14px;
+      color: black;
+      margin: 8px 0;
+      font-weight: 400;
+    }
+    &__author {
+      display: flex;
+      align-items: center;
+      img {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+      &__name {
+        font-size: 14px;
+        font-weight: 400;
+        color: $charcoal;
+      }
+    }
+  }
+}
+
+.grid {
+  display: grid;
+  width: 90%;
+  margin: auto;
+  padding: 16px 0;
+  &-half {
+    grid-template-columns: 49% 49%;
+    justify-content: space-between;
+  }
+}
+
+.section-title {
+  font-size: 18px;
+  color: $faint;
+  margin-bottom: 4px;
+}
+
+.features {
+  width: 90%;
+  margin: auto;
+  margin-bottom: 32px;
+  margin-top: 32px;
+  &__container {
+    padding: 16px;
+    @include card;
+    box-shadow: 0;
+  }
+  ul {
+    display: grid;
+    grid-template-columns: 30% 30% 30%;
+    justify-content: space-between;
+
+    @include media("<=t") {
+      grid-template-columns: 49% 49%;
+    }
+  }
+  &__item {
+    color: $charcoal;
+    font-size: 15px;
+    list-style-type: disc;
+    margin-bottom: 8px;
+    //font-weight: 500;
+    line-height: 1.4;
+    margin-left: 21px;
+  }
+}
+
+.delivery {
+  width: 90%;
+  margin: auto;
+  margin-bottom: 32px;
+  margin-top: 32px;
+  &__container {
+    @include card;
+    padding: 16px;
+  }
+  &__item {
+    display: flex;
+    font-size: 15px;
+
+    p {
+      &:first-of-type {
+        margin-right: 8px;
+      }
+      &:last-of-type {
+        color: $charcoal;
+      }
+    }
+
+    //justify-content: space-between;
   }
 }
 </style>

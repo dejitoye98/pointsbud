@@ -9,42 +9,64 @@
           </div>
         </div>
 
-        <div class="form">
-          <div class="form-input" v-for="(input, i) in form" :key="i">
-            <label>{{input.field_name}}</label>
-            <input
-              :required="input.is_required"
-              v-if="input.field_type === 'text'"
-              v-model="order_form[input.field_alias]"
-              type="text"
-            />
-            <select
-              v-model="order_form[input.field_alias]"
-              :required="input.is_required"
-              v-else-if="input.field_type === 'multi-choice option'"
-              type="text"
-            >
-              <option v-for="(option, o) in JSON.parse(input.field_options)" :key="o">{{option}}</option>
-            </select>
+        <template v-if="!old_customer">
+          <div class="form">
+            <div class="form-input" v-for="(input, i) in form" :key="i">
+              <label>{{input.field_name}}</label>
+              <input
+                :required="input.is_required"
+                v-if="input.field_type === 'text'"
+                v-model="order_form[input.field_alias]"
+                type="text"
+              />
+              <select
+                v-model="order_form[input.field_alias]"
+                :required="input.is_required"
+                v-else-if="input.field_type === 'multi-choice option'"
+                type="text"
+              >
+                <option v-for="(option, o) in JSON.parse(input.field_options)" :key="o">{{option}}</option>
+              </select>
 
-            <template v-else-if="input.field_type === 'one-choice option'">
-              <div class="single-choice">
-                <label
-                  class="checkbox"
-                  v-for="(option, o) in JSON.parse(input.field_options)"
-                  :key="o"
-                >
-                  <input type="radio" :value="option" v-model="order_form[input.field_alias]" />
-                  {{option}}
-                </label>
+              <template v-else-if="input.field_type === 'one-choice option'">
+                <div class="single-choice">
+                  <label
+                    class="checkbox"
+                    v-for="(option, o) in JSON.parse(input.field_options)"
+                    :key="o"
+                  >
+                    <input type="radio" :value="option" v-model="order_form[input.field_alias]" />
+                    {{option}}
+                  </label>
+                </div>
+              </template>
+            </div>
+
+            <div class="form__footer">
+              <button
+                :style="{'backgroundColor': color ? color: ''  }"
+                @click="createOrder"
+                :disabled="loading"
+              >Continue</button>
+            </div>
+          </div>
+        </template>
+
+        <template v-else>
+          <p
+            class="old-customer-label"
+          >You're a registered customer on Afflee. Please enter your password to continue the order</p>
+          <div class>
+            <div class="form">
+              <div class="form-input">
+                <label for="password">Password</label>
+                <input type="password" v-model="password" />
               </div>
-            </template>
-          </div>
 
-          <div class="form__footer">
-            <button :style="{'backgroundColor': color ? color: ''  }" @click="createOrder">Continue</button>
+              <button>Login and continue</button>
+            </div>
           </div>
-        </div>
+        </template>
       </div>
     </template>
   </BaseModal>
@@ -65,9 +87,13 @@ export default {
     return {
       order_created: false,
       order: null,
-      order_form: {}
+      order_form: {},
+      loading: false,
+      old_customer: false,
+      password: ""
     };
   },
+
   mounted() {
     if (this.form) {
       this.form.forEach(field => {
@@ -76,7 +102,37 @@ export default {
     }
   },
   methods: {
+    login(password) {
+      this.loading = true;
+      const email =
+        this.order_form.email ||
+        this.order_form.email_address ||
+        this.order_form["Email Address"];
+      const payload = {
+        password: "" + password,
+        email,
+        is_customer: true
+      };
+
+      this.$store
+        .dispatch("auth/login", payload)
+        .then(async resp => {
+          this.$cookies.remove("aff-token");
+          window.localStorage.setItem("aff-token", resp.data.data.token);
+          await this.$cookies.set("aff-token", resp.data.data.token);
+          const product_slug = this.$route.params.slug;
+          window.open(
+            `/products/${product_slug}/?intent=order&order_id=${this.order.id}&referrer=${this.$route.query.referrer}&m_uid=${this.$route.query.m_uid}`,
+            "_self"
+          );
+        })
+        .catch(err => {})
+        .finally(() => {
+          this.loading = false;
+        });
+    },
     createOrder() {
+      this.loading = true;
       const payload = {
         form: this.order_form,
         product_id: this.product.id,
@@ -85,7 +141,8 @@ export default {
           this.$route.query.ref ||
           (this.marketer &&
             this.marketer.redir_links &&
-            this.marketer.redir_links[0].redir_link),
+            this.marketer.redir_links[0].redir_link) ||
+          this.$route.query.referrer,
         referrer: this.$route.query.referrer,
         qty: this.quantity
       };
@@ -94,9 +151,18 @@ export default {
         .then(resp => {
           this.order_created = true;
           this.show_modal = false;
-          this.order = resp.data.data;
+          this.order = resp.data.data.order;
+          const is_new_customer = resp.data.data.customer_is_new;
 
-          this.continuePurchase();
+          if (is_new_customer) {
+            this.login(resp.data.data.one_time_auth);
+          } else {
+            this.old_customer = true;
+            // this.continuePurchase();
+          }
+        })
+        .catch(err => {
+          this.loading = false;
         });
     },
     populateFormDetails() {
@@ -159,7 +225,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$primary: #540a18;
+.old-customer-label {
+  display: block;
+  width: 90%;
+  margin: auto;
+  font-size: 13px;
+  margin-top: 16px;
+  font-weight: 500;
+}
 
 .single-choice {
   display: grid;
@@ -213,6 +286,9 @@ $primary: #540a18;
       @include smallbutton;
       background: $primary;
     }
+  }
+  button {
+    @include smallbutton;
   }
 }
 .form-input {

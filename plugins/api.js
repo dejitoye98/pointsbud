@@ -1,6 +1,6 @@
 export default function ({ $axios, store, redirect, $cookies }, inject) {
     const api = $axios.create();
-    api.setBaseURL("https://stagingaffleebackend.herokuapp.com/api/v1");
+    api.setBaseURL("http://stagingaffleebackend.herokuapp.com/api/v1");
     let obj = {}
     if ($cookies.get('aff-token')) {
         obj = { 'Authorization': `Bearer ${$cookies.get('aff-token')}` }

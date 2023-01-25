@@ -53,6 +53,7 @@
             <label for>Campaign Title</label>
             <input v-model="filter.campaign_title" type="text" />
           </div>
+          <!--
           <div class="filter__item">
             <label for>Budget</label>
             <div class="filter__flex">
@@ -66,7 +67,7 @@
               <input v-model="filter.min_avg_ppc" type="number" placeholder="min" />
               <input v-model="filter.max_avg_ppc" type="number" placeholder="max" />
             </div>
-          </div>
+          </div>-->
           <div class="filter__item">
             <button @click="applyFilter">Filter</button>
           </div>
@@ -174,10 +175,11 @@
                   <label for>Business Name</label>
                   <p>{{campaign.business && campaign.business.name}}</p>
                 </div>
+                <!--
                 <div class="card__body__details__detail">
                   <label for>Budget</label>
                   <p>NGN {{computeMoney(campaign.budget)}}</p>
-                </div>
+                </div>-->
                 <div
                   class="card__body__details__detail"
                   v-if="(userContext === 'marketer' && tab !== 'mine') || userContext === 'business' "

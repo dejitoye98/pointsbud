@@ -91,7 +91,7 @@ export default {
         return "yesterday";
       }
 
-      return d + " days ago";
+      return diff + " days ago";
     },
     getData() {
       this.$api.get("/inventory").then(resp => {
