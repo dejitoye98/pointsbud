@@ -115,12 +115,12 @@ export default {
 
 <style lang="scss" scoped>
 .personal-link {
-  color: $primary;
+  //color: $primary;
 }
 $breakpoint-alpha: 1009px;
 
 button {
-  @include editbutton;
+  @include smallbutton;
 }
 
 .table-ctas {
@@ -200,12 +200,13 @@ table {
     }
 
     &:before {
-      content: attr(data-th) ": "; // who knew you could do this? The internet, that's who.
+      content: attr(data-th) " "; // who knew you could do this? The internet, that's who.
       //font-weight: bold;
 
       // optional stuff to make it look nicer
       width: 6.5em; // magic number :( adjust according to your own content
       display: inline-block;
+      color: $primary;
       // end options
 
       @media (min-width: $breakpoint-alpha) {

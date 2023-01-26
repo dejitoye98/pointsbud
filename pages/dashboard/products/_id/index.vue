@@ -150,7 +150,7 @@
             </div>
             <div class="page__content__item">
               <p>Unit Price</p>
-              <p>{{product.currency}}{{product.unitprice}}</p>
+              <p>{{product.currency}}{{product.unitprice | money}}</p>
             </div>
             <div class="page__content__item">
               <p>Quantity Available</p>

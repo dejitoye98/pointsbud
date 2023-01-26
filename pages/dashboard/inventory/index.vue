@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">
       <p>Your personal inventories</p>
-      <button @click="$router.push('/dashboard/inventory/create')">Create new</button>
+      <button @click="$router.push('/dashboard/inventory/create')">Create a new link</button>
     </div>
     <div class="card" @click="goTo(iv)" v-for="(iv, i) in inventories" :key="i">
       <div class="card__header">{{iv.name}}</div>

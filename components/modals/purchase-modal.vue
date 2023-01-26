@@ -2,10 +2,69 @@
   <BaseModal @close="$emit('close', true)">
     <template #body>
       <div class="body" @click.stop>
-        <div class="body__header">
-          <div class="body__header__container">
-            <p class="body__header__title">Order product</p>
-            <p class="body__header__caption">{{product.name}}</p>
+        <div class="modal__header">
+          <div class="modal__header__container">
+            <div class="modal__header__container">
+              <div style="display: flex;">
+                <div class="header-icon">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M2 2H3.74001C4.82001 2 5.67 2.93 5.58 4L4.75 13.96C4.61 15.59 5.89999 16.99 7.53999 16.99H18.19C19.63 16.99 20.89 15.81 21 14.38L21.54 6.88C21.66 5.22 20.4 3.87 18.73 3.87H5.82001"
+                      stroke="black"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M16.25 22C16.9404 22 17.5 21.4404 17.5 20.75C17.5 20.0596 16.9404 19.5 16.25 19.5C15.5596 19.5 15 20.0596 15 20.75C15 21.4404 15.5596 22 16.25 22Z"
+                      stroke="black"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M8.25 22C8.94036 22 9.5 21.4404 9.5 20.75C9.5 20.0596 8.94036 19.5 8.25 19.5C7.55964 19.5 7 20.0596 7 20.75C7 21.4404 7.55964 22 8.25 22Z"
+                      stroke="black"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M9 8H21"
+                      stroke="black"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <div class="modal__header__text">
+                  <p>Order Product</p>
+                  <p>{{product.name}}</p>
+                </div>
+              </div>
+              <svg
+                @close="$emit('close', true)"
+                width="16"
+                height="16"
+                viewBox="0 0 8 8"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M1 1L7 7" stroke="black" stroke-width="0.5" stroke-linecap="round" />
+                <path d="M7 1L1 7" stroke="black" stroke-width="0.5" stroke-linecap="round" />
+              </svg>
+            </div>
           </div>
         </div>
 
@@ -40,6 +99,17 @@
                   </label>
                 </div>
               </template>
+            </div>
+
+            <div class="totals">
+              <div class="totals__item">
+                <p>Price per hour</p>
+                <p>NGN {{product.unitprice | money}}</p>
+              </div>
+              <div class="totals__item">
+                <p>Total</p>
+                <p>NGN {{totalPrice | money}}</p>
+              </div>
             </div>
 
             <div class="form__footer">
@@ -107,7 +177,8 @@ export default {
       const email =
         this.order_form.email ||
         this.order_form.email_address ||
-        this.order_form["Email Address"];
+        this.order_form["Email Address"] ||
+        this.order_form["email_address"];
       const payload = {
         password: "" + password,
         email,
@@ -121,10 +192,17 @@ export default {
           window.localStorage.setItem("aff-token", resp.data.data.token);
           await this.$cookies.set("aff-token", resp.data.data.token);
           const product_slug = this.$route.params.slug;
-          window.open(
-            `/products/${product_slug}/?intent=order&order_id=${this.order.id}&referrer=${this.$route.query.referrer}&m_uid=${this.$route.query.m_uid}`,
-            "_self"
-          );
+          let url = `/products/${product_slug}/?intent=order&order_id=${this.order.id}`;
+          if (this.$route.query.referrer) {
+            url += `&referrer=${this.$route.query.referrer}`;
+          }
+          if (this.$route.query.ref) {
+            url += `&referrer=${this.$route.query.ref}`;
+          }
+          if (this.$route.query.m_uid) {
+            url += `&referrer=${this.$route.query.m_uid}`;
+          }
+          window.open(url, "_self");
         })
         .catch(err => {})
         .finally(() => {
@@ -132,6 +210,16 @@ export default {
         });
     },
     createOrder() {
+      // validate
+      const can_continue = true;
+      for (let i = 0; i < Object.keys(this.order_form).length; i++) {
+        const key = Object.keys(this.order_form)[i];
+        if (!this.order_form[key]) {
+          alert("Please enter all fields");
+          return;
+        }
+      }
+      // end of validation //
       this.loading = true;
       const payload = {
         form: this.order_form,
@@ -308,6 +396,26 @@ export default {
   }
 }
 
+.totals {
+  padding: 16px;
+  &__item {
+    margin-bottom: 8px;
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+
+    p {
+      &:first-of-type {
+        font-weight: 500;
+        color: black;
+      }
+      color: $charcoal;
+      font-weight: 500;
+    }
+  }
+}
+
 .body {
   min-height: 200px;
   display: flex;
@@ -354,5 +462,115 @@ export default {
       }
     }
   }
+}
+
+.modal {
+  z-index: 10000000000000;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  &__mask {
+    width: 100vw;
+    height: 100%;
+    padding: 64px 0;
+    position: fixed;
+    //margin-left: 120px;
+    background-color: rgba(0, 0, 0, 0.612);
+    overflow: scroll;
+
+    @include media("<=dashbreak") {
+      margin-left: 0 !important;
+    }
+  }
+
+  &__header {
+    border-bottom: 0.5px solid rgba(211, 211, 211, 0.27);
+
+    &__container {
+      width: 95%;
+      margin: auto;
+      padding: 16px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      svg {
+        cursor: pointer;
+      }
+    }
+    &__text {
+      p {
+        &:first-of-type {
+          font-size: 16px;
+          color: black;
+          font-weight: 500;
+        }
+        font-size: 14px;
+        color: $faint;
+      }
+      // text-transform: uppercase;
+    }
+  }
+
+  &__container {
+    width: 30%;
+    background: white;
+    min-height: auto;
+    margin: auto;
+    //margin-top: 50px;
+    margin-top: 50px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
+    border-radius: 5px;
+    @include media("<=t") {
+      width: 90% !important;
+    }
+
+    &--half {
+      width: 50% !important;
+    }
+
+    &--quarter {
+      width: 25% !important;
+    }
+  }
+
+  &__body {
+    width: 95%;
+    margin: auto;
+    padding: 16px 0;
+  }
+
+  &__footer {
+    padding: 16px;
+    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 49% 49%;
+    border-top: 2px solid whitesmoke;
+
+    button {
+      @include smallbutton;
+      font-weight: 400 !important;
+      &:first-of-type {
+        background: white;
+        color: $charcoal;
+        border: 1.5px solid lightgrey;
+      }
+
+      &:hover {
+        transform: translateY(0);
+        box-shadow: rgba(0, 0, 0, 0.1) 0 2px 2px;
+      }
+    }
+  }
+}
+.header-icon {
+  border: 1px solid whitesmoke;
+  padding: 8px;
+  border-radius: 5px;
+  margin-right: 16px;
 }
 </style>

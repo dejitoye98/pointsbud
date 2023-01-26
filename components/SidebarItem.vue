@@ -433,6 +433,10 @@
             class="side__item__text__notif"
             v-else-if="text==='Reservations' && updateItems.bookings"
           >{{updateItems.bookings}}</div>
+          <div
+            class="side__item__text__notif"
+            v-else-if="text==='Earnings' && updateItems.earnings"
+          >{{updateItems.earnings}}</div>
         </template>
       </div>
     </nuxt-link>
@@ -443,122 +447,116 @@
 import { mapGetters } from "vuex";
 
 export default {
-    props: ['text', 'link', 'collapsed'],
-    computed: {
-        ...mapGetters("dashboard", ["active"]),
-        ...mapGetters("updates", ["updateItems"]),
-    },
-    methods: {
-        setActive() {
-            this.$store.commit('dashboard/setActive', this.text)
-            this.$store.commit('dashboard/setDashboardTitle', this.text)
-        }
+  props: ["text", "link", "collapsed"],
+  computed: {
+    ...mapGetters("dashboard", ["active"]),
+    ...mapGetters("updates", ["updateItems"])
+  },
+  methods: {
+    setActive() {
+      this.$store.commit("dashboard/setActive", this.text);
+      this.$store.commit("dashboard/setDashboardTitle", this.text);
     }
-}
+  }
+};
 </script>
 
 <style lang="scss" scoped>
 .link {
-    display: flex;
-    width: 100%;
-    height: 100%;
+  display: flex;
+  width: 100%;
+  height: 100%;
 }
-.active{ 
-    opacity: 1 !important;
-    color: $sidebar_text_active_color !important;
+.active {
+  opacity: 1 !important;
+  color: $sidebar_text_active_color !important;
 }
 
 .collapsed_side_item {
-    padding: 8px 16px !important;
-    //width: 50%;
-    //margin: auto;
+  padding: 8px 16px !important;
+  //width: 50%;
+  //margin: auto;
 }
 .side__item {
-    position: relative;
-    display: flex;
-    padding: 8px 36px;
-    cursor: pointer;
-    align-items:center;
-    margin-bottom: $sidebar_item_margin;
+  position: relative;
+  display: flex;
+  padding: 8px 36px;
+  cursor: pointer;
+  align-items: center;
+  margin-bottom: $sidebar_item_margin;
+
+  @include media("<=dashbreak") {
+    padding: 8px 16px;
+  }
+
+  div {
+    height: 100%;
+    p {
+      display: block;
+      height: 100%;
+
+      &:hover {
+        color: grey;
+      }
+    }
+  }
+
+  &:hover {
+    background: $sidebar_item_hover_color;
+  }
+
+  &__indi {
+    position: absolute;
+    opacity: 0;
+    height: 100%;
+    width: 3px;
+    background: $primary;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  }
+
+  &__icon {
+    margin-right: 16px;
 
     @include media("<=dashbreak") {
-        padding: 8px 16px;
+      width: 20px;
+      height: 20px;
+      svg {
+        height: 20px;
+        height: 20px;
+      }
     }
-    
-    div {
-        height: 100%;
-        p {
-            display: block;
-            height: 100%;
+  }
+  &__text {
+    font-weight: 400;
+    color: $sidebar_text_color;
+    font-size: $sidebar_text_font_size;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 
-            &:hover {
-                color: grey;
-            }
-        }
+    @include media("<=dashbreak") {
+      font-size: 13px;
     }
-
 
     &:hover {
-        background: $sidebar_item_hover_color;
-        
-        
-
-        
+      color: black;
     }
 
-    &__indi {
-        position: absolute;
-        opacity: 0;
-        height: 100%;
-        width: 3px;
-        background: $primary;
-        left: 0;
-        top: 0;
-        border-radius: 10px;
-        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    &__notif {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 20px;
+      color: white;
+      margin-left: 8px;
+      width: 20px;
+      background: $primary;
+      border-radius: 50%;
     }
-
-    &__icon {
-        margin-right: 16px;
-
-        @include media('<=dashbreak'){
-            width: 20px;
-            height: 20px;
-            svg {
-                height: 20px;
-                height: 20px;
-            }
-        }
-    }
-    &__text {
-        font-weight: 400;
-        color: $sidebar_text_color;
-        font-size: $sidebar_text_font_size;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-
-        @include media('<=dashbreak'){
-            font-size: 13px;
-        }
-
-        &:hover {
-            color: black;
-        }
-
-        &__notif {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 20px;
-            color: white;
-            margin-left: 8px;
-            width: 20px;
-            background: $primary;
-            border-radius: 50%;
-        }
-    }
-
+  }
 }
 </style>

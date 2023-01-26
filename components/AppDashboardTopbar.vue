@@ -279,7 +279,7 @@
       //border: rgba(211, 211, 211, 0.263) 1px solid ;
       //box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
       transition: all 0.3s ease-in-out;
-      border: 0.5px solid lightgray;
+      @include card;
 
       &--image {
         position: absolute;

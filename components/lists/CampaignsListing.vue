@@ -1,6 +1,11 @@
 <template>
   <div class="container">
-    <JoinedCampaignModal :campaign="campaign_just_joined" />
+    <!-- <JoinedCampaignModal :campaign="campaign_just_joined" />-->
+    <JoinedCampaignModal
+      @close="campaign_just_joined = null"
+      v-if="campaign_just_joined"
+      :campaign="campaign_just_joined"
+    />
 
     <div class="header desktop">
       <!--<div class="sort">
@@ -52,6 +57,17 @@
           <div class="filter__item">
             <label for>Campaign Title</label>
             <input v-model="filter.campaign_title" type="text" />
+          </div>
+          <div class="filter__item">
+            <label for>Category</label>
+            <select v-model="filter.category">
+              <option :value="0"></option>
+              <option
+                v-for="(category, c) in categories"
+                :value="category.id"
+                :key="c"
+              >{{category.name}}</option>
+            </select>
           </div>
           <!--
           <div class="filter__item">
@@ -113,6 +129,7 @@
             <label for>Campaign Title</label>
             <input v-model="filter.campaign_title" type="text" />
           </div>
+          <!--
           <div class="filter__item">
             <label for>Budget</label>
             <div class="filter__flex">
@@ -126,7 +143,7 @@
               <input v-model="filter.min_avg_ppc" type="number" placeholder="min" />
               <input v-model="filter.max_avg_ppc" type="number" placeholder="max" />
             </div>
-          </div>
+          </div>-->
           <div class="mobile-filter__cta">
             <button @click="applyFilter">Filter</button>
           </div>
@@ -154,7 +171,7 @@
                 <template
                   v-if="userContext === 'marketer' && tab !== 'mine' && campaign.who_can_join !== 2 && campaign.campaign_marketers && campaign.campaign_marketers.length < 1 "
                 >
-                  <button @click.stop="join(index)">Join</button>
+                  <button @click.stop="join(index)" :disabled="campaign_joining">Join</button>
                 </template>
                 <template
                   v-if="userContext === 'marketer' && tab !== 'mine' && campaign.who_can_join === 2 && campaign.campaign_marketers &&  campaign.campaign_marketers.length < 1"
@@ -175,11 +192,22 @@
                   <label for>Business Name</label>
                   <p>{{campaign.business && campaign.business.name}}</p>
                 </div>
+                <div class="card__body__details__detail">
+                  <label for>Categories</label>
+                  <p>{{getCategories(campaign)}}</p>
+                </div>
                 <!--
                 <div class="card__body__details__detail">
                   <label for>Budget</label>
                   <p>NGN {{computeMoney(campaign.budget)}}</p>
                 </div>-->
+                <div
+                  class="card__body__details__detail"
+                  v-if="(userContext === 'marketer' && tab !== 'mine') || userContext === 'business'  && campaign.purpose === 'sales'"
+                >
+                  <label for>Total Sales</label>
+                  <p>{{campaign.sales_driven || 0}}</p>
+                </div>
                 <div
                   class="card__body__details__detail"
                   v-if="(userContext === 'marketer' && tab !== 'mine') || userContext === 'business' "
@@ -200,6 +228,10 @@
                 >
                   <label for>Marketers joined</label>
                   <p>{{campaign.marketers_joined || 'unknown'}}</p>
+                </div>
+                <div class="card__body__details__detail">
+                  <label for>Ends At</label>
+                  <p>{{campaign.ends_at && computeDate(campaign.ends_at)}}</p>
                 </div>
                 <div
                   class="card__body__details__detail"
@@ -255,6 +287,7 @@ import moment from "moment";
 import JoinedCampaignModal from "../modals/JoinedCampaignModal";
 import LoadingState from "../states/LoadingState";
 import EmptyState from "../states/EmptyState";
+import categories from "../../static/categories";
 
 export default {
   props: ["tab"],
@@ -271,12 +304,16 @@ export default {
   },
   data() {
     return {
+      categories,
+
       current_page: this.$route.params.page || null,
-      campaign_just_joined: {},
+      campaign_just_joined: null,
+      campaign_joining: null,
       campaigns: {},
       campaigns_page_info: {},
       filter: {
         error: "",
+        category: this.$route.query.category || "",
         business_name: this.$route.query.business_name || "",
         campaign_title: this.$route.query.campaign_title || "",
         min_budget: this.$route.query.min_budget || null,
@@ -304,6 +341,20 @@ export default {
   },
 
   methods: {
+    getCategories(campaign) {
+      if (campaign.campaign_categories) {
+        let category_ids = campaign.campaign_categories.map(c => c.category_id);
+        const categories = [];
+        category_ids.forEach(id => {
+          const category = this.categories.find(c => c.id === id);
+          if (category) {
+            categories.push(category.name);
+          }
+        });
+
+        return categories.join(", ");
+      }
+    },
     open(id) {
       this.$router.push("/dashboard/campaigns/" + id);
     },
@@ -312,6 +363,7 @@ export default {
     },
 
     join(index) {
+      this.campaign_joining = index;
       this.$api
         .post(`/campaigns/${this.campaigns[index].id}/join`)
         .then(resp => {
@@ -322,6 +374,9 @@ export default {
           this.$store.dispatch("dashboard/actionShowErrorToast", {
             message: (err.response && err.response.data.data) || err
           });
+        })
+        .finally(() => {
+          this.campaign_joining = null;
         });
     },
 
@@ -476,7 +531,8 @@ select {
   width: 100%;
   //position: relative;
   background: white;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; //padding: 16px;
+  @include card;
+  //box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; //padding: 16px;
 
   @include media("<=dashbreak") {
     background: transparent;
@@ -547,12 +603,13 @@ select {
     border-right: 0;
     border-top: 0;
     border-bottom: 0;
+    border-right: 0.5px solid rgba(245, 245, 245, 0.61);
 
     //border-bottom: 0.5px solid rgba(211, 211, 211, 0.442);
   }
 
   button {
-    @include largebutton;
+    @include smallbutton;
     max-width: auto !important;
     width: 100% !important;
     //font-size: 14px !;
@@ -569,6 +626,7 @@ select {
     display: flex;
     flex-direction: column;
     padding: 8px 16px;
+    @include plain-form-input;
 
     label {
       font-size: 15px;
@@ -578,13 +636,6 @@ select {
     }
 
     input {
-      padding: 8px;
-      color: grey;
-      border-radius: 5px;
-      font-size: 15px;
-      border: 0.5px solid rgba(53, 3, 3, 0.129);
-      appearance: none;
-      -webkit-appearance: none;
     }
   }
   &__flex {
@@ -664,7 +715,7 @@ select {
   margin: auto;
   //box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
   padding: 16px 16px;
-  border: 0.5px solid rgba(53, 3, 3, 0.129);
+  border: 0.5px solid rgba(245, 245, 245, 0.61);
   border-left: 0;
   border-right: 0;
   border-top: 0;
@@ -675,6 +726,9 @@ select {
   z-index: 10;
   //align-items: center;
   margin-bottom: 2px;
+  &:hover {
+    background: $dashboard-background-color;
+  }
 
   &:first-of-type {
     border-top: 0;
@@ -722,7 +776,7 @@ select {
     &__description {
       font-size: 16px;
       margin: 8px 0;
-      font-weight: 300;
+      //font-weight: 300;
       color: $charcoal;
       @include media("<=dashbreak") {
         font-size: 14px;
@@ -783,9 +837,13 @@ select {
     }
 
     &__details {
-      display: flex;
+      display: grid;
       justify-content: space-between;
-      flex-wrap: wrap;
+      grid-template-columns: 19% 19% 19% 19% 19%;
+
+      @include media("<=t") {
+        grid-template-columns: 30% 30% 30%;
+      }
 
       button {
         @include largebutton;
@@ -795,30 +853,30 @@ select {
       }
 
       &__detail {
-        width: 25%;
+        width: 100%;
         //border-top: 0.5px solid rgba(211, 211, 211, 0.442);
         //border-bottom: 0.5px solid rgba(211, 211, 211, 0.442);
         padding: 0px 0;
+        margin-bottom: 8px;
         @include media("<=dashbreak") {
           width: 45%;
           margin-bottom: 8px;
         }
 
         label {
-          color: $charcoal;
+          color: black;
           font-weight: 400;
           font-size: 15px;
           @include media("<=dashbreak") {
-            font-size: 13px;
+            font-size: 14px;
           }
         }
 
         p {
           font-size: 15px;
           color: $charcoal;
-          font-weight: 300;
           @include media("<=dashbreak") {
-            font-size: 13px;
+            font-size: 14px;
           }
         }
       }

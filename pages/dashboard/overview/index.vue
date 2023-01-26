@@ -6,8 +6,10 @@
         <GroupedMarketerSalesChart />
       </div>
     </div>
+
     <div class="section" v-if="context === 'business'">
       <div class="section__container">
+        <!--
         <div class="section__body">
           <div class="l-card">
             <div class="l-card__body">
@@ -90,7 +92,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
       <div class="section__container">
         <div class="section__body">
@@ -509,14 +511,14 @@ export default {
 <style lang="scss" scoped>
 .l-card {
   background: white;
-  padding: 24px;
+  padding: 16px;
   border-radius: 8px;
   margin-bottom: 50px;
   border: 0.5px solid rgba(0, 0, 0, 0.06);
 
   //box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
   &__header {
-    font-size: 20px;
+    font-size: 16px;
     color: $charcoal;
     padding: 0 16px;
   }
@@ -536,7 +538,7 @@ export default {
       label {
         //color: lightseagreen;
         font-weight: 500;
-        font-size: 25px;
+        font-size: 16px;
       }
       p {
         color: $charcoal;
