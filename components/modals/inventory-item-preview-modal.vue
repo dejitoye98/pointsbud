@@ -131,6 +131,7 @@ export default {
   justify-content: space-between;
   width: 95%;
   margin: auto;
+  border-radius: 5px;
 
   padding: 16px 0;
   &__thumbnail {
@@ -143,6 +144,7 @@ export default {
       height: 100%;
       width: 100%;
       object-fit: cover;
+      border-radius: 5px;
     }
   }
   &__more {

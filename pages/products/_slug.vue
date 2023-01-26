@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <AffleeCheckoutToast />
+    <AffleeCheckoutToast :v-show="false" />
 
     <!-- Purchase Modal -->
     <PurchaseModal

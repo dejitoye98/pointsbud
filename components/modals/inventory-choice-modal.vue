@@ -22,7 +22,7 @@
 
         <template v-else>
           <div class="items">
-            <div class="item" v-for="(campaign, index) in campaigns" :key="index">
+            <div class="item" v-for="(campaign, index) in filteredCamapaigns" :key="index">
               <div class="item__header">{{campaign.campaign.title}}</div>
               <div class="item__body">
                 <div
@@ -66,6 +66,11 @@ export default {
   },
   created() {
     this.getAddable();
+  },
+  computed: {
+    filteredCamapaigns() {
+      return this.campaigns.filter(c => c.campaign);
+    }
   },
   methods: {
     getAddable() {

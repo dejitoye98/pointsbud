@@ -1,9 +1,9 @@
 <template>
   <div class="dashboard">
     <div class="nav">
-      <h1>Hosted on</h1>
+      <h1>Secured by Afflee</h1>
       <div class="nav__logo">
-        <Logo style="width: 150px" />
+        <!--<Logo style="width: 150px" />-->
       </div>
     </div>
     <div class="dashboard__container">
