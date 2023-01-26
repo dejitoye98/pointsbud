@@ -672,7 +672,7 @@ h3 {
 
         @include media("<=t") {
           height: 100%;
-          object-fit: cover;
+          object-fit: contain;
         }
       }
       @include media("<=t") {
