@@ -420,7 +420,7 @@ export default {
   min-height: 200px;
   display: flex;
   flex-direction: column;
-  margin-top: 20vh;
+  margin-top: 5vh;
   &__text {
     text-align: center;
     font-size: 15px;
