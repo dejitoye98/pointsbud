@@ -625,7 +625,9 @@ h3 {
       @include smallbutton;
     }
     @include media("<=t") {
-      display: none;
+      //display: none;
+      justify-content: center;
+      margin-top: 16px;
     }
     &__action {
       @include smallbutton;
