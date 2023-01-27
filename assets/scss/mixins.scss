@@ -1,8 +1,7 @@
 @mixin card {
     background: white;
     // border: 0.5px solid rgba(211, 211, 211, 0.24);
-    box-shadow: 0 0.8rem 2rem rgb(90 97 129 / 5%);
-    border: 0.5px solid rgba(211, 211, 211, 0.442);
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 3px 12px;
 }
 
 @mixin editbutton {
@@ -75,9 +74,9 @@
       color: #fff;
       cursor: pointer;
       display: inline-block;
-      font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+      //font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 400;
       line-height: 20px;
       padding: 6px 16px;
       position: relative;
@@ -95,7 +94,7 @@
       }
       
       &:hover {
-        background-color: $darkshade;
+        background-color: $lightaccent;
       }
       
       &:focus {
@@ -111,7 +110,7 @@
       }
       
       &:active {
-        background-color: $darkshade;
+        background-color: $lightaccent;
         box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
       }
   
@@ -299,19 +298,19 @@
     textarea,
     select,
     :deep(input) {
-        border: 0.5px solid rgba(211, 211, 211, 0.442);
+        border: 1px solid rgba(211, 211, 211, 0.774);
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         //border: 1.5px solid rgba(169, 169, 169, 0.64);
-        min-height: 40px;
+        min-height: 45px;
         border-radius: 5px;
         padding: 8px;
         outline: none;
-        font-size: 14px;
+        font-size: 15px;
         //color: $faint;
         color: $charcoal;
         font-weight: 400;
         appearance: none;
-        background-color: rgba(211, 211, 211, 0.046);
+        background-color: white;
         &:focus {
             border: 2px solid $lightaccent;
         }

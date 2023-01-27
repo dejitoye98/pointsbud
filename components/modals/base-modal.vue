@@ -2,15 +2,15 @@
   <div class="modal">
     <div class="modal__mask" @click="close">
       <div class="modal__container" style="width:">
-        <div class="modal__header">
-          <slot name="header"></slot>
-        </div>
         <div class="modal__body">
-          <slot name="body">
-            <div class="modal__footer">
-              <slot name="footer"></slot>
-            </div>
-          </slot>
+          <div class="modal__header">
+            <slot name="header"></slot>
+            <slot name="header-caption"></slot>
+          </div>
+          <slot name="body"></slot>
+          <div class="modal__footer">
+            <slot name="footer"></slot>
+          </div>
         </div>
       </div>
     </div>
@@ -21,10 +21,10 @@
 export default {
   methods: {
     close() {
-      this.$emit('close', true)
+      this.$emit("close", true);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -56,6 +56,12 @@ export default {
   top: 0;
   left: 0;
   transform: scale(1);
+
+  &__header {
+    padding: 16px;
+    font-size: 20px;
+    border-bottom: 2px solid whitesmoke;
+  }
   &__mask {
     width: 100%;
     height: 100%;
@@ -79,10 +85,13 @@ export default {
       margin-left: 0 !important;
     }
   }
+
   &__body {
     background: white;
-    width: 500px;
+    width: max-content;
     margin: auto;
+    height: max-content;
+    border-radius: 10px;
 
     @include media("<=t") {
       width: 90%;
@@ -91,7 +100,11 @@ export default {
   &__footer {
     display: flex;
     justify-content: flex-end;
-    border: 1px solid pink;
+    padding: 0 16px 16px 16px;
+    button {
+      @include smallbutton;
+      background: $lightaccent;
+    }
   }
 }
 </style>
