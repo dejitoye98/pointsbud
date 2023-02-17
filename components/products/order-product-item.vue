@@ -2,21 +2,34 @@
   <div class="product">
     <div class="product__details">
       <div class="product__image">
-        <img src="https://media-cdn.tripadvisor.com/media/photo-p/15/db/e4/b0/photo1jpg.jpg" alt />
+        <img :src="item.thumbnail" alt />
       </div>
       <div class="product__content">
         <p class="product__content__name">{{item.name}}</p>
-        <p class="product__content__points">40 points/unit</p>
+        <p class="product__content__price">{{item.currency}} {{item.unitprice | money}}</p>
+        <div class="product__content__analysis" style="display: flex">
+          <p
+            class="product__content__analysis__earn"
+            style="color: lightseagreen; margin-right: 8px;"
+          >+{{item.points_to_earn}} points</p>
+          <p
+            class="product__content__analysis__deduct"
+            style="color: red; margin-right: 8px;"
+          >-{{item.points_to_deduct}} points</p>
+        </div>
         <div class="product__content__form">
           <button @click="decreaseQuantity">-</button>
           <input type="text" value="1" v-model="model.quantity" />
           <button @click="increaseQuantity">+</button>
         </div>
 
-        <div class="product__content__points">
+        <div
+          class="product__content__points"
+          v-if="points_left>=item.points_to_earn * model.quantity"
+        >
           <label>
             <input type="checkbox" @change="usePoints" />
-            Use 36 points
+            Use {{item.points_to_earn * model.quantity}} points
           </label>
         </div>
       </div>
@@ -29,7 +42,7 @@
 
 <script>
 export default {
-  props: ["item"],
+  props: ["item", "points_left"],
   data() {
     return {
       model: {
@@ -40,8 +53,18 @@ export default {
   },
 
   methods: {
+    usePoints() {
+      this.model.used_points = this.item.points_to_earn * this.model.quantity;
+    },
     addProduct() {
-      this.$emit("onProductAdded", { ...this.item, ...this.model });
+      if (this.points_left < this.item.points_to_earn * this.model.quantity) {
+        this.models.used_points = null;
+      }
+      this.$emit("onProductAdded", {
+        ...this.item,
+        ...this.model,
+        totalPrice: this.item.unitprice * this.model.quantity
+      });
     },
     increaseQuantity() {
       this.model.quantity++;
@@ -49,13 +72,6 @@ export default {
     decreaseQuantity() {
       if (this.quantity !== 0) {
         this.model.quantity--;
-      }
-    },
-    usePoints() {
-      if (this.model.used_points === 0) {
-        this.model.used_points = 34;
-      } else {
-        this.model.used_points = 0;
       }
     }
   }
@@ -132,6 +148,7 @@ export default {
         height: 20px;
         width: 20px;
         margin-right: 8px;
+        border: $faint;
       }
     }
   }

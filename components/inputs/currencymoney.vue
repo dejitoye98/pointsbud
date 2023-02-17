@@ -1,12 +1,31 @@
 <template>
   <div class="input">
-    <select>
-      <option>NGN</option>
+    <select v-model="currency">
+      <option value="NGN">NGN</option>
     </select>
-    <input type="text" />
+    <input type="text" v-model="amount" />
   </div>
 </template>
 
+
+<script>
+export default {
+  data() {
+    return {
+      currency: "",
+      amount: ""
+    };
+  },
+  watch: {
+    currency(value) {
+      this.$emit("onCurrencyChange", value);
+    },
+    amount(value) {
+      this.$emit("onPriceChange", value);
+    }
+  }
+};
+</script>
 <style lang='scss' scoped>
 .input {
   position: relative;

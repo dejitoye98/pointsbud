@@ -6,12 +6,12 @@
         <div class="customer">
           <label>Search Customer</label>
           <div class="customer__form">
-            <select>
+            <select v-model="customer.field">
               <option value="code">Code</option>
-              <option value="Email">Email</option>
-              <option value="Phone">Phone</option>
+              <option value="email">Email</option>
+              <option value="phone">Phone</option>
             </select>
-            <input />
+            <input v-model="customer.value" />
           </div>
         </div>
       </template>
@@ -19,14 +19,14 @@
         <div class="sales">
           <div class="sales__header">
             <div>
-              <p>Deji Atoyebi</p>
-              <p class="small-text">itisdeji@gmail.com</p>
+              <p>{{customerDetails.name}}</p>
+              <p class="small-text">{{customerDetails.email}}</p>
             </div>
             <div>
               <p>Available Points</p>
               <div style="display: flex">
                 <img src="../../static/coins.png" />
-                <p class="small-text">50</p>
+                <p class="small-text">{{customerDetails.points || 0}}</p>
               </div>
             </div>
           </div>
@@ -38,7 +38,11 @@
                 <input type="text" placeholder="search for item" />
               </div>
               <div v-for="(product, index) in products" :key="index">
-                <OrderProductItem @onProductAdded="addProduct" :item="product" />
+                <OrderProductItem
+                  :points_left="points_left"
+                  @onProductAdded="addProduct"
+                  :item="product"
+                />
               </div>
             </div>
             <div class="orders">
@@ -56,8 +60,8 @@
                   </div>
 
                   <div v-else>
-                    <p>NGN</p>
-                    <p>400000</p>
+                    <p>{{order.currency}}</p>
+                    <p>{{order.totalPrice | money}}</p>
                   </div>
                 </div>
                 <button @click="removeOrder(index)">Remove</button>
@@ -84,7 +88,7 @@
             <button @click="nextStep">Continue</button>
           </div>
         </div>
-        <button v-else>Create</button>
+        <button v-else @click="searchCustomer">Search customer</button>
       </div>
     </template>
   </BaseModal>
@@ -94,28 +98,64 @@
 export default {
   data() {
     return {
-      step: 2,
-
+      step: 1,
       customer: {
         field: "",
-        value: ""
+        value: "",
+        result: null
       },
-
-      products: [
-        { name: "Ewa Agoyin" },
-        { name: "Eba and Egusi" },
-        { name: "Fish " }
-      ],
-
+      searching_customer: false,
+      products: [],
+      points_left: 0,
       orders: []
     };
   },
+  created() {
+    this.getProducts();
+  },
+  computed: {
+    customerDetails() {
+      if (this.customer) {
+        return this.customer.result;
+      }
+    }
+  },
   methods: {
+    getProducts() {
+      this.$api.get(`/products`).then(resp => {
+        this.products = resp.data.data;
+      });
+    },
+    searchCustomer() {
+      let url = `/customers/search?`;
+      if (this.customer.field && this.customer.value) {
+        url += this.customer.field + "=" + this.customer.value;
+      }
+      this.searching_customer = true;
+      this.$api
+        .get(url)
+        .then(resp => {
+          this.customer.result = resp.data.data;
+          this.points_left = this.customer.result.points;
+          if (this.customer.result) {
+            this.step++;
+          }
+        })
+        .catch(err => {})
+        .finally(() => {
+          this.searching_customer = false;
+        });
+    },
     nextStep() {
       this.step++;
     },
     addProduct(item = {}) {
       this.orders.push(item);
+      if (item.used_points) {
+        this.points_left =
+          parseFloat(this.customerDetails.points) -
+          parseFloat(item.used_points);
+      }
     },
     removeOrder(index) {
       this.orders.splice(index, 1);
@@ -290,6 +330,16 @@ export default {
         display: flex;
         flex-direction: column;
 
+        &__analysis {
+          &__earn {
+            font-size: 300px;
+            color: lightseagreen;
+          }
+          &__deduct {
+            color: red;
+          }
+        }
+
         &__name {
           font-size: 20px;
         }
@@ -335,6 +385,7 @@ export default {
           }
         }
       }
+
       &__action {
         button {
           @include smallbutton;

@@ -59,6 +59,7 @@ export default {
   min-height: 100vh;
   &__container {
     padding: 8px;
+    margin-top: 24px;
   }
   &__logo {
   }

@@ -6,33 +6,38 @@
         <div class="form" @click.stop>
           <div class="form-input">
             <label for>Name</label>
-            <input type="text" name />
+            <input v-model="product.name" type="text" name />
           </div>
           <div class>
             <label for>Price</label>
-            <Currencymoney />
+            <Currencymoney
+              @onCurrencyChange="changeProductCurrency"
+              @onPriceChange="changeProductPrice"
+            />
+          </div>
+
+          <div class="category-input">
+            <label for>Category</label>
+            <AddChooseCategory @onChoose="chooseCategory" />
           </div>
 
           <div class="form-input">
-            <label for>Category</label>
-            <select>
-              <option>Stuff</option>
-              <option>Stuff</option>
-              <option>Stuff</option>
-            </select>
+            <label>Image</label>
+            <ImageUpload @onImageUploaded="changeThumbnail" />
           </div>
+
           <div class="form-input">
             <label for>Points to earn</label>
-            <input type="text" name />
+            <input v-model="product.points_to_earn" type="number" name />
           </div>
           <div class="form-input">
             <label for>Points to deduct</label>
-            <input type="text" name />
+            <input v-model="product.points_to_deduct" type="number" name />
           </div>
         </div>
       </template>
       <template #footer>
-        <button>Create</button>
+        <button @click.stop="createProduct">Create</button>
       </template>
     </BaseModal>
 
@@ -41,6 +46,7 @@
       <button @click="create_product = true">Create Product</button>
     </div>
     <div class="section">
+      <!--
       <div class="filter">
         <div class="filter__header">Filter</div>
         <div class="filter__container">
@@ -62,14 +68,14 @@
             <input type="text" placeholder="Name" />
           </div>
           <div class="filter__item">
-            <label for>Addable Points</label>
+            <label for>Earnable Points</label>
             <input type="text" placeholder="Name" />
           </div>
         </div>
         <div style="display: flex; justify-content: flex-end; padding: 0 16px 16px 16px">
           <button>Filter</button>
         </div>
-      </div>
+      </div>-->
 
       <div class="table">
         <table>
@@ -82,15 +88,15 @@
             <th>Addable Points</th>
           </tr>
 
-          <tr>
+          <tr v-for="(product, index) in products" :key="index">
             <td>
-              <Avatar name="Deji Atoyebi"></Avatar>
+              <img class="product-thumbnail" :src="product.thumbnail" alt />
             </td>
-            <td>Skinkilla Soup</td>
-            <td>itisdeji@gmail.com</td>
-            <td>NGN 10,000</td>
-            <td>50</td>
-            <td>50</td>
+            <td>{{product.name}}</td>
+            <td>{{product.category && product.category.name}}</td>
+            <td>{{product.currency}} {{product.unitprice | money}}</td>
+            <td>{{product.points_to_deduct}}</td>
+            <td>{{product.points_to_earn}}</td>
           </tr>
         </table>
       </div>
@@ -101,16 +107,84 @@
 <script>
 export default {
   layout: "admin-dashboard",
+  created() {
+    this.getProducts();
+  },
   data() {
     return {
-      create_product: false
+      create_product: false,
+      products: null,
+      filter: {
+        name: "",
+        category: "",
+        points_to_earn: "",
+        points_to_deduct: ""
+      },
+      product: {
+        name: "",
+        currency: "",
+        unitprice: "",
+        points_to_earn: "",
+        points_to_deduct: "",
+        thumbnail: "",
+        category_id: ""
+      },
+      created_product: null,
+      flag_creating_product: false
     };
   },
-  methods() {}
+  computed: {
+    filterQuery() {}
+  },
+  methods: {
+    changeThumbnail(meta) {
+      this.product.thumbnail = meta.image;
+    },
+    onChooseCategory(value) {
+      this.product.category_id = value;
+    },
+    changeProductCurrency(value) {
+      this.product.currency = value;
+    },
+    changeProductPrice(value) {
+      this.product.unitprice = value;
+    },
+
+    getProducts() {
+      this.$api.get(`/products`).then(resp => {
+        this.products = resp.data.data;
+      });
+    },
+    createProduct() {
+      this.flag_creating_product = true;
+      this.$api
+        .post("/products", this.product)
+        .then(resp => {
+          this.getProducts();
+          this.create_product = false;
+        })
+        .finally(() => {
+          this.flag_creating_product = false;
+        });
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
+.product-thumbnail {
+  width: 70px;
+  height: 70px;
+  border-radius: 5px;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+.category-input {
+  z-index: 1000000000000000;
+}
 .page {
   padding: 36px;
 }
@@ -153,9 +227,10 @@ export default {
 }
 
 .section {
-  display: grid;
-  grid-template-columns: 25% 74%;
-  justify-content: space-between;
+  //display: grid;
+  //grid-template-columns: 25% 74%;
+  //justify-content: space-between;
+  width: 100%;
 }
 .section-title {
   display: flex;

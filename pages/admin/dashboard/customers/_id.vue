@@ -3,33 +3,33 @@
     <div class="section flex">
       <!--
       <h2 class="section-title">Details</h2>-->
-      <div class="details">
+      <div class="details" v-if="customer">
         <div class="details__item">
           <div class="details__item__header">Customer information</div>
           <div class="details__item__content">
             <div class="details__item__content__item">
               <p>Customer Name</p>
-              <p>Deji Atoyebi</p>
+              <p>{{customer.name}}</p>
             </div>
             <div class="details__item__content__item">
               <p>Email</p>
-              <p>itisdeji@gmail.com</p>
+              <p>{{customer.email}}</p>
             </div>
             <div class="details__item__content__item">
               <p>Phone</p>
-              <p>08100455706</p>
+              <p>{{customer.phone}}</p>
             </div>
             <div class="details__item__content__item">
               <p>Code</p>
-              <p>5043</p>
+              <p>{{customer.code}}</p>
             </div>
             <div class="details__item__content__item">
               <p>Points Earned</p>
-              <p>443</p>
+              <p>{{customer.points || '0'}}</p>
             </div>
             <div class="details__item__content__item">
               <p>Purchases</p>
-              <p>344</p>
+              <p>{{customer.purchases || '0'}}</p>
             </div>
           </div>
         </div>
@@ -61,7 +61,7 @@
     <div class="section">
       <h2 class="section-title">Orders</h2>
 
-      <div class="table">
+      <div class="table" v-if="customer">
         <table>
           <tr>
             <th></th>
@@ -75,25 +75,14 @@
 
           <tr>
             <td>
-              <Avatar name="Deji Atoyebi"></Avatar>
+              <Avatar :name="customer.name"></Avatar>
             </td>
-            <td>Deji Atoyebi</td>
-            <td>itisdeji@gmail.com</td>
-            <td>08100455706</td>
-            <td>#wrwerwer</td>
-            <td>40</td>
-            <td>50</td>
-          </tr>
-          <tr>
-            <td>
-              <Avatar name="James Atoyebi"></Avatar>
-            </td>
-            <td>James</td>
-            <td>james@gmail.com</td>
-            <td>08100455706</td>
-            <td>#4233</td>
-            <td>50</td>
-            <td>30</td>
+            <td>{{customer.name}}</td>
+            <td>{{customer.email}}</td>
+            <td>{{customer.phone}}</td>
+            <td>{{customer.code}}</td>
+            <td>{{customer.points}}</td>
+            <td>{{customer.purchases}}</td>
           </tr>
         </table>
       </div>
@@ -105,7 +94,24 @@
 export default {
   layout: "admin-dashboard",
   data() {
-    return {};
+    return {
+      loading: true,
+      customer: null
+    };
+  },
+  created() {
+    this.loading = true;
+    this.$api
+      .get("/customers/" + this.$route.params.id)
+      .then(resp => {
+        this.customer = resp.data.data;
+      })
+      .catch(err => {
+        this.loading = false;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   }
 };
 </script>
