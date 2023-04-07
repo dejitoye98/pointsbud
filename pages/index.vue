@@ -133,16 +133,17 @@
     &__caption {
         text-align: center;
         font-size: 20px;
-        font-family: 'Red Hat Display' !important;
+        font-family: 'Red Hat Display', cursive;
         margin-bottom: 34px;
         max-width: 502px;
         margin: auto;
         margin-bottom: 68px;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
+        font-weight: 300;
     }
 
     button {
-        font-family: 'Red Hat Display' !important;
+        font-family: 'Squada One', cursive;
         padding: 16px 32px;
         margin: auto;
         letter-spacing: 1px;
@@ -216,7 +217,7 @@
 
     &__header {
         color: grey;
-        font-family: 'Red Hat Display' !important;
+        font-family: 'Squada One', cursive;
         font-weight: 600;
     }
 
@@ -252,7 +253,7 @@
         flex-direction: column;
         align-items: center;
         color: white;
-        font-family: 'Red Hat Display' !important;
+        font-family: 'Squada One', cursive;
         font-size: 18px;
         letter-spacing: 1px;
 
