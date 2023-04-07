@@ -19,6 +19,7 @@ export default {
             },
             { hid: "description", name: "description", content: "" },
             { name: "format-detection", content: "telephone=no" },
+            //{ name: "google-signin-client_id", content: "638411293504-minstvm8qj8vmftvuaacnea143ghnpj7.apps.googleusercontent.com" }
         ],
         link: [
             { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
@@ -26,11 +27,18 @@ export default {
                 href: "https://fonts.googleapis.com/css?family=Quicksand:300,500|Playfair+Display:700i",
                 rel: "stylesheet",
             },
+            { href: 'https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap', rel: 'stylesheet' },
+            { href: 'https://fonts.googleapis.com/css2?family=Squada+One&display=swap', rel: 'stylesheet' }
         ],
         script: [
             {
                 src: "https://checkout.flutterwave.com/v3.js",
             },
+            {
+                src: 'https://accounts.google.com/gsi/client',
+            },
+
+
         ],
     },
 
@@ -61,14 +69,27 @@ export default {
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
+        '@nuxtjs/toast',
         "@nuxtjs/axios",
         "@nuxtjs/style-resources",
         ["cookie-universal-nuxt", { alias: "cookies" }],
     ],
+    toast: {
+        position: 'top-center',
+        register: [ // Register custom toasts
+            {
+                name: 'my-error',
+                message: 'Oops...Something went wrong',
+                options: {
+                    type: 'error'
+                }
+            }
+        ]
+    },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
-        // transpile: ['@vuepic/vue-datepicker']
+        transpile: ['@vuepic/vue-datepicker']
     },
     watchers: {
         webpack: {
@@ -76,4 +97,6 @@ export default {
             poll: 1000,
         },
     },
+
+
 };

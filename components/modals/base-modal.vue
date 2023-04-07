@@ -2,13 +2,13 @@
   <div class="modal">
     <div class="modal__mask" @click="close">
       <div class="modal__container" style="width:">
-        <div class="modal__body">
+        <div class="modal__body" @click.stop>
           <div class="modal__header">
             <slot name="header"></slot>
             <slot name="header-caption"></slot>
           </div>
           <slot name="body"></slot>
-          <div class="modal__footer">
+          <div class="modal__footer" @click.stop>
             <slot name="footer"></slot>
           </div>
         </div>
@@ -33,6 +33,7 @@ export default {
     transform: scale(0.8) translateY(1000px);
     opacity: 0;
   }
+
   100% {
     transform: scale(1) translateY(0px);
     opacity: 1;
@@ -43,6 +44,7 @@ export default {
   0% {
     background: rgba(0, 0, 0, 0);
   }
+
   100% {
     background: rgba(0, 0, 0, 0.7);
   }
@@ -58,10 +60,13 @@ export default {
   transform: scale(1);
 
   &__header {
-    padding: 16px;
-    font-size: 20px;
+    padding: 24px;
+    font-size: 18px;
     border-bottom: 2px solid whitesmoke;
+    // text-transform: uppercase;
+    font-weight: 500;
   }
+
   &__mask {
     width: 100%;
     height: 100%;
@@ -77,6 +82,7 @@ export default {
       margin-left: 0 !important;
     }
   }
+
   &__container {
     //animation
     animation: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
@@ -97,10 +103,12 @@ export default {
       width: 90%;
     }
   }
+
   &__footer {
     display: flex;
     justify-content: flex-end;
-    padding: 0 16px 16px 16px;
+    padding: 0 24px 24px 16px;
+
     button {
       @include smallbutton;
       background: $lightaccent;

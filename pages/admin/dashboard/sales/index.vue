@@ -1,78 +1,107 @@
 <template>
   <div class="page">
-    <CreateSalesModal />
+    <CreateSalesModal v-if="create_product" @close="create_product = false" />
 
     <div class="section-title">
       <p>Sales</p>
       <button @click="create_product = true">Create Order</button>
     </div>
     <div class="section">
-      <div class="filter">
-        <div class="filter__header">Filter</div>
-        <div class="filter__container">
-          <div class="filter__item">
-            <label for>Product Name</label>
-            <input type="text" placeholder="Name" />
-          </div>
 
-          <div class="filter__item">
-            <label for>Category</label>
-            <select>
-              <option>Deji Atoyebi</option>
-              <option>Deji Atoyebi</option>
-              <option>Deji Atoyebi</option>
-            </select>
-          </div>
-          <div class="filter__item">
-            <label for>Deductible Points</label>
-            <input type="text" placeholder="Name" />
-          </div>
-          <div class="filter__item">
-            <label for>Addable Points</label>
-            <input type="text" placeholder="Name" />
-          </div>
-        </div>
-        <div style="display: flex; justify-content: flex-end; padding: 0 16px 16px 16px">
-          <button>Filter</button>
-        </div>
-      </div>
+      <!--
+                                                                                                                                                                <div class="filter">
+                                                                                                                                                                  <div class="filter__header">Filter</div>
+                                                                                                                                                                  <div class="filter__container">
+                                                                                                                                                                    <div class="filter__item">
+                                                                                                                                                                      <label for>Product Name</label>
+                                                                                                                                                                      <input type="text" placeholder="Name" />
+                                                                                                                                                                    </div>
 
-      <div class="table">
-        <table>
-          <tr>
-            <th></th>
-            <th>Product Name</th>
-            <th>Categories</th>
-            <th>Price</th>
-            <th>Deductible Points</th>
-            <th>Addable Points</th>
-          </tr>
+                                                                                                                                                                    <div class="filter__item">
+                                                                                                                                                                      <label for>Category</label>
+                                                                                                                                                                      <select>
+                                                                                                                                                                        <option>Deji Atoyebi</option>
+                                                                                                                                                                        <option>Deji Atoyebi</option>
+                                                                                                                                                                        <option>Deji Atoyebi</option>
+                                                                                                                                                                      </select>
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <div class="filter__item">
+                                                                                                                                                                      <label for>Deductible Points</label>
+                                                                                                                                                                      <input type="text" placeholder="Name" />
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <div class="filter__item">
+                                                                                                                                                                      <label for>Addable Points</label>
+                                                                                                                                                                      <input type="text" placeholder="Name" />
+                                                                                                                                                                    </div>
+                                                                                                                                                                  </div>
+                                                                                                                                                                  <div style="display: flex; justify-content: flex-end; padding: 0 16px 16px 16px">
+                                                                                                                                                                    <button>Filter</button>
+                                                                                                                                                                  </div>
+                                                                                                                                                                -->
+    </div>
 
-          <tr>
+    <div class="table">
+
+      <BaseTable>
+        <template #header>
+
+          <th></th>
+          <th>Customer Name</th>
+          <th>Price</th>
+          <th>Points Earned</th>
+          <th>Points Used</th>
+        </template>
+
+        <template #data>
+
+          <tr v-for="(sale, index) in sales" :key="index">
             <td>
-              <Avatar name="Deji Atoyebi"></Avatar>
+              <Avatar :name="sale.customer.name"></Avatar>
             </td>
-            <td>Skinkilla Soup</td>
-            <td>itisdeji@gmail.com</td>
-            <td>NGN 10,000</td>
-            <td>50</td>
-            <td>50</td>
+            <td>{{ sale.customer.name }}</td>
+            <td>{{ sale.currency }} {{ sale.total_amount | money }}</td>
+            <td>{{ sale.points_earned }}</td>
+            <td>{{ sale.points_used }}</td>
           </tr>
-        </table>
-      </div>
+        </template>
+
+      </BaseTable>
     </div>
   </div>
-</template>
+</div></template>
 
 <script>
+import BaseTable from '../../../../components/tables/base-table.vue';
+
 export default {
   layout: "admin-dashboard",
   data() {
     return {
-      create_product: false
+      create_product: false,
+      create_sale: false,
+      orders: [],
+      sales: []
     };
   },
-  methods() {}
+  created() {
+    this.$store.commit('dashboard/setActive', 'Sales')
+    this.getSales();
+  },
+  methods: {
+    getOrders() {
+      this.$api.get("/orders").then(resp => {
+        this.orders = resp.data.data.list;
+      }).catch(err => {
+      });
+    },
+    getSales() {
+      this.$api.get("/sales").then(resp => {
+        this.sales = resp.data.data.list;
+      }).catch(err => {
+      });
+    },
+  },
+  components: { BaseTable }
 };
 </script>
 
@@ -88,6 +117,7 @@ export default {
   @include card;
   //box-shadow: none;
   height: max-content;
+
   button {
     @include smallbutton;
     // min-height: 50px;
@@ -95,6 +125,7 @@ export default {
     font-size: 16px;
     background: $lightaccent;
   }
+
   &__header {
     height: 50px;
     padding: 16px;
@@ -107,12 +138,14 @@ export default {
       color: $charcoal;
     }
   }
+
   &__container {
     padding: 24px;
     //display: grid;
     //grid-template-columns: 24% 24% 24% 24%;
     justify-content: space-between;
   }
+
   &__item {
     @include plain-form-input;
   }
@@ -123,59 +156,47 @@ export default {
   grid-template-columns: 25% 74%;
   justify-content: space-between;
 }
+
 .section-title {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 40px;
+  margin-bottom: 16px;
   margin-top: 40px;
+
   p {
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: 500;
     margin-right: 16px;
     color: $charcoal;
   }
+
   button {
     @include smallbutton;
     background: $lightaccent;
   }
 }
+
 .table {
-  @include card;
+  //@include card;
   width: 100%;
   border-radius: 10px;
   height: max-content; //margin-top: 16px;
-  table {
-    width: 100%;
-    tr {
-      border-bottom: 1px solid whitesmoke;
-      height: 65px;
-      cursor: pointer;
-      &:hover {
-        background: $dashboard-background-color;
-      }
-    }
-    th {
-      background: $dashboard-background-color;
-      color: $charcoal;
-      text-align: left;
-      padding: 0 16px;
-      font-weight: 500;
-    }
-    td {
-      text-align: left;
-      color: $charcoal;
-      padding: 0 16px;
-    }
-  }
+  background: white;
+
+
 }
 
 .form {
   padding: 16px;
 }
+
 .form-input {
   @include plain-form-input;
+
   &--noborder {
     border: 0 !important;
+
     input {
       border: 0 !important;
     }

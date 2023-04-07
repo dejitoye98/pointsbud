@@ -1,21 +1,13 @@
 <template>
   <div class="input">
-    <div
-      class="input__container"
-      :v-html="category"
-      @click="show_dropdown = !show_dropdown"
-    >{{category}}</div>
+    <div class="input__container" :v-html="category" @click="show_dropdown = !show_dropdown">{{ category }}</div>
     <div class="dropdown" v-if="show_dropdown == true">
       <div class="dropdown__item dropdown__item--new">
         <input type="text" v-model="new_category" />
         <button @click="createCategories">Create Category</button>
       </div>
-      <div
-        class="dropdown__item"
-        v-for="(category, index) in categories"
-        :key="index"
-        @click="chooseCategory(category)"
-      >{{category.name}}</div>
+      <div class="dropdown__item" v-for="(category, index) in categories" :key="index" @click="chooseCategory(category)">
+        {{ category.name }}</div>
     </div>
   </div>
 </template>
@@ -40,7 +32,12 @@ export default {
         .post("/categories", {
           category: this.new_category
         })
-        .then(resp => {})
+        .then(resp => {
+          this.categories.unshift(resp.data.data)
+          this.chooseCategory(resp.data.data)
+        }).catch(err => {
+          alert(err?.response?.data?.data)
+        })
         .finally(() => {
           this.creating_category = false;
         });
@@ -82,6 +79,7 @@ export default {
     color: $charcoal;
   }
 }
+
 .dropdown {
   width: 100%;
   position: absolute;
@@ -91,9 +89,11 @@ export default {
   background: white;
   border: 0.5px solid whitesmoke;
   left: -2px;
+
   &:hover {
     background: $dashboard-background-color;
   }
+
   &__item {
     background: white;
     padding: 8px 16px;
@@ -103,6 +103,7 @@ export default {
     font-size: 14px;
     cursor: pointer;
     color: $lightaccent;
+
     &--new {
       //background: $lightaccent;
       color: white;
@@ -121,10 +122,12 @@ export default {
         font-size: 15px;
 
         color: $charcoal;
+
         &:focus {
           outline: 0;
         }
       }
+
       button {
         @include smallbutton;
         background: $lightaccent;

@@ -31,13 +31,15 @@
           <div class="card__header">
             <div></div>Total Customers
           </div>
-          <p>200</p>
+          <!--<p>{{ stats.customers_count }}</p>-->
+          <p>243</p>
         </div>
         <div class="card">
           <div class="card__header">
             <div></div>Returned this Month
           </div>
-          <p>42</p>
+          <!--<p>{{ stats.customers_returned }}</p>-->
+          <p>72</p>
         </div>
       </div>
     </div>
@@ -47,8 +49,9 @@
       <button @click="triggerCreateCustomer">Register Customer</button>
     </div>
     <div class="table" v-if="customers">
-      <table>
-        <tr>
+      <BaseTable>
+        <template #header>
+
           <th></th>
           <th>Name</th>
           <th>Email</th>
@@ -56,25 +59,31 @@
           <th>Code</th>
           <th>Points Earned</th>
           <th>Purchases</th>
-        </tr>
+        </template>
 
-        <tr v-for="(customer,index) in customers" :key="index" @click="goToCustomer(customer)">
-          <td>
-            <Avatar :name="customer.name"></Avatar>
-          </td>
-          <td>{{customer.name}}</td>
-          <td>{{customer.email}}</td>
-          <td>{{customer.phone}}</td>
-          <td>{{customer.code}}</td>
-          <td>{{customer.points || 0}}</td>
-          <td>{{customer.purchases || 0}}</td>
-        </tr>
-      </table>
+        <template #data>
+
+          <tr v-for="(customer, index) in customers" :key="index" @click="goToCustomer(customer)">
+            <td>
+              <Avatar :name="customer.name"></Avatar>
+            </td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.phone }}</td>
+            <td>{{ customer.code }}</td>
+            <td>{{ customer.points || 0 }}</td>
+            <td>{{ customer.purchases || 0 }}</td>
+          </tr>
+        </template>
+
+      </BaseTable>
     </div>
   </div>
 </template>
 
 <script>
+import BaseTable from '../../../../components/tables/base-table.vue';
+
 export default {
   layout: "admin-dashboard",
   data() {
@@ -84,14 +93,25 @@ export default {
         email: "",
         phone: ""
       },
+      stats: {
+        customers_returned: 0,
+        customers_count: 0
+      },
       create_customer: false,
       customers: null
     };
   },
   created() {
     this.getCustomers();
+    this.getStats();
   },
   methods: {
+    getStats() {
+      this.$api.get("/stats/customers").then(resp => {
+        this.stats.customers_returned = resp.data.data.customer_returned;
+        this.stats.customers_count = resp.data.data.customer_count;
+      });
+    },
     goToCustomer(customer) {
       this.$router.push("/admin/dashboard/customers/" + customer.id);
     },
@@ -105,7 +125,7 @@ export default {
           this.create_customer = false;
           this.getCustomers();
         })
-        .catch(err => {});
+        .catch(err => { });
     },
     getCustomers() {
       this.$api.get("/customers").then(resp => {
@@ -113,7 +133,8 @@ export default {
         this.customers = resp.data.data.list;
       });
     }
-  }
+  },
+  components: { BaseTable }
 };
 </script>
 
@@ -123,79 +144,110 @@ export default {
   justify-content: space-between;
   margin-top: 10vh;
   margin-bottom: 16px;
+  align-items: flex-end;
+
   p {
     color: $charcoal;
+    font-size: 20px;
+    font-weight: 500
   }
+
   button {
     @include smallbutton;
   }
 }
+
 .add-customer {
   width: 600px;
+
   .form {
-    padding: 16px;
+    padding: 24px;
   }
+
   .form-input {
     @include plain-form-input;
   }
 }
+
 .page {
   padding: 36px;
 }
+
 .insights {
   width: 100%;
+
   &__container {
     width: 100%;
-    display: grid;
-    grid-template-columns: 30% 30% 30%;
-    justify-content: space-between;
+    display: flex;
+    flex-wrap: wrap
   }
 }
+
 .card {
   @include card;
   padding: 16px;
+  width: 250px;
+  height: 250px;
   border-radius: 10px;
+  background: rgb(77, 195, 189);
+  margin-right: 16px;
+
+  &:last-of-type {
+    background-color: #ff7777;
+
+  }
+
   &__header {
+    color: white;
     display: flex;
     align-items: center;
     font-size: 18px;
+
     div {
       height: 15px;
       width: 15px;
       border-radius: 50%;
-      background: $charcoal;
+      background: white;
       margin-right: 16px;
     }
   }
+
   p {
     margin-left: 31px;
     font-size: 40px;
+    color: white;
+
   }
 }
 
 .table {
-  @include card;
   //margin-top: 10vh;
   width: 100%;
-  border-radius: 10px;
+  //border-radius: 10px;
+
   table {
     font-size: 15px;
     width: 100%;
+
     tr {
       border-bottom: 1px solid whitesmoke;
       height: 45px;
       cursor: pointer;
+
       &:hover {
         background: $dashboard-background-color;
       }
     }
+
     th {
-      background: $dashboard-background-color;
+      //background: $dashboard-background-color;
+      background: white;
       color: $charcoal;
       text-align: left;
       padding: 0 16px;
       font-weight: 500;
     }
+
     td {
       text-align: left;
       color: $charcoal;

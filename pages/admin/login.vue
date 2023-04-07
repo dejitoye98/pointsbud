@@ -41,7 +41,7 @@ export default {
         .post("/auth/admin/login", this.payload)
         .then(resp => {
           this.$cookies.set("loyal-token", resp.data.data.token);
-          window.open("/admin/dashboard");
+          window.open("/admin/dashboard", "_self");
         })
         .finally(() => {
           this.loading = false;
@@ -55,6 +55,7 @@ export default {
   background: $dashboard-background-color;
   min-height: 100vh;
 }
+
 .nav {
   width: 100%;
   padding: 16px;
@@ -73,6 +74,7 @@ export default {
   margin: auto;
   @include card;
   padding: 36px;
+
   button {
     @include smallbutton;
     font-size: 16px;
@@ -119,6 +121,7 @@ export default {
     height: 100px;
     object-fit: contain;
   }
+
   p {
     font-size: 20px;
     font-weight: 400;
@@ -132,5 +135,4 @@ h2 {
   font-size: 25px;
   color: $faint;
   margin-bottom: 16px;
-}
-</style>
+}</style>

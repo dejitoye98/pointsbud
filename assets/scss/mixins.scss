@@ -1,8 +1,12 @@
 @mixin card {
     background: white;
     // border: 0.5px solid rgba(211, 211, 211, 0.24);
-    box-shadow: rgba(0, 0, 0, 0.09) 0px 3px 12px;
+    //box-shadow: rgba(0, 0, 0, 0.09) 0px 3px 12px;
+    //box-shadow: rgba(0, 0, 0, 0.012) 0px 0px 0px 1px, rgba(209, 213, 219, 0.728) 0px 0px 0px 1px inset;
+    // box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.023), 0 4px 10px 0 rgba(0, 0, 0, 0.001);
 }
+
 
 @mixin editbutton {
     margin-left: 16px;
@@ -12,6 +16,7 @@
     color: $faint;
     font-size: 14px;
     border: 1px solid $faint;
+
     &:hover {
         color: black;
         border: 1px solid black;
@@ -43,19 +48,23 @@
     width: 400px;
     will-change: transform;
     margin-bottom: 8px;
+
     @include media("<=t") {
         min-height: 40px;
         font-size: 14px;
         padding: 8px 12px;
     }
+
     &:hover {
         box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
         transform: translateY(-2px);
     }
+
     &:active {
         box-shadow: none;
         transform: translateY(0);
     }
+
     &:disabled {
         background: lightgrey;
         border: 2px solid lightgrey;
@@ -64,60 +73,61 @@
 }
 
 @mixin smallbutton {
-   
-      appearance: none;
-      background-color: $primary;
-      border: 1px solid rgba(27, 31, 35, .15);
-      border-radius: 6px;
-      box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
-      box-sizing: border-box;
-      color: #fff;
-      cursor: pointer;
-      display: inline-block;
-      //font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 20px;
-      padding: 6px 16px;
-      position: relative;
-      text-align: center;
-      text-decoration: none;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: manipulation;
-      vertical-align: middle;
-      white-space: nowrap;
 
-      &:focus:not(:focus-visible):not(.focus-visible) {
+    appearance: none;
+    background-color: $lightaccent;
+    border: 0.5px solid rgba(27, 31, 35, .15);
+    border-radius: 10px;
+    box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    //font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    // padding: 6px 16px;
+    padding: 0.75rem 1.7rem;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    white-space: nowrap;
+
+    &:focus:not(:focus-visible):not(.focus-visible) {
         box-shadow: none;
         outline: none;
-      }
-      
-      &:hover {
+    }
+
+    &:hover {
         background-color: $lightaccent;
-      }
-      
-      &:focus {
+    }
+
+    &:focus {
         box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
         outline: none;
-      }
-      
-      &:disabled {
+    }
+
+    &:disabled {
         background-color: lightgrey;
         border-color: rgba(27, 31, 35, .1);
         color: rgba(255, 255, 255, .8);
         cursor: default;
-      }
-      
-      &:active {
+    }
+
+    &:active {
         background-color: $lightaccent;
         box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
-      }
-  
     }
-    
-    
-    /*
+
+}
+
+
+/*
     background: $primary;
     border: 2px solid $primary;
     border-radius: 5px;
@@ -171,7 +181,7 @@
     color: $primary;
     cursor: pointer;
     display: inline-block;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 400;
     line-height: normal;
     margin: 0;
@@ -189,19 +199,23 @@
     will-change: transform;
     margin-bottom: 8px;
     height: auto;
+
     @include media("<=t") {
         min-height: 40px;
         font-size: 14px;
         padding: 8px 12px;
     }
+
     &:hover {
         box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
         transform: translateY(-2px);
     }
+
     &:active {
         box-shadow: none;
         transform: translateY(0);
     }
+
     &:disabled {
         background: lightgrey;
         border: 2px solid lightgrey;
@@ -229,15 +243,19 @@
     flex-direction: column;
     position: relative;
     width: 100%;
+
     @include media("<=t") {
         margin-bottom: 16px;
     }
+
     &--marginOverrule {
         margin-bottom: 0;
     }
+
     &--half {
         //width: 48%;
     }
+
     label {
         font-size: 12px;
         color: $charcoal !important;
@@ -248,6 +266,7 @@
         right: 10px;
         top: 10px;
     }
+
     input,
     select,
     textarea {
@@ -263,18 +282,22 @@
         color: rgba(0, 0, 0, 0.726);
         appearance: none;
         font-size: 15px;
+
         &:focus {
             outline: 2px solid $lightaccent;
         }
     }
+
     &--textarea {
         height: 200px;
+
         textarea {
             padding-top: 25px;
             height: 200px !important;
             resize: none;
         }
     }
+
     option {
         padding-left: 0px !important;
     }
@@ -284,25 +307,30 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 16px;
+
     label {
         font-size: 15px;
         //color: darkgrey;
         font-weight: 400;
         color: $charcoal;
+
         span {
             color: red;
         }
     }
+
     .input,
     input,
     textarea,
     select,
     :deep(input) {
-        border: 1px solid rgba(211, 211, 211, 0.774);
+        border: 0.5px solid rgba(226, 232, 240);
+        border-image-repeat: stretch;
+        border-image-source: none;
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         //border: 1.5px solid rgba(169, 169, 169, 0.64);
         min-height: 45px;
-        border-radius: 5px;
+        border-radius: 15px;
         padding: 8px;
         outline: none;
         font-size: 15px;
@@ -310,11 +338,16 @@
         color: $charcoal;
         font-weight: 400;
         appearance: none;
-        background-color: white;
+        //background-color: white;
+        background-color: rgb(247, 250, 252);
+        //border: none;
+        letter-spacing: 0.6px;
+
         &:focus {
-            border: 2px solid $lightaccent;
+            border: 1px solid lightgrey;
         }
     }
+
     .input {
         cursor: pointer;
     }
@@ -322,7 +355,7 @@
 
 @mixin radio-label {
     position: relative;
-
+    background-color: rgb(246, 246, 246);
     display: flex;
     padding: 8px 8px;
     align-items: center;
@@ -339,9 +372,11 @@
     &:hover {
         background: rgba(211, 211, 211, 0.382);
     }
+
     &:focus-within {
         //background: lightgray;
     }
+
     input {
         cursor: pointer;
         border: 0;
@@ -349,7 +384,7 @@
         width: 100% !important;
         height: 100% !important;
         opacity: 0;
-        background: none !important;
+        //background: none !important;
     }
 
     .radio-indicator {
@@ -357,15 +392,18 @@
         height: 20px;
         margin-right: 16px;
         border-radius: 50%;
-        background: lightgrey;
+        background: white;
+        border: 0.5px solid rgba(203, 201, 201, 0.709);
         display: block;
     }
+
     .radio-text {
         font-size: 14px;
         font-weight: 400;
         color: $faint;
     }
-    input:checked + .radio-indicator {
+
+    input:checked+.radio-indicator {
         background: $primary;
     }
 }

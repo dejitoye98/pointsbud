@@ -1,5 +1,5 @@
 <template>
-  <div class="av">{{initials}}</div>
+  <div class="av">{{ initials }}</div>
 </template>
 
 
@@ -23,8 +23,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .av {
-  width: 35px;
-  height: 35px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
