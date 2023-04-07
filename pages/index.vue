@@ -88,7 +88,7 @@
     background-color: #1e202d;
     width: 100%;
     min-height: 90vh;
-    background-image: url('../static/bg.png');
+    background-image: url('../static/bckg2.png');
     background-position: center;
     background-repeat: no-repeat;
 
