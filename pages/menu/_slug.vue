@@ -317,7 +317,7 @@ export default {
     },
     mounted() {
         google.accounts.id.initialize({
-            client_id: '638411293504-77us0j9tmbvgtet3hbquubb8ocdogqm1.apps.googleusercontent.com',
+            client_id: '309539494248-ir1uocjnkh6h8t3in55vn4r2m9jmt777.apps.googleusercontent.com',
             callback: this.googleSignIn, //method to run after user clicks the Google sign in button
             context: 'signin'
         })
