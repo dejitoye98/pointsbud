@@ -7,7 +7,7 @@ export default {
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
-        title: "Afflee",
+        title: "PointsBud",
         htmlAttrs: {
             lang: "en",
         },
@@ -22,7 +22,7 @@ export default {
             //{ name: "google-signin-client_id", content: "638411293504-minstvm8qj8vmftvuaacnea143ghnpj7.apps.googleusercontent.com" }
         ],
         link: [
-            { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+            { rel: "icon", type: "image/x-icon", href: "/pointsfavicon.png" },
             {
                 href: "https://fonts.googleapis.com/css?family=Quicksand:300,500|Playfair+Display:700i",
                 rel: "stylesheet",
