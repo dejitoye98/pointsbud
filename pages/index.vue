@@ -64,6 +64,9 @@
 
             <div class="footer">
                 <div class="footer__container">
+                    <div class="links">
+                        <a style="text-decoration: underline;" href="/privacy-policy">Privacy Policy</a>
+                    </div>
                     <p class="footer__copyright">Copyright 2023, PointsBud Inc</p>
                     <p>An affiliate of <a style="border-bottom: 1px solid white" href="https://www.afflee.com">Afflee </a>
                     </p>
