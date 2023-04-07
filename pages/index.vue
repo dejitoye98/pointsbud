@@ -150,7 +150,7 @@
         margin-bottom: 20px;
 
         @include media("<=t") {
-            padding: 16px;
+            padding: 14px;
             font-size: 18px;
             width: 100%;
         }
