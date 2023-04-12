@@ -241,6 +241,10 @@
                         <div class="product__name">
                             {{ product.name }}
                         </div>
+
+                        <div class="product__description">
+                            {{ product.description }}
+                        </div>
                         <div class="product__price">
                             {{ product.currency }} {{ product.unitprice | money }}
                         </div>
@@ -856,12 +860,20 @@ export default {
         transform: scale(1.05);
     }
 
+    &__description {
+        color: $charcoal;
+        text-align: center;
+
+    }
+
     &__image {
         height: 60px;
         width: 60px;
         //border-radius: 50%;
         margin: auto;
         margin-top: -50px;
+        border-radius: 15px;
+
 
 
 
@@ -869,7 +881,9 @@ export default {
             width: 100%;
             height: 100%;
             border-radius: 15px;
-            object-fit: cover
+            object-fit: cover;
+            border: 3px solid gold;
+
         }
 
     }
@@ -886,9 +900,10 @@ export default {
         text-align: center;
         font-weight: 400;
         font-size: 15px;
-        color: $charcoal;
+        color: black;
         margin-top: 8px;
         //margin-top: 8px;
+        font-weight: 600;
     }
 
     &__points-earn {
