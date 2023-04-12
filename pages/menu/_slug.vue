@@ -966,14 +966,14 @@ export default {
 }
 
 .categories {
-    width: 100%;
+    width: 90%;
     margin: auto;
     background: white;
     border-radius: 10px;
     @include card;
     padding: 16px;
     margin: 32px auto;
-    border: 1px solid rgb(236, 236, 236);
+    border: 1px solid rgb(252, 250, 250);
 
 
 
@@ -991,7 +991,7 @@ export default {
     ul {
         display: flex !important;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: stretch;
         cursor: pointer;
 
 
