@@ -63,9 +63,14 @@
 
 
                         <div class="menuqr__qr">
-                            <QrCode :text="'https://pointsbud.com/menu/circa-lagos'" />
+                            <QrCode :text="'https://www.pointsbud.com/menu/circa-lagos'" />
                         </div>
 
+
+                        <div class="menuqr__attribution">
+                            <img src="../../../../static/pointsfavicon.png" alt="">
+                            <p>PointsBud.com</p>
+                        </div>
 
                     </div>
                 </div>
@@ -217,6 +222,31 @@ export default {
     cursor: pointer;
     margin: auto;
     max-height: 100%;
+    position: relative;
+
+    &__attribution {
+        bottom: 0;
+        left: 0;
+        margin-top: 32px !important;
+        color: rgb(230, 230, 230);
+        background: rgba(0, 0, 0, 0.363);
+        font-weight: bold;
+        display: flex;
+        padding: 4px 8px;
+        align-items: center;
+        font-size: 13px;
+        border-radius: 2px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+
+
+        img {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+        }
+    }
 
     &__navigation {
         //border: 1px solid grey;
