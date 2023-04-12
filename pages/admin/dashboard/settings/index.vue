@@ -53,7 +53,9 @@
                             <div class="menuqr__header__text">
                                 <p style="text-align: center;">Scan to order from our menu
                                 </p>
-                                <p>and earn <span style="text-decoration: underline !important;"> discount points</span> for
+                                <p>and earn <span style="font-weight: 700; font-size: 25px;">
+                                        discount points</span>
+                                    for
                                     each
                                     purchase</p>
                             </div>
@@ -61,7 +63,7 @@
 
 
                         <div class="menuqr__qr">
-                            <QrCode :text="'localhost:3000'" />
+                            <QrCode :text="'https://pointsbud.com/menu/circa-lagos'" />
                         </div>
 
 
@@ -259,7 +261,7 @@ export default {
         &__text {
             font-size: 48px;
             font-weight: 700;
-            line-height: 0.9;
+            line-height: 1.2;
             text-align: center;
             display: block;
             color: black;

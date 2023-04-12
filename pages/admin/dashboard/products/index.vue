@@ -10,6 +10,10 @@
             <label for>Name</label>
             <input v-model="product.name" type="text" name />
           </div>
+          <div class="form-input">
+            <label for>Description</label>
+            <input v-model="product.description" type="text" name />
+          </div>
           <div class>
             <label for>Price</label>
             <Currencymoney @onCurrencyChange="changeProductCurrency" @onPriceChange="changeProductPrice" />
@@ -17,22 +21,18 @@
 
           <div class="category-input">
             <label for>Category</label>
-            <AddChooseCategory @onChoose="chooseCategory" />
+            <AddChooseCategory @onChoose="onChooseCategory" />
           </div>
 
           <div class="form-input">
             <label>Image</label>
             <ImageUpload @onImageUploaded="changeThumbnail" />
           </div>
+          <div class="form-input">
+            <label for>Percentage of product price to earn as points</label>
+            <input v-model="product.points_to_earn_percentage_price" type="number" name />
+          </div>
 
-          <div class="form-input">
-            <label for>Points to earn</label>
-            <input v-model="product.points_to_earn" type="number" name />
-          </div>
-          <div class="form-input">
-            <label for>Points to deduct</label>
-            <input v-model="product.points_to_deduct" type="number" name />
-          </div>
         </div>
       </template>
       <template #footer>
@@ -196,10 +196,12 @@ export default {
         name: "",
         currency: "",
         unitprice: "",
+        description: "",
         points_to_earn: "",
         points_to_deduct: "",
         thumbnail: "",
-        category_id: ""
+        category_id: "",
+        points_to_earn_percentage_price: "",
       },
       created_product: null,
       flag_creating_product: false,
@@ -252,7 +254,7 @@ export default {
         .post("/products", this.product)
         .then(resp => {
           this.getProducts();
-          this.create_product = false;
+          this.create_product = true;
         }).catch(err => {
           alert(err?.response?.data?.data)
 

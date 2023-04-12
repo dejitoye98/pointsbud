@@ -56,9 +56,9 @@
 
           <tr v-for="(sale, index) in sales" :key="index">
             <td>
-              <Avatar :name="sale.customer.name"></Avatar>
+              <Avatar :name="sale.customer && sale.customer.name"></Avatar>
             </td>
-            <td>{{ sale.customer.name }}</td>
+            <td>{{ sale.customer && sale.customer.name }}</td>
             <td>{{ sale.currency }} {{ sale.total_amount | money }}</td>
             <td>{{ sale.points_earned }}</td>
             <td>{{ sale.points_used }}</td>
