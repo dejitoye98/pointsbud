@@ -223,7 +223,12 @@
                                 v-for="(category, index) in categories" :key="index">{{ category.name }}</div>
 
                         </div>
+                        <div style="background: gold; color: black; margin-top: 16px; padding: 8px; border-radius: 8px"
+                            v-if="search_term !== '' && search_term !== ' '" class="search-results">
+                            <p>{{ filteredProducts.length }} results found <span style="text-decoration:underline"
+                                    @click="showSearchedProducts">Show</span></p>
 
+                        </div>
                         <div class="form-input menu__top__search">
                             <input v-model="search_term" placeholder="search for an item on the menu" type="text"
                                 class="menu__top__search__input">
@@ -410,6 +415,28 @@ export default {
     },
     computed: {
         filteredProducts() {
+            if (this.products) {
+                let productsNotInCart = this.products.filter(item => !this.cart.find(cart_item => item.id == cart_item.id)) || [];
+                const category = this.categories.find(c => c.name === this.chosenCategory);
+                if (category && !this.search_term) {
+                    productsNotInCart = productsNotInCart.filter(item => item.category_id === category.id) || []
+
+                }
+                else if (this.search_term !== '' && this.search_term !== ' ') {
+                    productsNotInCart = productsNotInCart.filter(item => item.name && item.name.toLowerCase().indexOf(this.search_term.toLowerCase()) > -1 || (item.description && item.description.toLowerCase().indexOf(this.search_item && this.search_term.toLowerCase()) > -1))
+
+                }
+
+
+
+                return productsNotInCart
+
+
+            }
+
+            return []
+
+            /*
             if (this.products) {
 
                 let productsNotInCart = this.products.filter(item => !this.cart.find(cart_item => item.id == cart_item.id)) || [];
@@ -612,6 +639,11 @@ export default {
         },
         selectCategory(category) {
             this.chosenCategory = category.name;
+            document.getElementById('menu-content').scrollIntoView({
+                behavior: 'smooth'
+            })
+        },
+        showSearchedProducts() {
             document.getElementById('menu-content').scrollIntoView({
                 behavior: 'smooth'
             })
