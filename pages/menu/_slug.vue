@@ -1020,6 +1020,7 @@ export default {
         &__search {
             // width: 100%;
             @include form-input;
+
             min-height: 50px !important;
             //border: 1px solid lightgrey;
             margin-bottom: 0px !important;
@@ -1266,7 +1267,8 @@ export default {
 
 
             input {
-                border: 0.5px solid lightgray;
+                @include plain-form-input;
+                border: 1px solid lightgray;
                 max-width: fit-content;
                 padding: 8px;
                 text-align: center;
@@ -1282,7 +1284,7 @@ export default {
                 border-radius: 50px;
                 font-size: 14px;
                 font-weight: 700;
-                border: 0.5px solid lightgray;
+                border: 1px solid lightgray;
                 width: 100px;
                 padding: 8px 16px;
 
