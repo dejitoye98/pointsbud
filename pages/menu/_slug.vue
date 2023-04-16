@@ -1025,7 +1025,7 @@ export default {
             //border: 1px solid lightgrey;
             margin-bottom: 0px !important;
             margin: 16px 0;
-            width: 50%;
+            width: 90%;
 
             input {
                 height: 50px;
