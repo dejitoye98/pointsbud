@@ -138,7 +138,7 @@
                 </template>
             </BaseModal>
 
-            <BaseModal v-if="show_order_modal" @close="show_order_modal = false">
+            <BaseModal :show_header="false" :show_footer="false" v-if="show_order_modal" @close="show_order_modal = false">
                 <template #header>
                     <div class="order-modal__header" @click.stop>
 
@@ -150,11 +150,6 @@
                 <template #footer>
                     <div class="order-modal__footer">
                         <div class="order-modal__footer__form">
-                            <div class="order-modal__footer__form__quantity">
-                                <button @click="decreaseQuantity">-</button>
-                                <input style="text-align:center;appearance:none" type="text" v-model="order.quantity">
-                                <button @click="increaseQuantity">+</button>
-                            </div>
 
                             <div class="order-modal__footer__form__total">
                                 {{ focused_product.currency }} {{ focused_product.unitprice * order.quantity | money }}
@@ -167,18 +162,45 @@
                 </template>
                 <template #body>
                     <div class="order-modal" @click.stop>
-                        <p class="order-modal__name">{{ focused_product.description }}</p>
-                        <p class="order-modal__description">This is the best omollette you could have</p>
+                        <div class="order-modal__top">
+                            <div></div>
+                            <div class="order-modal__top__points">30% off</div>
+                        </div>
 
-                        <div class="order-modal__images">
-                            <div>.</div>
-                            <div class="order-modal__images__items">
-                                <img :src="focused_product.thumbnail" alt="">
+                        <div class="order-modal__content">
+                            <div class="order-modal__content__image">
+                                <img :src="focused_product.thumbnail || 'https://maryelizabethhall.files.wordpress.com/2013/02/omelette-pexels.jpeg?w=500'"
+                                    alt="">
+                            </div>
 
+                            <div class="order-modal__content__name">
+                                <p>{{ focused_product.name }}</p>
+                            </div>
+
+                            <div class="order-modal__content__description">
+                                <p>{{ focused_product.description }}</p>
+                            </div>
+
+                            <div class="order-modal__content__quantity">
+                                <p class="order-modal__content__quantity__header">Total: {{ focused_product.currency }} {{
+                                    focused_product.unitprice * order.quantity | money }} </p>
+
+                                <div class="order-modal__content__quantity__container">
+
+                                    <button @click="decreaseQuantity"> -</button>
+                                    <input type="text" v-model="order.quantity">
+                                    <button @click="increaseQuantity"> +</button>
+                                </div>
+                            </div>
+
+                            <div class="order-modal__content__ctas">
+                                <button @click="addToCart">Add to cart</button>
                             </div>
                         </div>
 
-                        <div>.</div>
+
+
+
                     </div>
                 </template>
             </BaseModal>
@@ -192,10 +214,6 @@
                                 src="data:image/jpeg;base64,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">
                         </div>
 
-                        <div class="form-input menu__top__search">
-                            <input v-model="search_term" placeholder="search for an item on the menu" type="text"
-                                class="menu__top__search__input">
-                        </div>
 
 
 
@@ -204,6 +222,11 @@
                                 @click="selectCategory(category)" class="menu__top__categories__category"
                                 v-for="(category, index) in categories" :key="index">{{ category.name }}</div>
 
+                        </div>
+
+                        <div class="form-input menu__top__search">
+                            <input v-model="search_term" placeholder="search for an item on the menu" type="text"
+                                class="menu__top__search__input">
                         </div>
                     </div>
                 </div>
@@ -1000,6 +1023,8 @@ export default {
             min-height: 50px !important;
             //border: 1px solid lightgrey;
             margin-bottom: 0px !important;
+            margin: 16px 0;
+            width: 50%;
 
             input {
                 height: 50px;
@@ -1007,12 +1032,9 @@ export default {
                 padding: 8px;
 
 
-                :hover {
-                    outline: 0;
-                    border-radius: 5px;
-                }
 
-                :focus {
+
+                &:focus {
                     outline: 0;
                     border-radius: 5px;
 
@@ -1170,7 +1192,116 @@ export default {
 }
 
 .order-modal {
-    width: 700px;
+    //width: fit-content;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    &__top {
+        display: flex;
+        justify-content: space-between;
+        padding: 16px;
+
+        &__points {
+            background: #4ECB71;
+            color: white;
+            padding: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 10px;
+        }
+    }
+
+    &__content {
+        padding: 16px;
+
+        &__image {
+            width: 100%;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            max-width: 300px;
+            max-height: 300px;
+
+            img {
+                width: 100%;
+                height: auto;
+                border-radius: 15px;
+            }
+        }
+
+        &__name {
+            font-weight: 600;
+            text-align: center;
+            margin: 16px auto;
+            max-width: 300px;
+
+        }
+
+        &__description {
+            color: $faint;
+            max-width: 400px;
+            margin: auto;
+            text-align: center;
+
+        }
+
+        &__quantity {
+            margin-top: 32px;
+
+            &__header {
+                font-size: 16px;
+                text-align: center;
+                font-weight: 500;
+                margin-bottom: 8px;
+            }
+
+
+            &__container {
+                width: 50%;
+                display: flex;
+                justify-content: center;
+                margin: auto;
+            }
+
+
+            input {
+                border: 0.5px solid lightgray;
+                max-width: fit-content;
+                padding: 8px;
+                text-align: center;
+                border-radius: 50px;
+                margin: 0 8px;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            button {
+                border-radius: 50px;
+                font-size: 14px;
+                font-weight: 700;
+                border: 0.5px solid lightgray;
+                width: 100px;
+                padding: 8px 16px;
+
+            }
+        }
+
+        &__ctas {
+            margin: 32px auto;
+            display: flex;
+            justify-content: center;
+
+            button {
+                @include smallbutton;
+                background: gold;
+                color: black;
+            }
+        }
+    }
+
 
     &__header {
         display: flex;
@@ -1191,30 +1322,7 @@ export default {
         color: $charcoal;
     }
 
-    &__images {
-        padding: 16px;
-        display: flex;
-        justify-content: space-between;
-        border-radius: 10px;
-        height: 200px;
-        border: 1px solid whitesmoke;
-        border-left: 0;
-        border-right: 0;
-        width: 100%;
 
-        &__items {
-            display: flex;
-            overflow: scroll;
-            width: 100%;
-        }
-
-        img {
-            border-radius: 5px;
-            margin-bottom: 16px;
-            margin-right: 8px;
-
-        }
-    }
 
     &__footer {
         width: 100%;

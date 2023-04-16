@@ -3,12 +3,12 @@
     <div class="modal__mask" @click="close">
       <div class="modal__container" style="width:">
         <div class="modal__body" @click.stop>
-          <div class="modal__header">
+          <div class="modal__header" v-if="show_header || typeof (show_header) == 'undefined'">
             <slot name="header"></slot>
             <slot name="header-caption"></slot>
           </div>
           <slot name="body"></slot>
-          <div class="modal__footer" @click.stop>
+          <div class="modal__footer" v-if="show_footer || typeof (show_footer) == 'undefined'" @click.stop>
             <slot name="footer"></slot>
           </div>
         </div>
@@ -19,6 +19,7 @@
 
 <script>
 export default {
+  props: ["show_header", "show_footer"],
   methods: {
     close() {
       this.$emit("close", true);
