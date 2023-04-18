@@ -254,36 +254,7 @@
 
 
 
-                    <div class="cart-sticky" v-if="cart && cart.length > 0">
-                        <div class="cart-sticky__container">
-                            <div class="cart-sticky__header" style="display: flex; align-items:center">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 8px;"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M2 2H3.74001C4.82001 2 5.67 2.93 5.58 4L4.75 13.96C4.61 15.59 5.89999 16.99 7.53999 16.99H18.19C19.63 16.99 20.89 15.81 21 14.38L21.54 6.88C21.66 5.22 20.4 3.87 18.73 3.87H5.82001"
-                                        stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                    <path
-                                        d="M16.25 22C16.9404 22 17.5 21.4404 17.5 20.75C17.5 20.0596 16.9404 19.5 16.25 19.5C15.5596 19.5 15 20.0596 15 20.75C15 21.4404 15.5596 22 16.25 22Z"
-                                        stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                    <path
-                                        d="M8.25 22C8.94036 22 9.5 21.4404 9.5 20.75C9.5 20.0596 8.94036 19.5 8.25 19.5C7.55964 19.5 7 20.0596 7 20.75C7 21.4404 7.55964 22 8.25 22Z"
-                                        stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                    <path d="M9 8H21" stroke="black" stroke-width="1.5" stroke-miterlimit="10"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                <p>{{ cart.length }} items in cart</p>
-                            </div>
 
-                            <div class="cart-sticky__ctas" style="margin-top: 8px;">
-
-                                <button>Get recommendation</button>
-                                <button @click="viewCart">Complete order</button>
-                            </div>
-                        </div>
-                    </div>
 
 
 
@@ -354,7 +325,40 @@
                             </div>
                         </div>-->
                     </div>
+
+                    <div class="cart-sticky" v-if="cart && cart.length > 0">
+                        <div class="cart-sticky__container">
+                            <div class="cart-sticky__header" style="display: flex; align-items:center">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 8px;"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M2 2H3.74001C4.82001 2 5.67 2.93 5.58 4L4.75 13.96C4.61 15.59 5.89999 16.99 7.53999 16.99H18.19C19.63 16.99 20.89 15.81 21 14.38L21.54 6.88C21.66 5.22 20.4 3.87 18.73 3.87H5.82001"
+                                        stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path
+                                        d="M16.25 22C16.9404 22 17.5 21.4404 17.5 20.75C17.5 20.0596 16.9404 19.5 16.25 19.5C15.5596 19.5 15 20.0596 15 20.75C15 21.4404 15.5596 22 16.25 22Z"
+                                        stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path
+                                        d="M8.25 22C8.94036 22 9.5 21.4404 9.5 20.75C9.5 20.0596 8.94036 19.5 8.25 19.5C7.55964 19.5 7 20.0596 7 20.75C7 21.4404 7.55964 22 8.25 22Z"
+                                        stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path d="M9 8H21" stroke="black" stroke-width="1.5" stroke-miterlimit="10"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <p>{{ cart.length }} items in cart</p>
+                            </div>
+
+                            <div class="cart-sticky__ctas" style="margin-top: 8px;">
+
+                                <button>Get recommendation</button>
+                                <button @click="viewCart">Complete order</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+
 
 
             </div>
@@ -778,11 +782,12 @@ export default {
     &__ctas {
         display: flex;
         width: 100%;
-        justify-content: space-evenly;
+        flex-direction: column;
         @include card;
 
         button {
             border-radius: 1px;
+            margin-bottom: 8px;
 
             &:first-of-type {
                 background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37);
@@ -891,10 +896,13 @@ export default {
 }
 
 .cart-modal {
-    min-width: 500px;
+    min-width: auto;
+    box-sizing: border-box;
 
     &__redeem {
         padding: 16px;
+        box-sizing: border-box;
+        ;
 
         &__header {
             font-size: 20px;
@@ -904,6 +912,11 @@ export default {
             max-width: 400px;
             margin: auto;
             box-sizing: border-box;
+
+            @include media("<=t") {
+                max-width: 300px;
+                font-size: 13px;
+            }
         }
 
         &__auth {
@@ -1236,6 +1249,7 @@ export default {
         margin: auto;
         margin-top: 100px;
         width: 90%;
+        padding-bottom: 120px;
 
         @include media("<=t") {
             grid-template-columns: 48% 48%;
