@@ -825,7 +825,7 @@ export default {
 .selected {
     //olor: red;
     background: gold !important;
-    color: black;
+    color: black !important;
     font-weight: 600 !important; //border-radius: 20px;
 
 }
@@ -1199,7 +1199,7 @@ export default {
             cursor: pointer;
 
             &__category {
-                border: 1px solid rgba(245, 245, 245, 0.179);
+                //border: 1px solid rgba(245, 245, 245, 0.179);
                 padding: 8px;
                 margin-top: 2px;
                 font-size: 16px;
@@ -1207,6 +1207,9 @@ export default {
                 cursor: pointer !important;
                 margin-right: 1px;
                 //border-bottom: 0;
+                background: rgba(245, 245, 245, 0.111);
+                border-radius: 5px;
+                color: white;
 
                 &:first-of-type {
                     //border-bottom: 0;
