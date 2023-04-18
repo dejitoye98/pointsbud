@@ -256,7 +256,7 @@
 
                     <div class="cart-sticky" v-if="cart && cart.length > 0">
                         <div class="cart-sticky__container">
-                            <div style="display: flex; align-items:center">
+                            <div class="cart-sticky__header" style="display: flex; align-items:center">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 8px;"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
@@ -276,7 +276,12 @@
                                 </svg>
                                 <p>{{ cart.length }} items in cart</p>
                             </div>
-                            <button @click="viewCart">Complete order</button>
+
+                            <div class="cart-sticky__ctas" style="margin-top: 8px;">
+
+                                <button>Get recommendation</button>
+                                <button @click="viewCart">Complete order</button>
+                            </div>
                         </div>
                     </div>
 
@@ -746,11 +751,18 @@ export default {
     left: 0;
     position: fixed;
 
+    &__header {
+        border: 2px solid whitesmoke;
+        padding: 8px;
+    }
+
     &__container {
         padding: 16px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-direction: column;
+
 
         p {
             font-weight: 600;
@@ -758,6 +770,24 @@ export default {
 
         button {
             @include smallbutton;
+            background: gold;
+            color: black;
+        }
+    }
+
+    &__ctas {
+        display: flex;
+        width: 100%;
+        justify-content: space-evenly;
+        @include card;
+
+        button {
+            border-radius: 1px;
+
+            &:first-of-type {
+                background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37);
+                color: white;
+            }
         }
     }
 }
@@ -847,8 +877,8 @@ export default {
     margin-top: 16px;
 
     &__container {
-        position: relative;
         @include smallbutton;
+        position: relative;
         display: flex;
 
         svg {
