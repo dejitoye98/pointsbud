@@ -1249,7 +1249,7 @@ export default {
         margin: auto;
         margin-top: 100px;
         width: 90%;
-        padding-bottom: 120px;
+        padding-bottom: 300px;
 
         @include media("<=t") {
             grid-template-columns: 48% 48%;
