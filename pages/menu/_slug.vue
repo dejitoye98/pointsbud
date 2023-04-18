@@ -750,6 +750,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37);
+
 * {
     font-family: 'Red Hat Display' !important;
 
@@ -1352,8 +1354,8 @@ export default {
         padding: 16px;
 
         &__points {
-            background: #4ECB71;
-            color: white;
+            background: gold;
+            color: black;
             padding: 8px;
             font-size: 14px;
             font-weight: 600;
@@ -1446,8 +1448,10 @@ export default {
 
             button {
                 @include smallbutton;
-                background: gold;
-                color: black;
+                //background: gold;
+                //color: black;
+                background: $gradient-background !important;
+                color: white;
             }
         }
     }

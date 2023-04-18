@@ -79,6 +79,8 @@ export default {
     background: rgba(0, 0, 0, 0);
     animation: fadeIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 
+    padding-bottom: 300px;
+
     @include media("<=dashbreak") {
       margin-left: 0 !important;
     }

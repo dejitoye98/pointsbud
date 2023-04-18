@@ -109,7 +109,8 @@
     }
 
     &:hover {
-        background-color: $lightaccent;
+        //background-color: $lightaccent;
+        filter: contrast(0.5);
     }
 
     &:focus {
@@ -125,7 +126,7 @@
     }
 
     &:active {
-        background-color: $lightaccent;
+        // background-color: $lightaccent;
         box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
     }
 
