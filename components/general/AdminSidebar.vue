@@ -1,7 +1,9 @@
 <template>
   <div class="sidebar">
     <div class="sidebar__container">
-      <div class="sidebar__logo"></div>
+      <div class="sidebar__logo">
+        <h1>PointsBud Admin</h1>
+      </div>
       <div class="sidebar__content">
         <div class="sidebar__item" :class="[isSelected(item.name) ? 'selected' : '']" @click="goTo(item.route)"
           v-for="(item, index) in items" :key="index">
@@ -39,13 +41,21 @@ export default {
           route: "/admin/dashboard/sales"
         },
         {
+          name: "Loyalty Program",
+          route: "/admin/dashboard/loyalty-programs",
+        },
+        {
           name: "Offers",
           route: "/admin/dashboard/Offers"
         },
         {
           name: "Notifications",
           route: "/admin/dashboard/notifications"
-        }
+        },
+        {
+          name: "Settings",
+          route: "/admin/dashboard/settings"
+        },
       ]
     };
   },
@@ -75,6 +85,22 @@ export default {
   &__logo {
     // height: 200px;
     //background: #d044445e;
+    // height: 400px;
+    width: 100%;
+    justify-content: center;
+    display: flex;
+
+    img {
+      height: 50%;
+      width: 50%;
+    }
+
+    h1 {
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+      padding: 16px;
+    }
 
   }
 

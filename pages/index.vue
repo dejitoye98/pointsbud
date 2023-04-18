@@ -17,10 +17,6 @@
 
                         PointsBud
 
-
-
-
-
                     </div>
 
                     <!--<div class="links">

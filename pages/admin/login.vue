@@ -1,7 +1,10 @@
 <template>
   <div class="page">
     <div class="nav">
-      <div class="nav__logo">Loyalyt</div>
+      <div class="nav__logo">
+        <img src="../../static/pointsfavicon.png" />
+        <h1>PointsBud Admin Login</h1>
+      </div>
     </div>
     <template>
       <div class="login">
@@ -54,26 +57,45 @@ export default {
 .page {
   background: $dashboard-background-color;
   min-height: 100vh;
+  padding-top: 60px;
 }
 
 .nav {
   width: 100%;
-  padding: 16px;
   display: flex;
   justify-content: center;
+
+  &__logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 30px;
+      height: 30px;
+    }
+
+    h1 {
+      font-family: "Squada One", cursive !important;
+      font-size: 30px;
+    }
+  }
+
 }
 
 .login {
   &__container {
-    padding: 50px 16px;
+    // padding: 50px 16px;
+    padding: 16px 0;
   }
 }
 
 .form {
   width: 40%;
   margin: auto;
-  @include card;
   padding: 36px;
+  @include card;
 
   button {
     @include smallbutton;
@@ -135,4 +157,5 @@ h2 {
   font-size: 25px;
   color: $faint;
   margin-bottom: 16px;
-}</style>
+}
+</style>

@@ -11,7 +11,8 @@
         </AdminNotification>
       </div>
       <div class="topbar">
-        <AdminTopbar></AdminTopbar>
+        <!--<AdminTopbar></AdminTopbar>-->
+        <AdminSidebar></AdminSidebar>
       </div>
       <div class="main">
         <Nuxt />
@@ -86,7 +87,7 @@ body {
 
   &__container {
     display: flex;
-    flex-direction: column;
+    //flex-direction: column;
     height: 100%;
     //justify-content: space-between;
     //align-items: stretch;
