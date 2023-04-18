@@ -356,6 +356,17 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="cart-sticky" v-else>
+                        <div class="cart-sticky__container">
+
+
+                            <div class="cart-sticky__ctas" style="margin-top: 8px;">
+
+                                <button>Get recommendation</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
 
