@@ -525,7 +525,7 @@ export default {
     },
     async created() {
 
-
+        window.localStorage.clear()
 
         this.$api.get(`/businesses?slug=${this.$route.params.slug}`).then(resp => {
             this.business = resp.data.data;
