@@ -20,7 +20,8 @@
                     </div>
 
                     <div class="notifs__items">
-                        <div class="notifs__items__item" v-for="(notif, index) in filteredNotifications" :key="index">
+                        <div class="notifs__items__item" :class="[notif.seen === 0 ? 'unread' : '']"
+                            v-for="(notif, index) in filteredNotifications" :key="index">
                             <div class="notifs__items__item__tag">
                                 {{ computedTag(notif.type) }}
                             </div>
@@ -94,6 +95,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.unread {
+    background: gold !important;
+    color: white !important;
+}
+
 .notifs {
     padding: 36px;
 

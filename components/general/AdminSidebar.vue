@@ -11,6 +11,9 @@
           <img v-if="item.name === 'Offers'" src="../../static/sidebar_offers.svg" />
           <img v-if="item.name === 'Sales'" src="../../static/sidebar_sales.svg" />
           <img v-if="item.name === 'Products'" src="../../static/sidebar_products.svg" />
+          <img v-if="item.name === 'Loyalty Program'" src="../../static/sidebar_loyalty.svg" />
+          <img v-if="item.name === 'Notifications'" src="../../static/sidebar_notif.svg" />
+          <img v-if="item.name === 'Settings'" src="../../static/sidebar_settings.svg" />
 
           <p>{{ item.name }}</p>
         </div>
@@ -61,7 +64,7 @@ export default {
   },
   methods: {
     isSelected(name) {
-      if (this.$route.path.includes(name)) return true
+      if (this.$route.path.toLowerCase().includes(name.toLowerCase())) return true
       return false
     },
     goTo(link) {
@@ -76,6 +79,7 @@ export default {
   background: white;
   height: 100%;
   box-shadow: rgba(0, 0, 0, 0.041) 0px 4px 6px;
+  min-height: 100vh;
 
   &__container {
     //padding: 8px;
@@ -117,6 +121,7 @@ export default {
     padding: 8px 16px;
     cursor: pointer;
     border-radius: 10px;
+    padding: 16px 8px;
 
     &:hover {
       background: rgba(211, 211, 211, 0.219);
@@ -124,6 +129,10 @@ export default {
 
     img {
       margin-right: 8px;
+    }
+
+    p {
+      color: black;
     }
   }
 }

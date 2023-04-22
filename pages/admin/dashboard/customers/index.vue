@@ -31,16 +31,16 @@
           <div class="card__header">
             <div></div>Total Customers
           </div>
-          <!--<p>{{ stats.customers_count }}</p>-->
-          <p>243</p>
+          <p> {{ stats.customers_count }}</p>
+          <!--<p>243</p>-->
         </div>
-        <div class="card">
+        <!--  <div class="card">
           <div class="card__header">
             <div></div>Returned this Month
           </div>
-          <!--<p>{{ stats.customers_returned }}</p>-->
+          <p>{{ stats.customers_returned }}</p>
           <p>72</p>
-        </div>
+        </div> -->
       </div>
     </div>
 

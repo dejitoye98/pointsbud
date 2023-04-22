@@ -3,7 +3,11 @@
         <div class="top__container">
             <div @click="goTo(item.route)" class=" top__item" :class="[isSelected(item.name) ? 'selected' : '']"
                 v-for="(item, index) in items" :key="index">
-                {{ item.name }}
+                {{ item.name }} <span v-if="item && item.update_key && updateItems[item.update_key]"> {{
+                    updateItems[item.update_key]
+                }}</span>
+
+
             </div>
         </div>
     </div>
@@ -13,8 +17,16 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
+
+    watch: {
+
+    },
     computed: {
+        ...mapGetters("updates", ['updateItems']),
+
         ...mapGetters('dashboard', ['active'])
+
+
     },
     data() {
         return {
@@ -26,6 +38,7 @@ export default {
                 {
                     name: "Customers",
                     route: "/admin/dashboard/customers"
+
                 },
                 {
                     name: "Products",
@@ -33,11 +46,28 @@ export default {
                 },
                 {
                     name: "Sales",
-                    route: "/admin/dashboard/sales"
+                    route: "/admin/dashboard/sales",
+                    update_key: 'sales',
+                },
+                {
+                    name: "New Orders",
+                    route: "/admin/dashboard/new-orders",
+                    update_key: 'pending_sales'
+
+                },
+                {
+                    name: "Loyalty Programs",
+                    route: "/admin/dashboard/loyalty-programs",
+                    //update_key: 'loyalty-programs'
+
                 },
                 {
                     name: "Offers",
                     route: "/admin/dashboard/Offers"
+                },
+                {
+                    name: "Wallet",
+                    route: "/admin/dashboard/wallet"
                 },
                 {
                     name: "Notifications",
@@ -51,13 +81,17 @@ export default {
         };
     },
     methods: {
+
         goTo(link) {
             this.$router.push(link);
         },
         isSelected(name) {
-            if (this.$route.path.toLowerCase().indexOf(name.toLowerCase()) > -1) return true
+            if (this.$route.path.toLowerCase().split('-').join(' ').indexOf(name.split('-').join(' ').toLowerCase()) > -1) return true
             return false
         },
+        getUpdates(type) {
+            return this.updateItems && this.updateItems[type]
+        }
     },
     created() {
     }
@@ -65,6 +99,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+span {
+    background: red;
+    color: white;
+    border-radius: 100px;
+    padding: 8px;
+}
+
 .top {
     //@include card;
     background-color: teal;

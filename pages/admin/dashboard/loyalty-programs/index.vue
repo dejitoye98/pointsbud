@@ -47,7 +47,7 @@
 
 
         <div class="loyalty__container">
-            <template v-if="!programs || programs && programs.length === 0 && programs.length > 2">
+            <template v-if="!programs || programs && programs.length === 0">
                 <div class="loyalty-setup">
                     <h2>Set up a loyalty program</h2>
                     <p>There can be only one active loyalty program at a time.</p>

@@ -44,7 +44,7 @@ export default {
         .post("/auth/admin/login", this.payload)
         .then(resp => {
           this.$cookies.set("loyal-token", resp.data.data.token);
-          window.open("/admin/dashboard", "_self");
+          window.open("/admin/dashboard/customers", "_self");
         })
         .finally(() => {
           this.loading = false;

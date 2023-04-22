@@ -5,50 +5,92 @@
     <div class="layout__container">
       <div class="notifications" v-if="filteredNotifications.length > 0">
 
-        <AdminNotification @close="closeNotification" v-for="(notification, index) in filteredNotifications"
-          :notification="notification" :key="index">
+        <AdminNotification :socket="socketClient" @close="closeNotification"
+          v-for="(notification, index) in notifications" :notification="notification" :key="index">
 
         </AdminNotification>
       </div>
       <div class="topbar">
-        <!--<AdminTopbar></AdminTopbar>-->
-        <AdminSidebar></AdminSidebar>
+        <AdminTopbar></AdminTopbar>
+        <!--  <AdminSidebar></AdminSidebar> -->
       </div>
       <div class="main">
-        <Nuxt />
+        <Nuxt :socket="socketClient" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import socket from "socket.io-client"
+import { mapGetters } from "vuex";
+
 export default {
   created() {
     /*setInterval(() => {
 
       //this.getNotifications()
     }, 1000)*/
+    this.$store.commit('dashboard/setActive', "Customers")
   },
   data() {
     return {
-      notifications: []
+      socketClient: null,
+      business_slug: ''
+
     }
   },
   computed: {
+    ...mapGetters("notifications", ['notifications']),
+    ...mapGetters("updates", ['updateItems']),
     filteredNotifications() {
       //let notifs = [];
-      return this.notifications.filter(n => n.show === true);
+      return this.notifications.filter(n => n.show === true || !n.seen);
     }
   },
 
+  mounted() {
+    this.$store.dispatch('updates/getUpdates')
+    this.socketClient = socket('http://localhost:5000');
+    //console.log(this.socketClient)// Replace with your server URL
+    // Add your event handlers here
+    this.socketClient.on('connect', () => {
+      console.log('Connected to server');
+      this.getBusiness()
+    });
+
+    this.socketClient.on('disconnect', () => {
+      console.log('Disconnected from server');
+    });
+
+    this.socketClient.on('created_porder', (data) => {
+      //alert('got porder!!')
+      //this.notifications.unshift(data)
+      this.$store.commit('notifications/setNotifications', [data, ...this.notifications])
+    })
+
+
+
+
+
+
+  },
+
   methods: {
+
+    getBusiness() {
+      this.$api.get('/auth/admin/self').then(resp => {
+        this.business_slug = resp.data.data.slug
+        this.socketClient.emit('join_room', { room: `orders:${this.business_slug}` })
+      })
+    },
     closeNotification(id) {
       const notification = this.notifications.find(a => a.id === id);
-      //notification.show = false;
-      this.$set(notification, "show", false)
-      this.readNotification(id).then(resp => {
+
+      this.$store.commit('notifications/setNotifications', this.notifications.filter(n => n.id !== notification.id))
+      /*this.readNotification(id).then(resp => {
         this.$set(notification, "show", false)
-      })
+      })*/
     },
     getNotifications() {
       this.$api.get('/notifications/admin?type=new').then(resp => {
@@ -87,10 +129,10 @@ body {
 
   &__container {
     display: flex;
-    //flex-direction: column;
+    flex-direction: column;
     height: 100%;
-    //justify-content: space-between;
-    //align-items: stretch;
+    justify-content: space-between;
+    align-items: stretch;
   }
 }
 

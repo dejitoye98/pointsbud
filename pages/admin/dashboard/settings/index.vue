@@ -24,15 +24,22 @@
                 </template>
             </BaseModal>
             <div class="settings__navigation">
+                <div class="menu-item nav-selected" @click="changeActiveTab('spaces')"
+                    :class="[computedNavClass('spaces')]">
 
-                <div class="menu-item nav-selected" @click="changeActiveTab('menu')" :class="[computedNavClass('menu')]">
-                    Menu
+                </div>
+                <div class="menu-item nav-selected" @click="changeActiveTab('menu')"
+                    :class="[computedNavClass('QR Codes')]">
+                    QR Codes
                 </div>
                 <div class="menu-item nav-selected" @click="changeActiveTab('users')" :class="[computedNavClass('users')]">
                     Users
                 </div>
-                <div class="menu-item nav-selected" :class="[computedNavClass('users')]">
-                    Menu
+                <div class="menu-item nav-selected" @click="changeActiveTab('spaces')" :class="[computedNavClass('users')]">
+                    Spaces
+                </div>
+                <div class="menu-item nav-selected" @click="changeActiveTab('banks')" :class="[computedNavClass('banks')]">
+                    Banks
                 </div>
             </div>
 
@@ -40,8 +47,18 @@
 
                 <div class="menuqr">
                     <div class="menuqr__navigation">
-                        <button>Save</button>
-                        <button>Download</button>
+                        <!-- <button>Save</button>
+                        <button>Download</button> -->
+                        <div class="menuqr__spaces">
+                            <ul>
+                                <li @click="changeSpaceQRView('general')"
+                                    :class="[selected_space_qr === 'general' ? 'selected_space_qr' : '']">General design
+                                </li>
+                                <li @click="changeSpaceQRView(space.name)" v-for="(space, index) in spaces"
+                                    :class="[selected_space_qr === space.name ? 'selected_space_qr' : '']" :key="index">{{
+                                        space.name }}</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="menuqr__container">
                         <div class="menuqr__header">
@@ -63,7 +80,12 @@
 
 
                         <div class="menuqr__qr">
-                            <QrCode :text="'https://www.pointsbud.com/menu/circa-lagos'" />
+                            <QrCode :text="qrData" />
+                        </div>
+
+                        <div class="" color="black">
+                            <p style="color: black; margin-top: 8px; font-size: 18px; font-weight:600"> {{ selected_space_qr
+                            }}</p>
                         </div>
 
 
@@ -126,6 +148,67 @@
                 </div>
             </template>
 
+
+
+            <template v-if="activeTab === 'spaces'">
+                <div class="spaces">
+                    <div class="spaces__container">
+                        <div class="spaces__header">
+                            <button @click="saveSpaces">Save Changes</button>
+                        </div>
+                        <div class="spaces__content">
+
+                            <div class="spaces__item" v-for="(space, index) in spaces" :index="index">
+                                <div class="spaces__item__input-box">
+                                    <input placeholder="space name" v-model="space.name">
+                                    <input placeholder="price" v-model="space.price">
+                                    <input placeholder="description" v-model="space.description">
+                                </div>
+                                <div class="space__item__footer">
+                                </div>
+                            </div>
+                            <div class="spaces__item spaces__item--add" @click="addNewSpace">
+                                Add a new space
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <template v-if="activeTab === 'banks'">
+                <div class="banks">
+                    <div class="banks__container">
+                        <div class="banks__item" v-for="(acc, index) in banks" :key="index">
+                            <p>{{ acc.bank_name }}</p>
+                            <p>{{ acc.account_number }}</p>
+                            <p v-if="acc.is_primary"> IsPrimary</p>
+                        </div>
+                        <div class="form">
+                            <div class="form-input">
+                                <p class="error">{{ error }}</p>
+                                <label>Bank</label>
+                                <select v-model="bank.bank_shortcode">
+                                    <option v-for="bank in bankList" :key="bank.name" :value="bank.code"> {{ bank.name }}
+                                    </option>
+                                </select>
+
+                            </div>
+                            <div class="form-input">
+                                <p class="error">{{ error }}</p>
+                                <label>Account Number</label>
+                                <input type="number" v-model="bank.account_number" />
+                            </div>
+
+                            <div style="display: flex;justify-content:flex-end">
+                                <button class="button" @click="addBankAccount">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+
+
         </div>
     </div>
 </template>
@@ -133,12 +216,15 @@
 <script>
 import QrCode from "vue-qr-generator";
 import ColorPicker from '@radial-color-picker/vue-color-picker';
+import { mapGetters } from 'vuex';
+
 
 export default {
     layout: 'admin-dashboard',
     components: { QrCode, ColorPicker },
 
     created() {
+        this.getBusiness()
         this.changeActiveTab('menu')
     },
     data() {
@@ -158,14 +244,104 @@ export default {
                 role_id: ''
             },
 
-            roles: []
+            roles: [],
+
+            spaces: [],
+            edited_spaces: false,
+            selected_space_qr: 'general',
+
+            qr_properties: {
+                height: '200px',
+                width: '200px'
+            },
+            business: null,
+
+            bank: {
+                account_number: '',
+                bank_name: '',
+                bank_shortcode: '',
+                is_primary: 0
+            },
+
+            banks: []
+
 
         }
     },
+    watch: {
+        spaces(val) {
+            if (val) {
+                this.edited_spaces = false
+            }
+        }
+    },
     computed: {
+        ...mapGetters('banks', ['bankList']),
 
+        qrData() {
+            if (this.business) {
+
+                if (this.selected_space_qr !== 'general') {
+                    return "https://www.pointsbud.com/menu?space=" + this.selected_space_qr
+                }
+                else {
+                    return "https://www.pointsbud.com/menu/" + this.business.slug
+                }
+            }
+        }
     },
     methods: {
+        getBusiness() {
+            this.$api.get('/auth/admin/self').then(resp => {
+                this.business = resp.data.data;
+            })
+        },
+        changeSpaceQRView(space) {
+            this.selected_space_qr = space
+        },
+        addNewSpace() {
+            this.spaces.push({
+                name: ''
+            })
+        },
+        getSpaces() {
+            this.$api.get('/spaces').then(resp => {
+                this.spaces = resp.data.data
+            })
+        },
+        saveSpaces() {
+            this.$api.post('/spaces', { items: this.spaces }).then(resp => {
+                this.getSpaces()
+            })
+        },
+        getBanks() {
+            this.$api.get('/bank-accounts').then(resp => {
+                this.banks = resp.data.data
+            })
+        },
+        addBankAccount() {
+
+            const payload = this.bank
+            const bank = this.bankList.find(b => b.code === payload.bank_shortcode);
+            payload.bank_name = bank.name;
+            //payload.bank_shortcode = this.banks[this.bank.bank_name]
+
+            if (!payload.account_number || !payload.bank_name || !payload.bank_shortcode) {
+                this.error = "Please enter all fields"
+                return false
+            }
+            this.$api.post('/bank-accounts', payload).then(resp => {
+                this.bank = {
+                    account_number: '',
+                    bank_name: '',
+                    bank_shortcode: '',
+                    is_primary: ''
+                }
+
+                // this.$emit('reloadBankAccountsList', true)
+            })
+
+        },
         onInput() {
             alert('seter')
         },
@@ -183,7 +359,16 @@ export default {
             if (item === 'users' && !this.users) {
                 this.getUsers()
             }
-            if (item === 'menu') return;
+            else if (item === 'spaces' && this.spaces.length === 0) {
+                this.getSpaces()
+            }
+            else if (item === 'banks' && this.banks.length === 0) {
+                this.getBanks();
+            }
+            if (item === 'menu' && this.spaces.length === 0) {
+                this.getSpaces()
+                return;
+            }
         },
 
         addUser() {
@@ -204,6 +389,43 @@ export default {
 <style lang="scss" scoped>
 @import '@radial-color-picker/vue-color-picker/dist/vue-color-picker.min.css';
 
+
+.selected_space_qr {
+    color: goldenrod !important;
+    font-size: 20px;
+
+}
+
+
+
+.banks {
+    &__container {
+        padding: 64px 0;
+    }
+
+    &__item {
+        padding: 24px;
+        background: white;
+        margin-bottom: 16px;
+    }
+}
+
+.form {
+    @include card;
+    padding: 16px;
+
+    button {
+
+        @include smallbutton
+    }
+
+}
+
+.form-input {
+    @include plain-form-input;
+}
+
+
 .users {
     button {
         @include smallbutton;
@@ -223,6 +445,28 @@ export default {
     margin: auto;
     max-height: 100%;
     position: relative;
+
+    &__spaces {
+
+
+        ul {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        li {
+            margin-right: 8px;
+            color: black;
+            border-right: 1px solid grey;
+            padding-right: 16px;
+
+            &:hover {
+                cursor: pointer;
+                text-decoration: underline;
+            }
+
+        }
+    }
 
     &__attribution {
         bottom: 0;
@@ -422,6 +666,73 @@ export default {
 
     .form-input {
         @include plain-form-input;
+    }
+}
+
+.spaces {
+
+    &__container {
+        margin: 64px 0;
+
+
+    }
+
+    &__header {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 16px;
+
+        button {
+            @include smallbutton;
+        }
+    }
+
+    &__content {
+        display: grid;
+        grid-template-columns: 30% 30% 30%;
+        justify-content: space-between;
+    }
+
+    &__item {
+        background: white;
+        margin-bottom: 16px;
+
+        width: 100%;
+        padding: 24px;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        &__input-box {
+            input {
+                @include plain-form-input;
+                text-align: center;
+                border: 1px dashed whitesmoke;
+
+                &:focus {
+                    outline: 0;
+                }
+
+                &:active {
+                    outline: 0;
+                }
+            }
+        }
+
+        button {
+            @include smallbutton;
+        }
+
+        &--add {
+            background: gold;
+            font-size: 20px;
+
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
     }
 }
 </style>

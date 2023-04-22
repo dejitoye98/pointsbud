@@ -57,7 +57,7 @@
                             </div>
                             <div class="item" v-for="(order, index) in model.orders" :key="index">
                                 <div class="item__image">
-                                    <img :src="order && order.product.thumbnail" alt="">
+                                    <img :src="order && order.product?.thumbnail" alt="">
 
                                 </div>
                                 <div class="item__details">
@@ -85,8 +85,9 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
-    props: ['id'],
+    props: ['id', 'socket'],
     data() {
         return {
             model: null,
@@ -96,6 +97,7 @@ export default {
 
 
     computed: {
+
         currency() {
             if (this.model && this.model.orders) {
                 return this.model.orders[0].currency
@@ -130,7 +132,13 @@ export default {
             })
         },
         acceptOrder() {
-            this.$api.put('/orders/pending-sales/' + this.model.id, { status: 'accepted' }).then(resp => {
+
+            /*this.$api.put('/orders/pending-sales/' + this.model.id, { status: 'accepted' }).then(resp => {
+                this.$emit('close', true)
+            })*/
+
+            this.socket.emit('approved_order', this.model)
+            this.socket.on('approval_done_' + this.id, () => {
                 this.$emit('close', true)
             })
         }

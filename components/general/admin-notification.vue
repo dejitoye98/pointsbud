@@ -1,7 +1,7 @@
 <template>
     <div class="notification">
 
-        <NewOrderNotificationModal @close="closeDetail" v-if="focused_order_id" :id="focused_order_id">
+        <NewOrderNotificationModal :socket="socket" @close="closeDetail" v-if="focused_order_id" :id="focused_order_id">
 
         </NewOrderNotificationModal>
         <div class="notification__container">
@@ -32,7 +32,7 @@
 import moment from 'moment';
 export default {
 
-    props: ['notification'],
+    props: ['notification', 'socket'],
     data() {
         return {
             focused_order_id: null,
@@ -76,7 +76,7 @@ export default {
     height: max-content;
     padding: 8px 0;
     margin-bottom: 8px;
-    background: $primary;
+    background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37);
     color: white !important;
 
     &__header {
@@ -85,13 +85,14 @@ export default {
     }
 
     &__tag {
-        background: white;
+        background: gold;
         margin-bottom: 8px;
-        color: orangered;
+        // color: orangered;
         padding: 2px 8px;
         width: max-content;
         border-radius: 50px;
         font-size: 13px;
+        color: black;
     }
 
     &__container {
@@ -116,9 +117,12 @@ export default {
             border-radius: 10px;
             margin-top: 10px;
             font-size: 14px;
-            border: 2px solid whitesmoke;
+            border: 2px solid gold;
             color: white;
             max-height: max-content;
+
+            background: gold;
+            color: black;
 
             &:hover {
                 background: $primary;
