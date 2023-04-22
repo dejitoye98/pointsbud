@@ -540,7 +540,7 @@ export default {
 
     },
     mounted() {
-        this.socketClient = socket('http://localhost:5000'); // Replace with your server URL
+        this.socketClient = socket('https://loyalteeapi.herokuapp.com'); // Replace with your server URL
 
         if (this.$route.query.receipt_generated) {
             this.getReceipt()
