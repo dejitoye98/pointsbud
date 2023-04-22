@@ -317,9 +317,9 @@
 
 
                 <div class="menu__header">
-                    <div class="logo">
+                    <!--<div class="logo">
                         <img :src="business && business.logo" alt="">
-                    </div>
+                    </div>-->
                     <!-- 
                     <div class="categories">
                         <h2>Categories</h2>
