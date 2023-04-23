@@ -108,7 +108,7 @@ span {
 
 .top {
     //@include card;
-    background-color: teal;
+    background-color: #2c2e3e;
     color: white;
 
     &__container {

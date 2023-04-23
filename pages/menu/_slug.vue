@@ -525,6 +525,7 @@ export default {
     },
     async created() {
 
+
         window.localStorage.clear()
 
         this.$api.get(`/businesses?slug=${this.$route.params.slug}`).then(resp => {
@@ -1613,7 +1614,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         padding-bottom: 300px;
 
         @include media("<=t") {
-            grid-template-columns: 48% 48%;
+            grid-template-columns: 100%;
         }
 
     }

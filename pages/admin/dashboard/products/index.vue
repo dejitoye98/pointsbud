@@ -73,11 +73,29 @@
     </div>
 
     <div class="section">
+
+      <div class="categories">
+        <div class="categories__container">
+          <div @click="choseCategory('all')" class="categories__item"
+            :class="[chosen_category === 'all' ? 'selected-category' : '']">
+            All
+          </div>
+          <div @click="choseCategory(category.name)" class="categories__item"
+            v-for='(category, index) in       categories'
+            :class="[chosen_category.toLowerCase() === category.name.toLowerCase() ? 'selected-category' : '']">
+            {{ category.name }}
+          </div>
+
+          <div class="search">
+            <input v-model="search_term" type="text" placeholder="Search for an item on the menu">
+          </div>
+        </div>
+      </div>
       <div class="products">
 
-        <div class="product" v-for="(product, index) in products" :key="index">
+        <div class="product" v-for="(product, index) in       filteredProducts" :key="index">
           <div class="product__image">
-            <img :src="product.thumbnail" alt="">
+            <img v-if="product.thumbnail" :src="product.thumbnail" alt="">
           </div>
           <div class="product__name">
             {{ product.name }}
@@ -180,10 +198,16 @@ export default {
   layout: "admin-dashboard",
   created() {
     this.$store.commit('dashboard/setActive', 'Products')
-    this.getProducts();
+    this.getProducts().then(resp => {
+      this.getCategories()
+    })
   },
   data() {
     return {
+      categories: [],
+      chosen_category: "all",
+
+
       create_product: false,
       products: null,
       filter: {
@@ -206,6 +230,8 @@ export default {
       created_product: null,
       flag_creating_product: false,
 
+      search_term: '',
+
       product_availability: {
         show: false,
         focused_product: null,
@@ -216,9 +242,34 @@ export default {
     };
   },
   computed: {
-    filterQuery() { }
+    filteredProducts() {
+      if (!this.search_term && this.products) {
+
+        if (this.chosen_category === 'all') { return this.products }
+        else {
+          let category = this.categories.find(c => c.name === this.chosen_category)
+          return this.products.filter(p => p.category_id === category.id)
+        }
+
+
+      }
+      else if (this.search_term && this.products) {
+        return this.products.filter(p => p.name.toLowerCase().indexOf(this.search_term.toLowerCase()) > -1)
+      }
+
+
+
+    }
   },
   methods: {
+    choseCategory(value) {
+      this.chosen_category = value;
+    },
+    getCategories() {
+      this.$api.get('/categories?business_id=' + this.products[0].business_id).then(resp => {
+        this.categories = resp.data.data
+      })
+    },
     updateProductAvailability() {
       this.$api.put(`/products/${this.product_availability.focused_product.id}/availability`, { ...this.product_availability.model }).then(resp => {
         // change 
@@ -243,9 +294,9 @@ export default {
       this.product.unitprice = value;
     },
 
-    getProducts() {
-      this.$api.get(`/products`).then(resp => {
-        this.products = resp.data.data;
+    async getProducts() {
+      return this.$api.get(`/products`).then(resp => {
+        return this.products = resp.data.data;
       });
     },
     createProduct() {
@@ -268,6 +319,61 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.selected-category {
+
+  background: $secondary !important;
+  font-weight: 500 !important;
+}
+
+
+.search {
+  width: 100%;
+  padding: 16px;
+
+  input {
+    background: whitesmoke;
+    border: 1px solid lightgrey;
+    min-height: 40px;
+    width: 100%;
+    padding: 16px;
+
+    &:hover {
+      outline: 0;
+    }
+
+    &:active {
+      outline: 0;
+    }
+
+    &:focus {
+      outline: 0;
+    }
+  }
+}
+
+.categories {
+  display: flex;
+
+  &__container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 36px 0;
+  }
+
+  &__item {
+    background-color: rgba(255, 255, 255, 0.495);
+    padding: 8px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+
+    &:hover {
+      background: white;
+      cursor: pointer !important;
+      border-radius: 10px;
+    }
+  }
+}
+
 .av_modal {
   padding: 16px;
   width: 400px;

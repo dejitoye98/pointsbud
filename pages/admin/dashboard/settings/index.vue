@@ -63,8 +63,7 @@
                     <div class="menuqr__container">
                         <div class="menuqr__header">
                             <div class="menuqr__header__logo">
-                                <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/7QCEUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAGgcAigAYkZCTUQwYTAwMGE2YjAxMDAwMDRkMDIwMDAwYWUwMzAwMDBjZjAzMDAwMDBmMDQwMDAwYzIwNjAwMDA5YzA4MDAwMDBiMDkwMDAwMmMwOTAwMDA1ZDA5MDAwMGU0MGIwMDAwAP/bAEMABgQFBgUEBgYFBgcHBggKEAoKCQkKFA4PDBAXFBgYFxQWFhodJR8aGyMcFhYgLCAjJicpKikZHy0wLSgwJSgpKP/bAEMBBwcHCggKEwoKEygaFhooKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKP/CABEIAJYAlgMBIgACEQEDEQH/xAAbAAEAAwEBAQEAAAAAAAAAAAAABAUGAwIBB//EABUBAQEAAAAAAAAAAAAAAAAAAAAB/9oADAMBAAIQAxAAAAH8/CgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXM1mS1610c1eavM4a2HceDF6bhRGmznrgbTFa+uKAAAGqj0fs7yqXubXFeOZua3P+yzlZiWW8vL8zXW2Gjnj4AAGyz1jnzzsqDSEfLbfKl1zrbgqJUzLmqoLSmL3nykGXAABpPWZF72zgtPVSNF2y49aTMi6jVw00KmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH/8QAJhAAAgMAAQIGAgMAAAAAAAAAAwQBAgUAFSAGERITFCE1YBAkMv/aAAgBAQABBQL90SRk9IVzyTopykwsuoQTOcmvcVaWKXOTFUufWQ1ibWlBZbnTAmCCtLFDjCYBP1PbqT6EeHOQ9ueIPyfGkDNqUBGPTBiJ0iXkhAnIHlYm1tAtky7Qoq32jiminGM75uhouVbNYYFsZxzuCFYpdVI3xET1aCCb5eiXKuWel3EPATkh29LQAY67T2bP1PZURJi/u1jlRktFotWeDoQskXMOeAEe/CReLcosclZi1e7AcYlxts7P8YTJ/c1CdQSFSSlfcspfP2DhOgvDjzOoabLFnUHn0Hd/QdeG2/o/Mz+3w/8Albf6aW9gK9F18jPqhxX+vo61JHopCzWj5shrqFHYRMKvpaCIjJhazVKt1CzndqWlRWOor8Zfg5XtKrYkWqq30W4cLTSiw66QQc859XUqFq2/JhINWTYnQXJLz1mafuv/xAAUEQEAAAAAAAAAAAAAAAAAAABg/9oACAEDAQE/AUn/xAAUEQEAAAAAAAAAAAAAAAAAAABg/9oACAECAQE/AUn/xAAzEAACAQMCAwUFCAMAAAAAAAABAgMAERIEIRMxQRAUICJxMkJRUmEFIzNgcoGRsSQ1Yv/aAAgBAQAGPwL86NLI4i0683NYRaxg/TiJsa4RbI4g3FAzavhv8uF6KSa0hwL2woCR8Uvu1qjZ9cQJFyXydKeXSahZ1TdhaxFAKLk8qA12pxl+SMXtUs2l1QdI1LEEWalEr4J1a16aTTarLoLra5qx8X2fEvscPP8AfsDSm5AC9j/pX+uzQNFhYQ28zWp5NQ4M8iFUjX+6Qn3FZh/FM7bsTc0/DNs1xb0oAczWkghv/jWJ+rda4sY+7nHEXxRRZqmqhGK5cmWrGIAfEsLVw0lEth5iOV6EkYTH6tTSx4FcR74+FCNLZE251pSMPuYbP5q7lq22P4Uh9w0hlAOPtWN9qMmhKzQnlY7imk1jrCoGwvck0NQ2PDj3AJ5mikjplz2ANDvHD46NdPMN1q3huqMR6VZ+IB9ey6o5H0FWbIH69lo1Zz9K88Tr6r2fcJIf0irS5Zf9dmSRSMPiFrcMPFFBxTwsT5f2q08hcDlfssZmGmhUuwpNbiA6Ng4Hw6Uka82NqOk0R4aR7Mw5saHeJGli6g71i20e7t6VjpWMEC+yqbU+m1PmnC5RSdfSoUm9gtvTqXeEKbKq7C1QpJ+Orksbc/FH6N/VGtM+V+MmXpWGplaJtScthc4ipdNHqXbvAxsy236VFxNsJBetQG+cmo4QupDt1vUsUWSxyK0a5fGmjcWZTY0dS34UKliaxhW77msHKyoOki3rvcUXBdXwZRyPiTHSRmRRbPrX+ug/moCdOgjiFhH0NYnSxqwGIa/KsmgSU8xl0ricFI2649aVNZp01AXYMdjWWj0SRyfMTe1ZX3veh33TJM49+9jQhijWGD5F60JkAJAI3rLUaGNpPipteljVFihXki/nb//EACYQAQACAQQBAwUBAQAAAAAAAAEAESExQVFhcRAggWCRocHwseH/2gAIAQEAAT8h+tGf7W/eA3Zan8KhvO0qfxExmNHZzZT5hNyZLqWS450yKOanfqRYMllFC5qKEVQN2GruW3fmwqbaOJtUsy2hgmHrscINIFApMPuTEleG7dfSpjo9GkNTzP7fH0QwDVGVzK/iwRxZhgX8iMI0NkjzN5+xaqCHaUE0iFYauYHVC/Jqff3WPiB1wr5if6FBh1QFHDgcy6MOKRmF2t8GU0jmXQvzF2QwRwj+Z92KHDfE0CUGY8MYntgTqSL9IUGzAQL3YBEdCoPPsAZ7l7MxUWGSCxajXtBbWI5SWrQuendUElWeFY9OnWBYAGnSwuOXOssWl1W/UbgBtayCmjU7NXEmKzFZs9yiU07MJiwmWmz06pOGuPvKcTNs1KaZFPzOJvp36sRey95JdjMng5YxxQ2zleZWQsg1G7mY1Sl/8joL4I2VNQQhoCsPn3fxuc/Ihg7LrlpBPwjMCZhdOq5rnV260wY6sPY5GY5o2NXUeBGnkX/YzqsGNjvwzoI5uWEeMwFhZWms0Hfc1Pc/JixbXMn7Ez3ZxolMcRKycRpZIqS5xKcata19wmk2lJ5inAjn4RZWbzuB81oFo75hdO3yuV3g82BozLdVq0rxFH/envl5frb/2gAMAwEAAgADAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKGCKDPLAAAKAKEHIAAAAAFIDMELAAAIMIMIIIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAGD/2gAIAQMBAT8QSf/EABQRAQAAAAAAAAAAAAAAAAAAAGD/2gAIAQIBAT8QSf/EACQQAQACAgICAQUBAQAAAAAAAAEAESExQVFhcSBggZGhscHx/9oACAEBAAE/EPrV76EQH9PQQI5QlfhoYXB3VRjlAdxjDdxByDWbAeRIlyqK9Yy+vMAkZbtzV7xPb0k5ts7qHsVmlMAQqU81XGofEY7MUBYujTmM+W2FNboyx0Bwg3FLbftFQKQeE2fJhrDCXYrtxOIz+tAMdD8cz9Z/ZtwDZLjkMuRwOyKDXFI20kOocZiHV5X5iS2hWqe4AaWAHmH6jEBDbVwEKNCp1+SYxMSDAa/xW+RrtgOmwaAYxENnA7yiqaqbltwO46jWWHOcLcu3oECpmC9jAsVBL2FgiwhwtoLRfDqOMBtN0MJZvpOI4BsGBUBMXTqNTEYFbvoialCGZAMK8vMQIJCNuOC0bjLlVHhYwOI4qqceSaaEwx6JaVN5PiuGZWD5EI3nBUZ9DDDgK6IcUW7UfuEa1hbeV6YNcztMj0+xNCv1g8YiUbZc/wCztGxa9sbSPAPyZiuYeGoxp21C+8EoIqnIbM8+PlbWlapSfhzFXrUKV+IQuQuxiGteVMxalUja+2PczwWr2gP7F1L1Iecq7ojLIoiqxpXSPmAW1J2xD2mIiSrrAYAZVtisFLBDa5omoigPlQl7PlxC6MInOgwlVmUdBAEaIm1z6+dz9n/YynIqlrGXOjMBcZt8lIcC5gdNgaM9JEjaUdh6I3F5pg4HUHkRnHDC8JXHGGBwakgUWmKRiPjEFVJCceKq1+0rqPYopDFlTAdZkCji3MOO4V2Abrz8qGdC6SK8ZGoulRW4pm0Rmt08m4UYy7pga/7CmNiiLuj6hFBpitzbmDISqG0V2HmPwYrHhShwMpoJU4S12dNwcCGghgZ+0wwhZ9iyp1MqBKuL8ou+QjEoQAJ9x9bH/9k="
-                                    alt="">
+                                <img src="https://i.ibb.co/XJ4nNjb/62909-C67-617-A-4-EF8-91-C0-45-D06-F471-F87.png" alt="">
                             </div>
 
                             <div class="menuqr__header__text">
@@ -83,6 +82,35 @@
                             <QrCode :text="qrData" />
                         </div>
 
+                        <div class="menuqr__socials">
+                            <p class="menuqr__socials__header">
+                                We are social
+                            </p>
+                            <div class="menuqr__socials__links">
+                                <div style="display: flex;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M7.8 2H16.2C19.4 2 22 4.6 22 7.8V16.2C22 17.7383 21.3889 19.2135 20.3012 20.3012C19.2135 21.3889 17.7383 22 16.2 22H7.8C4.6 22 2 19.4 2 16.2V7.8C2 6.26174 2.61107 4.78649 3.69878 3.69878C4.78649 2.61107 6.26174 2 7.8 2ZM7.6 4C6.64522 4 5.72955 4.37928 5.05442 5.05442C4.37928 5.72955 4 6.64522 4 7.6V16.4C4 18.39 5.61 20 7.6 20H16.4C17.3548 20 18.2705 19.6207 18.9456 18.9456C19.6207 18.2705 20 17.3548 20 16.4V7.6C20 5.61 18.39 4 16.4 4H7.6ZM17.25 5.5C17.5815 5.5 17.8995 5.6317 18.1339 5.86612C18.3683 6.10054 18.5 6.41848 18.5 6.75C18.5 7.08152 18.3683 7.39946 18.1339 7.63388C17.8995 7.8683 17.5815 8 17.25 8C16.9185 8 16.6005 7.8683 16.3661 7.63388C16.1317 7.39946 16 7.08152 16 6.75C16 6.41848 16.1317 6.10054 16.3661 5.86612C16.6005 5.6317 16.9185 5.5 17.25 5.5ZM12 7C13.3261 7 14.5979 7.52678 15.5355 8.46447C16.4732 9.40215 17 10.6739 17 12C17 13.3261 16.4732 14.5979 15.5355 15.5355C14.5979 16.4732 13.3261 17 12 17C10.6739 17 9.40215 16.4732 8.46447 15.5355C7.52678 14.5979 7 13.3261 7 12C7 10.6739 7.52678 9.40215 8.46447 8.46447C9.40215 7.52678 10.6739 7 12 7ZM12 9C11.2044 9 10.4413 9.31607 9.87868 9.87868C9.31607 10.4413 9 11.2044 9 12C9 12.7956 9.31607 13.5587 9.87868 14.1213C10.4413 14.6839 11.2044 15 12 15C12.7956 15 13.5587 14.6839 14.1213 14.1213C14.6839 13.5587 15 12.7956 15 12C15 11.2044 14.6839 10.4413 14.1213 9.87868C13.5587 9.31607 12.7956 9 12 9Z"
+                                            fill="white" />
+                                    </svg>
+                                    circa_lagos
+
+                                </div>
+                                <div style="display: flex;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M8.283 20.263C15.83 20.263 19.959 14.004 19.959 8.586C19.959 8.41 19.959 8.234 19.951 8.058C20.7551 7.47532 21.4489 6.75406 22 5.928C21.2496 6.25954 20.4544 6.47824 19.64 6.577C20.498 6.06329 21.1405 5.25562 21.448 4.304C20.6415 4.78246 19.7586 5.11837 18.838 5.297C18.4548 4.88758 17.9916 4.56121 17.4771 4.3381C16.9626 4.115 16.4078 3.99993 15.847 4C14.7583 4.00079 13.7143 4.43364 12.9445 5.2035C12.1746 5.97335 11.7418 7.01726 11.741 8.106C11.741 8.426 11.781 8.738 11.845 9.042C10.2129 8.96004 8.61627 8.53575 7.15879 7.79667C5.7013 7.05759 4.41555 6.02025 3.385 4.752C2.86128 5.65655 2.70141 6.72651 2.93783 7.74464C3.17426 8.76278 3.78927 9.65279 4.658 10.234C4.00708 10.2115 3.37059 10.0361 2.8 9.722V9.778C2.80088 10.7253 3.12873 11.6433 3.72816 12.3768C4.32759 13.1103 5.16186 13.6144 6.09 13.804C5.73825 13.901 5.37488 13.9495 5.01 13.948C4.745 13.948 4.489 13.924 4.24 13.876C4.50164 14.6918 5.01201 15.4053 5.69958 15.9164C6.38714 16.4275 7.21742 16.7106 8.074 16.726C6.62055 17.8686 4.82477 18.4885 2.976 18.486C2.648 18.486 2.32 18.47 2 18.43C3.87671 19.6276 6.05673 20.2636 8.283 20.263Z"
+                                            fill="white" />
+                                    </svg>
+
+                                    circa_lagos
+
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="" color="black">
                             <p style="color: black; margin-top: 8px; font-size: 18px; font-weight:600"> {{ selected_space_qr
                             }}</p>
@@ -90,6 +118,7 @@
 
 
                         <div class="menuqr__attribution">
+                            <p style="margin-right: 8px;">Courtesy of</p>
                             <img src="../../../../static/pointsfavicon.png" alt="">
                             <p>PointsBud.com</p>
                         </div>
@@ -443,8 +472,25 @@ export default {
     width: 100%;
     cursor: pointer;
     margin: auto;
-    max-height: 100%;
+    //max-height: 100%;
     position: relative;
+    height: 500px !important;
+    width: 500px !important;
+    padding: 16px !important;
+
+    &__socials {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 16px;
+
+        &__header {
+            font-size: 25px;
+
+        }
+
+    }
 
     &__spaces {
 
@@ -456,7 +502,7 @@ export default {
 
         li {
             margin-right: 8px;
-            color: black;
+            color: white;
             border-right: 1px solid grey;
             padding-right: 16px;
 
@@ -516,53 +562,53 @@ export default {
 
 
     &__container {
-        background-color: #ddaa44;
+        background-color: black;
         border-radius: 10px;
-        background-image: url('../../../../static/backgroun.png');
+        //  background-image: url('../../../../static/backgroun.png');
 
 
 
-        padding: 64px 64px;
+        padding: 16px 18px;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
     &__header {
-        max-width: 500px;
-        margin-bottom: 24px;
+        max-width: 600px;
+        //margin-bottom: 24px;
 
         &__text {
-            font-size: 48px;
+            font-size: 20px;
             font-weight: 700;
-            line-height: 1.2;
+            //line-height: 1.2;
             text-align: center;
             display: block;
-            color: black;
+            color: white;
         }
 
         p {
             &:last-child {
                 font-size: 18px;
                 font-weight: 400;
-                color: black !important;
-                margin-top: 20px;
-                margin-bottom: 10px;
+                color: white !important;
+                // margin-top: 20px;
+                margin-bottom: 20px;
             }
         }
 
         &__logo {
             //border: 2px dashed white;
             border-radius: 10px;
-            height: 100px;
-            width: 100px;
+            height: 150px;
+            width: 150px;
             margin: auto;
-            margin-bottom: 36px;
+            //margin-bottom: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 8px;
+            //padding: 8px;
             border-radius: 5px;
 
             img {
@@ -575,6 +621,8 @@ export default {
         padding: 16px;
         background: white;
         border-radius: 20px;
+        height: 150px;
+        width: 150px;
     }
 
     &__footer {
