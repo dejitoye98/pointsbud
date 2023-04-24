@@ -312,15 +312,15 @@
 
                             <div class="scroll-left">
                             </div>
-                            <div class="scroll-right">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            <button class="scroll-right">
+                                <svg width="36" height="36  " viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M6.4 18L5 16.6L9.575 12L5 7.4L6.4 6L12.4 12L6.4 18ZM13 18L11.6 16.6L16.175 12L11.6 7.4L13 6L19 12L13 18Z"
-                                        fill="white" />
+                                        fill="black" stroke-width="2" />
                                 </svg>
 
-                            </div>
+                            </button>
 
                         </div>
                         <div style="background: gold; color: black; margin-top: 16px; padding: 8px; border-radius: 8px"
@@ -1764,8 +1764,10 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
                 //top: 10px;
                 //margin-top: 8px;
                 height: 40px;
-                width: 30px;
-                background-color: rgba(0, 0, 0, 0.135);
+                width: 40px;
+                border-radius: 50%;
+
+                background-color: gold;
                 display: flex;
                 align-items: center;
                 justify-content: center;
