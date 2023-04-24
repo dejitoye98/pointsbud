@@ -242,15 +242,21 @@
                 <template #body>
                     <div class="order-modal" @click.stop>
                         <div class="order-modal__top">
-                            <div></div>
                             <div class="order-modal__top__points">{{ focused_product.points_to_earn }} points to earn</div>
+                            <div><svg style="cursor: pointer;" @click="show_order_modal = false" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
+                                        fill="black" />
+                                </svg>
+                            </div>
                         </div>
 
                         <div class="order-modal__content">
                             <div class="order-modal__content__image">
                                 <img :src="focused_product.thumbnail || business && business.logo">
 
-                                >
+
                             </div>
 
                             <div class=" order-modal__content__name">
@@ -430,7 +436,7 @@
 
                             <div class="cart-sticky__ctas" style="margin-top: 8px;">
 
-                                <button disabled>Recommend</button>
+                                <button disabled>Recommendations</button>
                                 <button @click="viewCart">Go to cart ({{ cart.length }})</button>
                             </div>
                         </div>
@@ -1719,6 +1725,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         display: flex;
         justify-content: space-between;
         padding: 16px;
+        align-items: center;
         z-index: 100000000000000000000;
 
         &__points {
