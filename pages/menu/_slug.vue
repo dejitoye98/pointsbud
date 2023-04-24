@@ -1746,8 +1746,8 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             margin: auto;
             display: flex;
             justify-content: center;
-            max-width: 300px;
-            max-height: 300px;
+            max-width: 100px;
+            max-height: 100px;
 
             img {
                 width: 100%;
@@ -1875,6 +1875,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
                     width: 40px;
                     text-align: center;
                     margin: 0 8px;
+                    appearance: none;
 
 
                     &:hover {
