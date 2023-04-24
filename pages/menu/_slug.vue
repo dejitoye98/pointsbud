@@ -1078,9 +1078,9 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     }
 
     button {
-        width: 60px;
+        width: 70px;
         background-color: gold;
-        height: 60px;
+        height: 70px;
         border-radius: 50%;
         position: relative;
         margin-bottom: 5px;
@@ -1111,7 +1111,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             left: 0;
 
             margin-left: 30%;
-            margin-top: 30%;
+            margin-top: 35%;
 
             path {
                 stroke: black;
@@ -1133,6 +1133,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             text-align: center;
             align-items: center;
             justify-content: center;
+            color: white;
 
         }
 
