@@ -963,7 +963,7 @@ export default {
                     this.categories = resp.data.data;
                     this.chosenCategory = this.categories[0]?.name;
                 }).catch(err => {
-                    alert(JSON.stringify(err.data))
+                    alert(JSON.stringify(err.message))
                 })
             }
         },
