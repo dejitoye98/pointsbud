@@ -962,7 +962,9 @@ export default {
                 this.$api.get(`/categories?business_id=${this.business.id}`).then(resp => {
                     this.categories = resp.data.data;
                     this.chosenCategory = this.categories[0]?.name;
-                });
+                }).catch(err => {
+                    alert(JSON.stringify(err))
+                })
             }
         },
         getProducts() {
