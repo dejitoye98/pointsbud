@@ -613,7 +613,7 @@ export default {
                         let container_width = window.getComputedStyle(document.getElementsByClassName('menu__top__container')[0]).width;
                         container_width = container_width.split('px')[0]
                         container_width = parseInt(container_width)
-                        document.getElementById('categories-list').scrollLeft += container_width - 20;
+                        document.getElementById('categories-list').scrollLeft += container_width - 100;
                     })
                 }, 2000)
 
