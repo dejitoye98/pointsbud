@@ -111,7 +111,7 @@
                                         <button @click="removeCartItem(item)">Remove</button>
                                     </div>
                                     <div class="points"
-                                        v-if="this.loyalty_program && canUsePoints(item) || products_using_points.includes(item.id)">
+                                        v-if="loyalty_program && canUsePoints(item) || products_using_points.includes(item.id)">
                                         <label for="">
                                             <input type="checkbox"
                                                 :disabled="!canUsePoints(item) && !products_using_points.includes(item.id)"
