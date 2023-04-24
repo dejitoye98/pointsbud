@@ -309,6 +309,19 @@
                                 @click="selectCategory(category)" class="menu__top__categories__category"
                                 v-for="(category, index) in categories" :key="index">{{ category.name }}</div>
 
+
+                            <div class="scroll-left">
+                            </div>
+                            <div class="scroll-right">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M6.4 18L5 16.6L9.575 12L5 7.4L6.4 6L12.4 12L6.4 18ZM13 18L11.6 16.6L16.175 12L11.6 7.4L13 6L19 12L13 18Z"
+                                        fill="white" />
+                                </svg>
+
+                            </div>
+
                         </div>
                         <div style="background: gold; color: black; margin-top: 16px; padding: 8px; border-radius: 8px"
                             v-if="search_term !== '' && search_term !== ' '" class="search-results">
@@ -1734,8 +1747,29 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             -ms-overflow-style: none;
             //margin-bottom: 36px;
 
+            position: relative;
+
             &::-webkit-scrollbar {
                 display: none;
+            }
+
+            .scroll-left {
+                position: fixed;
+                left: 0
+            }
+
+            .scroll-right {
+                position: fixed;
+                right: 0;
+                //top: 10px;
+                //margin-top: 8px;
+                height: 40px;
+                width: 30px;
+                background-color: rgba(0, 0, 0, 0.135);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
             }
 
             //transform: translateX(-10px);
