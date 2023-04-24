@@ -1085,7 +1085,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         height: 70px;
         border-radius: 50%;
         position: relative;
-        margin-bottom: 5px;
+        margin-bottom: 10px;
 
         box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
