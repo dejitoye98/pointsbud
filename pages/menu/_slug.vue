@@ -310,9 +310,9 @@
                                 v-for="(category, index) in categories" :key="index">{{ category.name }}</div>
 
 
-                            <div class="scroll-left">
+                            <div class="scroll-left" id="scroll-left">
                             </div>
-                            <button class="scroll-right">
+                            <button class="scroll-right" id="scroll-right">
                                 <svg width="36" height="36  " viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
@@ -603,6 +603,20 @@ export default {
 
                     //alert()
                 }, 2000)*/
+
+
+                setTimeout(() => {
+
+                    document.getElementById('scroll-right').addEventListener('click', (e) => {
+                        //alert('s')
+                        //alert('s')
+                        let container_width = window.getComputedStyle(document.getElementsByClassName('menu__top__container')[0]).width;
+                        container_width = container_width.split('px')[0]
+                        container_width = parseInt(container_width)
+                        document.getElementById('categories-list').scrollLeft += container_width - 20;
+                    })
+                }, 2000)
+
 
 
             }
@@ -1747,7 +1761,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             -ms-overflow-style: none;
             //margin-bottom: 36px;
 
-            position: relative;
+            position: relativexw;
 
             &::-webkit-scrollbar {
                 display: none;
@@ -1759,7 +1773,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             }
 
             .scroll-right {
-                position: fixed;
+                position: absolute;
                 right: 0;
                 //top: 10px;
                 //margin-top: 8px;
