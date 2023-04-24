@@ -1717,6 +1717,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         min-width: 100%;
         box-sizing: border-box;
         z-index: 10000;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
         &__finish {
             line-height: 1;
