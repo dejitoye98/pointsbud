@@ -304,7 +304,7 @@
 
 
 
-                        <div class="menu__top__categories">
+                        <div class="menu__top__categories" id="categories-list">
                             <div :class="[chosenCategory === category.name ? 'selected' : '']"
                                 @click="selectCategory(category)" class="menu__top__categories__category"
                                 v-for="(category, index) in categories" :key="index">{{ category.name }}</div>
@@ -571,6 +571,30 @@ export default {
 
         }
     },
+
+    watch: {
+        loading_data(value) {
+            if (value === false) {
+                /*
+                setTimeout(() => {
+                    const category_container = window.document.getElementsByClassName('menu__top')[0];
+                    const category_container_width = window.getComputedStyle(category_container).width;
+
+                    const category_list = window.document.getElementById('categories-list')
+                    const category_list_width = window.getComputedStyle(category_list).width;
+
+                    //category_list.style.transform = "translateX(-100px)";
+
+                    console.log(category_list.style.transform)
+
+
+                    //alert()
+                }, 2000)*/
+
+
+            }
+        }
+    },
     async created() {
 
 
@@ -580,10 +604,13 @@ export default {
             this.business = resp.data.data;
             this.getLoyaltyProgram()
             this.getPreferences()
-            this.getCategories();
+            this.getCategories()
             this.getProducts();
             this.computeCartFromLocalStorage();
-            this.isSignedIn()
+            this.isSignedIn();
+
+
+
         })
 
 
@@ -615,6 +642,7 @@ export default {
                 context: 'signin'
             })
         }
+
 
         this.initializeGoogleSignin()
 
@@ -650,28 +678,28 @@ export default {
 
             /*
             if (this.products) {
-
+    
                 let productsNotInCart = this.products.filter(item => !this.cart.find(cart_item => item.id == cart_item.id)) || [];
                 const category = this.categories.find(c => c.name === this.chosenCategory);
-
+    
                 if (category) {
-
+    
                     productsNotInCart = productsNotInCart.filter(item => item.category_id === category.id) || []
-
+    
                     if (this.search_term) {
                         productsNotInCart = productsNotInCart.filter(item => item.name.toLowerCase().indexOf(this.search_term.toLowerCase()) > -1 || item.description?.toLowerCase().indexOf(this.search_item.toLowerCase()) > -1)
                     }
                     return productsNotInCart
                 }
                 return []
-
+    
             }
             return []
             /*if (this.chosenCategory) {
-
+    
                 const category = this.categories.find(c => c.name === this.chosenCategory);
                 const category_id = category.id;
-
+    
                 return this.products.filter(product => product.product_categories.find(item => item.category_id === category_id))
             }
             return []*/
@@ -837,10 +865,10 @@ export default {
 
             /*
             this.$api.post('/orders', { business_id: this.business.id, items: orders }).then(resp => {
-
+    
                 this.cart_step = 3;
                 this.created_order = resp.data.data;
-
+    
                 this.get_order_interval = setInterval(() => {
                     this.getPendingSale();
                 }, 10000)
@@ -1008,6 +1036,10 @@ export default {
                 this.$api.get(`/categories?business_id=${this.business.id}`).then(resp => {
                     this.categories = resp.data.data;
                     this.chosenCategory = this.categories[0]?.name;
+
+
+
+
                 }).catch(err => {
                     alert(JSON.stringify(err.message))
                 })
@@ -1648,7 +1680,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            // align-items: center;
             padding: 16px;
             width: 100vw;
         }
@@ -1660,8 +1692,9 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             min-height: 40px !important;
             //border: 1px solid lightgrey;
             margin-bottom: 0px !important;
-            margin: 16px 0;
+            margin: 16px auto;
             width: 90%;
+
 
 
             input {
@@ -1692,8 +1725,20 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             justify-content: flex-start;
             margin-top: 8px;
             cursor: pointer;
-            width: 100%;
             height: 40px;
+            flex-wrap: nowrap;
+            overflow-x: scroll;
+
+            width: 100%;
+            min-width: auto;
+            -ms-overflow-style: none;
+            //margin-bottom: 36px;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            //transform: translateX(-10px);
 
             &__category {
                 //height: 50px;
@@ -1801,6 +1846,8 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     padding: 16px;
     margin: 32px auto;
     border: 1px solid rgb(252, 250, 250);
+
+    //  transform: translateX(-200);
 
 
 
