@@ -105,7 +105,9 @@
                                 <div class="cart-modal__item__name">
                                     <div>
 
-                                        <p>{{ item.name }} x <b>{{ item.quantity }} </b>
+                                        <p>{{ item.name }} <span class="cart-modal__item__quantity"><b> x {{ item.quantity
+                                        }}
+                                                </b> </span>
                                         </p>
                                         <!--<button>Change quantity</button>-->
                                         <button @click="removeCartItem(item)">Remove</button>
@@ -1455,7 +1457,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         //grid-template-columns: 19% 49% 29%;
         justify-content: space-between;
         padding: 16px 0;
-        align-items: center;
+        align-items: flex-start;
 
 
         &__thumbnail {
@@ -1476,9 +1478,13 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             }
         }
 
+        &__quantity {
+            color: gold;
+        }
+
         &__name {
             font-size: 15px;
-            font-weight: 600;
+            font-weight: 700;
             margin-right: 16px;
 
 
@@ -1506,7 +1512,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         &__total {
             display: flex;
             justify-content: flex-end;
-            font-weight: 500;
+            font-weight: 700;
         }
     }
 
