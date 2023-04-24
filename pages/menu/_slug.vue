@@ -64,7 +64,7 @@
                         <div class="">
                             Cart
                         </div>
-                        <div style="font-weight: 400; font-size: 16px" v-if="customer">
+                        <div style="font-weight: 600; font-size: 16px" v-if="customer">
                             Available points:
 
                             <span> {{ customer.points - points_in_use }} </span>
@@ -1446,7 +1446,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         align-items: center;
 
         span {
-            color: lightseagreen;
+            color: black;
         }
     }
 
