@@ -31,10 +31,5 @@ export default {
     margin: auto;
     border: 1px dashed lightgrey;
 
-    h1 {
-        color: $primary;
-        font-size: 20px;
-
-    }
 }
 </style>

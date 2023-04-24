@@ -580,15 +580,16 @@ export default {
             if (this.products) {
                 let productsNotInCart = this.products.filter(item => !this.cart.find(cart_item => item.id == cart_item.id)) || [];
                 const category = this.categories.find(c => c.name === this.chosenCategory);
+
                 if (category && !this.search_term) {
-                    productsNotInCart = productsNotInCart.filter(item => item.category_id === category.id) || []
+
+                    productsNotInCart = productsNotInCart.filter(item => parseInt(item.category_id) === parseInt(category.id)) || []
 
                 }
                 else if (this.search_term !== '' && this.search_term !== ' ') {
                     productsNotInCart = productsNotInCart.filter(item => item.name && item.name.toLowerCase().indexOf(this.search_term.toLowerCase()) > -1 || (item.description && item.description.toLowerCase().indexOf(this.search_item && this.search_term.toLowerCase()) > -1))
 
                 }
-
 
 
                 return productsNotInCart
@@ -1489,7 +1490,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 .menu {
 
     &__top {
-        position: static;
+        position: fixed;
         top: 0;
         left: 0;
         background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37);
@@ -1507,22 +1508,27 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             justify-content: center;
             align-items: center;
             padding: 16px;
+            width: 100vw;
         }
 
         &__search {
             // width: 100%;
             @include form-input;
 
-            min-height: 50px !important;
+            min-height: 40px !important;
             //border: 1px solid lightgrey;
             margin-bottom: 0px !important;
             margin: 16px 0;
             width: 90%;
 
+
             input {
-                height: 50px;
+                height: 40px;
                 color: white;
                 padding: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
 
 
 
@@ -1541,25 +1547,31 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         &__categories {
             display: flex;
             color: white;
-            flex-wrap: wrap;
-            justify-content: center;
+            justify-content: flex-start;
             margin-top: 8px;
             cursor: pointer;
+            width: 100%;
+            height: 40px;
 
             &__category {
-                //border: 1px solid rgba(245, 245, 245, 0.179);
-                padding: 8px;
+                //height: 50px;
+                padding: 8px 8px;
                 margin-top: 2px;
-                font-size: 16px;
                 font-weight: 300;
                 cursor: pointer !important;
-                margin-right: 1px;
+                margin-right: 10px;
                 //border-bottom: 0;
                 background: rgba(245, 245, 245, 0.111);
                 border-radius: 5px;
                 color: white;
+                text-align: center;
+                line-height: 1.5;
+                //border: 1px solid white;
+                box-sizing: border-box;
+                white-space: nowrap;
 
-                &:first-of-type {
+
+                d &:first-of-type {
                     //border-bottom: 0;
                 }
             }
@@ -1569,13 +1581,15 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         &__logo {
             display: flex;
             height: 50px;
-            width: 50px;
+            // width: 50vw;
             margin-bottom: 8px;
+            //width: 50%;
+            margin: auto;
 
 
             img {
                 height: 100%;
-                width: 100%;
+                //width: 100%;
                 border-radius: 50%;
             }
         }
@@ -1612,6 +1626,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         margin-top: 100px;
         width: 90%;
         padding-bottom: 300px;
+        padding-top: 150px;
 
         @include media("<=t") {
             grid-template-columns: 100%;
@@ -1698,6 +1713,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         display: flex;
         justify-content: space-between;
         padding: 16px;
+        z-index: 100000000000000000000;
 
         &__points {
             background: gold;

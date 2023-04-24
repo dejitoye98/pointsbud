@@ -20,6 +20,35 @@
                         <span>Example: 0.5% will earn a customer 0.25 points for purchasing a product that costs $50.
                         </span>
                     </div>
+                    <div class="form-input">
+                        <label for="">Customer reward for entering their data</label>
+                        <select v-model="new_program_payload.customer_reward_for_data_type">
+                            <option value="default">Default (nothing)</option>
+                            <option value="freebie">Freebie Product</option>
+                            <option value="points">Points</option>
+                            <option value="other">Other</option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-input" v-if="new_program_payload.customer_reward_for_data_type === 'freebie'">
+                        <label for="">Freebie product</label>
+                        <select v-model="new_program_payload.customer_reward_for_data_value">
+                            <option v-for="(product, index) in products" :key="index">{{ product.name }}</option>
+                        </select>
+                    </div>
+
+
+
+                    <div class="form-input" v-if="new_program_payload.customer_reward_for_data_type === 'points'">
+                        <label for="">Value of reward points</label>
+                        <input v-model="new_program_payload.customer_reward_for_data_value" type="text" inputmode="decimal">
+                    </div>
+                    <div class="form-input" v-if="new_program_payload.customer_reward_for_data_type === 'other'">
+                        <label for="">Reward Text</label>
+                        <textarea v-model="new_program_payload.customer_reward_for_data_value"
+                            placeholder="eg: Stand a chance to win a trip to Dubai"></textarea>
+                    </div>
                     <!-- 
                     <div class="form-input">
                         <label for="">Exceptions</label>
@@ -75,6 +104,10 @@
                                 <p class="programs__item__box__label">Percentage</p>
                                 <p>{{ program.percentage }}</p>
                             </div>
+                            <div class="programs__item__box">
+                                <p class="programs__item__box__label">Customer reward for data</p>
+                                <p>{{ program.customer_reward_for_data_type }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -97,18 +130,35 @@ export default {
             new_program_payload: {
                 name: '',
                 description: '',
-                percentage: ''
+                percentage: '',
+                customer_reward_for_data_type: "",
+                customer_reward_for_data_value: ""
+
+
             },
-            edit_mode: true,
+            edit_mode: false,
             creating_new_program: false,
             editing_program: false,
+
+            products: [],
+
+
 
         }
     },
     fetch() {
         this.getPrograms()
+        this.getProducts()
     },
     methods: {
+        changeCustomerRewardMeta(name) {
+            this.new_program_payload.customer_reward_for_data_value = name;
+        },
+        getProducts() {
+            this.$api.get('/products').then(resp => {
+                this.products = resp.data.data
+            })
+        },
         triggerEdit(program) {
             this.show_create_modal = true;
             this.edit_mode = true;
@@ -117,13 +167,15 @@ export default {
 
         },
         editProgram() {
-            this.editing_program = true
+            this.editing_program = true;
+            /*
             const obj = {
                 id: this.new_program_payload.id,
                 name: this.new_program_payload.name,
                 description: this.new_program_payload.description,
                 percentage: this.new_program_payload.percentage
-            }
+            }*/
+            const obj = this.new_program_payload;
             this.$api.put("/loyalty-programs/" + obj.id, obj).then(resp => {
                 this.getPrograms()
                 this.show_create_modal = false;
@@ -143,6 +195,7 @@ export default {
         },
         createProgram() {
             this.creating_new_program = true
+            alert(JSON.stringify(this.new_program_payload))
             this.$api.post("/loyalty-programs", this.new_program_payload).then(resp => {
                 this.getPrograms()
                 this.show_create_modal = false;
@@ -160,6 +213,9 @@ export default {
 <style lang="scss" scoped>
 .loyalty {}
 
+.radio-label {
+    @include radio-label;
+}
 
 .form-input {
     @include plain-form-input;
