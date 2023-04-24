@@ -111,7 +111,7 @@
                                         <button @click="removeCartItem(item)">Remove</button>
                                     </div>
                                     <div class="points"
-                                        v-if="canUsePoints(item) || products_using_points.includes(item.id)">
+                                        v-if="this.loyalty_program && canUsePoints(item) || products_using_points.includes(item.id)">
                                         <label for="">
                                             <input type="checkbox"
                                                 :disabled="!canUsePoints(item) && !products_using_points.includes(item.id)"
@@ -527,7 +527,9 @@ export default {
 
             show_receipt_modal: false,
             receipt_details: null,
-            prefs: null
+            prefs: null,
+
+            loyalty_program: null
 
         }
     },
@@ -538,6 +540,7 @@ export default {
 
         this.$api.get(`/businesses?slug=${this.$route.params.slug}`).then(resp => {
             this.business = resp.data.data;
+            this.getLoyaltyProgram()
             this.getPreferences()
             this.getCategories();
             this.getProducts();
@@ -693,6 +696,11 @@ export default {
         }
     },
     methods: {
+        getLoyaltyProgram() {
+            this.$api.get(`/loyalty-programs`).then(resp => {
+                this.loyalty_program = resp.data.data && resp.data.data[0];
+            })
+        },
         getPreference(pref) {
             return this.prefs.find(p => p.business_setting.setting_alias === pref)
         },
@@ -733,8 +741,8 @@ export default {
             this.cart.forEach(item => {
                 const obj = {
                     product_id: item.id,
-                    points_earned: item.points_to_earn,
-                    points_used: this.products_using_points.includes(item.id) ? (item.quantity * item.points_to_deduct) : 0,
+                    points_earned: this.loyalty_program && item.points_to_earn,
+                    points_used: this.loyalty_program && this.products_using_points.includes(item.id) ? (item.quantity * item.points_to_deduct) : 0,
                     currency: item.currency,
                     quantity: item.quantity,
                     total_amount: this.products_using_points.includes(item.id) ? 0 : (item.quantity * item.unitprice),
@@ -853,7 +861,7 @@ export default {
         },
         canUsePoints(product) {
             // if points_in_use and item points and < available points er
-            if (this.customer) {
+            if (this.customer && this.loyalty_program) {
 
                 if (parseInt(this.points_in_use + (product.points_to_deduct * product.quantity)) <= this.customer.points) {
                     return true
