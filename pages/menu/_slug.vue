@@ -108,7 +108,7 @@
                                         <p>{{ item.name }} x <b>{{ item.quantity }} </b>
                                         </p>
                                         <!--<button>Change quantity</button>-->
-                                        <button @click="removeCartItem(item)">Remove from cart</button>
+                                        <button @click="removeCartItem(item)">Remove</button>
                                     </div>
                                     <div class="points"
                                         v-if="canUsePoints(item) || products_using_points.includes(item.id)">
@@ -1332,7 +1332,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         display: flex;
         //grid-template-columns: 19% 49% 29%;
         justify-content: space-between;
-        padding: 16px;
+        padding: 16px 0;
         align-items: center;
 
 
@@ -1361,9 +1361,9 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 
 
             button {
-                border: 0.5px solid $charcoal;
+                border: 0.1px solid $faint;
                 border-radius: 5px;
-                padding: 2px 24px;
+                padding: 2px 8px;
 
                 &:hover {
                     background: grey;
