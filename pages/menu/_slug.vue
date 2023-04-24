@@ -741,7 +741,7 @@ export default {
             this.cart.forEach(item => {
                 const obj = {
                     product_id: item.id,
-                    points_earned: this.loyalty_program && item.points_to_earn,
+                    points_earned: this.loyalty_program && item.points_to_earn || 0,
                     points_used: this.loyalty_program && this.products_using_points.includes(item.id) ? (item.quantity * item.points_to_deduct) : 0,
                     currency: item.currency,
                     quantity: item.quantity,
