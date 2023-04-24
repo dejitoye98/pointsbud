@@ -405,6 +405,8 @@
 
                     <div class="cart-sticky" v-if="cart && cart.length > 0">
                         <div class="cart-sticky__container">
+
+                            <!-- 
                             <div class="cart-sticky__header" style="display: flex; align-items:center">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 8px;"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -424,12 +426,12 @@
                                         stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                                 <p>{{ cart.length }} items in cart</p>
-                            </div>
+                            </div> -->
 
                             <div class="cart-sticky__ctas" style="margin-top: 8px;">
 
-                                <button disabled>Get recommendation</button>
-                                <button @click="viewCart">Complete order</button>
+                                <button disabled>Recommend</button>
+                                <button @click="viewCart">Go to cart ({{ cart.length }})</button>
                             </div>
                         </div>
                     </div>
@@ -438,9 +440,9 @@
                         <div class="cart-sticky__container">
 
 
-                            <div class="cart-sticky__ctas" style="margin-top: 8px;">
+                            <div class="cart-sticky__ctas" style="margin-top: 8px; width: 100% !important">
 
-                                <button disabled>Get recommendation</button>
+                                <button style="width: 100%;" disabled>Get recommendation</button>
                             </div>
                         </div>
                     </div>
@@ -1076,12 +1078,15 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     &__ctas {
         display: flex;
         width: 100%;
-        flex-direction: column;
+        //flex-direction: column;
         @include card;
 
         button {
             border-radius: 1px;
             margin-bottom: 8px;
+            width: 50%;
+            word-break: break-all;
+            padding: 10px;
 
             &:first-of-type {
                 background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37);
