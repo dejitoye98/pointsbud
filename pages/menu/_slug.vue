@@ -409,7 +409,43 @@
                         </div>-->
                     </div>
 
-                    <div class="cart-sticky" v-if="cart && cart.length > 0">
+
+                    <div class="bottom-sticky">
+                        <div class="bottom-sticky__container">
+                            <button>
+                                <svg width="26" height="26" viewBox="0 0 26 26" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M13 0C5.925 0 0 5.08 0 11.5C0 14.53 1.359 17.248 3.5 19.281C3.23915 19.9611 2.86968 20.5943 2.406 21.156C1.79087 21.9023 1.11125 22.5929 0.375 23.22C0.213516 23.3496 0.0962236 23.526 0.039309 23.7251C-0.0176056 23.9241 -0.0113363 24.136 0.0572518 24.3313C0.12584 24.5266 0.253365 24.6959 0.422229 24.8156C0.591093 24.9354 0.79297 24.9998 1 25C3.215 25 4.808 24.975 6.25 24.594C7.54 24.252 8.649 23.536 9.781 22.531C10.811 22.778 11.874 23 13 23C20.075 23 26 17.92 26 11.5C26 5.08 20.075 0 13 0ZM13 2C19.125 2 24 6.32 24 11.5C24 16.68 19.125 21 13 21C11.911 21 10.78 20.812 9.75 20.531C9.58529 20.4896 9.41274 20.4908 9.24863 20.5345C9.08452 20.5783 8.93425 20.6631 8.812 20.781C7.687 21.86 6.858 22.363 5.75 22.656C5.24 22.791 4.256 22.759 3.562 22.813C3.702 22.655 3.833 22.571 3.969 22.406C4.755 21.446 5.472 20.431 5.688 19.281C5.71775 19.1084 5.70164 18.931 5.64127 18.7665C5.58089 18.6021 5.47838 18.4564 5.344 18.344C3.249 16.614 2 14.189 2 11.5C2 6.32 6.875 2 13 2ZM11.094 5.906C10.918 5.9455 10.7559 6.03189 10.625 6.156L9.125 7.563L10.469 9.031L11.656 7.906H14.062L15 8.97V10.439L12.437 12.157C12.3 12.2503 12.1883 12.3762 12.1121 12.5233C12.0358 12.6705 11.9973 12.8343 12 13V15H14V13.562L16.563 11.844C16.7001 11.7506 16.8119 11.6246 16.8882 11.4772C16.9645 11.3299 17.0029 11.1659 17 11V8.594C16.9987 8.35231 16.9099 8.11927 16.75 7.938L15.25 6.25C15.1567 6.1426 15.0415 6.05636 14.9121 5.99704C14.7828 5.93772 14.6423 5.90668 14.5 5.906H11.312C11.2396 5.89806 11.1664 5.89806 11.094 5.906ZM12 16V18H14V16H12Z"
+                                        fill="white" />
+                                </svg>
+
+
+                            </button>
+                            <button v-if="cart && cart.length > 0" @click="viewCart">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 8px;"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M2 2H3.74001C4.82001 2 5.67 2.93 5.58 4L4.75 13.96C4.61 15.59 5.89999 16.99 7.53999 16.99H18.19C19.63 16.99 20.89 15.81 21 14.38L21.54 6.88C21.66 5.22 20.4 3.87 18.73 3.87H5.82001"
+                                        stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path
+                                        d="M16.25 22C16.9404 22 17.5 21.4404 17.5 20.75C17.5 20.0596 16.9404 19.5 16.25 19.5C15.5596 19.5 15 20.0596 15 20.75C15 21.4404 15.5596 22 16.25 22Z"
+                                        stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path
+                                        d="M8.25 22C8.94036 22 9.5 21.4404 9.5 20.75C9.5 20.0596 8.94036 19.5 8.25 19.5C7.55964 19.5 7 20.0596 7 20.75C7 21.4404 7.55964 22 8.25 22Z"
+                                        stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path d="M9 8H21" stroke="black" stroke-width="1.5" stroke-miterlimit="10"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span>{{ cart.length }}</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cart-sticky" v-if="cart && cart.length > 0" style="display: none;">
                         <div class="cart-sticky__container">
 
                             <!-- 
@@ -442,7 +478,7 @@
                         </div>
                     </div>
 
-                    <div class="cart-sticky" v-else>
+                    <div class="cart-sticky" v-else style="display: none;">
                         <div class="cart-sticky__container">
 
 
@@ -1024,6 +1060,83 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 * {
     font-family: 'Red Hat Display' !important;
 
+}
+
+.bottom-sticky {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    height: fit-content;
+    width: fit-content;
+
+    &__container {
+
+        //background-color: black;
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+    }
+
+    button {
+        width: 60px;
+        background-color: gold;
+        height: 60px;
+        border-radius: 50%;
+        position: relative;
+        margin-bottom: 5px;
+
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+        &:hover {
+            transform: scale(1.1);
+            box-shadow: rgba(100, 100, 111, 0.656) 0px 7px 29px 0px;
+
+        }
+
+        &:first-of-type {
+            background: $primary;
+
+            svg {
+                path {
+                    stroke: white !important;
+                    stroke-width: 0.5 !important;
+
+                }
+            }
+        }
+
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            margin-left: 30%;
+            margin-top: 30%;
+
+            path {
+                stroke: black;
+                stroke-width: 2;
+            }
+        }
+
+        span {
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin-left: 20%;
+            margin-top: 15%;
+            background: red;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+    }
 }
 
 .receipt {
