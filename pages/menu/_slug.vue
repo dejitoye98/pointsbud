@@ -1120,6 +1120,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 
 * {
     font-family: 'Red Hat Display' !important;
+    touch-action: manipulation;
 
 }
 
