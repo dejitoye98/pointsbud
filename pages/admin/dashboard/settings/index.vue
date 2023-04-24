@@ -23,6 +23,9 @@
                     </div>
                 </template>
             </BaseModal>
+            <NewSpaceModal v-if="add_space" @close="add_space = false" v-on:spaceCreated="spaceCreated">
+
+            </NewSpaceModal>
             <div class="settings__navigation">
                 <div class="menu-item nav-selected" @click="changeActiveTab('spaces')"
                     :class="[computedNavClass('spaces')]">
@@ -190,13 +193,13 @@
                             <div class="spaces__item" v-for="(space, index) in spaces" :index="index">
                                 <div class="spaces__item__input-box">
                                     <input placeholder="space name" v-model="space.name">
-                                    <input placeholder="price" v-model="space.price">
+                                    <input placeholder="price" v-model="space.unitprice">
                                     <input placeholder="description" v-model="space.description">
                                 </div>
                                 <div class="space__item__footer">
                                 </div>
                             </div>
-                            <div class="spaces__item spaces__item--add" @click="addNewSpace">
+                            <div class="spaces__item spaces__item--add" @click="add_space = true">
                                 Add a new space
                             </div>
                         </div>
@@ -258,6 +261,8 @@ export default {
     },
     data() {
         return {
+            add_space: false,
+
             value: "http://localhost:3000",
             size: 640,
 
@@ -276,6 +281,14 @@ export default {
             roles: [],
 
             spaces: [],
+            new_space: {
+                name: '',
+                description: '',
+                reservable: 1,
+                currency: '',
+                unitprice: 0
+
+            },
             edited_spaces: false,
             selected_space_qr: 'general',
 
@@ -320,6 +333,10 @@ export default {
         }
     },
     methods: {
+        spaceCreated() {
+            this.getSpaces()
+        },
+
         getBusiness() {
             this.$api.get('/auth/admin/self').then(resp => {
                 this.business = resp.data.data;
