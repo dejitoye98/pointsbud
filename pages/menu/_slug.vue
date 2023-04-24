@@ -79,9 +79,14 @@
                         <div class="cart-modal__container" v-if="cart_step === 1">
 
                             <div class="cart-modal__redeem">
-                                <p class="cart-modal__redeem__header">
-                                    Sign in to redeem points and discounts for your purchases
-                                </p>
+
+                                <p class="cart-modal__redeem__header"
+                                    v-if="loyalty_program && loyalty_program.customer_reward_for_data_type === 'default' || !loyalty_program">
+                                    Sign in to redeem points and discounts for your purchases</p>
+                                <p class="cart-modal__redeem__header"
+                                    v-if="loyalty_program && loyalty_program.customer_reward_for_data_type === 'freebie'">
+                                    Sign in to stand a chance to get a freebie!</p>
+
                                 <div class="cart-modal__redeem__auth">
                                     <div id="googleButton"></div>
                                 </div>
@@ -89,6 +94,7 @@
                                 <div class="or">
                                     <p>Or</p>
                                 </div>
+
 
                                 <div class="cart-modal__redeem__skipbtn">
                                     <button @click="cart_step = 2">Proceed to checkout</button>
@@ -213,6 +219,8 @@
                 <template #footer>
                     <div class="cart-modal__footer">
                         <div @click.stop class="order-modal__footer__cta" v-if="cart_step === 2">
+                            <button id="go-back" @click="cart_step--">Go back</button>
+
                             <button :disabled="flag_creating_order" @click="completeOrder">Create Order</button>
                         </div>
                     </div>
@@ -620,6 +628,16 @@ export default {
 
 
             }
+        },
+        cart_step(value) {
+            if (value === 1) {
+                // Emit an event to the server
+                google.accounts.id.initialize({
+                    client_id: '309539494248-ir1uocjnkh6h8t3in55vn4r2m9jmt777.apps.googleusercontent.com',
+                    callback: this.googleSignIn, //method to run after user clicks the Google sign in button
+                    context: 'signin'
+                })
+            }
         }
     },
     async created() {
@@ -790,7 +808,7 @@ export default {
     },
     methods: {
         getLoyaltyProgram() {
-            this.$api.get(`/loyalty-programs`).then(resp => {
+            this.$api.get(`/loyalty-programs?business_id=${this.business.id}`).then(resp => {
                 this.loyalty_program = resp.data.data && resp.data.data[0];
             })
         },
@@ -1793,7 +1811,6 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 
             &__category {
                 //height: 50px;
-                padding: 8px 8px;
                 margin-top: 2px;
                 font-weight: 300;
                 cursor: pointer !important;
@@ -1807,6 +1824,10 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
                 //border: 1px solid white;
                 box-sizing: border-box;
                 white-space: nowrap;
+                padding: 10px 16px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
 
                 d &:first-of-type {
@@ -2117,11 +2138,17 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         &__cta {
             margin-top: 32px;
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
 
             button {
+
                 background-color: gold;
                 color: black;
+            }
+
+            #go-back {
+                background: white;
+                margin-right: 16px;
             }
         }
     }
