@@ -15,7 +15,7 @@
 
                 <template #data>
 
-                    <tr v-for="(order, index) in pending_sales" :key="index" @click="focused_order_id = order.id">
+                    <tr v-for="(order, index) in pending_sales" :key="index" @click="goToOrder(order.id)">
 
                         <td>{{ order.customer?.name || "Anon" }}</td>
                         <td>{{ order.order_ids?.split(',').length }}</td>
@@ -70,6 +70,9 @@ export default {
 
 
     methods: {
+        goToOrder(id) {
+            this.$router.push('/admin/dashboard/new-orders/' + id)
+        },
         closeDetail() {
             this.focused_order_id = null
         },
@@ -92,7 +95,7 @@ export default {
                     return `1 hour ago`
                 }
                 else {
-                    return `${diff_in_minutes} hours ago`
+                    return `${parseInt(diff_in_minutes / 60)} hours ago`
                 }
             }
         },

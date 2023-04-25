@@ -51,7 +51,7 @@ export default {
 
   mounted() {
     this.$store.dispatch('updates/getUpdates')
-    this.socketClient = socket('https://loyalteeapi.herokuapp.com');
+    this.socketClient = socket('//localhost:5000');
     //console.log(this.socketClient)// Replace with your server URL
     // Add your event handlers here
     this.socketClient.on('connect', () => {

@@ -30,7 +30,7 @@
                                     <tr v-for="(detail, index) in receipt_details.orders" :key="index">
                                         <td>{{ detail.product.name }}</td>
                                         <td>{{ detail.quantity }}</td>
-                                        <td>{{ detail.currency }} {{ detail.unitprice }}</td>
+                                        <td>{{ detail.currency }} {{ detail.total_amount }}</td>
                                     </tr>
 
 
@@ -662,7 +662,7 @@ export default {
 
     },
     mounted() {
-        this.socketClient = socket('https://loyalteeapi.herokuapp.com'); // Replace with your server URL
+        this.socketClient = socket('//localhost:5000'); // Replace with your server URL
 
         if (this.$route.query.receipt_generated) {
             this.getReceipt()
@@ -824,6 +824,10 @@ export default {
             this.$api.get(`/prefs?business_id=${this.business.id}&setting_aliases=${setting_aliases.join(',')}`).then(resp => {
                 this.prefs = resp.data.data
             })
+        },
+
+        getSale() {
+
         },
 
         getReceipt() {

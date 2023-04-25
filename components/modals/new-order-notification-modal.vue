@@ -14,17 +14,17 @@
                 <div class="notifmodal__container" v-if="model">
                     <div class="notifmodal__customer">
                         <div class="notifmodal__customer__name">
-                            {{ model.customer.name }}
+                            {{ model.customer?.name || "Anonymous customer" }}
                         </div>
 
                         <div class="notifmodal__customer__email">
-                            {{ model.customer.email }}
+                            {{ model.customer?.email }}
                         </div>
 
                         <div class="notifmodal__customer__details">
                             <div class="notifmodal__customer__details__item">
                                 <p>Points</p>
-                                <p>{{ model.customer.points }}</p>
+                                <p>{{ model.customer?.points }}</p>
                             </div>
 
 
@@ -136,7 +136,8 @@ export default {
             /*this.$api.put('/orders/pending-sales/' + this.model.id, { status: 'accepted' }).then(resp => {
                 this.$emit('close', true)
             })*/
-
+            const token = this.$cookies.get('loyal-token')
+            this.model.token = token;
             this.socket.emit('approved_order', this.model)
             this.socket.on('approval_done_' + this.id, () => {
                 this.$emit('close', true)

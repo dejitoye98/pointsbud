@@ -54,7 +54,7 @@
 
         <template #data>
 
-          <tr v-for="(sale, index) in sales" :key="index">
+          <tr v-for="(sale, index) in sales" :key="index" @click="goToSale(sale)">
             <td>
               <Avatar :name="sale.customer && sale.customer.name"></Avatar>
             </td>
@@ -88,6 +88,9 @@ export default {
     this.getSales();
   },
   methods: {
+    goToSale(sale) {
+      this.$router.push('/admin/dashboard/sales/' + sale.id);
+    },
     getOrders() {
       this.$api.get("/orders").then(resp => {
         this.orders = resp.data.data.list;

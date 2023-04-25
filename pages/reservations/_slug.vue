@@ -2,6 +2,16 @@
     <div class="reservations">
 
 
+        <BaseModal v-if="focused_space">
+            <template #body>
+                <div class="reserve-modal">
+                    <div class="reserve-modal__container">
+
+                    </div>
+                </div>
+            </template>
+        </BaseModal>
+
         <div class="reservations__container">
 
             <div class="header">
@@ -100,7 +110,8 @@
                         </div>
 
                         <div class="reservations__spaces__item__cta">
-                            <button :disabled="!chosen.date && !chosen.from_time">Reserve</button>
+                            <button @click="chooseSpace(space)"
+                                :disabled="!chosen.date && !chosen.from_time">Reserve</button>
                         </div>
                     </div>
                 </div>
@@ -125,6 +136,7 @@ export default {
                 from: false,
                 to: false,
             },
+            focused_space: null,
             times: [
                 "12:00 AM",
                 "1:00 AM",
@@ -169,6 +181,9 @@ export default {
         })
     },
     methods: {
+        chooseSpace(space) {
+            this.focused_space = space
+        },
         chooseTime(time, type) {
             if (type === 'from') {
                 this.chosen.from_time = time
