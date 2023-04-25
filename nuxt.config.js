@@ -97,6 +97,7 @@ export default {
         webpack: {
             aggregateTimeout: 300,
             poll: 1000,
+
         },
     },
 
