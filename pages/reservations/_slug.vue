@@ -37,7 +37,7 @@
 
 
                     <div class="form-input">
-                        <DatePicker v-model="chosen.date" />
+                        <!--<DatePicker v-model="chosen.date" />-->
 
                     </div>
                 </div>
@@ -124,11 +124,10 @@
 
 
 <script>
-import DatePicker from "vue2-datepicker";
-import "vue2-datepicker/index.css";
+
 export default {
     components: {
-        DatePicker
+        //  DatePicker
     },
     data() {
         return {
