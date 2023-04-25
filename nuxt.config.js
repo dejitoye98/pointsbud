@@ -3,6 +3,7 @@ export default {
     ssr: false,
     publicRuntimeConfig: {
         API_BASE: process.env.API_BASE,
+        SOCKET_BASE: process.env.SOCKET_BASE,
     },
 
 
