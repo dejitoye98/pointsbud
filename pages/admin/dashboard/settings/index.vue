@@ -121,7 +121,7 @@
 
 
                         <div class="menuqr__attribution">
-                            <p style="margin-right: 8px;">Courtesy of</p>
+                            <p style="margin-right: 8px;">Courtesy</p>
                             <img src="../../../../static/pointsfavicon.png" alt="">
                             <p>PointsBud.com</p>
                         </div>
