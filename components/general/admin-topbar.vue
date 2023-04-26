@@ -47,12 +47,12 @@ export default {
                 {
                     name: "Sales",
                     route: "/admin/dashboard/sales",
-                    update_key: 'sales',
+                    //update_key: 'sales',
                 },
                 {
                     name: "New Orders",
                     route: "/admin/dashboard/new-orders",
-                    update_key: 'pending_sales'
+                    //update_key: 'pending_sales'
 
                 },
                 {

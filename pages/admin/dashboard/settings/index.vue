@@ -72,11 +72,11 @@
                             <div class="menuqr__header__text">
                                 <p style="text-align: center;">Scan to order from our menu
                                 </p>
-                                <p>and earn <span style="font-weight: 700; font-size: 25px;">
+                                <!--<p>and earn <span style="font-weight: 700; font-size: 25px;">
                                         discount points</span>
                                     for
                                     each
-                                    purchase</p>
+                                    purchase</p>-->
                             </div>
                         </div>
 
@@ -121,9 +121,7 @@
 
 
                         <div class="menuqr__attribution">
-                            <p style="margin-right: 8px;">Courtesy</p>
-                            <img src="../../../../static/pointsfavicon.png" alt="">
-                            <p>PointsBud.com</p>
+                            <p style="">Powered by PointsBud.com</p>
                         </div>
 
                     </div>
@@ -504,7 +502,7 @@ export default {
 
         &__header {
             font-size: 30px;
-            font-family: 'MedievalSharp', cursive;
+            font-family: 'Pacifico', cursive;
 
 
         }

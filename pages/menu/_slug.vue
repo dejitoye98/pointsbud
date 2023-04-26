@@ -244,6 +244,8 @@
                                 {{ focused_product.currency }} {{ focused_product.unitprice * order.quantity | money }}
                             </div>
                         </div>
+
+
                         <div @click.stop class="order-modal__footer__cta">
                             <button @click="addToCart">Add to cart</button>
                         </div>
@@ -287,6 +289,17 @@
                                     <input type="text" v-model="order.quantity">
                                     <button @click="increaseQuantity"> +</button>
                                 </div>
+                            </div>
+
+                            <div class="order-modal__content__comment">
+                                <p v-if="!order.to_add_comment" @click="triggerAddComment">Add a comment</p>
+
+                                <div style="display: flex; flex-direction: column;" v-if="order.to_add_comment"
+                                    class="form-input">
+                                    <label for="">Comment</label>
+                                    <textarea v-model="order.customer_comment"></textarea>
+                                </div>
+
                             </div>
 
                             <div class="order-modal__content__ctas">
@@ -561,6 +574,8 @@ export default {
             },
             order: {
                 quantity: 1,
+                customer_comment: '',
+                to_add_comment: false
             },
             quantity: 0,
             cart: [],
@@ -629,6 +644,11 @@ export default {
 
             }
         },
+        show_order_modal(value) {
+            if (!value) {
+                this.to_add_comment = false
+            }
+        },
         cart_step(value) {
             if (value === 1) {
                 // Emit an event to the server
@@ -662,7 +682,7 @@ export default {
 
     },
     mounted() {
-        this.socketClient = socket('//localhost:5000'); // Replace with your server URL
+        this.socketClient = socket(this.$config.SOCKET_BASE); // Replace with your server URL
 
         if (this.$route.query.receipt_generated) {
             this.getReceipt()
@@ -807,6 +827,9 @@ export default {
         }
     },
     methods: {
+        triggerAddComment() {
+            this.order.to_add_comment = true;
+        },
         getLoyaltyProgram() {
             this.$api.get(`/loyalty-programs?business_id=${this.business.id}`).then(resp => {
                 this.loyalty_program = resp.data.data && resp.data.data[0];
@@ -861,6 +884,8 @@ export default {
                     currency: item.currency,
                     quantity: item.quantity,
                     total_amount: this.products_using_points.includes(item.id) ? 0 : (item.quantity * item.unitprice),
+                    customer_comment: item.customer_comment
+
                 }
 
                 orders.push(obj)
@@ -1106,7 +1131,8 @@ export default {
             let cart = window.localStorage.getItem('cart');
             const item = {
                 ...this.focused_product,
-                quantity: this.order.quantity
+                quantity: this.order.quantity,
+                customer_comment: this.order.customer_comment,
             }
             if (cart !== 'null' && cart) {
                 cart = JSON.parse(cart)
@@ -1994,6 +2020,30 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 
     &__content {
         padding: 16px;
+
+        &__comment {
+            text-align: center;
+            //border: 1px solid grey;
+            color: goldenrod;
+            margin: 8px 0;
+            cursor: pointer;
+
+            textarea {
+                border: 1px solid lightgrey;
+                resize: none;
+                color: black;
+                width: 50%;
+                border-radius: 5px;
+                padding: 8px;
+                font-size: 12px;
+
+                margin: auto;
+
+                &:focus {
+                    outline: 0;
+                }
+            }
+        }
 
         &__image {
             width: 100%;

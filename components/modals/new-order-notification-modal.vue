@@ -63,7 +63,10 @@
                                 <div class="item__details">
                                     <div class="item__details__name">{{ order.product.name }}</div>
                                     <div class="item__details__quantity">
-                                        <p>Quanity: <b>{{ order.quantity }}</b></p>
+                                        <p>Quantity: <b>{{ order.quantity }}</b></p>
+                                    </div>
+                                    <div class="item__details__comment">
+                                        <p><b>Comment</b>: {{ order.customer_comment }}</p>
                                     </div>
                                 </div>
 
@@ -166,7 +169,7 @@ export default {
 }
 
 .notifmodal {
-    max-width: 600px;
+    min-width: 600px;
     color: black;
 
     &__container {
