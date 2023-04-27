@@ -1689,6 +1689,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         font-size: 15px;
         margin-top: 8px;
         text-transform: capitalize !important;
+        letter-spacing: 1.7px;
     }
 
     &__price {
