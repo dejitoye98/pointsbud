@@ -58,7 +58,7 @@
                         </p>
                         <div class="hero__cta" style="justify-content: center">
 
-                            <button @click="getStarted">Get Started</button>
+                            <button @click="getStarted">Get Started for free</button>
                         </div>
 
                         <div class="companies">
@@ -67,7 +67,7 @@
                                 <img src="https://theboroughlagos.com/wp-content/uploads/2018/10/Artboard-1-copy.png">
 
                                 <img style="filter: brightness(0) invert(1);
-                                                                                                                                                                                                                                                                    "
+                                                                                                                                                                                                                                                                            "
                                     id="flutterwave-logo" data-v-796721dc=""
                                     src="https://www.afflee.com/_nuxt/img/flutterwave-logo.311915c.svg" alt="">
                             </div>
@@ -127,6 +127,7 @@ export default {
     methods: {
         getStarted() {
             mixpanel.track("PointsBud: Click get started");
+            this.show_modal = true
 
         },
         subscribe() {
