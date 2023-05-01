@@ -5,7 +5,7 @@
             <div class="footer" v-if="model">
 
                 <button>Reject</button>
-                <button @click="acceptOrder">Accept</button>
+                <button @click="acceptOrder">Accept and Request Payment</button>
             </div>
         </template>
 

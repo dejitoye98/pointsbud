@@ -1,5 +1,29 @@
 <template>
     <div class="landing">
+        <BaseModal v-if="show_modal">
+            <template #body>
+                <div class="submodal">
+                    <template v-if="!subscribed">
+                        <div class="submodal__container">
+                            <p>Sign up for a demo</p>
+                            <p>We'll contact you in less than 6 hours</p>
+                            <div class="form-input">
+                                <label for="">Your email or phone number</label>
+                                <input type="text" v-model="model.contact">
+                            </div>
+                            <div class="cta">
+                                <button :disabled="subscribing" @click="subscribe" style="width:100%">Contact me</button>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="submodal__container">
+                            <p>Thanks for reaching out. We'll get in touch with you in 6 hours</p>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </BaseModal>
         <div class="landing__container">
             <div class="header">
                 <div class="header__container">
@@ -27,23 +51,31 @@
                 <div class="hero">
                     <div class="hero__container">
                         <div class="hero__title">
-                            <span style="border-bottom: 3px solid #FFEA78;;">Gift</span> and <span
-                                style="border-bottom: 3px solid rgb(1, 155, 155) ;">Earn</span> Points for
-                            Discounted Purchases
+                            Engage with the people who enjoy your food.
                         </div>
-                        <p class="hero__caption">We enable ventures in the business of hospitality to reward and <span
-                                style="color: #FFEA78">retain</span>
-                            their customers...
+                        <p class="hero__caption">We provide restaurants and food vendors with their own digital menu and
+                            tools for engaging with customers and selling more than they'd do on Jumia, Glovo and Chowdeck.
                         </p>
                         <div class="hero__cta" style="justify-content: center">
 
-                            <button>Find Deals</button>
-                            <button>Set up a loyalty program</button>
+                            <button @click="show_modal = true">Get Started</button>
+                        </div>
+
+                        <div class="companies">
+                            <div class="companies__header">Trusted by</div>
+                            <div class="companies__container">
+                                <img src="https://theboroughlagos.com/wp-content/uploads/2018/10/Artboard-1-copy.png">
+
+                                <img style="filter: brightness(0) invert(1);
+                                                                                                                                                                                                                                "
+                                    id="flutterwave-logo" data-v-796721dc=""
+                                    src="https://www.afflee.com/_nuxt/img/flutterwave-logo.311915c.svg" alt="">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
+            <!-- 
             <div class="trusted">
                 <div class="trusted__container">
 
@@ -56,7 +88,7 @@
                             src="https://www.afflee.com/_nuxt/img/flutterwave-logo.311915c.svg" alt="">
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="footer">
                 <div class="footer__container">
@@ -74,7 +106,75 @@
 </template>
 
 
+<script>
+export default {
+    data() {
+        return {
+            subscribing: false,
+            subscribed: false,
+            show_modal: false,
+            model: {
+                contact: ''
+            }
+        }
+    },
+    methods: {
+        subscribe() {
+            this.subscribing = true;
+            this.$api.post('/waitlist', {
+                email: this.model.contact
+            }).then(resp => {
+                this.subscribed = true;
+
+            }).finally(() => {
+                this.subscribing = false;
+            })
+        }
+    }
+}
+</script>
+
+
 <style lang="scss" scoped>
+.submodal {
+    &__container {
+        padding: 16px;
+        box-sizing: border-box;
+        ;
+    }
+
+    p {
+        font-size: 18px;
+        font-weight: 500;
+        text-align: center;
+
+        &:last-child {
+            font-size: 13px;
+        }
+    }
+
+    .form-input {
+        margin-top: 16px;
+        @include plain-form-input;
+        text-align: center;
+
+        input {
+            margin-bottom: 16px;
+            text-align: center;
+        }
+    }
+
+    .cta {
+        width: 100%;
+
+        button {
+            width: 100%;
+            @include largebutton;
+            color: white;
+        }
+    }
+}
+
 .landing {
     width: 100%;
 }
@@ -87,7 +187,7 @@
     background-color: #1e202d;
     width: 100%;
     min-height: 90vh;
-    background-image: url('../static/bckg2.png');
+    //background-image: url('../static/bckg2.png');
     background-position: center;
     background-repeat: no-repeat;
 
@@ -137,7 +237,7 @@
         font-size: 50px;
         margin-top: 60px;
         max-width: 946px;
-        margin-bottom: 34px;
+        margin-bottom: 16px;
         font-family: 'Squada One', cursive;
         letter-spacing: 1.5px;
 
@@ -147,7 +247,7 @@
         text-align: center;
         font-size: 20px;
         font-family: 'Red Hat Display', cursive;
-        margin-bottom: 34px;
+        margin-bottom: 16px;
         max-width: 502px;
         margin: auto;
         margin-bottom: 68px;
@@ -160,6 +260,7 @@
         padding: 16px 32px;
         margin: auto;
         letter-spacing: 1px;
+        color: black;
 
         border-radius: 50px;
         font-size: 18px;
@@ -181,17 +282,18 @@
 
         &:first-of-type {
             background: #FFEA78 !important;
-            margin-right: 16px;
+            //margin-right: 16px;
+            color: black;
 
             @include media("<=t") {
-                margin-right: 18px;
+                // margin-right: 18px;
             }
 
         }
 
         &:last-child {
             background: rgb(1, 155, 155);
-            color: white;
+            color: black;
 
             @include media("<=t") {
                 margin-bottom: 60px;
@@ -201,10 +303,51 @@
         }
     }
 
+    .companies {
+        &__header {
+            margin-top: 32px;
+
+            text-align: center;
+            font-size: 13px;
+        }
+
+
+        &__container {
+            padding-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            width: 50%;
+            margin: auto;
+            box-sizing: border-box;
+            display: grid;
+            grid-template-columns: 40% 40%;
+            align-items: center;
+            justify-content: center;
+            //border: 1px solid white;
+
+            @include media("<=t") {
+                width: 100%;
+            }
+
+            img {
+                height: 80px;
+
+            }
+
+        }
+
+    }
+
     &__cta {
         margin: auto;
         display: flex;
-        width: 50%;
+        // width: 50%;
+
+
+        button {
+            width: 80%;
+            margin: auto;
+        }
 
         @include media("<=t") {
             width: 80%;

@@ -322,9 +322,12 @@ export default {
             if (this.business) {
 
                 if (this.selected_space_qr !== 'general') {
-                    return "https://www.pointsbud.com/menu?space=" + this.selected_space_qr
+                    //return "https://www.pointsbud.com/menu?space=" + this.selected_space_qr
+                    return "https://www.pointsbud.com"
                 }
                 else {
+                    return "https://www.pointsbud.com"
+
                     return "https://www.pointsbud.com/menu/" + this.business.slug
                 }
             }
