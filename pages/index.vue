@@ -58,7 +58,7 @@
                         </p>
                         <div class="hero__cta" style="justify-content: center">
 
-                            <button @click="show_modal = true">Get Started</button>
+                            <button @click="getStarted">Get Started</button>
                         </div>
 
                         <div class="companies">
@@ -67,7 +67,7 @@
                                 <img src="https://theboroughlagos.com/wp-content/uploads/2018/10/Artboard-1-copy.png">
 
                                 <img style="filter: brightness(0) invert(1);
-                                                                                                                                                                                                                                "
+                                                                                                                                                                                                                                                                    "
                                     id="flutterwave-logo" data-v-796721dc=""
                                     src="https://www.afflee.com/_nuxt/img/flutterwave-logo.311915c.svg" alt="">
                             </div>
@@ -107,7 +107,13 @@
 
 
 <script>
+import mixpanel from 'mixpanel-browser';
+
 export default {
+    mounted() {
+        mixpanel.init('94aa4934861f03d1be99f929b6ba07b0', { debug: false });
+        mixpanel.track("PointsBud: Visited");
+    },
     data() {
         return {
             subscribing: false,
@@ -119,7 +125,13 @@ export default {
         }
     },
     methods: {
+        getStarted() {
+            mixpanel.track("PointsBud: Click get started");
+
+        },
         subscribe() {
+            mixpanel.track("PointsBud: Clicked subscribe");
+
             this.subscribing = true;
             this.$api.post('/waitlist', {
                 email: this.model.contact
