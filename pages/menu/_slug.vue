@@ -341,8 +341,10 @@
                                 v-for="(category, index) in categories" :key="index">{{ category.name }}</div>
 
 
-                            <div class="scroll-left" id="scroll-left">
-                            </div>
+                            <!--  <div class="scroll-left" id="scroll-left">
+                            </div> -->
+
+                            <!-- 
                             <button class="scroll-right" id="scroll-right">
                                 <svg width="36" height="36  " viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -351,7 +353,7 @@
                                         fill="black" stroke-width="2" />
                                 </svg>
 
-                            </button>
+                            </button>-->
 
                         </div>
                         <div style="background: gold; color: black; margin-top: 16px; padding: 8px; border-radius: 8px"
