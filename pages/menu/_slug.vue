@@ -213,6 +213,16 @@
                             </div>
                         </div>
 
+                        <div class="cart-modal__container" v-else-if="cart_step === 6">
+                            <div class="cart-modal__orderloading">
+                                <p>Yay!! Your order has been accepted and is being being processed!</p>
+                            </div>
+
+                            <div>
+                                <LoadingState></LoadingState>
+                            </div>
+                        </div>
+
 
                     </div>
                 </template>
@@ -918,15 +928,12 @@ export default {
 
                 })
 
+                this.socketClient.on(`processing-order`, () => {
+                    this.cart_step = 6
+                })
 
             });
-            this.socketClient.on('order-accepted' + r_uid, () => {
-                //this.cart_step = 3
-                // this.flag_creating_order = false;
-                console.log("********* gotchya *********")
-                this.cart_step = 4;
-                //this.cart_step = 2
-            })
+
 
 
 

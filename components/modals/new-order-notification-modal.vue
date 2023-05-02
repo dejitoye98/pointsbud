@@ -4,8 +4,9 @@
         <template #footer>
             <div class="footer" v-if="model">
 
-                <button>Reject</button>
-                <button @click="acceptOrder">Accept and Request Payment</button>
+                <button id="reject">Reject</button>
+                <button id="process" @click="processOrder">Process Order</button>
+                <button id="accept" @click="acceptOrder">Accept and Request Payment</button>
             </div>
         </template>
 
@@ -129,6 +130,20 @@ export default {
     },
 
     methods: {
+
+        processOrder() {
+            const token = this.$cookies.get('loyal-token')
+
+            this.model.status = 'processing'
+
+            this.model.token = token;
+            this.model.status = 'processing'
+            this.socket.emit('processing_order', this.model)
+            this.socket.on('processed_order' + this.id, () => {
+                this.$emit('close', true)
+            })
+
+        },
         getOrder() {
             this.$api.get(`/orders/pending-sales/${this.id}`).then(resp => {
                 this.model = resp.data.data;
@@ -141,6 +156,7 @@ export default {
             })*/
             const token = this.$cookies.get('loyal-token')
             this.model.token = token;
+            this.model.status = 'awaiting-payment'
             this.socket.emit('approved_order', this.model)
             this.socket.on('approval_done_' + this.id, () => {
                 this.$emit('close', true)
@@ -165,6 +181,11 @@ export default {
             background-color: red;
             color: white;
         }
+    }
+
+    #process {
+        background: gold !important;
+        color: black;
     }
 }
 

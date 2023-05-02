@@ -84,7 +84,7 @@ export default {
     };
   },
   created() {
-    window.print()
+    //window.print()
     this.$store.commit('dashboard/setActive', 'Sales')
     this.getSales();
   },

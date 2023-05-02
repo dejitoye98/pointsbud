@@ -65,6 +65,59 @@
         </div>
       </template>
     </BaseModal>
+
+    <BaseModal v-if="upsell.product" @close="closeUpsellModal">
+      <template #header>
+        Upsell {{ upsell.product.name }}
+      </template>
+      <template #footer>
+        <button @click="updateProductAvailability">Update</button>
+      </template>
+      <template #body>
+        <div class="upsellmodal">
+          <div class="upsellmodal__container">
+            <div class="upsellmodal__group">
+              <p>Choose one tag</p>
+              <div class="upsellmodal__tags">
+
+                <label v-for="(tag, index) in upsell.tags_template">
+
+                  <input type="radio" for="tag" :value="tag" :key="tag" v-model="upsell.tag"> {{ tag }}
+                </label>
+
+
+              </div>
+
+              <p>Alongside category</p>
+              <div class="upsellmodal__alongside-category">
+
+                <label v-for="(category, index) in categories">
+
+                  <input type="checkbox" :value="category" :key="index" @click="addUpsellAlongside(category)"> {{
+                    category.name
+                  }}
+                </label>
+
+
+              </div>
+
+
+              <p>Alonside products</p>
+              <div class="upsellmodal__alongside-category">
+
+                <label v-for="(item, index) in products">
+
+                  <input type="checkbox" :value="product.id" :key="index" @click="addUpsellAlongsideProduct(item)"> {{
+                    item.name }}
+                </label>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </BaseModal>
     <div class="section-title">
       <p>Products</p>
       <div>
@@ -94,6 +147,9 @@
       <div class="products">
 
         <div class="product" v-for="(product, index) in       filteredProducts" :key="index">
+          <div class="product__category">
+            {{ getCategoryName(product.category_id) }}
+          </div>
           <div class="product__image">
             <img v-if="product.thumbnail" :src="product.thumbnail" alt="">
           </div>
@@ -122,6 +178,7 @@
           <div class="product__footer">
             <button :class="[product.availability === 'available' ? '' : 'product-unavailable']"
               @click="changeProductAvailability(product)">Change Status</button>
+            <button @click="upsell.product = product">Upsell product</button>
           </div>
         </div>
 
@@ -238,6 +295,22 @@ export default {
         model: {
           availability: ''
         }
+      },
+
+      upsell: {
+        product: null,
+        tags_template: [
+          'While you wait',
+          'Before main meal',
+          'Dessert',
+          'Takeout',],
+        tag: "",
+        alongside: {
+          categories: [],
+          products: []
+        }
+
+
       }
     };
   },
@@ -262,6 +335,36 @@ export default {
     }
   },
   methods: {
+    getCategoryName(id) {
+      return this.categories.find(c => c.id == id)?.name
+    },
+    closeUpsellModal() {
+      this.upsell = {
+        product: null,
+        tags_template: [
+          'While you wait',
+          'Before main meal',
+          'Dessert',
+          'Takeout',],
+        tag: "",
+        alongside: {
+          categories: [],
+          products: []
+        }
+
+      }
+    },
+    addUpsellAlongsideProduct(product_id) {
+      const index = this.upsell.alongside.products.indexOf(product_id)
+      if (!index) {
+
+        this.upsell.alongside.products.push(product_id)
+      }
+      else {
+        this.upsell.alongside.products.splice(index, 1)
+      }
+
+    },
     choseCategory(value) {
       this.chosen_category = value;
     },
@@ -269,6 +372,17 @@ export default {
       this.$api.get('/categories?business_id=' + this.products[0].business_id).then(resp => {
         this.categories = resp.data.data
       })
+    },
+    addUpsellAlongside(category) {
+      const index = this.upsell.alongside.categories.indexOf(category)
+
+      if (!index) {
+
+        this.upsell.alongside.categories.push(category)
+      }
+      else {
+        this.upsell.alongside.categories.splice(index, 1)
+      }
     },
     updateProductAvailability() {
       this.$api.put(`/products/${this.product_availability.focused_product.id}/availability`, { ...this.product_availability.model }).then(resp => {
@@ -325,6 +439,45 @@ export default {
   font-weight: 500 !important;
 }
 
+
+.upsellmodal {
+  max-width: 800px;
+
+  p {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  &__container {
+    padding: 24px;
+  }
+
+  &__tags {
+    display: flex;
+    //justify-content: space-between;
+    margin-bottom: 16px;
+
+
+
+  }
+
+  &__alongside-category {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: stretch;
+    margin-bottom: 16px;
+  }
+
+  label {
+    margin-right: 8px;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    border: 1px solid lightgrey;
+
+    input {}
+  }
+}
 
 .search {
   width: 100%;
@@ -478,10 +631,19 @@ export default {
       transform: scale(1.05);
     }
 
+    &__category {
+      background: whitesmoke;
+      color: black;
+      border-radius: 50px;
+      padding: 8px;
+      text-align: center;
+    }
+
     &__footer {
       button {
         width: 100%;
         @include smallbutton;
+        margin-bottom: 8px;
 
       }
     }

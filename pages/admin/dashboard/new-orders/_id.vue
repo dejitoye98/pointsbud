@@ -14,14 +14,14 @@
                     <div class="order__customer">
                         <p class="order__customer__name">
 
-                            {{ model.customer.name }}
+                            {{ model.customer && model.customer.name }}
                         </p>
                         <p class="order__customer__email">
-                            {{ model.customer.email }}
+                            {{ model.customer && model.customer.email }}
                         </p>
                         <div class="order__customer__details">
                             <p>Points</p>
-                            <p>{{ model.customer.points }}</p>
+                            <p>{{ model.customer && model.customer.points }}</p>
                         </div>
                     </div>
 
@@ -66,8 +66,14 @@
 
 
                     <div class="order__ctas">
-                        <button>Reject</button>
-                        <button>Accept</button>
+                        <button
+                            v-if="!['awaiting-payment', 'processing', 'completed'].includes(model.status)">Reject</button>
+                        <button
+                            v-if="!['awaiting-payment', 'processing', 'completed'].includes(model.status)">Accept</button>
+                        <button @click="markAsCompleted" v-if="['processing', 'awaiting-payment'].includes(model.status)"
+                            :disabled="loading">Mark as
+                            completed</button>
+
                     </div>
                 </div>
 
@@ -85,6 +91,7 @@ export default {
     data() {
         return {
             model: null,
+            loading: false
         }
     },
 
@@ -120,12 +127,23 @@ export default {
     },
 
     methods: {
+        markAsCompleted() {
+            this.$api.put('/orders/pending-sales/' + this.model.id, { status: 'completed' }).then(resp => {
+                this.loading = true;
+                this.getOrder()
+            }).catch(err => {
+
+            }).finally(() => {
+                this.loading = false;
+            })
+        },
         goBack() {
             this.$router.back()
         },
         getOrder() {
             this.$api.get(`/orders/pending-sales/${this.$route.params.id}`).then(resp => {
                 this.model = resp.data.data;
+                //alert(resp.data.data.status)
             })
         },
         acceptOrder() {

@@ -21,7 +21,9 @@
                         <td>{{ order.order_ids?.split(',').length }}</td>
                         <td>NGN {{ order.total_amount | money || 'N/A' }}</td>
                         <td>{{ getMomentsAgo(order.createdAt) }}</td>
-                        <td> <span class='status-data' :class="getStatusStyle(order.status)"> {{ order.status }} </span>
+                        <td> <span class='status-data' :class="getStatusStyle(order.status)"
+                                v-if="order.status !== 'pending'"> {{ order.status }} </span>
+                            <span v-else class='status-data' :class="getStatusStyle(order.status)"> new </span>
                         </td>
                     </tr>
                 </template>
@@ -102,7 +104,13 @@ export default {
 
         getStatusStyle(status) {
             switch (status) {
+                case 'awaiting-payment':
+                    return 'awaiting-payment-status'
+                case 'processing':
+                    return 'processing-status'
                 case 'accepted':
+                    return 'accepted-status'
+                case 'completed':
                     return 'accepted-status'
                 case 'rejected':
                     return 'rejected-status'
@@ -146,6 +154,15 @@ export default {
 </script>
   
 <style lang="scss" scoped>
+.status-data {
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    width: 100%;
+    border-radius: 0 !important;
+    padding: 2px;
+}
+
 td {
     span {
         border-radius: 20px;
@@ -156,6 +173,16 @@ td {
 .accepted-status {
     background: lightseagreen;
     color: white;
+}
+
+.awaiting-payment-status {
+    background: gold;
+    color: black;
+}
+
+.processing-status {
+    background: gold;
+    color: black;
 }
 
 .rejected-status {
