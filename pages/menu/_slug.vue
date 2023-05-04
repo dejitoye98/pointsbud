@@ -1148,7 +1148,6 @@ export default {
                 this.cart_step = 2;
                 this.customer = resp.data.data.customer;
                 this.business_customer = resp.data.data.business_customer;
-                alert(JSON.stringify({ customer: this.customer, business_customer: this.business_customer }))
 
             }).catch(err => {
 
@@ -1159,9 +1158,8 @@ export default {
                 this.signed_in = true;
                 this.cart_step = 2;
                 this.customer = resp.data.data.customer;
-                this.business_cutomer = resp.data.data.business_customer
+                this.business_customer = resp.data.data.business_customer
 
-                alert(JSON.stringify({ customer: this.customer, business_customer: this.business_customer }))
 
             }).catch(err => {
                 this.signed_in = false;
