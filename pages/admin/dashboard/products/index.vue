@@ -610,7 +610,7 @@ export default {
 
 .products {
   display: grid;
-  grid-template-columns: 23% 23% 23% 23%;
+  grid-template-columns: 30% 30% 30%;
   justify-content: space-between;
   margin-top: 0px;
 

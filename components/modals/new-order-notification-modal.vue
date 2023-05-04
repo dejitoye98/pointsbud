@@ -13,6 +13,10 @@
         <template #body>
             <div class="notifmodal">
                 <div class="notifmodal__container" v-if="model">
+                    <div class="notifmodal__space" v-if="model.space_type || model.space_id">
+                        <p v-if="model.space_type">{{ model.space_type }}</p>
+                        <p v-if="model.space_id">{{ model.space_id }}</p>
+                    </div>
                     <div class="notifmodal__customer">
                         <div class="notifmodal__customer__name">
                             {{ model.customer?.name || "Anonymous customer" }}
@@ -23,7 +27,7 @@
                         </div>
 
                         <div class="notifmodal__customer__details">
-                            <div class="notifmodal__customer__details__item">
+                            <div class="notifmodal__customer__details__item" v-if="model.customer && model.customer.points">
                                 <p>Points</p>
                                 <p>{{ model.customer?.points }}</p>
                             </div>
@@ -56,9 +60,11 @@
                         <div class="notifmodal__items__container">
                             <div class="items__header" style="font-weight: 400; color:black; margin-bottom: 8px;">Items
                             </div>
-                            <div class="item" v-for="(order, index) in model.orders" :key="index">
+                            <div class="item" :class="getOrderStyle(order.status)" v-for="(order, index) in model.orders"
+                                :key="index">
                                 <div class="item__image">
-                                    <img :src="order && order.product?.thumbnail" alt="">
+                                    <img :src="order && order.product?.thumbnail || 'https://cdn-icons-png.flaticon.com/512/4901/4901689.png'"
+                                        alt="">
 
                                 </div>
                                 <div class="item__details">
@@ -67,7 +73,7 @@
                                         <p>Quantity: <b>{{ order.quantity }}</b></p>
                                     </div>
                                     <div class="item__details__comment">
-                                        <p><b>Comment</b>: {{ order.customer_comment }}</p>
+                                        <p v-if="order.customer_comment"><b>Comment</b>: {{ order.customer_comment }}</p>
                                     </div>
                                 </div>
 
@@ -130,7 +136,14 @@ export default {
     },
 
     methods: {
-
+        getOrderStyle(status) {
+            switch (status) {
+                case 'new':
+                    return '';
+                default:
+                    return 'blur'
+            }
+        },
         processOrder() {
             const token = this.$cookies.get('loyal-token')
 
@@ -173,6 +186,10 @@ export default {
 
 
 <style lang="scss" scoped>
+.blur {
+    filter: blur(10px);
+}
+
 .footer {
     button {
         margin-right: 16px;
@@ -192,6 +209,19 @@ export default {
 .notifmodal {
     min-width: 600px;
     color: black;
+
+    &__space {
+        // border: 1px dashed grey;
+        margin: auto;
+        text-align: center;
+        font-size: 20px;
+        width: 50%;
+        background-color: gold;
+        color: black;
+        font-weight: 500;
+        display: flex;
+        justify-content: center;
+    }
 
     &__container {
         padding: 16px;
@@ -296,6 +326,7 @@ export default {
 
             &__image {
                 height: 100%;
+                width: 100px;
 
                 img {
                     height: 100%;

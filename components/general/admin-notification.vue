@@ -6,9 +6,16 @@
         </NewOrderNotificationModal>
         <div class="notification__container">
             <div class="notification__header">
+                <div>
 
-                <div class="notification__tag">
-                    {{ notification.type === 'pending-sale' ? "New Order" : '' }}
+                    <div class="notification__tag">
+                        {{ notification.type === 'pending-sale' ? "New Order" : '' }}
+
+                    </div>
+                    <div class="notification__tag" v-if="notification.space_id || notification.space_type">
+                        <b style="font-size: 16px;"> {{ notification.space_type + ' ' + notification.space_id }}</b>
+
+                    </div>
                 </div>
                 <svg @click="close" style="cursor: pointer;" width="16" height="16" viewBox="0 0 8 8" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -91,7 +98,7 @@ export default {
         padding: 2px 8px;
         width: max-content;
         border-radius: 50px;
-        font-size: 13px;
+        font-size: 14px;
         color: black;
     }
 
@@ -125,7 +132,7 @@ export default {
             color: black;
 
             &:hover {
-                background: $primary;
+                filter: brightness(1px);
             }
         }
     }

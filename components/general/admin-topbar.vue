@@ -3,7 +3,7 @@
         <div class="top__container">
             <div @click="goTo(item.route)" class=" top__item" :class="[isSelected(item.name) ? 'selected' : '']"
                 v-for="(item, index) in items" :key="index">
-                {{ item.name }} <span v-if="item && item.update_key && updateItems[item.update_key]"> {{
+                {{ item.name }} <span v-if="item && item.update_key && updateItems && updateItems[item.update_key]"> {{
                     updateItems[item.update_key]
                 }}</span>
 
@@ -52,13 +52,13 @@ export default {
                 {
                     name: "New Orders",
                     route: "/admin/dashboard/new-orders",
-                    //update_key: 'pending_sales'
+                    update_key: 'pending_sales'
 
                 },
                 {
                     name: "Loyalty Programs",
                     route: "/admin/dashboard/loyalty-programs",
-                    //update_key: 'loyalty-programs'
+                    update_key: 'loyalty-programs'
 
                 },
                 {

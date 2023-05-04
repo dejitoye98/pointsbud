@@ -214,13 +214,24 @@
                         </div>
 
                         <div class="cart-modal__container" v-else-if="cart_step === 6">
-                            <div class="cart-modal__orderloading">
-                                <p>Yay!! Your order has been accepted and is being being processed!</p>
+                            <div class="cart-modal__orderaccepted"
+                                style="display: flex; margin-top: 48px; justify-content: center; width: 100px; margin:auto;">
+
+                                <img src="../../static/confetti.png" style="width: 100%; text-align: center" alt="">
+
+
+                                <div class="cart-modal__orderaccepted__text"
+                                    style="display: flex; margin-top: 16px; margin-bottom: 16px; font-size:16px; justify-content:center">
+                                    <p style="text-align: center; padding: 16px;">Your order has been accepted and is being
+                                        processed</p>
+
+                                </div>
+
+                                <div>
+                                    <button @click="view_cart = false">Add to order</button>
+                                </div>
                             </div>
 
-                            <div>
-                                <LoadingState></LoadingState>
-                            </div>
                         </div>
 
 
@@ -427,6 +438,10 @@
                         <div class="product__image">
                             <img :src="product.thumbnail || business && business.logo" alt="">
                         </div>
+                        <!-- 
+                        <div class="product__cart">
+                            Added to cart
+                        </div> -->
                         <div class="product__name">
                             {{ product.name }}
                         </div>
@@ -436,6 +451,10 @@
                         </div>
                         <div class="product__price">
                             {{ product.currency }} {{ product.unitprice | money }}
+                        </div>
+
+                        <div class="product__cta">
+                            <button>Add to order</button>
                         </div>
 
 
@@ -496,27 +515,6 @@
                     <div class="cart-sticky" v-if="cart && cart.length > 0" style="display: none;">
                         <div class="cart-sticky__container">
 
-                            <!-- 
-                            <div class="cart-sticky__header" style="display: flex; align-items:center">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 8px;"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M2 2H3.74001C4.82001 2 5.67 2.93 5.58 4L4.75 13.96C4.61 15.59 5.89999 16.99 7.53999 16.99H18.19C19.63 16.99 20.89 15.81 21 14.38L21.54 6.88C21.66 5.22 20.4 3.87 18.73 3.87H5.82001"
-                                        stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                    <path
-                                        d="M16.25 22C16.9404 22 17.5 21.4404 17.5 20.75C17.5 20.0596 16.9404 19.5 16.25 19.5C15.5596 19.5 15 20.0596 15 20.75C15 21.4404 15.5596 22 16.25 22Z"
-                                        stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                    <path
-                                        d="M8.25 22C8.94036 22 9.5 21.4404 9.5 20.75C9.5 20.0596 8.94036 19.5 8.25 19.5C7.55964 19.5 7 20.0596 7 20.75C7 21.4404 7.55964 22 8.25 22Z"
-                                        stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                    <path d="M9 8H21" stroke="black" stroke-width="1.5" stroke-miterlimit="10"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                <p>{{ cart.length }} items in cart</p>
-                            </div> -->
 
                             <div class="cart-sticky__ctas" style="margin-top: 8px;">
 
@@ -658,7 +656,9 @@ export default {
         },
         show_order_modal(value) {
             if (!value) {
-                this.to_add_comment = false
+                // this.to_add_comment = false;
+                this.order.customer_comment = ''
+
             }
         },
         cart_step(value) {
@@ -675,10 +675,11 @@ export default {
     async created() {
 
 
-        window.localStorage.clear()
+        window.localStorage.removeItem('cart')
 
         this.$api.get(`/businesses?slug=${this.$route.params.slug}`).then(resp => {
             this.business = resp.data.data;
+            this.checkForLastOrder()
             this.getLoyaltyProgram()
             this.getPreferences()
             this.getCategories()
@@ -730,9 +731,10 @@ export default {
 
     },
     computed: {
+
         filteredProducts() {
             if (this.products) {
-                let productsNotInCart = this.products.filter(item => !this.cart.find(cart_item => item.id == cart_item.id)) || [];
+                let productsNotInCart = this.products;
                 const category = this.categories.find(c => c.name === this.chosenCategory);
 
                 if (category && !this.search_term) {
@@ -839,6 +841,21 @@ export default {
         }
     },
     methods: {
+        checkForLastOrder() {
+            let last_order = window.localStorage.getItem('last_order') && JSON.parse(window.localStorage.getItem('last_order')).id;
+            if (last_order) {
+                // see if order is completed;
+                return this.$api.get(`/orders/pending-sales/` + last_order).then(resp => {
+                    if (resp.data.data.status === 'completed') {
+                        window.localStorage.removeItem('last_order')
+                    }
+                    else {
+
+                    }
+                })
+
+            }
+        },
         triggerAddComment() {
             this.order.to_add_comment = true;
         },
@@ -906,19 +923,38 @@ export default {
             const slug = this.$route.params.slug;
 
             const r_uid = Date.now();
+            const space_id = this.$route.query.space_id;
+            const space_type = this.$route.query.space_type;
 
             //alert(`orders:${this.$route.params.slug}:${r_uid}`)
-            this.socketClient.emit('created_order', {
-                r_uid,
-                business_slug: slug, business_id: this.business.id, items: orders,
-                vat: parseFloat(this.vat || 0),
-                consumption_tax: parseFloat(this.consumptionTax || 0)
-            })
+            if (!window.localStorage.getItem('last_order')) {
+                this.socketClient.emit('created_order', {
+                    r_uid,
+                    business_slug: slug, business_id: this.business.id, items: orders,
+                    vat: parseFloat(this.vat || 0),
+                    consumption_tax: parseFloat(this.consumptionTax || 0),
+                    space_id,
+                    space_type,
+                    pending_sale_id: window.localStorage.getItem('last_order') && JSON.parse(window.localStorage.getItem('last_order')).id
+                })
 
-
-            this.socketClient.on('received_order_' + r_uid, () => {
+            }
+            else {
+                this.socketClient.emit('add_to_order', {
+                    r_uid,
+                    business_slug: slug, business_id: this.business.id, items: orders,
+                    vat: parseFloat(this.vat || 0),
+                    consumption_tax: parseFloat(this.consumptionTax || 0),
+                    space_id,
+                    space_type,
+                    pending_sale_id: window.localStorage.getItem('last_order') && JSON.parse(window.localStorage.getItem('last_order')).id
+                })
+            }
+            this.socketClient.on('received_order_' + r_uid, (data) => {
                 this.cart_step = 3
                 this.flag_creating_order = false;
+
+
 
                 this.socketClient.emit('join_room', { room: `orders:${r_uid}` })
 
@@ -930,8 +966,10 @@ export default {
 
                 })
 
-                this.socketClient.on(`processing-order`, () => {
+                this.socketClient.on(`processing-order`, (data) => {
                     this.cart_step = 6
+                    window.localStorage.setItem('last_order', JSON.stringify({ id: data.id }))
+
                 })
 
             });
@@ -1143,6 +1181,7 @@ export default {
                 quantity: this.order.quantity,
                 customer_comment: this.order.customer_comment,
             }
+            this.order.customer_comment = ''
             if (cart !== 'null' && cart) {
                 cart = JSON.parse(cart)
                 cart.push(item);
@@ -1531,6 +1570,11 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     }
 
     &__orderaccepted {
+        display: flex;
+        flex-direction: column;
+        width: 50% !important;
+        align-items: center;
+
         p {
             font-size: 18px;
             font-weight: 400;
@@ -1670,6 +1714,31 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 
     }
 
+    &__cart {
+        // background: gold;
+        padding: 2px 10px;
+        border-radius: 20px;
+        display: block;
+        margin: auto;
+        width: fit-content;
+        width: 50%;
+        margin-top: 10px;
+        font-size: 12px;
+        border: 1px solid grey;
+        text-align: center;
+        background: $primary;
+        color: white;
+    }
+
+    button {
+        @include smallbutton;
+        margin: auto;
+        width: 100%;
+        color: black;
+        background-color: gold;
+    }
+
+
     &__image {
         height: 60px;
         width: 60px;
@@ -1709,6 +1778,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         margin-top: 8px;
         //margin-top: 8px;
         font-weight: 600;
+        margin-bottom: 8px;
     }
 
     &__points-earn {

@@ -70,7 +70,7 @@
                             </div>
 
                             <div class="menuqr__header__text">
-                                <p style="text-align: center;">Scan to order from our menu
+                                <p style="text-align: center;">Scan to order <b> directly</b> from our menu
                                 </p>
                                 <!--<p>and earn <span style="font-weight: 700; font-size: 25px;">
                                         discount points</span>
@@ -86,8 +86,9 @@
                         </div>
 
                         <div class="menuqr__socials">
-                            <p class="menuqr__socials__header">
-                                We are social
+
+                            <p class="menuqr__socials__header" style="margin-bottom: 8px;">
+                                Table 23
                             </p>
                             <div class="menuqr__socials__links">
                                 <div style="display: flex;">
@@ -121,7 +122,7 @@
 
 
                         <div class="menuqr__attribution">
-                            <p style="">Powered by PointsBud.com</p>
+                            <p style="font-weight:500">Powered by PointsBud.com</p>
                         </div>
 
                     </div>
@@ -320,13 +321,13 @@ export default {
 
         qrData() {
             if (this.business) {
-
+                return "https://www.pointsbud.com/menu/circa-lagos?space_id=23&space_type=table"
                 if (this.selected_space_qr !== 'general') {
-                    //return "https://www.pointsbud.com/menu?space=" + this.selected_space_qr
+                    // return "https://www.pointsbud.com/menu?spaceId=" + this.selected_space_qr +  ""
                     return "https://www.pointsbud.com"
                 }
                 else {
-                    return "https://www.pointsbud.com"
+                    //return "https://www.pointsbud.com"
 
                     return "https://www.pointsbud.com/menu/" + this.business.slug
                 }
