@@ -1141,7 +1141,7 @@ export default {
             console.log(JSON.stringify(response))
             this.$api.post('/auth/google/signin', {
                 credential: response.credential,
-                business: this.business.id
+                business_id: this.business.id
             }).then(resp => {
                 this.$cookies.set("loyal-token", resp.data.data.token);
                 this.cart_step = 2;
