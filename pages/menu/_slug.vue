@@ -111,8 +111,8 @@
                                 <div class="cart-modal__item__name">
                                     <div>
 
-                                        <p>{{ item.name }} <span class="cart-modal__item__quantity"><b> x {{ item.quantity
-                                        }}
+                                        <p>{{ item.name }} <span class="cart-modal__item__quantity"><b> (x {{ item.quantity
+                                        }})
                                                 </b> </span>
                                         </p>
                                         <!--<button>Change quantity</button>-->
@@ -148,11 +148,11 @@
                                 <div>SubTotal</div>
                                 <div>{{ cart[0].currency }} {{ cartTotal | money }}</div>
                             </div>
-                            <div class="cart-modal__total">
+                            <div class="cart-modal__total" v-if="getPreference('consumption_tax')">
                                 <div>Consumption Tax ({{ getPreference('consumption_tax')?.value || 0 }}%) </div>
                                 <div>{{ cart[0].currency }} {{ consumptionTax | money }}</div>
                             </div>
-                            <div class="cart-modal__total">
+                            <div class="cart-modal__total" v-if="getPreference('vat')">
                                 <div>Vat ({{ getPreference('vat')?.value || 0 }}%) </div>
                                 <div>{{ cart[0].currency }} {{ vat | money }}</div>
                             </div>
@@ -266,7 +266,6 @@
                             </div>
                         </div>
 
-
                         <div @click.stop class="order-modal__footer__cta">
                             <button @click="addToCart">Add to cart</button>
                         </div>
@@ -301,13 +300,23 @@
                             </div>
 
                             <div class="order-modal__content__quantity">
-                                <p class="order-modal__content__quantity__header">Total: {{ focused_product.currency }} {{
-                                    focused_product.unitprice * order.quantity | money }} </p>
+                                <p v-if="!isInCart(focused_product)" class="order-modal__content__quantity__header">Total:
+                                    {{ focused_product.currency }} {{
+                                        focused_product.unitprice * order.quantity | money }}
+                                </p>
+
+                                <p v-else class="order-modal__content__quantity__header">Total: {{ focused_product.currency
+                                }} {{
+    focused_product.unitprice * cart.find(i => i.id === focused_product.id).quantity | money
+}}
+                                </p>
 
                                 <div class="order-modal__content__quantity__container">
 
                                     <button @click="decreaseQuantity"> -</button>
-                                    <input type="text" v-model="order.quantity">
+                                    <input type="text" v-if="!isInCart(focused_product)" v-model="order.quantity">
+                                    <input type="text" v-else
+                                        v-model="cart.find(i => i.id === focused_product.id).quantity">
                                     <button @click="increaseQuantity"> +</button>
                                 </div>
                             </div>
@@ -315,16 +324,19 @@
                             <div class="order-modal__content__comment">
                                 <p v-if="!order.to_add_comment" @click="triggerAddComment">Add a comment</p>
 
-                                <div style="display: flex; flex-direction: column;" v-if="order.to_add_comment"
-                                    class="form-input">
+                                <div style="display: flex; flex-direction: column;"
+                                    v-if="order.to_add_comment && !isInCart(focused_product)" class="form-input">
                                     <label for="">Comment</label>
                                     <textarea v-model="order.customer_comment"></textarea>
                                 </div>
 
+
                             </div>
 
                             <div class="order-modal__content__ctas">
-                                <button @click="addToCart">Add to cart</button>
+                                <button v-if="!isInCart(focused_product)" @click="addToCart">Add to cart</button>
+                                <button style="background: red !important; color: white" v-else
+                                    @click="removeCartItem(focused_product)">Remove from cart</button>
                             </div>
                         </div>
 
@@ -374,6 +386,8 @@
 
                         </div>
                         <div class="form-input menu__top__search">
+
+
                             <input v-model="search_term" placeholder="search for an item on the menu" type="text"
                                 class="menu__top__search__input">
                         </div>
@@ -454,7 +468,9 @@
                         </div>
 
                         <div class="product__cta">
-                            <button>Add to order</button>
+                            <button v-if="!isInCart(product)">Add to order</button>
+                            <button style="background: gold; color: black" v-else>View Order</button>
+
                         </div>
 
 
@@ -477,18 +493,49 @@
                     </div>
 
 
-                    <div class="bottom-sticky">
+                    <div class="checkout-cart" v-if="cart.length > 0" @click="viewCart">
+                        <button>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 8px;"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M2 2H3.74001C4.82001 2 5.67 2.93 5.58 4L4.75 13.96C4.61 15.59 5.89999 16.99 7.53999 16.99H18.19C19.63 16.99 20.89 15.81 21 14.38L21.54 6.88C21.66 5.22 20.4 3.87 18.73 3.87H5.82001"
+                                    stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path
+                                    d="M16.25 22C16.9404 22 17.5 21.4404 17.5 20.75C17.5 20.0596 16.9404 19.5 16.25 19.5C15.5596 19.5 15 20.0596 15 20.75C15 21.4404 15.5596 22 16.25 22Z"
+                                    stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path
+                                    d="M8.25 22C8.94036 22 9.5 21.4404 9.5 20.75C9.5 20.0596 8.94036 19.5 8.25 19.5C7.55964 19.5 7 20.0596 7 20.75C7 21.4404 7.55964 22 8.25 22Z"
+                                    stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path d="M9 8H21" stroke="black" stroke-width="1.5" stroke-miterlimit="10"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            Complete your order
+                            <span> ({{ cart.length }} items)</span>
+
+                        </button>
+
+                    </div>
+
+                    <div class="bottom-sticky" style="display: none;">
                         <div class="bottom-sticky__container">
                             <button>
-                                <svg width="26" height="26" viewBox="0 0 26 26" fill="none"
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
-                                        d="M13 0C5.925 0 0 5.08 0 11.5C0 14.53 1.359 17.248 3.5 19.281C3.23915 19.9611 2.86968 20.5943 2.406 21.156C1.79087 21.9023 1.11125 22.5929 0.375 23.22C0.213516 23.3496 0.0962236 23.526 0.039309 23.7251C-0.0176056 23.9241 -0.0113363 24.136 0.0572518 24.3313C0.12584 24.5266 0.253365 24.6959 0.422229 24.8156C0.591093 24.9354 0.79297 24.9998 1 25C3.215 25 4.808 24.975 6.25 24.594C7.54 24.252 8.649 23.536 9.781 22.531C10.811 22.778 11.874 23 13 23C20.075 23 26 17.92 26 11.5C26 5.08 20.075 0 13 0ZM13 2C19.125 2 24 6.32 24 11.5C24 16.68 19.125 21 13 21C11.911 21 10.78 20.812 9.75 20.531C9.58529 20.4896 9.41274 20.4908 9.24863 20.5345C9.08452 20.5783 8.93425 20.6631 8.812 20.781C7.687 21.86 6.858 22.363 5.75 22.656C5.24 22.791 4.256 22.759 3.562 22.813C3.702 22.655 3.833 22.571 3.969 22.406C4.755 21.446 5.472 20.431 5.688 19.281C5.71775 19.1084 5.70164 18.931 5.64127 18.7665C5.58089 18.6021 5.47838 18.4564 5.344 18.344C3.249 16.614 2 14.189 2 11.5C2 6.32 6.875 2 13 2ZM11.094 5.906C10.918 5.9455 10.7559 6.03189 10.625 6.156L9.125 7.563L10.469 9.031L11.656 7.906H14.062L15 8.97V10.439L12.437 12.157C12.3 12.2503 12.1883 12.3762 12.1121 12.5233C12.0358 12.6705 11.9973 12.8343 12 13V15H14V13.562L16.563 11.844C16.7001 11.7506 16.8119 11.6246 16.8882 11.4772C16.9645 11.3299 17.0029 11.1659 17 11V8.594C16.9987 8.35231 16.9099 8.11927 16.75 7.938L15.25 6.25C15.1567 6.1426 15.0415 6.05636 14.9121 5.99704C14.7828 5.93772 14.6423 5.90668 14.5 5.906H11.312C11.2396 5.89806 11.1664 5.89806 11.094 5.906ZM12 16V18H14V16H12Z"
+                                        d="M6.00001 23C4.60001 23 3.41668 22.5167 2.45001 21.55C1.48335 20.5833 1.00001 19.4 1.00001 18H2.50001C2.50001 18.9833 2.83735 19.8127 3.51201 20.488C4.18668 21.1633 5.01601 21.5007 6.00001 21.5V23ZM10.325 23C9.92501 23 9.54168 22.925 9.17501 22.775C8.80835 22.625 8.48335 22.4083 8.20001 22.125L0.950012 14.9L2.40001 13.825C2.73335 13.5917 3.07935 13.4543 3.43801 13.413C3.79668 13.3717 4.15068 13.4507 4.50001 13.65L7.00001 14.9V4C7.00001 3.71667 7.09601 3.479 7.28801 3.287C7.48001 3.095 7.71735 2.99933 8.00001 3C8.28335 3 8.52101 3.096 8.71301 3.288C8.90501 3.48 9.00068 3.71733 9.00001 4V12H11V2C11 1.71667 11.096 1.479 11.288 1.287C11.48 1.095 11.7173 0.999333 12 1C12.2833 1 12.521 1.096 12.713 1.288C12.905 1.48 13.0007 1.71733 13 2V12H15V3C15 2.71667 15.096 2.479 15.288 2.287C15.48 2.095 15.7173 1.99933 16 2C16.2833 2 16.521 2.096 16.713 2.288C16.905 2.48 17.0007 2.71733 17 3V12H19V5C19 4.71667 19.096 4.479 19.288 4.287C19.48 4.095 19.7173 3.99933 20 4C20.2833 4 20.521 4.096 20.713 4.288C20.905 4.48 21.0007 4.71733 21 5V19C21 20.1167 20.6083 21.0627 19.825 21.838C19.0417 22.6133 18.1 23.0007 17 23H10.325ZM22 5.025C22 4.175 21.7083 3.45833 21.125 2.875C20.5417 2.29167 19.825 2 18.975 2V0.5C20.225 0.5 21.2917 0.941667 22.175 1.825C23.0583 2.70833 23.5 3.775 23.5 5.025H22Z"
                                         fill="white" />
                                 </svg>
 
 
+
                             </button>
+
+
+
+                            <!-- 
                             <button v-if="cart && cart.length > 0" @click="viewCart">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 8px;"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -508,17 +555,17 @@
                                         stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                                 <span>{{ cart.length }}</span>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
 
-                    <div class="cart-sticky" v-if="cart && cart.length > 0" style="display: none;">
+                    <div class="cart-sticky" v-if="cart && cart.length > 0" style="display: none">
                         <div class="cart-sticky__container">
 
 
                             <div class="cart-sticky__ctas" style="margin-top: 8px;">
 
-                                <button disabled>Recommendations</button>
+                                <!--  <button disabled>Recommendations</button> -->
                                 <button @click="viewCart">Go to cart ({{ cart.length }})</button>
                             </div>
                         </div>
@@ -841,6 +888,7 @@ export default {
         }
     },
     methods: {
+
         checkForLastOrder() {
             let last_order = window.localStorage.getItem('last_order') && JSON.parse(window.localStorage.getItem('last_order')).id;
             if (last_order) {
@@ -1092,7 +1140,8 @@ export default {
         googleSignIn(response) {
             console.log(JSON.stringify(response))
             this.$api.post('/auth/google/signin', {
-                credential: response.credential
+                credential: response.credential,
+                business: this.business.id
             }).then(resp => {
                 this.$cookies.set("loyal-token", resp.data.data.token);
                 this.cart_step = 2;
@@ -1102,10 +1151,11 @@ export default {
             })
         },
         isSignedIn() {
-            this.$api.get('/auth/loggedin').then(resp => {
+            this.$api.get('/auth/loggedin?business_id=' + this.business.id).then(resp => {
                 this.signed_in = true;
                 this.cart_step = 2;
                 this.customer = resp.data.data;
+
             }).catch(err => {
                 this.signed_in = false;
             })
@@ -1124,7 +1174,10 @@ export default {
         },
         increaseQuantity() {
             try {
-
+                if (this.isInCart(this.focused_product)) {
+                    this.cart.find(i => i.id === this.focused_product.id).quantity++;
+                    return
+                }
                 this.order.quantity++;
             } catch (e) {
                 alert(e)
@@ -1132,7 +1185,14 @@ export default {
             // this.focused_product.quantity++;
         },
         decreaseQuantity() {
+
+
+            if (this.isInCart(this.focused_product) && this.cart.find(i => i.id === this.focused_product.id).quantity > 1) {
+                this.cart.find(i => i.id === this.focused_product.id).quantity--;
+                return
+            }
             if (this.order.quantity > 1) {
+
                 this.order.quantity--;
             }
         },
@@ -1205,6 +1265,10 @@ export default {
                 window.localStorage.setItem('cart', JSON.stringify(cart));
                 this.cart = cart;
 
+            }
+
+            if (this.view_cart) {
+                this.view_cart = false;
             }
         }
     }
@@ -1327,6 +1391,43 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         text-align: center;
         margin-top: 16px;
     }
+}
+
+
+.checkout-cart {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    button {
+        @include smallbutton;
+        border-radius: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        //margin-right: 5px;
+        background: gold;
+        color: black;
+        align-items: center;
+
+        position: relative svg {
+            margin-left: 5px;
+        }
+
+        span {
+
+            margin-left: 5px;
+
+            color: black;
+            border-radius: 50%;
+            //position: absolute;
+            //right: 0;
+        }
+
+
+    }
+
 }
 
 .cart-sticky {
@@ -1486,6 +1587,8 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 .cart-modal {
     min-width: fit-content;
     box-sizing: border-box;
+    letter-spacing: 0.6px;
+    padding: 20px;
 
     &__container {
         padding: 24px;
@@ -1504,7 +1607,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             font-size: 20px;
             text-align: center;
             color: black;
-            font-weight: 600;
+            font-weight: 500;
             max-width: 400px;
             margin: auto;
             box-sizing: border-box;
@@ -1620,6 +1723,10 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         padding: 16px 0;
         align-items: flex-start;
 
+        &:last-of-type {
+            border-bottom: 0px !important;
+        }
+
 
         &__thumbnail {
             //width: 100%;
@@ -1640,17 +1747,17 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         }
 
         &__quantity {
-            color: gold;
+            color: $faint;
         }
 
         &__name {
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 500;
             margin-right: 16px;
 
 
             button {
-                border: 0.1px solid $faint;
+                border: 0.1px solid $charcoal;
                 border-radius: 5px;
                 padding: 2px 8px;
 
@@ -1673,19 +1780,20 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         &__total {
             display: flex;
             justify-content: flex-end;
-            font-weight: 700;
+            font-weight: 500;
+            //padding: 20px;
         }
     }
 
     &__total {
-        padding: 16px;
+        padding: 20px;
         display: flex;
         justify-content: space-between;
         padding: 8px 0;
 
         div {
             &:last-of-type {
-                font-weight: 700;
+                font-weight: 600;
             }
         }
     }
@@ -1734,8 +1842,8 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         @include smallbutton;
         margin: auto;
         width: 100%;
-        color: black;
-        background-color: gold;
+        color: white;
+        background-color: $primary;
     }
 
 
@@ -1814,6 +1922,14 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             width: 20px;
         }
     }
+
+    &__cta {
+        button {
+            font-size: 15px;
+            //text-transform: uppercase;
+            //letter-spacing: 0.8px;
+        }
+    }
 }
 
 .menu {
@@ -1851,6 +1967,9 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             margin-bottom: 0px !important;
             margin: 16px auto;
             width: 90%;
+            padding: 10px;
+            display: flex;
+            align-items: center;
 
 
 
@@ -2093,7 +2212,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             color: black;
             padding: 8px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             border-radius: 10px;
         }
     }
@@ -2284,6 +2403,8 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             #go-back {
                 background: white;
                 margin-right: 16px;
+                border: 1px solid $faint;
+                color: $faint;
             }
         }
     }

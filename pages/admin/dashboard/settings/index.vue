@@ -65,6 +65,7 @@
                     </div>
                     <div class="menuqr__container">
                         <div class="menuqr__header">
+
                             <div class="menuqr__header__logo">
                                 <img src="https://i.ibb.co/XJ4nNjb/62909-C67-617-A-4-EF8-91-C0-45-D06-F471-F87.png" alt="">
                             </div>
@@ -83,14 +84,15 @@
 
                         <div class="menuqr__qr">
                             <QrCode :text="qrData" />
+                            <p style="text-align: center; width: 100%; margin: 10px 0; font-weight: 500">Table 7</p>
                         </div>
 
                         <div class="menuqr__socials">
 
-                            <p class="menuqr__socials__header" style="margin-bottom: 8px;">
-                                Table 23
+                            <p class="menuqr__socials__header" style="margin-top: 10px;">
+                                We are social
                             </p>
-                            <div class="menuqr__socials__links">
+                            <div class=" menuqr__socials__links">
                                 <div style="display: flex;">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -116,8 +118,9 @@
                         </div>
 
                         <div class="" color="black">
-                            <p style="color: black; margin-top: 8px; font-size: 18px; font-weight:600"> {{ selected_space_qr
-                            }}</p>
+                            <p style="color: white; margin-top: 16px; font-size: 13px; font-weight:600"> Powered by
+                                PointsBud.com
+                            </p>
                         </div>
 
 
@@ -321,7 +324,7 @@ export default {
 
         qrData() {
             if (this.business) {
-                return "https://www.pointsbud.com/menu/circa-lagos?space_id=23&space_type=table"
+                return "https://www.pointsbud.com/menu/circa-lagos?space_id=Table-7"
                 if (this.selected_space_qr !== 'general') {
                     // return "https://www.pointsbud.com/menu?spaceId=" + this.selected_space_qr +  ""
                     return "https://www.pointsbud.com"
@@ -493,7 +496,7 @@ export default {
     margin: auto;
     //max-height: 100%;
     position: relative;
-    height: 500px !important;
+    height: 200px !important;
     width: 500px !important;
     padding: 16px !important;
 
@@ -593,6 +596,8 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 500px;
+        height: 400px;
     }
 
     &__header {
@@ -614,15 +619,15 @@ export default {
                 font-weight: 400;
                 color: white !important;
                 // margin-top: 20px;
-                margin-bottom: 20px;
+                margin-bottom: 8px;
             }
         }
 
         &__logo {
             //border: 2px dashed white;
             border-radius: 10px;
-            height: 150px;
-            width: 150px;
+            height: 70px;
+            width: 100px;
             margin: auto;
             //margin-bottom: 36px;
             display: flex;
@@ -639,11 +644,10 @@ export default {
     }
 
     &__qr {
-        padding: 16px;
-        background: white;
-        border-radius: 20px;
-        height: 150px;
-        width: 150px;
+        height: 100px;
+        width: 100px;
+
+
     }
 
     &__footer {
