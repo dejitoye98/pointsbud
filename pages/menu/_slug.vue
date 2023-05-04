@@ -64,10 +64,10 @@
                         <div class="">
                             Cart
                         </div>
-                        <div style="font-weight: 600; font-size: 16px" v-if="customer">
+                        <div style="font-weight: 600; font-size: 16px" v-if="business_customer">
                             Available points:
 
-                            <span> {{ customer.points - points_in_use }} </span>
+                            <span> {{ business_customer.points - points_in_use }} </span>
                         </div>
                     </div>
 
@@ -623,6 +623,7 @@ export default {
             categories: [],
             products: null,
             customer: null,
+            business_customer: null,
 
             chosenCategory: null,
             show_order_modal: false,
@@ -1096,9 +1097,9 @@ export default {
         },
         canUsePoints(product) {
             // if points_in_use and item points and < available points er
-            if (this.customer && this.loyalty_program) {
+            if (this.business_customer && this.loyalty_program) {
 
-                if (parseInt(this.points_in_use + (product.points_to_deduct * product.quantity)) <= this.customer.points) {
+                if (parseInt(this.points_in_use + (product.points_to_deduct * product.quantity)) <= this.business_customer.points) {
                     return true
                 }
                 return false;
@@ -1146,6 +1147,9 @@ export default {
                 this.$cookies.set("loyal-token", resp.data.data.token);
                 this.cart_step = 2;
                 this.customer = resp.data.data.customer;
+                this.business_customer = resp.data.data.business_customer;
+                alert(JSON.stringify({ customer: this.customer, business_customer: this.business_customer }))
+
             }).catch(err => {
 
             })
@@ -1154,7 +1158,10 @@ export default {
             this.$api.get('/auth/loggedin?business_id=' + this.business.id).then(resp => {
                 this.signed_in = true;
                 this.cart_step = 2;
-                this.customer = resp.data.data;
+                this.customer = resp.data.data.customer;
+                this.business_cutomer = resp.data.data.business_customer
+
+                alert(JSON.stringify({ customer: this.customer, business_customer: this.business_customer }))
 
             }).catch(err => {
                 this.signed_in = false;
