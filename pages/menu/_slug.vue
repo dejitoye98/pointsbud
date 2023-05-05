@@ -814,6 +814,12 @@ export default {
                     context: 'signin'
                 })
             }
+        },
+
+        view_cart(value) {
+            if (value === false && this.cart_step == 6) {
+                this.cart_step = 2
+            }
         }
     },
     async created() {
