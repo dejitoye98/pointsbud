@@ -71,8 +71,8 @@
             <td>{{ customer.email }}</td>
             <td>{{ customer.phone }}</td>
             <td>{{ customer.code }}</td>
-            <td>{{ customer.points || 0 }}</td>
-            <td>{{ customer.purchases || 0 }}</td>
+            <td>{{ customer.business_customer[0].points || 0 }}</td>
+            <td>{{ customer.business_customer[0].purchases || 0 }}</td>
           </tr>
         </template>
 
