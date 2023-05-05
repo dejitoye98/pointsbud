@@ -1390,10 +1390,10 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 
 
 .navigation {
-    position: absolute;
+    position: fixed;
     left: 0;
     top: 0;
-    z-index: 10000000000000000000000000;
+    z-index: 100000000000000000000000000000000000000;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     width: 100%;
 
