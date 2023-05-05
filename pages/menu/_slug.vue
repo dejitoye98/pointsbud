@@ -557,7 +557,7 @@
                         </div>
 
                         <div class="product__cta">
-                            <button v-if="!isInCart(product)">Add to order</button>
+                            <button v-if="!isInCart(product)">Order item</button>
                             <button style="background: gold; color: black" v-else>View Order</button>
 
                         </div>
