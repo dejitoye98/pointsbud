@@ -978,6 +978,7 @@ export default {
             //alert(`orders:${this.$route.params.slug}:${r_uid}`)
             if (!window.localStorage.getItem('last_order')) {
                 this.socketClient.emit('created_order', {
+                    token: this.$cookies.get('loyal-token'),
                     r_uid,
                     business_slug: slug, business_id: this.business.id, items: orders,
                     vat: parseFloat(this.vat || 0),
@@ -990,6 +991,7 @@ export default {
             }
             else {
                 this.socketClient.emit('add_to_order', {
+                    token: this.$cookies.get('loyal-token'),
                     r_uid,
                     business_slug: slug, business_id: this.business.id, items: orders,
                     vat: parseFloat(this.vat || 0),
