@@ -1091,7 +1091,7 @@ export default {
             else {
                 this.socketClient.emit('add_to_order', {
                     token: this.$cookies.get('loyal-token'),
-                    //r_uid: ,
+                    r_uid,
                     business_slug: slug, business_id: this.business.id, items: orders,
                     vat: parseFloat(this.vat || 0),
                     consumption_tax: parseFloat(this.consumptionTax || 0),
@@ -1103,21 +1103,18 @@ export default {
             this.socketClient.on('received_order_' + r_uid, (data) => {
                 this.cart_step = 3
                 this.flag_creating_order = false;
-
-
-
                 this.socketClient.emit('join_room', { room: `orders:${r_uid}` })
-
                 this.socketClient.on('order-accepted', (data) => {
                     this.cart_step = 4;
                     //alert(data)
                     this.paymentDetails = data;
-
-
                 })
 
                 this.socketClient.on(`processing-order`, (data) => {
                     this.cart_step = 6
+
+                    window.localStorage.removeItem('cart');
+                    this.cart = []
                     window.localStorage.setItem('last_order', JSON.stringify({ id: data.id, r_uid: data.r_uid, created: Date.now() }))
 
                 })

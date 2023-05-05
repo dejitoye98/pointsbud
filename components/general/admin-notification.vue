@@ -13,7 +13,7 @@
 
                     </div>
                     <div class="notification__tag" v-if="notification.space_id || notification.space_type">
-                        <b style="font-size: 16px;"> {{ notification.space_type + ' ' + notification.space_id }}</b>
+                        <b style="font-size: 16px;"> {{ notification.space_id }}</b>
 
                     </div>
                 </div>
