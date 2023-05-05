@@ -817,7 +817,7 @@ export default {
         },
 
         view_cart(value) {
-            if (value === false && this.cart_step == 6) {
+            if (!value && this.cart_step === 6) {
                 this.cart_step = 2
             }
         }
