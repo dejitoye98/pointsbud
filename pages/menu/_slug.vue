@@ -430,7 +430,8 @@
 
 
 
-                            <div class="menu__top__navigation" @click="openNavigation" v-if="customer">
+                            <div class="menu__top__navigation" @click="openNavigation" style="display: none;"
+                                v-if="customer">
                                 <svg width="18" height="18" viewBox="0 0 16 16" fill="none" @click="openNavigation"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
