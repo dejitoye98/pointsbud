@@ -430,7 +430,7 @@
 
 
 
-                            <div class="menu__top__navigation" @click="openNavigation">
+                            <div class="menu__top__navigation" @click="openNavigation" v-if="customer">
                                 <svg width="18" height="18" viewBox="0 0 16 16" fill="none" @click="openNavigation"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
@@ -1396,6 +1396,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     z-index: 100000000000000000000000000000000000000;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     width: 100%;
+    min-height: 100%;
 
 
     &__wrapper {
