@@ -243,7 +243,7 @@
                                 </div>
 
                                 <div>
-                                    <button @click="view_cart = false">Add to order</button>
+                                    <!--<button @click="view_cart = false">Add to order</button> -->
                                 </div>
                             </div>
 
@@ -557,11 +557,12 @@
                             {{ product.currency }} {{ product.unitprice | money }}
                         </div>
 
-                        <div class="product__cta">
+                        <!-- 
+                        <div class="product__cta">  
                             <button v-if="!isInCart(product)">Order item</button>
                             <button style="background: gold; color: black" v-else>View Order</button>
 
-                        </div>
+                        </div>-->
 
 
                         <!-- 
@@ -1069,7 +1070,7 @@ export default {
             })
             const slug = this.$route.params.slug;
 
-            const r_uid = Date.now();
+            const r_uid = window.localStorage.getItem('last_order') && JSON.parse(window.localStorage.getItem('last_order')).r_uid || Date.now();
             const space_id = this.$route.query.space_id;
             const space_type = this.$route.query.space_type;
 
@@ -1090,7 +1091,7 @@ export default {
             else {
                 this.socketClient.emit('add_to_order', {
                     token: this.$cookies.get('loyal-token'),
-                    r_uid,
+                    //r_uid: ,
                     business_slug: slug, business_id: this.business.id, items: orders,
                     vat: parseFloat(this.vat || 0),
                     consumption_tax: parseFloat(this.consumptionTax || 0),
@@ -1117,7 +1118,7 @@ export default {
 
                 this.socketClient.on(`processing-order`, (data) => {
                     this.cart_step = 6
-                    window.localStorage.setItem('last_order', JSON.stringify({ id: data.id }))
+                    window.localStorage.setItem('last_order', JSON.stringify({ id: data.id, r_uid: data.r_uid, created: Date.now() }))
 
                 })
 
