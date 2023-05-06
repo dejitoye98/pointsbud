@@ -126,12 +126,23 @@
                                 <div class="cart-modal__item__name">
                                     <div>
 
-                                        <p>{{ item.name }} <span class="cart-modal__item__quantity"><b> (x {{ item.quantity
-                                        }})
-                                                </b> </span>
+                                        <p>{{ item.name }}
                                         </p>
-                                        <!--<button>Change quantity</button>-->
-                                        <button @click="removeCartItem(item)">Remove</button>
+
+
+                                        <div style="display: flex;">
+
+                                            <p style="margin-right: 8px;"> (Qty: {{ item.quantity }})</p>
+                                            <!--<button>Change quantity</button>-->
+                                            <button @click="removeCartItem(item)"><svg width="20" height="16"
+                                                    viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M6.7 11.3C6.88334 11.4833 7.11667 11.575 7.4 11.575C7.68333 11.575 7.91667 11.4833 8.1 11.3L10 9.4L11.925 11.325C12.1083 11.5083 12.3333 11.6 12.6 11.6C12.8667 11.6 13.1 11.5 13.3 11.3C13.4833 11.1167 13.575 10.8833 13.575 10.6C13.575 10.3167 13.4833 10.0833 13.3 9.9L11.4 8L13.325 6.075C13.5083 5.89167 13.6 5.66667 13.6 5.4C13.6 5.13333 13.5 4.9 13.3 4.7C13.1167 4.51667 12.8833 4.425 12.6 4.425C12.3167 4.425 12.0833 4.51667 11.9 4.7L10 6.6L8.075 4.675C7.89167 4.49167 7.66667 4.4 7.4 4.4C7.13333 4.4 6.9 4.5 6.7 4.7C6.51667 4.88334 6.425 5.11667 6.425 5.4C6.425 5.68333 6.51667 5.91667 6.7 6.1L8.6 8L6.675 9.925C6.49167 10.1083 6.4 10.3333 6.4 10.6C6.4 10.8667 6.5 11.1 6.7 11.3ZM2 16C1.45 16 0.979002 15.804 0.587002 15.412C0.195002 15.02 -0.000664969 14.5493 1.69779e-06 14V2C1.69779e-06 1.45 0.196002 0.979002 0.588002 0.587002C0.980002 0.195002 1.45067 -0.000664969 2 1.69779e-06H18C18.55 1.69779e-06 19.021 0.196001 19.413 0.588001C19.805 0.980001 20.0007 1.45067 20 2V14C20 14.55 19.804 15.021 19.412 15.413C19.02 15.805 18.5493 16.0007 18 16H2Z"
+                                                        fill="#F24E1E" />
+                                                </svg>
+                                            </button>
+                                        </div>
+
                                     </div>
                                     <div class="points"
                                         v-if="loyalty_program && canUsePoints(item) || products_using_points.includes(item.id)">
@@ -1116,6 +1127,10 @@ export default {
                     this.paymentDetails = data;
                 })
 
+                this.socketClient.on('order-completed', (data) => {
+                    window.localStorage.removeItem('last_order')
+                })
+
                 this.socketClient.on(`processing-order`, (data) => {
                     this.cart_step = 6
 
@@ -1388,8 +1403,9 @@ export default {
 $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37);
 
 * {
-    font-family: 'Red Hat Display' !important;
+    //font-family: 'Red Hat Display' !important;
     touch-action: manipulation;
+    font-family: 'Open Sans', sans-serif;
 
 }
 
@@ -1428,7 +1444,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         color: white;
         font-size: 14px;
         font-weight: 600;
-        letter-spacing: 0.7px;
+        //letter-spacing: 0.7px;
         flex-direction: column;
         border-bottom: 1px solid rgba(86, 86, 86, 0.296);
 
@@ -1600,6 +1616,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         background: gold;
         color: black;
         align-items: center;
+        font-size: 18px;
 
         position: relative svg {
             margin-left: 5px;
@@ -1777,11 +1794,11 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 .cart-modal {
     min-width: fit-content;
     box-sizing: border-box;
-    letter-spacing: 0.6px;
+    //letter-spacing: 0.6px;
     padding: 20px;
 
     &__container {
-        padding: 24px;
+        padding: 8px;
     }
 
 
@@ -1838,7 +1855,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             font-family: "Google Sans", arial, sans-serif;
             font-size: 14px;
             height: 40px;
-            letter-spacing: 0.25px;
+            //letter-spacing: 0.25px;
             outline: none;
             overflow: hidden;
             padding: 0 12px;
@@ -1908,10 +1925,11 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     &__item {
         border-bottom: 1px solid whitesmoke;
         display: flex;
-        //grid-template-columns: 19% 49% 29%;
+        // grid-template-columns: 85% 10%;
         justify-content: space-between;
+
         padding: 16px 0;
-        align-items: flex-start;
+        align-items: center;
 
         &:last-of-type {
             border-bottom: 0px !important;
@@ -1945,8 +1963,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             font-weight: 500;
             margin-right: 16px;
 
-
-            button {
+            width button {
                 border: 0.1px solid $charcoal;
                 border-radius: 5px;
                 padding: 2px 8px;
@@ -1972,6 +1989,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             justify-content: flex-end;
             font-weight: 500;
             //padding: 20px;
+            white-space: nowrap;
         }
     }
 
@@ -1981,9 +1999,16 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         justify-content: space-between;
         padding: 8px 0;
 
+
         div {
+            margin-right: 8px;
+            max-width: 200px;
+
             &:last-of-type {
                 font-weight: 600;
+                margin-right: 0;
+                white-space: nowrap;
+                max-width: fit-content;
             }
         }
     }
@@ -2065,7 +2090,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         font-size: 15px;
         margin-top: 8px;
         text-transform: capitalize !important;
-        letter-spacing: 1.7px;
+        //letter-spacing: 1.7px;
     }
 
     &__price {
