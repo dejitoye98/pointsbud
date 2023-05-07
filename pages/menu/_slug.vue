@@ -571,29 +571,35 @@
                       
                     </div> -->
 
+                    <div v-for="(category, index) in categories" :key="index" class="menu__content__item">
+                        <div class="category-header-container">
 
-                    <div @click="showOrderModal(product)" class="product" v-for="(product, index) in filteredProducts"
-                        :key="index">
-                        <div class="product__container">
-                            <div class="product__image" v-if="product.thumbnail">
-                                <img :src="getProductCategoryImage(product.id)" alt="">
+                            <p class="category-header">{{ category.name }}</p>
+                        </div>
+                        <div :data-category="getCategory(product)" @click="showOrderModal(product)" class="product"
+                            v-for="(product, index) in getCategoryProducts(category.id)" :key="index">
+                            <div class="product__container">
+                                <div class="product__image" v-if="product.thumbnail">
+                                    <img :src="getProductCategoryImage(product.id)" alt="">
 
-                            </div>
+                                </div>
 
-                            <div class="product__content">
-                                <p class="product__name">{{ product.name }}</p>
+                                <div class="product__content">
+                                    <p class="product__name">{{ product.name }}</p>
 
-                                <p class="product__description">
-                                    <!--<TruncatedText :text="product.description" limit="100"></TruncatedText>-->
-                                    {{ product.description }}
-                                </p>
+                                    <p class="product__description">
+                                        <!--<TruncatedText :text="product.description" limit="100"></TruncatedText>-->
+                                        {{ product.description }}
+                                    </p>
 
-                                <div class="product__price">
-                                    {{ product.currency }} {{ product.unitprice | money }}
+                                    <div class="product__price">
+                                        {{ product.currency }} {{ product.unitprice | money }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
 
                     <div class="checkout-cart">
@@ -1003,6 +1009,12 @@ export default {
         }
     },
     methods: {
+        getCategoryProducts(category_id) {
+            return this.products.filter(p => p.category_id === category_id)
+        },
+        getCategory(product) {
+            return this.categories.find(c => c.id === product.category_id)?.name
+        },
         getProductCategoryImage(product_id) {
             try {
 
@@ -1426,6 +1438,30 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     //font-family: 'Red Hat Display' !important;
     touch-action: manipulation;
     font-family: 'Open Sans', sans-serif;
+
+}
+
+.category-header {
+    font-size: 20px;
+    //background-color: rgba(255, 217, 0, 0.283);
+    border-radius: 50px;
+
+    width: 40%;
+    margin: auto;
+    text-align: center;
+    font-weight: 600;
+    padding: 20px 16px;
+    margin-bottom: 30px;
+    //border: 1px solid grey;
+    font-size: 18px;
+    background: $dashboard-background-color;
+
+}
+
+.category-header-container {
+    border-bottom: 3px dashed lightgrey;
+    height: 36px;
+    margin-bottom: 30px;
 
 }
 
@@ -2450,6 +2486,11 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         padding-bottom: 300px;
         padding-top: 100px;
         margin-top: 100px;
+
+        &__item {
+            padding: 36px 0;
+            // background: rgba(255, 217, 0, 0.333);
+        }
 
     }
 
