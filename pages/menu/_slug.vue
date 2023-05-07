@@ -435,7 +435,7 @@
 
                 <!------ NAVIGATION -->
 
-                <div class="menu__top">
+                <div class="menu__top" id="menu-top">
                     <div class="menu__top__container">
                         <div class="menu__top__header">
 
@@ -717,7 +717,9 @@
 
 
 <script>
-import socket from "socket.io-client"
+import socket from "socket.io-client";
+
+
 export default {
     data() {
         return {
@@ -783,6 +785,7 @@ export default {
     watch: {
         loading_data(value) {
             if (value === false) {
+                this.initializeScrollingCategories()
                 /*
                 setTimeout(() => {
                     const category_container = window.document.getElementsByClassName('menu__top')[0];
@@ -815,6 +818,9 @@ export default {
 
 
             }
+            else {
+
+            }
         },
         show_order_modal(value) {
             if (!value) {
@@ -841,6 +847,9 @@ export default {
         }
     },
     async created() {
+
+        //scroll
+
 
 
         window.localStorage.removeItem('cart')
@@ -1009,6 +1018,13 @@ export default {
         }
     },
     methods: {
+        initializeScrollingCategories() {
+            //alert(JSON.stringify(menu_top))
+            window.addEventListener('scroll', () => {
+                const menu_top = document.getElementById('menu-top')
+                console.log(menu_top.offsetHeight)
+            })
+        },
         getCategoryProducts(category_id) {
             return this.products.filter(p => p.category_id === category_id)
         },
@@ -1446,7 +1462,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     //background-color: rgba(255, 217, 0, 0.283);
     border-radius: 50px;
 
-    width: 40%;
+    width: 90%;
     margin: auto;
     text-align: center;
     font-weight: 600;
