@@ -572,9 +572,10 @@
                     </div> -->
 
 
-                    <div class="product" v-for="(product, index) in filteredProducts" :key="index">
+                    <div @click="showOrderModal(product)" class="product" v-for="(product, index) in filteredProducts"
+                        :key="index">
                         <div class="product__container">
-                            <div class="product__image">
+                            <div class="product__image" v-if="product.thumbnail">
                                 <img :src="product.thumbnail || business && business.logo" alt="">
 
                             </div>
@@ -582,7 +583,10 @@
                             <div class="product__content">
                                 <p class="product__name">{{ product.name }}</p>
 
-                                <p class="product__description">{{ product.description }}</p>
+                                <p class="product__description">
+                                    <!--<TruncatedText :text="product.description" limit="100"></TruncatedText>-->
+                                    {{ product.description }}
+                                </p>
 
                                 <div class="product__price">
                                     {{ product.currency }} {{ product.unitprice | money }}
@@ -592,8 +596,8 @@
                     </div>
 
 
-                    <div class="checkout-cart" v-if="cart.length > 0" @click="viewCart">
-                        <button>
+                    <div class="checkout-cart">
+                        <!--  <button>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 8px;"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -614,7 +618,7 @@
                             Complete your order
                             <span> ({{ cart.length }} items)</span>
 
-                        </button>
+                        </button>-->
 
                     </div>
 
@@ -1601,6 +1605,9 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     bottom: 0;
     left: 0;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background: white;
+    height: 75px;
+    border-top: 0.2px solid rgb(168, 168, 168);
 
 
     button {
@@ -2147,28 +2154,34 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 
 
 .product {
-    width: 90%;
+    cursor: pointer;
     margin: auto;
-    //background: white;
+    background: white;
     margin-top: 10px;
     // border-radius: 10px;
     ///@include card;
-    background: white;
+    // background: white;
+    height: max-content;
+    //max-height: 250px;
+    box-sizing: border-box;
+    padding: 16px;
 
 
     &__container {
-        display: flex;
-        align-items: fill;
+        //display: flex;
+        display: grid;
+        grid-template-columns: 100%;
+
 
 
 
     }
 
     &__image {
-        width: 200px;
-        height: 100%;
+        width: 100%;
+        //height: 100%;
         //padding: 2px 0;
-        //border: 1px solid grey;
+        display: flex;
         //margin-right: 16px;
         //border-top-left-radius: 10px;
         //border-bottom-left-radius: 10px;
@@ -2176,8 +2189,9 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 
         img {
             width: 100%;
-            height: 100%;
-            object-fit: contain;
+            height: 200px;
+            margin: auto;
+            object-fit: cover;
             // border-radius: 10px;
             //border-top-left-radius: 10px;
             // border-bottom-left-radius: 10px;
@@ -2187,7 +2201,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 
     &__content {
         width: 100%;
-        padding: 16px 16px;
+        padding: 8px 8px;
     }
 
     &__name {
@@ -2202,6 +2216,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         line-height: 1.5;
         margin-bottom: 16px;
         width: 100%;
+        text-overflow: ellipsis;
 
     }
 
@@ -2409,7 +2424,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 
     &__content {
         padding-bottom: 300px;
-        padding-top: 150px;
+        padding-top: 100px;
         margin-top: 100px;
 
     }
