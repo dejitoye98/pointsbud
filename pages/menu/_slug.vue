@@ -2151,7 +2151,8 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     margin: auto;
     background: white;
     margin-top: 10px;
-    border-radius: 10px;
+    // border-radius: 10px;
+    @include card;
 
     &__container {
         display: flex;
@@ -2161,11 +2162,11 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     }
 
     &__image {
-        width: 30%;
+        width: 150px;
         border: 1px solid black;
-        margin-right: 16px;
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
+        //margin-right: 16px;
+        //border-top-left-radius: 10px;
+        //border-bottom-left-radius: 10px;
 
 
         img {
@@ -2173,27 +2174,29 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             height: 100%;
             object-fit: cover;
             // border-radius: 10px;
-            border-top-left-radius: 10px;
-            border-bottom-left-radius: 10px;
+            //border-top-left-radius: 10px;
+            // border-bottom-left-radius: 10px;
 
         }
     }
 
     &__content {
-        width: 70%;
-        padding: 16px 8px;
+        width: 100%;
+        padding: 16px 16px;
     }
 
     &__name {
-        font-size: 17px;
+        font-size: 16px;
         margin-bottom: 8px;
         font-weight: 600;
     }
 
     &__description {
-        font-size: 15px;
+        font-size: 14px;
         color: $faint;
+        line-height: 1.8;
         margin-bottom: 8px;
+        width: 100%;
 
     }
 
@@ -2201,10 +2204,11 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         background-color: rgba(255, 217, 0, 0.396);
         color: white;
         width: fit-content;
-        padding: 8px 10px;
+        padding: 8px 16px;
         border-radius: 20px;
         color: black;
-        font-weight: 600;
+        font-weight: 400;
+        font-size: 15px;
 
 
     }
