@@ -575,9 +575,8 @@
                     <div @click="showOrderModal(product)" class="product" v-for="(product, index) in filteredProducts"
                         :key="index">
                         <div class="product__container">
-                            <div class="product__image">
-                                <img :src="product.thumbnail || 'https://alcaratello.com/wp-content/uploads/2021/03/meal-placeholder.jpg'"
-                                    alt="">
+                            <div class="product__image" v-if="product.thumbnail">
+                                <img :src="getProductCategoryImage(product.id)" alt="">
 
                             </div>
 
@@ -1004,6 +1003,25 @@ export default {
         }
     },
     methods: {
+        getProductCategoryImage(product_id) {
+            try {
+
+                const product = this.products.find(p => p.id === product_id);
+
+                if (product.thumbnail) return product.thumbnail;
+
+                const category = this.categories.find(c => product.category_id);
+                if (category && category.type.toLowerCase() === 'food') {
+                    return 'https://alcaratello.com/wp-content/uploads/2021/03/meal-placeholder.jpg'
+                }
+                else {
+                    return 'https://www.mixlabcocktails.com/images/cocktail-image/image-placeholder@3x.png'
+                }
+            }
+            catch (e) {
+                return null
+            }
+        },
 
         openNavigation() {
             this.show_navigation = true
