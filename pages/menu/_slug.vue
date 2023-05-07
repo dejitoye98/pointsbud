@@ -2149,21 +2149,24 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 .product {
     width: 90%;
     margin: auto;
-    background: white;
+    //background: white;
     margin-top: 10px;
     // border-radius: 10px;
-    @include card;
+    ///@include card;
+    background: transparent;
+
 
     &__container {
         display: flex;
+        align-items: center;
 
 
 
     }
 
     &__image {
-        width: 300px;
-        border: 1px solid black;
+        width: 200px;
+        padding: 20px 0;
         //margin-right: 16px;
         //border-top-left-radius: 10px;
         //border-bottom-left-radius: 10px;
@@ -2193,8 +2196,8 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 
     &__description {
         font-size: 14px;
-        color: $faint;
-        line-height: 1.8;
+        color: black;
+        line-height: 1.5;
         margin-bottom: 16px;
         width: 100%;
 
