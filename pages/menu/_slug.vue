@@ -2166,7 +2166,8 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 
     &__image {
         width: 200px;
-        padding: 20px 0;
+        //padding: 2px 0;
+        //border: 1px solid grey;
         //margin-right: 16px;
         //border-top-left-radius: 10px;
         //border-bottom-left-radius: 10px;
