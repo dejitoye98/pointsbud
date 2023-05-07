@@ -548,15 +548,14 @@
                 </div>
 
                 <div class="menu__content" id="menu-content">
+
+                    <!-- 
                     <div class="product" v-for="(product, index) in filteredProducts" :key="index"
                         @click="showOrderModal(product)">
                         <div class="product__image">
                             <img :src="product.thumbnail || business && business.logo" alt="">
                         </div>
-                        <!-- 
-                        <div class="product__cart">
-                            Added to cart
-                        </div> -->
+                        
                         <div class="product__name">
                             {{ product.name }}
                         </div>
@@ -568,30 +567,28 @@
                             {{ product.currency }} {{ product.unitprice | money }}
                         </div>
 
-                        <!-- 
-                        <div class="product__cta">  
-                            <button v-if="!isInCart(product)">Order item</button>
-                            <button style="background: gold; color: black" v-else>View Order</button>
-
-                        </div>-->
+                      
+                      
+                    </div> -->
 
 
-                        <!-- 
-    
-                        <div style="display: flex">
-    
-                            <div class="product__points-earn">
-                                <img src="../../static/coins.png" />
-                                {{ product.points_to_earn }}
-    
+                    <div class="product" v-for="(product, index) in filteredProducts" :key="index">
+                        <div class="product__container">
+                            <div class="product__image">
+                                <img :src="product.thumbnail || business && business.logo" alt="">
+
                             </div>
-    
-                            <div class="product__points-deduct">
-                                <img src="../../static/coins.png" />
-                                {{ product.points_to_deduct }}
-    
+
+                            <div class="product__content">
+                                <p class="product__name">{{ product.name }}</p>
+
+                                <p class="product__description">{{ product.description }}</p>
+
+                                <div class="product__price">
+                                    {{ product.currency }} {{ product.unitprice | money }}
+                                </div>
                             </div>
-                        </div>-->
+                        </div>
                     </div>
 
 
@@ -2014,6 +2011,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     }
 }
 
+/*
 .product {
     padding: 24px;
     background: white;
@@ -2145,6 +2143,73 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             //letter-spacing: 0.8px;
         }
     }
+}*/
+
+
+.product {
+    width: 90%;
+    margin: auto;
+    background: white;
+    margin-top: 10px;
+    border-radius: 10px;
+
+    &__container {
+        display: flex;
+
+
+
+    }
+
+    &__image {
+        width: 30%;
+        border: 1px solid black;
+        margin-right: 16px;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            // border-radius: 10px;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+
+        }
+    }
+
+    &__content {
+        width: 70%;
+        padding: 16px 8px;
+    }
+
+    &__name {
+        font-size: 17px;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    &__description {
+        font-size: 15px;
+        color: $faint;
+        margin-bottom: 8px;
+
+    }
+
+    &__price {
+        background-color: rgba(255, 217, 0, 0.396);
+        color: white;
+        width: fit-content;
+        padding: 8px 10px;
+        border-radius: 20px;
+        color: black;
+        font-weight: 600;
+
+
+    }
+
+
 }
 
 .menu {
@@ -2334,20 +2399,29 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     }
 
     &__content {
-        display: grid;
-        grid-template-columns: 23% 23% 23% 23%;
-        justify-content: space-between;
+        padding-bottom: 300px;
+        padding-top: 150px;
+        margin-top: 100px;
+
+    }
+
+    /* &__content {
+        //display: grid;
+        //grid-template-columns: 23% 23% 23% 23%;
+        //justify-content: space-between;
         margin: auto;
+        display: flex;
+        flex-direction: column;
         margin-top: 100px;
         width: 90%;
         padding-bottom: 300px;
         padding-top: 150px;
 
         @include media("<=t") {
-            grid-template-columns: 100%;
+            //  grid-template-columns: 100%;
         }
 
-    }
+    }*/
 
     .logo {
         width: 50%;
