@@ -2195,7 +2195,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         font-size: 14px;
         color: $faint;
         line-height: 1.8;
-        margin-bottom: 8px;
+        margin-bottom: 16px;
         width: 100%;
 
     }
@@ -2204,7 +2204,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         background-color: rgba(255, 217, 0, 0.396);
         color: white;
         width: fit-content;
-        padding: 8px 16px;
+        padding: 3px 16px;
         border-radius: 20px;
         color: black;
         font-weight: 400;
