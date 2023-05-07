@@ -2162,7 +2162,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     }
 
     &__image {
-        width: 150px;
+        width: 300px;
         border: 1px solid black;
         //margin-right: 16px;
         //border-top-left-radius: 10px;
