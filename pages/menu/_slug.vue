@@ -575,8 +575,9 @@
                     <div @click="showOrderModal(product)" class="product" v-for="(product, index) in filteredProducts"
                         :key="index">
                         <div class="product__container">
-                            <div class="product__image" v-if="product.thumbnail">
-                                <img :src="product.thumbnail || business && business.logo" alt="">
+                            <div class="product__image">
+                                <img :src="product.thumbnail || 'https://alcaratello.com/wp-content/uploads/2021/03/meal-placeholder.jpg'"
+                                    alt="">
 
                             </div>
 
@@ -2191,7 +2192,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
             width: 100%;
             height: 200px;
             margin: auto;
-            object-fit: cover;
+            object-fit: contain;
             // border-radius: 10px;
             //border-top-left-radius: 10px;
             // border-bottom-left-radius: 10px;
@@ -2208,6 +2209,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         font-size: 16px;
         margin-bottom: 8px;
         font-weight: 600;
+        text-align: center;
     }
 
     &__description {
@@ -2217,6 +2219,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         margin-bottom: 16px;
         width: 100%;
         text-overflow: ellipsis;
+        text-align: center;
 
     }
 
@@ -2229,6 +2232,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         color: black;
         font-weight: 400;
         font-size: 15px;
+        margin: auto;
 
 
     }
