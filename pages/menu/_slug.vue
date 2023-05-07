@@ -2153,12 +2153,12 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     margin-top: 10px;
     // border-radius: 10px;
     ///@include card;
-    background: transparent;
+    background: white;
 
 
     &__container {
         display: flex;
-        align-items: center;
+        align-items: fill;
 
 
 
@@ -2166,6 +2166,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 
     &__image {
         width: 200px;
+        height: 100%;
         //padding: 2px 0;
         //border: 1px solid grey;
         //margin-right: 16px;
@@ -2176,7 +2177,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
         img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             // border-radius: 10px;
             //border-top-left-radius: 10px;
             // border-bottom-left-radius: 10px;
