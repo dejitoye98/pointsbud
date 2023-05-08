@@ -2327,7 +2327,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     cursor: pointer;
     margin: auto;
     background: white;
-    margin-top: 10px;
+    margin-top: 20px;
     // border-radius: 10px;
     ///@include card;
     // background: white;
@@ -2335,7 +2335,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     //max-height: 250px;
     box-sizing: border-box;
     padding: 16px;
-    width: 95%;
+    width: 90%;
 
 
 
