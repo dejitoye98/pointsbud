@@ -1560,7 +1560,8 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     //background-color: rgba(255, 217, 0, 0.283);
     border-radius: 50px;
 
-    width: 90%;
+    // width: 90%;
+    width: fit-content;
     margin: auto;
     text-align: center;
     font-weight: 600;
@@ -1575,8 +1576,8 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
 .category-header-container {
     border-bottom: 3px dashed lightgrey;
     height: 36px;
-    margin-bottom: 30px;
-
+    margin-bottom: 50px;
+    //padding-bottom: 100px;
 }
 
 
@@ -1775,7 +1776,7 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     left: 0;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     background: white;
-    height: 75px;
+    height: 60px;
     border-top: 0.2px solid rgb(168, 168, 168);
 
 
