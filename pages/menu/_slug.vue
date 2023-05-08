@@ -809,12 +809,12 @@ export default {
                     //alert(element_nav)
 
                     document.getElementById('categories-list').scrollBy({
-                        left: element_offset_left
+                        left: element_offset_left - 20
                     })
                 }
                 else if (element_offset_left < 0) {
                     document.getElementById('categories-list').scrollBy({
-                        left: element_offset_left
+                        left: element_offset_left - 20
                     })
                 }
             }
