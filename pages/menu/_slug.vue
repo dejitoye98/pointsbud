@@ -792,32 +792,36 @@ export default {
             //this.category_ui_elements = value;
         },
         chosenCategory(value) {
-            //alert(value)
+            if (value && document.getElementById(value)) {
 
-            const element_nav = document.getElementById(value + "_nav");
+                document.getElementById(value).scrollIntoView({ behavior: 'smooth' })
+                const element_nav = document.getElementById(value + "_nav");
 
-            if (element_nav) {
+                if (element_nav) {
 
-                const element_offset_left = element_nav.getBoundingClientRect().left;
-                const element_offset_right = element_nav.getBoundingClientRect().right;
+                    const element_offset_left = element_nav.getBoundingClientRect().left;
+                    const element_offset_right = element_nav.getBoundingClientRect().right;
 
-                // alert(element_offset_right)
+                    // alert(element_offset_right)
 
 
 
-                if (element_offset_left + 50 > window.innerWidth) {
-                    //alert(element_nav)
+                    if (element_offset_left + 50 > window.innerWidth) {
+                        //alert(element_nav)
 
-                    document.getElementById('categories-list').scrollBy({
-                        left: element_offset_left - 20
-                    })
-                }
-                else if (element_offset_left < 0) {
-                    document.getElementById('categories-list').scrollBy({
-                        left: element_offset_left - 20
-                    })
+                        document.getElementById('categories-list').scrollBy({
+                            left: element_offset_left - 20
+                        })
+                    }
+                    else if (element_offset_left < 0) {
+                        document.getElementById('categories-list').scrollBy({
+                            left: element_offset_left - 20
+                        })
+                    }
                 }
             }
+            //alert(value)
+
         },
         loading_data(value) {
             if (value === false) {
@@ -1088,7 +1092,7 @@ export default {
                         const nav = document.getElementById(category.name + '_nav');
                         const navOffset = document.getElementById(category.name + '_nav')?.getBoundingClientRect().left
 
-                        if (distance < 150 && distance > 100) {
+                        if (distance > 100 && distance < 150) {
                             //console.log(element.getBoundingClientRect().top)
                             this.chosenCategory = category.name
 
