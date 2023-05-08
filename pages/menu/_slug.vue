@@ -282,7 +282,8 @@
 
 
             <!--- ORDER MODAL-->
-            <BaseModal :show_header="false" :show_footer="false" v-if="show_order_modal" @close="show_order_modal = false">
+            <BaseModal :show_header="false" :show_footer="false" v-if="show_order_modal"
+                @close="show_order_modal = false; focused_product = null">
                 <template #header>
                     <div class="order-modal__header" @click.stop>
 
