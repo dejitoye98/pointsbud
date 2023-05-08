@@ -803,13 +803,16 @@ export default {
 
                 // alert(element_offset_right)
 
-                if (element_offset_left > window.innerWidth) {
+
+
+                if (element_offset_left + 50 > window.innerWidth) {
                     //alert(element_nav)
+
                     document.getElementById('categories-list').scrollBy({
-                        left: element_offset_left - (element_offset_right - element_offset_left) + 32
+                        left: element_offset_left
                     })
                 }
-                else {
+                else if (element_offset_left < 0) {
                     document.getElementById('categories-list').scrollBy({
                         left: element_offset_left
                     })
