@@ -794,7 +794,10 @@ export default {
         chosenCategory(value) {
             if (value && document.getElementById(value)) {
 
-                document.getElementById(value).scrollIntoView({ behavior: 'smooth' })
+                document.getElementById(value).scrollIntoView({ behavior: 'smooth' });
+                window.scrollBy({
+                    top: -200
+                })
                 const element_nav = document.getElementById(value + "_nav");
 
                 if (element_nav) {
