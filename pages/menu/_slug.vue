@@ -460,7 +460,7 @@
 
 
                         <div class="menu__top__categories" id="categories-list">
-                            <div :class="[chosenCategory === category.name ? 'selected' : '']"
+                            <div :class="[chosenCategory === category.name ? 'selected' : '']" :id="category.name + '_nav'"
                                 @click="selectCategory(category)" class="menu__top__categories__category"
                                 v-for="(category, index) in categories" :key="index">{{ category.name }}</div>
 
@@ -571,7 +571,8 @@
                       
                     </div> -->
 
-                    <div v-for="(category, index) in categories" :key="index" class="menu__content__item">
+                    <div v-for="(category, index) in categories" :key="index" class="menu__content__item"
+                        :id="category.name">
                         <div class="category-header-container">
 
                             <p class="category-header">{{ category.name }}</p>
@@ -777,15 +778,47 @@ export default {
             receipt_details: null,
             prefs: null,
 
-            loyalty_program: null
+            loyalty_program: null,
+
+
+            category_ui_elements: [],
+            scroll_position: 0,
 
         }
     },
 
     watch: {
+        categories(value) {
+            //this.category_ui_elements = value;
+        },
+        chosenCategory(value) {
+            //alert(value)
+
+            const element_nav = document.getElementById(value + "_nav");
+
+            if (element_nav) {
+
+                const element_offset_left = element_nav.getBoundingClientRect().left;
+                const element_offset_right = element_nav.getBoundingClientRect().right;
+
+                // alert(element_offset_right)
+
+                if (element_offset_left > window.innerWidth) {
+                    //alert(element_nav)
+                    document.getElementById('categories-list').scrollBy({
+                        left: element_offset_left - (element_offset_right - element_offset_left) + 32
+                    })
+                }
+                else {
+                    document.getElementById('categories-list').scrollBy({
+                        left: element_offset_left
+                    })
+                }
+            }
+        },
         loading_data(value) {
             if (value === false) {
-                this.initializeScrollingCategories()
+                // this.initializeScrollingCategories()
                 /*
                 setTimeout(() => {
                     const category_container = window.document.getElementsByClassName('menu__top')[0];
@@ -846,9 +879,15 @@ export default {
             }
         }
     },
+    mounted() {
+    },
     async created() {
 
+        this.initializeScrollingCategories()
+
+
         //scroll
+
 
 
 
@@ -1020,9 +1059,61 @@ export default {
     methods: {
         initializeScrollingCategories() {
             //alert(JSON.stringify(menu_top))
+
+
+            //alert(category_elements)
             window.addEventListener('scroll', () => {
-                const menu_top = document.getElementById('menu-top')
-                console.log(menu_top.offsetHeight)
+                //console.log(this.category_ui_elements)
+
+                try {
+
+                    //alert('d')
+                    //console.log(window.document.dataset)
+                    const menu_top = document.getElementById('menu-top')
+                    //console.log(menu_top)
+                    this.categories.forEach(category => {
+
+
+
+
+                        let element = document.getElementById(category.name)
+
+                        var elDistanceToTop = window.pageYOffset;
+
+
+                        const distance = element.getBoundingClientRect().top;
+                        const nav = document.getElementById(category.name + '_nav');
+                        const navOffset = document.getElementById(category.name + '_nav')?.getBoundingClientRect().left
+
+                        if (distance < 150 && distance > 100) {
+                            //console.log(element.getBoundingClientRect().top)
+                            this.chosenCategory = category.name
+
+                            console.log('nav')
+                            console.log(category.name + '_nav')
+                            console.log(navOffset)
+                            console.log('window width')
+                            console.log(window.innerWidth)
+
+
+
+
+
+
+                        }
+
+                        /* if (element.offsetHeight < menu_top.offsetHeight + 100) {
+                             console.log('*****')
+                             console.log('*****')
+                             console.log(element)
+                             console.log(menu_top.offsetHeight)
+                             console.log('*****')
+                             console.log('*****')
+                         }*/
+                    })
+                } catch (e) {
+                    console.log(e)
+                }
             })
         },
         getCategoryProducts(category_id) {
