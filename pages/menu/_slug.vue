@@ -71,6 +71,10 @@
         <template v-if="!loading_data">
 
 
+            <MenuRecommenderModal :categories="categories" :business_id="business.id" :products="products">
+            </MenuRecommenderModal>
+
+
             <!----  CART MODAL-->
 
             <BaseModal v-if="view_cart && cart.length > 0" @close="view_cart = false">
@@ -578,7 +582,10 @@
 
                             <p class="category-header">{{ category.name }}</p>
                         </div>
-                        <div :data-category="getCategory(product)" @click="showOrderModal(product)" class="product"
+                        <!--  <div :data-category="getCategory(product)" @click="showOrderModal(product)" class="product"
+                            v-for="(product, index) in getCategoryProducts(category.id)" :key="index"> -->
+
+                        <div :data-category="getCategory(product)" class="product"
                             v-for="(product, index) in getCategoryProducts(category.id)" :key="index">
                             <div class="product__container">
                                 <div class="product__image" v-if="product.thumbnail">
@@ -627,6 +634,11 @@
                             <span> ({{ cart.length }} items)</span>
 
                         </button>-->
+
+                        <button>
+
+                            Get Recommmendation
+                        </button>
 
                     </div>
 
@@ -720,20 +732,18 @@
 
 <script>
 import socket from "socket.io-client";
+import MenuRecommenderModal from "../../components/modals/menu-recommender-modal.vue";
 
 
 export default {
     data() {
         return {
             show_navigation: false,
-            search_term: '',
-
+            search_term: "",
             loading_data: true,
             flag_creating_order: false,
-
             created_order: null,
             business: null,
-
             categories: [],
             products: null,
             customer: null,
@@ -742,7 +752,6 @@ export default {
                 name: "Deji Atoyebi"
             },*/
             business_customer: null,
-
             chosenCategory: null,
             show_order_modal: false,
             focused_product: {
@@ -750,7 +759,7 @@ export default {
             },
             order: {
                 quantity: 1,
-                customer_comment: '',
+                customer_comment: "",
                 to_add_comment: false
             },
             quantity: 0,
@@ -758,74 +767,53 @@ export default {
             view_cart: false,
             cart_step: 1,
             signed_in: false,
-
             points_in_use: 0,
             products_using_points: [],
-
             get_order_interval: null,
             points_earned: 0,
-
             eligible_offers: [{
-                offer: 'discount',
-                title: '50% discount on next purchase'
+                offer: "discount",
+                title: "50% discount on next purchase"
             }],
-
             paymentDetails: null,
-
-
             socketClient: null,
-
             show_receipt_modal: false,
             receipt_details: null,
             prefs: null,
-
             loyalty_program: null,
-
-
             category_ui_elements: [],
             scroll_position: 0,
-
-        }
+        };
     },
-
     watch: {
         categories(value) {
             //this.category_ui_elements = value;
         },
         chosenCategory(value) {
             if (value && document.getElementById(value)) {
-
-                document.getElementById(value).scrollIntoView({ behavior: 'smooth' });
+                document.getElementById(value).scrollIntoView({ behavior: "smooth" });
                 window.scrollBy({
                     top: -200
-                })
+                });
                 const element_nav = document.getElementById(value + "_nav");
-
                 if (element_nav) {
-
                     const element_offset_left = element_nav.getBoundingClientRect().left;
                     const element_offset_right = element_nav.getBoundingClientRect().right;
-
                     // alert(element_offset_right)
-
-
-
                     if (element_offset_left + 50 > window.innerWidth) {
                         //alert(element_nav)
-
-                        document.getElementById('categories-list').scrollBy({
+                        document.getElementById("categories-list").scrollBy({
                             left: element_offset_left - 20
-                        })
+                        });
                     }
                     else if (element_offset_left < 0) {
-                        document.getElementById('categories-list').scrollBy({
+                        document.getElementById("categories-list").scrollBy({
                             left: element_offset_left - 20
-                        })
+                        });
                     }
                 }
             }
             //alert(value)
-
         },
         loading_data(value) {
             if (value === false) {
@@ -845,143 +833,97 @@ export default {
 
                     //alert()
                 }, 2000)*/
-
-
                 setTimeout(() => {
-
-                    document.getElementById('scroll-right').addEventListener('click', (e) => {
+                    document.getElementById("scroll-right").addEventListener("click", (e) => {
                         //alert('s')
                         //alert('s')
-                        let container_width = window.getComputedStyle(document.getElementsByClassName('menu__top__container')[0]).width;
-                        container_width = container_width.split('px')[0]
-                        container_width = parseInt(container_width)
-                        document.getElementById('categories-list').scrollLeft += container_width - 100;
-                    })
-                }, 2000)
-
-
-
+                        let container_width = window.getComputedStyle(document.getElementsByClassName("menu__top__container")[0]).width;
+                        container_width = container_width.split("px")[0];
+                        container_width = parseInt(container_width);
+                        document.getElementById("categories-list").scrollLeft += container_width - 100;
+                    });
+                }, 2000);
             }
             else {
-
             }
         },
         show_order_modal(value) {
             if (!value) {
                 // this.to_add_comment = false;
-                this.order.customer_comment = ''
-
+                this.order.customer_comment = "";
             }
         },
         cart_step(value) {
             if (value === 1) {
                 // Emit an event to the server
                 google.accounts.id.initialize({
-                    client_id: '309539494248-ir1uocjnkh6h8t3in55vn4r2m9jmt777.apps.googleusercontent.com',
-                    callback: this.googleSignIn, //method to run after user clicks the Google sign in button
-                    context: 'signin'
-                })
+                    client_id: "309539494248-ir1uocjnkh6h8t3in55vn4r2m9jmt777.apps.googleusercontent.com",
+                    callback: this.googleSignIn,
+                    context: "signin"
+                });
             }
         },
-
         view_cart(value) {
             if (!value && this.cart_step === 6) {
-                this.cart_step = 2
+                this.cart_step = 2;
             }
         }
     },
     mounted() {
     },
     async created() {
-
-        this.initializeScrollingCategories()
-
-
+        this.initializeScrollingCategories();
         //scroll
-
-
-
-
-        window.localStorage.removeItem('cart')
-
+        window.localStorage.removeItem("cart");
         this.$api.get(`/businesses?slug=${this.$route.params.slug}`).then(resp => {
             this.business = resp.data.data;
-            this.checkForLastOrder()
-            this.getLoyaltyProgram()
-            this.getPreferences()
-            this.getCategories()
+            this.checkForLastOrder();
+            this.getLoyaltyProgram();
+            this.getPreferences();
+            this.getCategories();
             this.getProducts();
             this.computeCartFromLocalStorage();
             this.isSignedIn();
-
-
-
-        })
-
-
-
+        });
     },
     mounted() {
         this.socketClient = socket(this.$config.SOCKET_BASE); // Replace with your server URL
-
         if (this.$route.query.receipt_generated) {
-            this.getReceipt()
+            this.getReceipt();
             //this.show_receipt_modal = true;
         }
         // Add your event handlers here
-        this.socketClient.on('connect', () => {
-            console.log('Connected to server');
+        this.socketClient.on("connect", () => {
+            console.log("Connected to server");
         });
-
-        this.socketClient.on('disconnect', () => {
-            console.log('Disconnected from server');
+        this.socketClient.on("disconnect", () => {
+            console.log("Disconnected from server");
         });
-
-
         if (google) {
-
             // Emit an event to the server
             google.accounts.id.initialize({
-                client_id: '309539494248-ir1uocjnkh6h8t3in55vn4r2m9jmt777.apps.googleusercontent.com',
-                callback: this.googleSignIn, //method to run after user clicks the Google sign in button
-                context: 'signin'
-            })
+                client_id: "309539494248-ir1uocjnkh6h8t3in55vn4r2m9jmt777.apps.googleusercontent.com",
+                callback: this.googleSignIn,
+                context: "signin"
+            });
         }
-
-
-        this.initializeGoogleSignin()
-
-
-
-
+        this.initializeGoogleSignin();
         // render button
-
     },
     computed: {
-
         filteredProducts() {
             if (this.products) {
                 let productsNotInCart = this.products;
                 const category = this.categories.find(c => c.name === this.chosenCategory);
-
                 if (category && !this.search_term) {
-
-                    productsNotInCart = productsNotInCart.filter(item => parseInt(item.category_id) === parseInt(category.id)) || []
-
+                    productsNotInCart = productsNotInCart.filter(item => parseInt(item.category_id) === parseInt(category.id)) || [];
                 }
-                else if (this.search_term !== '' && this.search_term !== ' ') {
-                    productsNotInCart = productsNotInCart.filter(item => item.name && item.name.toLowerCase().indexOf(this.search_term.toLowerCase()) > -1 || (item.description && item.description.toLowerCase().indexOf(this.search_item && this.search_term.toLowerCase()) > -1))
-
+                else if (this.search_term !== "" && this.search_term !== " ") {
+                    productsNotInCart = productsNotInCart.filter(item => item.name && item.name.toLowerCase().indexOf(this.search_term.toLowerCase()) > -1 || (item.description && item.description.toLowerCase().indexOf(this.search_item && this.search_term.toLowerCase()) > -1));
                 }
-
-
-                return productsNotInCart
-
-
+                return productsNotInCart;
             }
-
-            return []
-
+            return [];
             /*
             if (this.products) {
     
@@ -1009,13 +951,12 @@ export default {
                 return this.products.filter(product => product.product_categories.find(item => item.category_id === category_id))
             }
             return []*/
-
         },
         computedCart() {
-            const cart = window.localStorage.getItem('cart');
-            if (cart !== "null" && cart) return cart;
-
-            return []
+            const cart = window.localStorage.getItem("cart");
+            if (cart !== "null" && cart)
+                return cart;
+            return [];
         },
         cartTotal() {
             let total = 0;
@@ -1025,42 +966,31 @@ export default {
                     total += price;
                 }
             });
-
             // consumption tax and vat;
-
-
-            let vat = this.getPreference('vat')
-            vat = vat && vat.value || 0
-
-
+            let vat = this.getPreference("vat");
+            vat = vat && vat.value || 0;
             if (vat) {
-                vat = parseFloat((vat / 100) * total)
+                vat = parseFloat((vat / 100) * total);
             }
             //  alert(consumption_tax)
-            return total
-
+            return total;
         },
-
         consumptionTax() {
             // consumption tax and vat;
-            let consumption_tax = this.getPreference('consumption_tax')
+            let consumption_tax = this.getPreference("consumption_tax");
             consumption_tax = consumption_tax && consumption_tax.value || 0;
             if (consumption_tax) {
-                consumption_tax = parseFloat((consumption_tax / 100) * this.cartTotal).toFixed(2)
+                consumption_tax = parseFloat((consumption_tax / 100) * this.cartTotal).toFixed(2);
             }
-            return consumption_tax
-
+            return consumption_tax;
         },
         vat() {
-            let vat = this.getPreference('vat')
-            vat = vat && vat.value || 0
-
-
+            let vat = this.getPreference("vat");
+            vat = vat && vat.value || 0;
             if (vat) {
-                vat = parseFloat((vat / 100) * this.cartTotal).toFixed(2)
+                vat = parseFloat((vat / 100) * this.cartTotal).toFixed(2);
             }
-
-            return vat
+            return vat;
             //  
         },
         totalPointsEarned() {
@@ -1070,49 +1000,29 @@ export default {
     methods: {
         initializeScrollingCategories() {
             //alert(JSON.stringify(menu_top))
-
-
             //alert(category_elements)
-            window.addEventListener('scroll', () => {
+            window.addEventListener("scroll", () => {
                 //console.log(this.category_ui_elements)
-
                 try {
-
                     //alert('d')
                     //console.log(window.document.dataset)
-                    const menu_top = document.getElementById('menu-top')
+                    const menu_top = document.getElementById("menu-top");
                     //console.log(menu_top)
                     this.categories.forEach(category => {
-
-
-
-
-                        let element = document.getElementById(category.name)
-
+                        let element = document.getElementById(category.name);
                         var elDistanceToTop = window.pageYOffset;
-
-
                         const distance = element.getBoundingClientRect().top;
-                        const nav = document.getElementById(category.name + '_nav');
-                        const navOffset = document.getElementById(category.name + '_nav')?.getBoundingClientRect().left
-
+                        const nav = document.getElementById(category.name + "_nav");
+                        const navOffset = document.getElementById(category.name + "_nav")?.getBoundingClientRect().left;
                         if (distance > 100 && distance < 150) {
                             //console.log(element.getBoundingClientRect().top)
-                            this.chosenCategory = category.name
-
-                            console.log('nav')
-                            console.log(category.name + '_nav')
-                            console.log(navOffset)
-                            console.log('window width')
-                            console.log(window.innerWidth)
-
-
-
-
-
-
+                            this.chosenCategory = category.name;
+                            console.log("nav");
+                            console.log(category.name + "_nav");
+                            console.log(navOffset);
+                            console.log("window width");
+                            console.log(window.innerWidth);
                         }
-
                         /* if (element.offsetHeight < menu_top.offsetHeight + 100) {
                              console.log('*****')
                              console.log('*****')
@@ -1121,54 +1031,50 @@ export default {
                              console.log('*****')
                              console.log('*****')
                          }*/
-                    })
-                } catch (e) {
-                    console.log(e)
+                    });
                 }
-            })
+                catch (e) {
+                    console.log(e);
+                }
+            });
         },
         getCategoryProducts(category_id) {
-            return this.products.filter(p => p.category_id === category_id)
+            return this.products.filter(p => p.category_id === category_id);
         },
         getCategory(product) {
-            return this.categories.find(c => c.id === product.category_id)?.name
+            return this.categories.find(c => c.id === product.category_id)?.name;
         },
         getProductCategoryImage(product_id) {
             try {
-
                 const product = this.products.find(p => p.id === product_id);
-
-                if (product.thumbnail) return product.thumbnail;
-
+                if (product.thumbnail)
+                    return product.thumbnail;
                 const category = this.categories.find(c => product.category_id);
-                if (category && category.type.toLowerCase() === 'food') {
-                    return 'https://alcaratello.com/wp-content/uploads/2021/03/meal-placeholder.jpg'
+                if (category && category.type.toLowerCase() === "food") {
+                    return "https://alcaratello.com/wp-content/uploads/2021/03/meal-placeholder.jpg";
                 }
                 else {
-                    return 'https://www.mixlabcocktails.com/images/cocktail-image/image-placeholder@3x.png'
+                    return "https://www.mixlabcocktails.com/images/cocktail-image/image-placeholder@3x.png";
                 }
             }
             catch (e) {
-                return null
+                return null;
             }
         },
-
         openNavigation() {
-            this.show_navigation = true
+            this.show_navigation = true;
         },
         checkForLastOrder() {
-            let last_order = window.localStorage.getItem('last_order') && JSON.parse(window.localStorage.getItem('last_order')).id;
+            let last_order = window.localStorage.getItem("last_order") && JSON.parse(window.localStorage.getItem("last_order")).id;
             if (last_order) {
                 // see if order is completed;
                 return this.$api.get(`/orders/pending-sales/` + last_order).then(resp => {
-                    if (resp.data.data.status === 'completed') {
-                        window.localStorage.removeItem('last_order')
+                    if (resp.data.data.status === "completed") {
+                        window.localStorage.removeItem("last_order");
                     }
                     else {
-
                     }
-                })
-
+                });
             }
         },
         triggerAddComment() {
@@ -1177,45 +1083,41 @@ export default {
         getLoyaltyProgram() {
             this.$api.get(`/loyalty-programs?business_id=${this.business.id}`).then(resp => {
                 this.loyalty_program = resp.data.data && resp.data.data[0];
-            })
+            });
         },
         getPreference(pref) {
-            return this.prefs.find(p => p.business_setting.setting_alias === pref)
+            return this.prefs.find(p => p.business_setting.setting_alias === pref);
         },
         getPreferences() {
             const setting_aliases = [
                 "consumption_tax",
                 "vat"
-            ]
-
-            this.$api.get(`/prefs?business_id=${this.business.id}&setting_aliases=${setting_aliases.join(',')}`).then(resp => {
-                this.prefs = resp.data.data
-            })
+            ];
+            this.$api.get(`/prefs?business_id=${this.business.id}&setting_aliases=${setting_aliases.join(",")}`).then(resp => {
+                this.prefs = resp.data.data;
+            });
         },
-
         getSale() {
-
         },
-
         getReceipt() {
-            this.$api.get('/receipts/' + this.$route.query.receipt_generated).then(resp => {
-                this.show_receipt_modal = true
-                this.receipt_details = resp.data.data
-            })
+            this.$api.get("/receipts/" + this.$route.query.receipt_generated).then(resp => {
+                this.show_receipt_modal = true;
+                this.receipt_details = resp.data.data;
+            });
         },
         isInCart(product) {
             return this.cart.find(item => item.id === product.id);
         },
         getPendingSale() {
             this.$api.get(`/orders/pending-sales/${this.created_order.id}`).then(resp => {
-                if (resp.data.data.status === 'accepted') {
+                if (resp.data.data.status === "accepted") {
                     this.cart_step = 4;
                     clearInterval(this.get_order_interval);
                     //this.isSignedIn();
                     // this.cart = [];
-                    window.localStorage.removeItem('cart');
+                    window.localStorage.removeItem("cart");
                 }
-            })
+            });
         },
         completeOrder() {
             this.flag_creating_order = true;
@@ -1229,79 +1131,62 @@ export default {
                     quantity: item.quantity,
                     total_amount: this.products_using_points.includes(item.id) ? 0 : (item.quantity * item.unitprice),
                     customer_comment: item.customer_comment
-
-                }
-
-                orders.push(obj)
-                this.points_earned += obj.points_earned
-            })
+                };
+                orders.push(obj);
+                this.points_earned += obj.points_earned;
+            });
             const slug = this.$route.params.slug;
-
-            const r_uid = window.localStorage.getItem('last_order') && JSON.parse(window.localStorage.getItem('last_order')).r_uid || Date.now();
+            const r_uid = window.localStorage.getItem("last_order") && JSON.parse(window.localStorage.getItem("last_order")).r_uid || Date.now();
             const space_id = this.$route.query.space_id;
             const space_type = this.$route.query.space_type;
-
             //alert(`orders:${this.$route.params.slug}:${r_uid}`)
-            if (!window.localStorage.getItem('last_order')) {
-                this.socketClient.emit('created_order', {
-                    token: this.$cookies.get('loyal-token'),
+            if (!window.localStorage.getItem("last_order")) {
+                this.socketClient.emit("created_order", {
+                    token: this.$cookies.get("loyal-token"),
                     r_uid,
-                    business_slug: slug, business_id: this.business.id, items: orders,
+                    business_slug: slug,
+                    business_id: this.business.id,
+                    items: orders,
                     vat: parseFloat(this.vat || 0),
                     consumption_tax: parseFloat(this.consumptionTax || 0),
                     space_id,
                     space_type,
-                    pending_sale_id: window.localStorage.getItem('last_order') && JSON.parse(window.localStorage.getItem('last_order')).id
-                })
-
+                    pending_sale_id: window.localStorage.getItem("last_order") && JSON.parse(window.localStorage.getItem("last_order")).id
+                });
             }
             else {
-                this.socketClient.emit('add_to_order', {
-                    token: this.$cookies.get('loyal-token'),
+                this.socketClient.emit("add_to_order", {
+                    token: this.$cookies.get("loyal-token"),
                     r_uid,
-                    business_slug: slug, business_id: this.business.id, items: orders,
+                    business_slug: slug,
+                    business_id: this.business.id,
+                    items: orders,
                     vat: parseFloat(this.vat || 0),
                     consumption_tax: parseFloat(this.consumptionTax || 0),
                     space_id,
                     space_type,
-                    pending_sale_id: window.localStorage.getItem('last_order') && JSON.parse(window.localStorage.getItem('last_order')).id
-                })
+                    pending_sale_id: window.localStorage.getItem("last_order") && JSON.parse(window.localStorage.getItem("last_order")).id
+                });
             }
-            this.socketClient.on('received_order_' + r_uid, (data) => {
-                this.cart_step = 3
+            this.socketClient.on("received_order_" + r_uid, (data) => {
+                this.cart_step = 3;
                 this.flag_creating_order = false;
-                this.socketClient.emit('join_room', { room: `orders:${r_uid}` })
-                this.socketClient.on('order-accepted', (data) => {
+                this.socketClient.emit("join_room", { room: `orders:${r_uid}` });
+                this.socketClient.on("order-accepted", (data) => {
                     this.cart_step = 4;
                     //alert(data)
                     this.paymentDetails = data;
-                })
-
-                this.socketClient.on('order-completed', (data) => {
-                    window.localStorage.removeItem('last_order')
-                })
-
+                });
+                this.socketClient.on("order-completed", (data) => {
+                    window.localStorage.removeItem("last_order");
+                });
                 this.socketClient.on(`processing-order`, (data) => {
-                    this.cart_step = 6
-
-                    window.localStorage.removeItem('cart');
-                    this.cart = []
-                    window.localStorage.setItem('last_order', JSON.stringify({ id: data.id, r_uid: data.r_uid, created: Date.now() }))
-
-                })
-
+                    this.cart_step = 6;
+                    window.localStorage.removeItem("cart");
+                    this.cart = [];
+                    window.localStorage.setItem("last_order", JSON.stringify({ id: data.id, r_uid: data.r_uid, created: Date.now() }));
+                });
             });
-
-
-
-
-
-
-
-
-
-
-
             /*
             this.$api.post('/orders', { business_id: this.business.id, items: orders }).then(resp => {
     
@@ -1314,7 +1199,6 @@ export default {
             }).finally(() => {
                 this.flag_creating_order = false;
             })*/
-
         },
         makePayment() {
             FlutterwaveCheckout({
@@ -1330,9 +1214,9 @@ export default {
                 },
                 narration: "Wallet Funding",
                 customer: {
-                    email: this.customer && this.customer.email || 'anon@gmail.com',
+                    email: this.customer && this.customer.email || "anon@gmail.com",
                     // phone_number: this.userDetails.contact_phone_number,
-                    name: this.customer && this.customer.name || 'Anon-Customer',
+                    name: this.customer && this.customer.name || "Anon-Customer",
                 },
                 customizations: {
                     title: "PointsBud",
@@ -1341,35 +1225,33 @@ export default {
                 callback: (data) => {
                     //this.$store.commit('dashboard/setActionFundWallet', false);
                     this.cart_step = 5;
-                    let payload = { type: 'order-paid', pending_sale_id: this.paymentDetails.id, ...data, business_id: this.business.id }
-                    this.$api.post('/transactions/verify-flw', payload).then(resp => {
-                        this.socketClient.emit('order-paid', { ...payload, ...resp.data.data })
-                        this.$router.push(`/menu/${this.$route.params.slug}?receipt_generated=${resp.data.data.receipt_id}`)
-                    })
+                    let payload = { type: "order-paid", pending_sale_id: this.paymentDetails.id, ...data, business_id: this.business.id };
+                    this.$api.post("/transactions/verify-flw", payload).then(resp => {
+                        this.socketClient.emit("order-paid", { ...payload, ...resp.data.data });
+                        this.$router.push(`/menu/${this.$route.params.slug}?receipt_generated=${resp.data.data.receipt_id}`);
+                    });
                 }
             });
         },
-
         calculatePriceWithPoints(product) {
             if (this.products_using_points.includes(product.id)) {
                 return {
                     value: (product.quantity * product.points_to_deduct),
-                    type: 'points'
-                }
+                    type: "points"
+                };
             }
             else {
                 return {
                     value: product.quantity * product.unitprice,
-                    type: 'money'
-                }
+                    type: "money"
+                };
             }
         },
         canUsePoints(product) {
             // if points_in_use and item points and < available points er
             if (this.business_customer && this.loyalty_program) {
-
                 if (parseInt(this.points_in_use + (product.points_to_deduct * product.quantity)) <= this.business_customer.points) {
-                    return true
+                    return true;
                 }
                 return false;
             }
@@ -1377,39 +1259,35 @@ export default {
         },
         usePoints($event, product, points) {
             if ($event.target.checked) {
-
                 this.points_in_use += points;
-                this.products_using_points.push(product.id)
+                this.products_using_points.push(product.id);
             }
             else {
                 this.points_in_use -= points;
                 const index = this.products_using_points.indexOf(product.id);
-                this.products_using_points.splice(index, 1)
+                this.products_using_points.splice(index, 1);
             }
         },
         viewCart() {
             this.view_cart = true;
             setTimeout(() => {
                 this.initializeGoogleSignin();
-            }, 1000)
+            }, 1000);
         },
         initializeGoogleSignin() {
-            google.accounts.id.renderButton(
-                document.getElementById('googleButton'),
-                {
-                    type: 'standard',
-                    size: 'large',
-                    text: 'signin_with',
-                    shape: 'rectangular',
-                    theme: 'dark',
-                    logo_alignment: 'center',
-                    width: 250
-                }
-            )
+            google.accounts.id.renderButton(document.getElementById("googleButton"), {
+                type: "standard",
+                size: "large",
+                text: "signin_with",
+                shape: "rectangular",
+                theme: "dark",
+                logo_alignment: "center",
+                width: 250
+            });
         },
         googleSignIn(response) {
-            console.log(JSON.stringify(response))
-            this.$api.post('/auth/google/signin', {
+            console.log(JSON.stringify(response));
+            this.$api.post("/auth/google/signin", {
                 credential: response.credential,
                 business_id: this.business.id
             }).then(resp => {
@@ -1417,56 +1295,46 @@ export default {
                 this.cart_step = 2;
                 this.customer = resp.data.data.customer;
                 this.business_customer = resp.data.data.business_customer;
-
             }).catch(err => {
-
-            })
+            });
         },
         isSignedIn() {
-            this.$api.get('/auth/loggedin?business_id=' + this.business.id).then(resp => {
+            this.$api.get("/auth/loggedin?business_id=" + this.business.id).then(resp => {
                 this.signed_in = true;
                 this.cart_step = 2;
                 this.customer = resp.data.data.customer;
-                this.business_customer = resp.data.data.business_customer
-
-
+                this.business_customer = resp.data.data.business_customer;
             }).catch(err => {
                 this.signed_in = false;
-            })
+            });
         },
-
-
         computeCartFromLocalStorage() {
-            const cart = window.localStorage.getItem('cart');
+            const cart = window.localStorage.getItem("cart");
             if (cart !== "null" && cart) {
-
-                this.cart = JSON.parse(cart)
-                return
+                this.cart = JSON.parse(cart);
+                return;
             }
-            this.cart = []
-
+            this.cart = [];
         },
         increaseQuantity() {
             try {
                 if (this.isInCart(this.focused_product)) {
                     this.cart.find(i => i.id === this.focused_product.id).quantity++;
-                    return
+                    return;
                 }
                 this.order.quantity++;
-            } catch (e) {
-                alert(e)
+            }
+            catch (e) {
+                alert(e);
             }
             // this.focused_product.quantity++;
         },
         decreaseQuantity() {
-
-
             if (this.isInCart(this.focused_product) && this.cart.find(i => i.id === this.focused_product.id).quantity > 1) {
                 this.cart.find(i => i.id === this.focused_product.id).quantity--;
-                return
+                return;
             }
             if (this.order.quantity > 1) {
-
                 this.order.quantity--;
             }
         },
@@ -1476,28 +1344,23 @@ export default {
         },
         selectCategory(category) {
             this.chosenCategory = category.name;
-            document.getElementById('menu-content').scrollIntoView({
-                behavior: 'smooth'
-            })
+            document.getElementById("menu-content").scrollIntoView({
+                behavior: "smooth"
+            });
         },
         showSearchedProducts() {
-            document.getElementById('menu-content').scrollIntoView({
-                behavior: 'smooth'
-            })
+            document.getElementById("menu-content").scrollIntoView({
+                behavior: "smooth"
+            });
         },
         getCategories() {
             if (this.business) {
-
                 this.$api.get(`/categories?business_id=${this.business.id}`).then(resp => {
                     this.categories = resp.data.data;
                     this.chosenCategory = this.categories[0]?.name;
-
-
-
-
                 }).catch(err => {
-                    alert(JSON.stringify(err.message))
-                })
+                    alert(JSON.stringify(err.message));
+                });
             }
         },
         getProducts() {
@@ -1509,43 +1372,41 @@ export default {
             });
         },
         addToCart() {
-            let cart = window.localStorage.getItem('cart');
+            let cart = window.localStorage.getItem("cart");
             const item = {
                 ...this.focused_product,
                 quantity: this.order.quantity,
                 customer_comment: this.order.customer_comment,
-            }
-            this.order.customer_comment = ''
-            if (cart !== 'null' && cart) {
-                cart = JSON.parse(cart)
+            };
+            this.order.customer_comment = "";
+            if (cart !== "null" && cart) {
+                cart = JSON.parse(cart);
                 cart.push(item);
-                window.localStorage.setItem('cart', JSON.stringify(cart));
-                this.cart.push(item)
+                window.localStorage.setItem("cart", JSON.stringify(cart));
+                this.cart.push(item);
             }
             else {
-                cart = [item]
+                cart = [item];
                 this.cart = cart;
-                window.localStorage.setItem("cart", JSON.stringify(cart))
+                window.localStorage.setItem("cart", JSON.stringify(cart));
             }
             this.order.quantity = 1;
             this.show_order_modal = false;
-
         },
         removeCartItem(item) {
-            let cart = window.localStorage.getItem('cart');
-            if (cart !== 'null' && cart) {
+            let cart = window.localStorage.getItem("cart");
+            if (cart !== "null" && cart) {
                 cart = JSON.parse(cart);
                 cart = cart.filter(c => c.id !== item.id);
-                window.localStorage.setItem('cart', JSON.stringify(cart));
+                window.localStorage.setItem("cart", JSON.stringify(cart));
                 this.cart = cart;
-
             }
-
             if (this.view_cart) {
                 this.view_cart = false;
             }
         }
-    }
+    },
+    components: { MenuRecommenderModal }
 }
 </script>
 
@@ -1782,19 +1643,23 @@ $gradient-background: linear-gradient(to bottom right, #2c2e3e, #2e2d3c, #2d2c37
     background: white;
     height: 60px;
     border-top: 0.2px solid rgb(168, 168, 168);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
 
     button {
         @include smallbutton;
         border-radius: 0;
         width: 100%;
+        height: 100%;
         display: flex;
         justify-content: center;
         //margin-right: 5px;
         background: gold;
         color: black;
         align-items: center;
-        font-size: 18px;
+        font-size: 16px;
 
         position: relative svg {
             margin-left: 5px;
