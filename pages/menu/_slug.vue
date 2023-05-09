@@ -71,7 +71,8 @@
         <template v-if="!loading_data">
 
 
-            <MenuRecommenderModal :categories="categories" :business_id="business.id" :products="products">
+            <MenuRecommenderModal @close="show_recommendation_modal = false" v-if="show_recommendation_modal"
+                :categories="categories" :business_id="business.id" :products="products">
             </MenuRecommenderModal>
 
 
@@ -611,7 +612,7 @@
 
 
 
-                    <div class="checkout-cart">
+                    <div class="checkout-cart" @click="show_recommendation_modal = true">
                         <!--  <button>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 8px;"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -738,6 +739,7 @@ import MenuRecommenderModal from "../../components/modals/menu-recommender-modal
 export default {
     data() {
         return {
+            show_recommendation_modal: false,
             show_navigation: false,
             search_term: "",
             loading_data: true,

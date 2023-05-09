@@ -1,12 +1,13 @@
 <template>
-    <BaseModal>
+    <BaseModal @close="$emit('close')">
         <template #header>
             <p>Recommendation</p>
         </template>
         <template #body>
             <template v-if="get_recommendation">
 
-                <RecommenderList v-if="get_recommendation" :categories="categories" :data="rankings" :products="products">
+                <RecommenderList :drink_categories="drink_list" v-if="get_recommendation" :categories="categories"
+                    :data="rankings" :products="products">
                 </RecommenderList>
             </template>
 
@@ -29,6 +30,27 @@
                                         value="option">
                                     <div class="radio-indicator"></div>
                                     <div class="radio-text">{{ option }}</div>
+                                </div>
+
+
+
+
+
+
+
+                            </div>
+                        </div>
+
+                        <div class="recommend-modal__question">
+                            <p>Preferred Drink</p>
+
+                            <div class="recommend-modal__question__options">
+
+                                <div class="radio-label"
+                                    v-for="(category, index) in categories.filter(cat => cat.type === 'drink')">
+                                    <input name="alias" @change="updateDrinksList(category)" type="checkbox" value="option">
+                                    <div class="radio-indicator"></div>
+                                    <div class="radio-text">{{ category.name }}</div>
                                 </div>
 
 
@@ -66,13 +88,22 @@ export default {
             questionData: [],
             jsonData: null,
             answers: {},
-            rankings: {}
+            rankings: {},
+            drink_list: [],
         };
     },
     mounted() {
         this.getRecommendationData();
     },
     methods: {
+        updateDrinksList(category) {
+            if (this.drink_list.find(c => c.id == category.id)) {
+                const index = this.drink_list.find(c => c.id == category.id);
+                this.drink_list.splice(index, 1);
+                return
+            }
+            this.drink_list.push(category)
+        },
         updateQuestionOption(alias, option) {
             if (this.answers && this.answers[alias] && this.answers[alias].indexOf(option) > -1) {
                 const index = this.answers[alias].indexOf(option);

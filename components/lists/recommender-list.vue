@@ -2,8 +2,8 @@
     <div class="list">
         <div class="list__container">
 
-            <div v-if="reOrderedDataProjucts && reOrderedDataProjucts.length > 0"
-                v-for="(product, index) in reOrderedDataProjucts" :key="index" class="product-container">
+            <div v-if="reOrderedDataProjucts && reOrderedDataProjucts.length > 0" v-for="(product, index) in finalProducts"
+                :key="index" class="product-container">
 
 
                 <div class="product__image" v-if="product.thumbnail">
@@ -35,7 +35,7 @@
 
 <script>
 export default {
-    props: ['products', 'categories', 'data'],
+    props: ['products', 'categories', 'data', 'drink_categories'],
     data() {
         return {
             list: []
@@ -46,6 +46,7 @@ export default {
             //this.reOrderData()
         }
     },
+
     methods: {
         getProductItem(product_name) {
             // return product object in this.products
@@ -54,6 +55,10 @@ export default {
         getCategory(product) {
             return this.categories.find(c => c.id === product.category_id)?.name;
         },
+
+        getRandomIndex(len) {
+            return Math.floor(Math.random() * len);
+        }
 
 
 
@@ -80,7 +85,59 @@ export default {
 
             }
             return list
+        },
+
+        organizedDrinks() {
+            const obj = {}
+            if (this.drink_categories) {
+                const list = this.drink_categories;
+                list.forEach(category => {
+                    if (!obj[category.name.trim()]) obj[category.name.trim()] = []
+                    const category_id = category.id;
+                    const products = this.products.filter(p => p.category_id == category_id);
+
+                    products.sort((a, b) => {
+                        return a.unitprice - b.unitprice;
+                    });
+
+                    obj[category.name.trim()] = products.slice(products.length - 3)
+
+                })
+
+
+                //return list;
+            }
+
+            return obj
+        },
+
+        finalProducts() {
+            const list = [];
+
+            for (let i = 0; i < this.reOrderedDataProjucts.length; i++) {
+                list.push(this.reOrderedDataProjucts[i])
+                if (i % 2 === 0) {
+                    const category_index = this.getRandomIndex(Object.keys(this.organizedDrinks).length)
+                    const product_index = this.getRandomIndex(this.organizedDrinks[Object.keys(this.organizedDrinks)[category_index]].length)
+
+
+
+
+                    if (this.organizedDrinks[Object.keys(this.organizedDrinks)[category_index]][product_index]) {
+
+                        list.push(this.organizedDrinks[Object.keys(this.organizedDrinks)[category_index]][product_index])
+                    }
+
+                }
+
+
+
+            }
+            return list
         }
+
+
+
     }
 
 }
@@ -102,8 +159,8 @@ export default {
 
 .labels {
     display: flex;
-    padding: 8px 16px;
-    justify-content: center;
+    padding: 8px 0px;
+    justify-content: flex-start;
 }
 
 label {
@@ -172,7 +229,7 @@ label {
         font-size: 16px;
         margin-bottom: 8px;
         font-weight: 600;
-        text-align: center;
+        text-align: left;
     }
 
     &__description {
@@ -182,7 +239,7 @@ label {
         margin-bottom: 16px;
         width: 100%;
         text-overflow: ellipsis;
-        text-align: center;
+        text-align: left;
 
     }
 
@@ -195,7 +252,7 @@ label {
         color: black;
         font-weight: 400;
         font-size: 15px;
-        margin: auto;
+        //margin: auto;
 
 
     }
