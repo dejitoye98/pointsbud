@@ -2828,8 +2828,8 @@ body {
 }
 
 .moving-border {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     position: fixed;
     background: gold;
 

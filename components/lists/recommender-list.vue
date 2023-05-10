@@ -336,7 +336,7 @@ export default {
 
 <style  lang="scss" scoped>
 .active-tab {
-    background-color: whitesmoke;
+    background-color: gold;
 }
 
 .list {
@@ -451,12 +451,13 @@ label {
             button {
                 @include smallbutton;
                 background-color: gold;
-                padding: 2px 8px;
+                padding: 5px 8px;
                 font-size: 14px;
                 color: black;
                 height: fit-content;
                 border-radius: 2px;
                 font-weight: 500;
+                border-radius: 10px;
             }
         }
 

@@ -41,7 +41,7 @@
 
 
             <template v-else>
-                <div class="recommend-modal">
+                <div class="recommend-modal" id="recommend-modal">
                     <div class="recommend-modal__container" v-if="questions && Object.keys(questions).length > 0">
 
                         <div class="recommend-modal__question" v-for="(alias, index) in Object.keys(questions)"
@@ -137,6 +137,11 @@ export default {
         triggerGetRecommendation() {
             this.get_recommendation = true;
             this.recommendation_step = 2;
+
+
+            document.getElementsByClassName('modal__mask')[0].scrollTo({ top: 0, behavior: 'smooth' })
+            document.getElementsByClassName('modal__container')[0].scrollTo({ top: 0, behavior: 'smooth' })
+
 
             /* if (!this.customer) {
                  setTimeout(() => {
