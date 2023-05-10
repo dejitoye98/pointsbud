@@ -192,12 +192,14 @@ export default {
                 const index = this.answers[alias].indexOf(option);
                 this.answers[alias].splice(index, 1);
                 this.getRankings();
+                this.$forceUpdate()
                 return;
             }
             //this.$set(this.answers, alias, this.answers[alias].push(option))
             this.getRankings();
+            this.answers[alias].push(option);
+            this.$forceUpdate()
             this.$nextTick(() => {
-                this.answers[alias].push(option);
             });
         },
         getRecommendationData() {
