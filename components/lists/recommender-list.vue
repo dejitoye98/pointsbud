@@ -55,7 +55,7 @@
 
                 <template v-else>
 
-                    <div v-for="(product, index) in list" :key="index" class="product-container">
+                    <div v-for="(product, index) in drink_list" :key="index" class="product-container">
 
 
                         <div class="product__image" v-if="product.thumbnail">
@@ -71,7 +71,7 @@
 
                                 </p>
 
-                                <button @click="getNextItemInCategory(product, index)">Find similar item</button>
+                                <!-- <button @click="getNextItemInCategory(product, index)">Find similar item</button>-->
                             </div>
                             <div class="labels">
                                 <label>{{ getCategory(product) }}</label>
@@ -104,6 +104,7 @@ export default {
         return {
             list: [],
             activeTab: 'food',
+            drink_list: []
         }
     },
     created() {
@@ -118,17 +119,36 @@ export default {
     },
 
     mounted() {
-        this.reorderData()
+        this.reorderData();
+        this.orderDrinks()
     },
 
     methods: {
+        orderDrinks() {
+            let products = []
+            const categories = this.drink_categories;
+            categories.forEach(category => {
+                const products = this.products.filter(p => p.category_id === category.id);
+                products.sort((a, b) => {
+                    return a.unitprice - b.unitprice;
+                });
+
+                // alert(products)
+
+                this.drink_list = this.drink_list.concat(products)
+            });
+
+
+            // get the first 3
+
+        },
         activateTab(tab) {
             this.activeTab = tab;
         },
         getNextItemInCategory(product, index_in_list) {
 
             // get all products in category;
-            const products_in_category = this.products.filter(p => p.category_id === product.category_id);
+            let products_in_category = this.products.filter(p => p.category_id === product.category_id);
             products_in_category.sort((a, b) => {
                 return a.unitprice - b.unitprice;
             });
@@ -146,32 +166,23 @@ export default {
 
 
 
-                if (focused_product.id === product.id) {
-                    const index = products_in_category.indexOf(focused_product);
-                    if (index + 1 < range) {
-                        //return next product 
-                        //alert(JSON.stringify(products_in_category[index + 1]))
-                        this.list[index_in_list] = products_in_category[index + 1];
-                        this.$forceUpdate()
-                        return
-                        break;
-                    }
-                    else {
-                        this.list[index_in_list] = products_in_category[0];
-                        this.$forceUpdate()
-                        return;
-
-                    }
-                }
-                else {
-                    const index = i;
-
-                    this.list[index_in_list] = focused_product;
+                const index = products_in_category.indexOf(focused_product);
+                if (index + 1 < range) {
+                    //return next product 
+                    //alert(JSON.stringify(products_in_category[index + 1]))
+                    this.list[index_in_list] = products_in_category[index + 1];
                     this.$forceUpdate()
-
                     return
                     break;
                 }
+                else {
+                    this.list[index_in_list] = products_in_category[0];
+                    this.$forceUpdate()
+                    return;
+
+                }
+
+
             }
 
             return product;
