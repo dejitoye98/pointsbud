@@ -492,12 +492,13 @@
                                     @click="showSearchedProducts">Show</span></p>
 
                         </div>
+                        <!-- 
                         <div class="form-input menu__top__search">
 
-
+                            
                             <input v-model="search_term" placeholder="search for an item on the menu" type="text"
                                 class="menu__top__search__input">
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
