@@ -124,20 +124,22 @@ export default {
         this.getRecommendationData();
     },
     methods: {
+
         triggerGetRecommendation() {
             this.get_recommendation = true;
+            this.recommendation_step = 2;
 
-            if (!this.customer) {
-                setTimeout(() => {
-                    this.initializeGoogleSignin()
-                }, 1000)
-
-
-                this.recommendation_step = 1
-            }
-            else {
-                this.recommendation_step = 2
-            }
+            /* if (!this.customer) {
+                 setTimeout(() => {
+                     this.initializeGoogleSignin()
+                 }, 1000)
+ 
+ 
+                 this.recommendation_step = 1
+             }
+             else {
+                 this.recommendation_step = 2
+             }*/
         },
         googleSignIn(response) {
             console.log(JSON.stringify(response));

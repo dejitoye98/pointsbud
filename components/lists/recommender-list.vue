@@ -2,31 +2,95 @@
     <div class="list">
         <div class="list__container">
 
-            <div v-if="reOrderedDataProjucts && reOrderedDataProjucts.length > 0" v-for="(product, index) in finalProducts"
-                :key="index" class="product-container">
-
-
-                <div class="product__image" v-if="product.thumbnail">
-                    <img :src="getProductCategoryImage(product.id)" alt="">
-
-                </div>
-
-                <div class="product__content">
-                    <p class="product__name">{{ product.name }}</p>
-                    <div class="labels">
-                        <label>{{ getCategory(product) }}</label>
+            <div class="list__header">
+                <div class="tabs">
+                    <div class="tab" @click="activateTab('food')" :class="[activeTab === 'food' ? 'active-tab' : '']">
+                        Food
                     </div>
 
-                    <p class="product__description">
-                        <!--<TruncatedText :text="product.description" limit="100"></TruncatedText>-->
-                        {{ product.description }}
-                    </p>
-
-                    <div class="product__price">
-                        {{ product.currency }} {{ product.unitprice | money }}
+                    <div class="tab" @click="activateTab('drink')" :class="[activeTab === 'drink' ? 'active-tab' : '']">
+                        Drinks
                     </div>
                 </div>
+
             </div>
+
+            <template v-if="list && list.length > 0">
+
+                <template v-if="activeTab === 'food'">
+
+                    <div v-for="(product, index) in list" :key="index" class="product-container">
+
+
+                        <div class="product__image" v-if="product.thumbnail">
+                            <img :src="getProductCategoryImage(product.id)" alt="">
+
+                        </div>
+
+                        <div class="product__content">
+                            <div class="product__content__header">
+
+                                <p class="product__name">{{ product.name }}
+
+
+                                </p>
+
+                                <button @click="getNextItemInCategory(product, index)">Find similar item</button>
+                            </div>
+                            <div class="labels">
+                                <label>{{ getCategory(product) }}</label>
+                            </div>
+
+                            <p class="product__description">
+                                <!--<TruncatedText :text="product.description" limit="100"></TruncatedText>-->
+                                {{ product.description }}
+                            </p>
+
+                            <div class="product__price">
+                                {{ product.currency }} {{ product.unitprice | money }}
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <template v-else>
+
+                    <div v-for="(product, index) in list" :key="index" class="product-container">
+
+
+                        <div class="product__image" v-if="product.thumbnail">
+                            <img :src="getProductCategoryImage(product.id)" alt="">
+
+                        </div>
+
+                        <div class="product__content">
+                            <div class="product__content__header">
+
+                                <p class="product__name">{{ product.name }}
+
+
+                                </p>
+
+                                <button @click="getNextItemInCategory(product, index)">Find similar item</button>
+                            </div>
+                            <div class="labels">
+                                <label>{{ getCategory(product) }}</label>
+                            </div>
+
+                            <p class="product__description">
+                                <!--<TruncatedText :text="product.description" limit="100"></TruncatedText>-->
+                                {{ product.description }}
+                            </p>
+
+                            <div class="product__price">
+                                {{ product.currency }} {{ product.unitprice | money }}
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+            </template>
+
 
         </div>
 
@@ -38,7 +102,8 @@ export default {
     props: ['products', 'categories', 'data', 'drink_categories'],
     data() {
         return {
-            list: []
+            list: [],
+            activeTab: 'food',
         }
     },
     created() {
@@ -47,10 +112,66 @@ export default {
     watch: {
         data(value) {
             //this.reOrderData()
+
+            this.reorderData()
         }
     },
 
     methods: {
+        activateTab(tab) {
+            this.activeTab = tab;
+        },
+        getNextItemInCategory(product, index_in_list) {
+
+            // get all products in category;
+            const products_in_category = this.products.filter(p => p.category_id === product.category_id);
+            products_in_category.sort((a, b) => {
+                return a.unitprice - b.unitprice;
+            });
+
+            //alert(JSON.stringify(products_in_category))
+
+            // choose next
+            const range = products_in_category.length - 1;
+
+
+
+            for (let i = 0; i < products_in_category.length; i++) {
+                const focused_product = products_in_category.find(p => p.id === product.id)
+
+
+
+
+                if (focused_product.id === product.id) {
+                    const index = products_in_category.indexOf(focused_product);
+                    if (index + 1 < range) {
+                        //return next product 
+                        //alert(JSON.stringify(products_in_category[index + 1]))
+                        this.list[index_in_list] = products_in_category[index + 1];
+                        this.$forceUpdate()
+                        return
+                        break;
+                    }
+                    else {
+                        this.list[index_in_list] = products_in_category[0];
+                        this.$forceUpdate()
+                        return;
+
+                    }
+                }
+                else {
+                    const index = i;
+
+                    this.list[index_in_list] = focused_product;
+                    this.$forceUpdate()
+
+                    return
+                    break;
+                }
+            }
+
+            return product;
+        },
         initializeGoogleSignin() {
             google.accounts.id.renderButton(document.getElementById("googleButton"), {
                 type: "standard",
@@ -72,7 +193,45 @@ export default {
 
         getRandomIndex(len) {
             return Math.floor(Math.random() * len);
-        }
+        },
+
+        reorderData() {
+            if (this.data) {
+                let list = []
+                const l = Object.entries(this.data).sort((a, b) => b[1] - a[1]).map(el => el[0])
+                l.forEach(name => {
+                    const obj = this.getProductItem(name)
+                    console.log(name)
+                    console.log(obj)
+                    list.push(obj)
+                })
+
+                /*for (let i = 0; i < this.list.length; i++) {
+                    list.push(this.reOrderedDataProjucts[i])
+                    if (i % 2 === 0) {
+                        const category_index = this.getRandomIndex(Object.keys(this.organizedDrinks).length)
+                        const product_index = this.getRandomIndex(this.organizedDrinks[Object.keys(this.organizedDrinks)[category_index]].length)
+
+
+
+
+                        if (this.organizedDrinks[Object.keys(this.organizedDrinks)[category_index]][product_index]) {
+
+                            list.push(this.organizedDrinks[Object.keys(this.organizedDrinks)[category_index]][product_index])
+                        }
+
+                    }
+
+
+
+                }*/
+
+                this.list = list
+                this.$forceUpdate()
+
+
+            }
+        },
 
 
 
@@ -98,7 +257,7 @@ export default {
                 })
 
             }
-            return list
+            this.list = list
         },
 
         organizedDrinks() {
@@ -127,6 +286,9 @@ export default {
 
         finalProducts() {
             const list = [];
+            if (this.reOrderedDataProjucts && this.reOrderedDataProjucts.length === 0) {
+                return this.products
+            }
 
             for (let i = 0; i < this.reOrderedDataProjucts.length; i++) {
                 list.push(this.reOrderedDataProjucts[i])
@@ -147,7 +309,7 @@ export default {
 
 
             }
-            return list
+            this.list = list
         }
 
 
@@ -158,11 +320,40 @@ export default {
 </script>
 
 <style  lang="scss" scoped>
+.active-tab {
+    background-color: whitesmoke;
+}
+
 .list {
     &__container {
         display: flex;
         flex-direction: column;
         padding: 18px;
+    }
+
+    &__header {
+        display: flex;
+        width: 100%;
+    }
+
+    .tabs {
+        //border: 1px solid pink;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .tab {
+        width: 50%;
+        color: $charcoal;
+        max-height: 40px;
+        // border: 1px solid grey;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: 1px solid whitesmoke;
     }
 }
 
@@ -179,8 +370,8 @@ export default {
 
 label {
     font-size: 13px;
-    background: whitesmoke;
-    color: black;
+    background: grey;
+    color: white;
     padding: 2px 8px;
     border-radius: 20px;
 }
@@ -237,12 +428,29 @@ label {
         //padding: 8px 8px;
         padding: 30px 8px;
 
+        &__header {
+            display: flex;
+            justify-content: space-between;
+
+            button {
+                @include smallbutton;
+                background-color: gold;
+                padding: 2px 8px;
+                font-size: 14px;
+                color: black;
+                height: fit-content;
+                border-radius: 2px;
+                font-weight: 500;
+            }
+        }
+
     }
 
     &__name {
         font-size: 16px;
-        margin-bottom: 8px;
+        // margin-bottom: 8px;
         font-weight: 600;
+        margin-right: 8px;
         text-align: left;
     }
 
