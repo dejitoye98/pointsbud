@@ -41,6 +41,9 @@ export default {
             list: []
         }
     },
+    created() {
+        this.initializeGoogleSignin()
+    },
     watch: {
         data(value) {
             //this.reOrderData()
@@ -48,6 +51,17 @@ export default {
     },
 
     methods: {
+        initializeGoogleSignin() {
+            google.accounts.id.renderButton(document.getElementById("googleButton"), {
+                type: "standard",
+                size: "large",
+                text: "signin_with",
+                shape: "rectangular",
+                theme: "dark",
+                logo_alignment: "center",
+                width: 250
+            });
+        },
         getProductItem(product_name) {
             // return product object in this.products
             return this.products.find(p => p.name.toLowerCase().trim() == product_name.toLowerCase().trim())

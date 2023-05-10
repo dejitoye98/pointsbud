@@ -71,8 +71,8 @@
         <template v-if="!loading_data">
 
 
-            <MenuRecommenderModal @close="show_recommendation_modal = false" v-if="show_recommendation_modal"
-                :categories="categories" :business_id="business.id" :products="products">
+            <MenuRecommenderModal :customer="customer" @close="show_recommendation_modal = false"
+                v-if="show_recommendation_modal" :categories="categories" :business_id="business.id" :products="products">
             </MenuRecommenderModal>
 
 

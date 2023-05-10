@@ -6,9 +6,25 @@
         <template #body>
             <template v-if="get_recommendation">
 
-                <RecommenderList :drink_categories="drink_list" v-if="get_recommendation" :categories="categories"
-                    :data="rankings" :products="products">
-                </RecommenderList>
+                <template v-if="recommendation_step === 1">
+
+                    <div class="google__container">
+                        <p>Sign in to get recommendation and new offers from Circa Lagos</p>
+                        <div id="googleButton"></div>
+
+                    </div>
+
+                </template>
+
+
+
+
+                <template v-else>
+                    <RecommenderList :drink_categories="drink_list" v-if="get_recommendation" :categories="categories"
+                        :data="rankings" :products="products">
+                    </RecommenderList>
+                </template>
+
             </template>
 
 
@@ -62,7 +78,7 @@
                             </div>
                         </div>
 
-                        <div><button @click="get_recommendation = true">Get Recommendation</button></div>
+                        <div><button @click="triggerGetRecommendation">Get Recommendation</button></div>
                     </div>
 
                 </div>
@@ -81,7 +97,7 @@ import RecommenderList from "../lists/recommender-list.vue";
 
 
 export default {
-    props: ["business_id", "products", "categories"],
+    props: ["business_id", "products", "categories", "customer"],
     data() {
         return {
             get_recommendation: false,
@@ -90,12 +106,63 @@ export default {
             answers: {},
             rankings: {},
             drink_list: [],
+
+            recommendation_step: null,
         };
+    },
+
+    created() {
+        google.accounts.id.initialize({
+            client_id: "309539494248-ir1uocjnkh6h8t3in55vn4r2m9jmt777.apps.googleusercontent.com",
+            callback: this.googleSignIn,
+            context: "signin"
+        });
+        this.initializeGoogleSignin()
+
     },
     mounted() {
         this.getRecommendationData();
     },
     methods: {
+        triggerGetRecommendation() {
+            this.get_recommendation = true;
+
+            if (!this.customer) {
+                setTimeout(() => {
+                    this.initializeGoogleSignin()
+                }, 1000)
+
+
+                this.recommendation_step = 1
+            }
+            else {
+                this.recommendation_step = 2
+            }
+        },
+        googleSignIn(response) {
+            console.log(JSON.stringify(response));
+            this.$api.post("/auth/google/signin", {
+                credential: response.credential,
+                business_id: this.business_id
+            }).then(resp => {
+                this.$cookies.set("loyal-token", resp.data.data.token);
+                this.recommendation_step = 2;
+
+            }).catch(err => {
+            });
+        },
+
+        initializeGoogleSignin() {
+            google.accounts.id.renderButton(document.getElementById("googleButton"), {
+                type: "standard",
+                size: "large",
+                text: "signin_with",
+                shape: "rectangular",
+                theme: "dark",
+                logo_alignment: "center",
+                width: 250
+            });
+        },
         updateDrinksList(category) {
             if (this.drink_list.find(c => c.id == category.id)) {
                 const index = this.drink_list.find(c => c.id == category.id);
@@ -185,6 +252,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.google__container {
+    padding: 24px;
+
+    p {
+        color: $charcoal;
+        font-size: 16px;
+        font-weight: 500;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+}
+
 .radio-label {
     @include radio-label;
     border-radius: 15px;
