@@ -450,7 +450,7 @@ label {
 
             button {
                 @include smallbutton;
-                background-color: gold;
+                background-color: rgba(255, 217, 0, 0.396);
                 padding: 5px 8px;
                 font-size: 14px;
                 color: black;

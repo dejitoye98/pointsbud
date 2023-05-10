@@ -136,24 +136,24 @@ export default {
 
         triggerGetRecommendation() {
             this.get_recommendation = true;
-            this.recommendation_step = 2;
+            //this.recommendation_step = 2;
 
 
             document.getElementsByClassName('modal__mask')[0].scrollTo({ top: 0, behavior: 'smooth' })
             document.getElementsByClassName('modal__container')[0].scrollTo({ top: 0, behavior: 'smooth' })
 
 
-            /* if (!this.customer) {
-                 setTimeout(() => {
-                     this.initializeGoogleSignin()
-                 }, 1000)
- 
- 
-                 this.recommendation_step = 1
-             }
-             else {
-                 this.recommendation_step = 2
-             }*/
+            if (!this.customer) {
+                setTimeout(() => {
+                    this.initializeGoogleSignin()
+                }, 1000)
+
+
+                this.recommendation_step = 1
+            }
+            else {
+                this.recommendation_step = 2
+            }
         },
         googleSignIn(response) {
             console.log(JSON.stringify(response));
