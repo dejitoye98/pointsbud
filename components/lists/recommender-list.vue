@@ -113,8 +113,12 @@ export default {
         data(value) {
             //this.reOrderData()
 
-            this.reorderData()
+            // this.reorderData()
         }
+    },
+
+    mounted() {
+        this.reorderData()
     },
 
     methods: {
@@ -370,10 +374,11 @@ export default {
 
 label {
     font-size: 13px;
-    background: grey;
-    color: white;
+    background: rgb(246, 244, 244);
+    color: black;
     padding: 2px 8px;
     border-radius: 20px;
+    font-weight: 500;
 }
 
 .product {
