@@ -56,6 +56,10 @@
                         </svg>-->
 
                         <h3>Smooth in-dining experience</h3>
+
+                        <p>We'll provide you with tools to ensure that you can handle high traffic easily with few
+                            attendants</p>
+
                     </div>
 
                     <div class="dine__items">
@@ -169,13 +173,12 @@
 .header {
 
     //height: 500px;
-    padding: 60px 0;
     background: linear-gradient(180deg, rgba(255, 217, 0, 0.49) 0%, rgba(255, 217, 0, 0.359) 76.25%);
 
     &__container {
-        width: 80%;
+        width: 70%;
         margin: auto;
-        padding: 60px 0;
+        padding: 100px 0;
     }
 
     h1 {
@@ -224,7 +227,7 @@
                 width: 500px;
                 appearance: none;
                 margin-right: 16px;
-                border: 2px solid rgba(211, 211, 211, 0.323);
+                //border: 2px solid rgba(211, 211, 211, 0.323);
                 border-radius: 10px;
                 color: $charcoal;
 
@@ -281,17 +284,18 @@
 
     &__container {
         padding: 120px 0 60px 0;
-        margin: 80%;
+        margin: 70%;
         margin: auto;
     }
 
     &__header {
         display: flex;
+        flex-direction: column;
         align-items: center;
         width: fit-content;
         margin: auto;
-        font-weight: 600;
         color: $charcoal;
+
 
         svg {
             height: 20px
@@ -299,7 +303,20 @@
 
         h3 {
             font-size: 25px;
+            font-weight: 600;
+
         }
+
+        p {
+            color: $faint;
+            font-weight: 300;
+            font-size: 20px;
+            max-width: 500px;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+
     }
 
     &__items {
@@ -319,7 +336,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 32px 16px;
+            padding: 0px 0 32px 0;
             border-radius: 20px;
 
 
@@ -348,8 +365,10 @@
 
 
 .engage {
+    background-color: white;
+
     &__container {
-        width: 80%;
+        width: 70%;
         margin: auto;
         padding: 60px 0;
         display: flex;
