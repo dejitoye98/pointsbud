@@ -1,443 +1,241 @@
 <template>
-    <div class="landing">
-        <BaseModal v-if="show_modal">
-            <template #body>
-                <div class="submodal">
-                    <template v-if="!subscribed">
-                        <div class="submodal__container">
-                            <p>Sign up for a demo</p>
-                            <p>We'll contact you in less than 6 hours</p>
-                            <div class="form-input">
-                                <label for="">Your email or phone number</label>
-                                <input type="text" v-model="model.contact">
-                            </div>
-                            <div class="cta">
-                                <button :disabled="subscribing" @click="subscribe" style="width:100%">Contact me</button>
-                            </div>
-                        </div>
+    <div class="page">
+        <div class="page__container">
+            <div class="page__left">
+
+            </div>
+
+            <div class="page__right">
+                <div class="page__logo">
+                    <svg width="240" height="61" viewBox="0 0 240 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M15.5847 0.539725C12.3722 0.683543 11.317 0.821782 10.2346 1.24014C5.75419 2.97177 2.40274 6.41853 0.885258 10.8555L0.221952 12.7957L0.114028 36.74L0.00634766 60.6842L7.3711 57.0856L14.7359 53.4868L23.8305 53.3471C32.1154 53.22 33.0499 53.1638 34.3258 52.7178C38.3474 51.3116 41.6852 48.4956 43.4137 45.0515C45.0495 41.7922 45.0522 41.7602 45.0444 26.8622C45.0396 17.3824 44.9523 13.1023 44.7427 12.0681C43.9354 8.08007 40.6431 3.98964 36.6686 2.03586C35.5435 1.48266 34.0772 0.932616 33.4103 0.813293C31.6745 0.503104 20.3037 0.328486 15.5847 0.539725ZM19.8289 9.51751C16.3035 10.0195 13.2906 11.6263 10.2707 14.6147C6.98694 17.8643 5.43891 21.2914 5.22112 25.7938C5.05572 29.2144 5.55483 31.7049 7.00877 34.7149C9.49489 39.861 14.984 43.6745 20.6161 44.1683C26.5473 44.6885 31.6064 42.8392 35.4271 38.7551C38.3151 35.6678 39.8103 32.0233 40.0082 27.5897C40.1602 24.1762 39.729 22.081 38.2465 19.0335C37.3033 17.095 36.8032 16.4171 35.0107 14.6469C32.592 12.2585 30.5807 10.9782 27.9217 10.1347C25.8151 9.46658 22.1491 9.18695 19.8289 9.51751ZM20.0714 17.1912C15.8786 17.6254 13.8928 18.2268 13.8778 19.0672C13.8725 19.3526 14.333 22.3997 14.901 25.8382L15.9339 32.0898L17.5176 32.5804C21.1378 33.7016 24.336 33.6987 27.9864 32.5712L29.5956 32.074L29.8779 30.0744C30.0329 28.9746 30.482 26.2529 30.8756 24.0261C31.8368 18.5892 31.8387 18.6255 30.5606 18.1589C29.9936 17.952 28.925 17.6782 28.1858 17.5502C26.5977 17.2754 21.4562 17.0479 20.0714 17.1912ZM12.2378 33.8226C11.5678 34.4927 12.2146 36.6796 13.5729 38.3375C14.4198 39.3709 14.4771 39.4 14.6961 38.9089C15.2544 37.6577 18.4683 36.8692 22.9817 36.876C27.2283 36.8823 30.6724 37.8301 30.9132 39.059C30.9727 39.3612 31.2676 39.1288 32.0031 38.2005C33.1789 36.7164 33.8313 34.5488 33.296 33.9039C32.8168 33.3264 31.0677 33.447 27.7049 34.2895C23.6959 35.294 21.8125 35.2935 17.7199 34.288C14.4708 33.4899 12.7195 33.341 12.2378 33.8226ZM16.5829 47.3621C16.5288 49.0032 17.8404 50.0243 19.9986 50.0218C20.7056 50.0209 21.568 49.8722 21.9151 49.691C22.4416 49.4163 22.6429 49.415 23.1277 49.6838C23.4476 49.8611 24.2877 50.01 24.9947 50.0148C27.1471 50.0291 28.4645 49.0061 28.4104 47.3621C28.3932 46.8409 28.3357 46.6961 28.2629 46.9917C28.0607 47.8149 27.6874 48.0831 26.7437 48.0831C26.1714 48.0831 25.5816 47.8828 25.1467 47.5408C24.5821 47.0968 24.1262 46.9932 22.6281 46.9687C21.0769 46.9435 20.6707 47.0259 19.9545 47.511C19.0319 48.136 17.5016 48.28 17.0956 47.7799C16.9603 47.6133 16.7959 47.2585 16.7304 46.9917C16.6576 46.6961 16.6001 46.8409 16.5829 47.3621Z"
+                            fill="url(#paint0_linear_0_1)" />
+                        <path
+                            d="M53.0367 45.5V16.4091H64.514C66.7204 16.4091 68.6002 16.8305 70.1532 17.6733C71.7062 18.5066 72.8899 19.6667 73.7043 21.1534C74.5282 22.6307 74.9401 24.3352 74.9401 26.267C74.9401 28.1989 74.5235 29.9034 73.6901 31.3807C72.8568 32.858 71.6494 34.0085 70.068 34.8324C68.496 35.6562 66.5926 36.0682 64.3577 36.0682H57.0424V31.1392H63.3634C64.5471 31.1392 65.5225 30.9356 66.2896 30.5284C67.0661 30.1117 67.6437 29.5388 68.0225 28.8097C68.4108 28.071 68.6049 27.2235 68.6049 26.267C68.6049 25.3011 68.4108 24.4583 68.0225 23.7386C67.6437 23.0095 67.0661 22.446 66.2896 22.0483C65.513 21.6411 64.5282 21.4375 63.335 21.4375H59.1873V45.5H53.0367ZM78.8215 45.5V23.6818H84.688V27.4886H84.9153C85.313 26.1345 85.9806 25.1117 86.9181 24.4205C87.8556 23.7197 88.9351 23.3693 90.1567 23.3693C90.4598 23.3693 90.7865 23.3883 91.1369 23.4261C91.4872 23.464 91.795 23.5161 92.0601 23.5824V28.9517C91.7761 28.8665 91.3831 28.7907 90.8812 28.7244C90.3793 28.6581 89.92 28.625 89.5033 28.625C88.6132 28.625 87.8177 28.8191 87.117 29.2074C86.4257 29.5862 85.8764 30.1165 85.4692 30.7983C85.0715 31.4801 84.8726 32.2661 84.8726 33.1562V45.5H78.8215ZM104.031 45.9261C101.825 45.9261 99.9164 45.4574 98.3066 44.5199C96.7062 43.5729 95.4704 42.2566 94.5992 40.571C93.728 38.8759 93.2924 36.911 93.2924 34.6761C93.2924 32.4223 93.728 30.4527 94.5992 28.767C95.4704 27.072 96.7062 25.7557 98.3066 24.8182C99.9164 23.8712 101.825 23.3977 104.031 23.3977C106.237 23.3977 108.141 23.8712 109.741 24.8182C111.351 25.7557 112.592 27.072 113.463 28.767C114.334 30.4527 114.77 32.4223 114.77 34.6761C114.77 36.911 114.334 38.8759 113.463 40.571C112.592 42.2566 111.351 43.5729 109.741 44.5199C108.141 45.4574 106.237 45.9261 104.031 45.9261ZM104.059 41.2386C105.063 41.2386 105.901 40.9545 106.574 40.3864C107.246 39.8087 107.753 39.0227 108.094 38.0284C108.444 37.0341 108.619 35.9025 108.619 34.6335C108.619 33.3646 108.444 32.233 108.094 31.2386C107.753 30.2443 107.246 29.4583 106.574 28.8807C105.901 28.303 105.063 28.0142 104.059 28.0142C103.046 28.0142 102.194 28.303 101.503 28.8807C100.821 29.4583 100.305 30.2443 99.9543 31.2386C99.6134 32.233 99.443 33.3646 99.443 34.6335C99.443 35.9025 99.6134 37.0341 99.9543 38.0284C100.305 39.0227 100.821 39.8087 101.503 40.3864C102.194 40.9545 103.046 41.2386 104.059 41.2386ZM130.437 23.6818V28.2273H116.971V23.6818H130.437ZM120.054 45.5V22.1051C120.054 20.5237 120.362 19.2121 120.977 18.1705C121.602 17.1288 122.454 16.3475 123.534 15.8267C124.613 15.3059 125.84 15.0455 127.213 15.0455C128.141 15.0455 128.988 15.1165 129.755 15.2585C130.532 15.4006 131.11 15.5284 131.488 15.642L130.409 20.1875C130.172 20.1117 129.879 20.0407 129.528 19.9744C129.187 19.9081 128.837 19.875 128.477 19.875C127.587 19.875 126.967 20.0833 126.616 20.5C126.266 20.9072 126.091 21.4801 126.091 22.2188V45.5H120.054ZM143.505 45.5V16.4091H154.983C157.189 16.4091 159.069 16.8305 160.622 17.6733C162.175 18.5066 163.359 19.6667 164.173 21.1534C164.997 22.6307 165.409 24.3352 165.409 26.267C165.409 28.1989 164.992 29.9034 164.159 31.3807C163.326 32.858 162.118 34.0085 160.537 34.8324C158.965 35.6562 157.061 36.0682 154.826 36.0682H147.511V31.1392H153.832C155.016 31.1392 155.991 30.9356 156.758 30.5284C157.535 30.1117 158.112 29.5388 158.491 28.8097C158.88 28.071 159.074 27.2235 159.074 26.267C159.074 25.3011 158.88 24.4583 158.491 23.7386C158.112 23.0095 157.535 22.446 156.758 22.0483C155.982 21.6411 154.997 21.4375 153.804 21.4375H149.656V45.5H143.505ZM169.29 45.5V23.6818H175.341V45.5H169.29ZM172.33 20.8693C171.43 20.8693 170.659 20.571 170.015 19.9744C169.38 19.3684 169.063 18.6439 169.063 17.8011C169.063 16.9678 169.38 16.2528 170.015 15.6562C170.659 15.0502 171.43 14.7472 172.33 14.7472C173.23 14.7472 173.997 15.0502 174.631 15.6562C175.275 16.2528 175.597 16.9678 175.597 17.8011C175.597 18.6439 175.275 19.3684 174.631 19.9744C173.997 20.571 173.23 20.8693 172.33 20.8693ZM191.794 23.6818V28.2273H178.655V23.6818H191.794ZM181.638 18.4545H187.689V38.7955C187.689 39.3542 187.774 39.7898 187.944 40.1023C188.115 40.4053 188.352 40.6184 188.655 40.7415C188.967 40.8646 189.327 40.9261 189.734 40.9261C190.018 40.9261 190.302 40.9025 190.586 40.8551C190.871 40.7983 191.088 40.7557 191.24 40.7273L192.192 45.2301C191.889 45.3248 191.462 45.4337 190.913 45.5568C190.364 45.6894 189.696 45.7699 188.91 45.7983C187.452 45.8551 186.174 45.661 185.075 45.2159C183.986 44.7708 183.139 44.0795 182.532 43.142C181.926 42.2045 181.628 41.0208 181.638 39.5909V18.4545ZM205.359 45.9261C203.124 45.9261 201.202 45.4527 199.592 44.5057C197.992 43.5492 196.761 42.2235 195.899 40.5284C195.047 38.8333 194.621 36.8826 194.621 34.6761C194.621 32.4413 195.051 30.4811 195.913 28.7955C196.784 27.1004 198.02 25.7794 199.621 24.8324C201.221 23.8759 203.124 23.3977 205.331 23.3977C207.234 23.3977 208.901 23.7434 210.331 24.4347C211.761 25.1259 212.892 26.0966 213.726 27.3466C214.559 28.5966 215.018 30.0644 215.103 31.75H209.393C209.232 30.661 208.806 29.785 208.115 29.1222C207.433 28.4498 206.538 28.1136 205.43 28.1136C204.493 28.1136 203.674 28.3693 202.973 28.8807C202.282 29.3826 201.742 30.1165 201.353 31.0824C200.965 32.0483 200.771 33.2178 200.771 34.5909C200.771 35.983 200.96 37.1667 201.339 38.142C201.728 39.1174 202.272 39.8608 202.973 40.3722C203.674 40.8835 204.493 41.1392 205.43 41.1392C206.121 41.1392 206.742 40.9972 207.291 40.7131C207.85 40.429 208.309 40.017 208.669 39.4773C209.038 38.928 209.28 38.2699 209.393 37.5028H215.103C215.009 39.1695 214.554 40.6373 213.74 41.9062C212.935 43.1657 211.822 44.1506 210.402 44.8608C208.981 45.571 207.3 45.9261 205.359 45.9261ZM225.029 32.8864V45.5H218.978V16.4091H224.858V27.5312H225.114C225.607 26.2434 226.402 25.2348 227.5 24.5057C228.599 23.767 229.977 23.3977 231.634 23.3977C233.149 23.3977 234.47 23.7292 235.597 24.392C236.733 25.0455 237.614 25.9877 238.239 27.2188C238.874 28.4403 239.186 29.9034 239.177 31.608V45.5H233.125V32.6875C233.135 31.3428 232.794 30.2964 232.103 29.5483C231.421 28.8002 230.465 28.4261 229.233 28.4261C228.41 28.4261 227.68 28.6013 227.046 28.9517C226.421 29.3021 225.929 29.8134 225.569 30.4858C225.218 31.1487 225.038 31.9489 225.029 32.8864Z"
+                            fill="url(#paint1_linear_0_1)" />
+                        <defs>
+                            <linearGradient id="paint0_linear_0_1" x1="22.5259" y1="0.447021" x2="22.5259" y2="60.6842"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#BC2BD4" />
+                                <stop offset="1" stop-color="#2BA1D4" />
+                            </linearGradient>
+                            <linearGradient id="paint1_linear_0_1" x1="146.508" y1="6.5" x2="146.508" y2="54.5"
+                                gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#BC2BD4" />
+                                <stop offset="1" stop-color="#2BA1D4" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+
+                </div>
+
+
+                <div class="auth-header">
+                    <template v-if="mode === 'register'">Sign Up </template>
+                    <template v-else> Sign In</template>
+                </div>
+
+                <div class="form-input">
+                    <template v-if="mode === 'register'">
+
+
+                        <input placeholder="First and Last Name" v-model="model.name">
+                        <input placeholder="Email address" v-model="model.email">
+                        <input placeholder="Password" type="password" v-model="model.password">
+                    </template>
+
+                    <template v-if="mode === 'login'">
+                        <input placeholder="Email address" v-model="model.email">
+                        <input placeholder="Password" type="password" v-model="model.password">
+                    </template>
+                </div>
+
+                <button @click="continueAuth">Continue</button>
+
+                <div class="already" style="width: 100%; text-align: center">
+                    <template v-if="mode === 'register'">
+
+                        Already have an account <span @click="mode = 'login'"> Sign in</span>
                     </template>
                     <template v-else>
-                        <div class="submodal__container">
-                            <p>Thanks for reaching out. We'll get in touch with you in 6 hours</p>
-                        </div>
+                        Don't have an account <span @click="mode = 'register'"> Sign up</span>
                     </template>
                 </div>
-            </template>
-        </BaseModal>
-        <div class="landing__container">
-            <div class="header">
-                <div class="header__container">
-                    <div class="logo">
-                        <svg width="68" height="71" viewBox="0 0 68 71" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M0 39.5C0 40.1731 0.03477 40.8401 0.103036 41.5C0.03477 42.1599 0 42.8269 0 43.5C0 43.8349 0.00860703 44.1683 0.0256642 44.5C0.00860703 44.8317 0 45.1651 0 45.5C0 59.5833 15.2223 71 34 71C52.7777 71 68 59.5833 68 45.5C68 45.1651 67.9914 44.8318 67.9743 44.5C67.9914 44.1683 68 43.8349 68 43.5C68 42.8269 67.9652 42.1599 67.897 41.5C67.9652 40.8401 68 40.1731 68 39.5C68 38.8269 67.9652 38.1599 67.897 37.5C67.9652 36.8401 68 36.1731 68 35.5C68 34.8269 67.9652 34.1599 67.897 33.5C67.9652 32.8401 68 32.1731 68 31.5C68 17.4167 52.7777 6 34 6C15.2223 6 0 17.4167 0 31.5C0 32.1731 0.03477 32.8401 0.103036 33.5C0.03477 34.1599 0 34.8269 0 35.5C0 36.1731 0.03477 36.8401 0.103036 37.5C0.03477 38.1599 0 38.8269 0 39.5ZM5.65236 38.5C7.05326 35.6187 9.32024 32.9474 12.3584 30.6688C17.7547 26.6215 25.393 24 34 24C42.607 24 50.2453 26.6215 55.6416 30.6688C58.6798 32.9474 60.9467 35.6187 62.3476 38.5C60.9467 41.3813 58.6798 44.0526 55.6416 46.3312C50.2453 50.3785 42.607 53 34 53C25.393 53 17.7547 50.3785 12.3584 46.3312C9.32024 44.0526 7.05326 41.3813 5.65236 38.5Z"
-                                fill="url(#paint0_linear_1_91)" />
-                            <ellipse cx="33.75" cy="25.5" rx="33.75" ry="25.5" fill="url(#paint1_linear_1_91)" />
-                            <defs>
-                                <linearGradient id="paint0_linear_1_91" x1="1.47329e-07" y1="53.7206" x2="29.2658"
-                                    y2="53.7206" gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#ECCB1D" />
-                                    <stop offset="1" stop-color="#FFD807" />
-                                </linearGradient>
-                                <linearGradient id="paint1_linear_1_91" x1="33.75" y1="0" x2="33.75" y2="51"
-                                    gradientUnits="userSpaceOnUse">
-                                    <stop stop-color="#FFD804" />
-                                    <stop offset="1" stop-color="#FFD807" />
-                                </linearGradient>
-                            </defs>
-                        </svg>
-
-
-
-
-                        PointsBud
-
-                    </div>
-
-                    <!--<div class="links">
-                        <a href="">About</a>
-                    </div>-->
-
-                </div>
-                <div class="hero">
-                    <div class="hero__container">
-                        <div class="hero__title">
-                            Engage with the people who enjoy your food.
-                        </div>
-                        <p class="hero__caption">We provide restaurants and food vendors with their own digital menu and
-                            tools for engaging with customers and selling more than they'd do on Jumia, Glovo and Chowdeck.
-                        </p>
-                        <div class="hero__cta" style="justify-content: center">
-
-                            <button @click="getStarted">Get Started for free</button>
-                        </div>
-
-                        <div class="companies">
-                            <div class="companies__header">Trusted by</div>
-                            <div class="companies__container">
-                                <img src="https://theboroughlagos.com/wp-content/uploads/2018/10/Artboard-1-copy.png">
-
-                                <img style="filter: brightness(0) invert(1);
-                                                                                                                                                                                                                                                                            "
-                                    id="flutterwave-logo" data-v-796721dc=""
-                                    src="https://www.afflee.com/_nuxt/img/flutterwave-logo.311915c.svg" alt="">
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
-            <!-- 
-            <div class="trusted">
-                <div class="trusted__container">
-
-                    <p class="trusted__header">Trusted by</p>
-                    <div class="trusted__logos">
-
-                        <img src="https://theboroughlagos.com/wp-content/uploads/2018/10/Artboard-1-copy.png">
-
-                        <img id="flutterwave-logo" data-v-796721dc=""
-                            src="https://www.afflee.com/_nuxt/img/flutterwave-logo.311915c.svg" alt="">
-                    </div>
-                </div>
-            </div> -->
-
-            <div class="footer">
-                <div class="footer__container">
-                    <div class="links">
-                        <a style="text-decoration: underline;" href="/privacy-policy">Privacy Policy</a>
-                    </div>
-                    <p class="footer__copyright">Copyright 2023, PointsBud Inc</p>
-                    <p>An affiliate of <a style="border-bottom: 1px solid white" href="https://www.afflee.com">Afflee </a>
-                    </p>
-                </div>
-            </div>
-
         </div>
     </div>
 </template>
 
-
 <script>
-import mixpanel from 'mixpanel-browser';
-
 export default {
-    mounted() {
-        mixpanel.init('94aa4934861f03d1be99f929b6ba07b0', { debug: false });
-        mixpanel.track("PointsBud: Visited");
-    },
     data() {
         return {
-            subscribing: false,
-            subscribed: false,
-            show_modal: false,
+            mode: 'register',
+            loading: false,
             model: {
-                contact: ''
+                name: '',
+                email: '',
+                password: '',
             }
         }
     },
+
     methods: {
-        getStarted() {
-            mixpanel.track("PointsBud: Click get started");
-            this.show_modal = true
-
+        continueAuth() {
+            if (this.mode === 'register') {
+                this.signup()
+            }
+            else {
+                this.login()
+            }
         },
-        subscribe() {
-            mixpanel.track("PointsBud: Clicked subscribe");
-
-            this.subscribing = true;
-            this.$api.post('/waitlist', {
-                email: this.model.contact
-            }).then(resp => {
-                this.subscribed = true;
-
+        login() {
+            this.$api.post('/auth/login', this.model).then(resp => {
+                this.$cookies.set('profpitchcookie', resp.data.data.token);
+                window.open('/dashboard', '_self');
             }).finally(() => {
-                this.subscribing = false;
+                this.loading = false
+            })
+        },
+        signup() {
+            this.loading = true;
+            this.$api.post('/auth/register', this.model).then(resp => {
+                this.login()
+            }).catch(err => {
+                this.$toast.error(err.data.data.message)
             })
         }
     }
 }
+
+
 </script>
-
-
 <style lang="scss" scoped>
-.submodal {
-    &__container {
-        padding: 16px;
-        box-sizing: border-box;
-        ;
-    }
+.auth-header {
+    text-align: center;
+    margin-bottom: 8px;
+    font-size: 18px;
+    color: #BC2BD4;
+    text-transform: uppercase;
 
-    p {
-        font-size: 18px;
-        font-weight: 500;
-        text-align: center;
-
-        &:last-child {
-            font-size: 13px;
-        }
-    }
-
-    .form-input {
-        margin-top: 16px;
-        @include plain-form-input;
-        text-align: center;
-
-        input {
-            margin-bottom: 16px;
-            text-align: center;
-        }
-    }
-
-    .cta {
-        width: 100%;
-
-        button {
-            width: 100%;
-            @include largebutton;
-            color: white;
-        }
-    }
 }
 
-.landing {
-    width: 100%;
-}
-
-.container {
-    width: 100%;
-}
-
-.header {
-    background-color: #1e202d;
-    width: 100%;
-    min-height: 90vh;
-    //background-image: url('../static/bckg2.png');
-    background-position: center;
-    background-repeat: no-repeat;
-
-    &__container {
-        width: 80%;
-        margin: auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding-top: 40px;
+.already {
+    margin-top: 8px;
+    color: #707070;
 
 
-    }
-
-    .links {
-        a {
-            color: white;
-        }
-    }
-
-    .logo {
-        display: flex;
-        flex-direction: column;
-
-        color: white;
-        font-family: 'Squada One', cursive;
-        justify-content: center;
-        align-items: center;
-        font-size: 30px;
-        letter-spacing: 1.5px;
-        color: #FFEA78;
-
-    }
-}
-
-.hero {
-    &__container {
-        width: 80%;
-        margin: auto;
-        color: white;
-    }
-
-    &__title {
-        text-align: center;
-        margin: auto;
-        display: block;
-        font-size: 50px;
-        margin-top: 60px;
-        max-width: 946px;
-        margin-bottom: 16px;
-        font-family: 'Squada One', cursive;
-        letter-spacing: 1.5px;
-
-    }
-
-    &__caption {
-        text-align: center;
-        font-size: 20px;
-        font-family: 'Red Hat Display', cursive;
-        margin-bottom: 16px;
-        max-width: 502px;
-        margin: auto;
-        margin-bottom: 68px;
-        letter-spacing: 1.5px;
-        font-weight: 300;
-    }
-
-    button {
-        //font-family: 'Squada One', cursive;
-        padding: 16px 32px;
-        margin: auto;
-        letter-spacing: 1px;
-        color: black;
-
-        border-radius: 50px;
-        font-size: 18px;
-        font-weight: 600;
-        color: $charcoal;
-        margin-bottom: 20px;
-        width: 300px !important;
-        margin: auto;
-
-        @include media("<=t") {
-            padding: 14px;
-            font-size: 18px;
-            width: 100%;
-        }
+    span {
+        color: #BC2BD4;
+        cursor: pointer;
 
         &:hover {
-            box-shadow: rgba(133, 133, 133, 0.25) 0 8px 15px;
-            //transform: translateY(-2px);
-        }
-
-
-        &:first-of-type {
-            background: #FFEA78 !important;
-            //margin-right: 16px;
-            color: black;
-
-            @include media("<=t") {
-                // margin-right: 18px;
-            }
-
-        }
-
-        &:last-child {
-            background: rgb(1, 155, 155);
-            color: black;
-
-            @include media("<=t") {
-                margin-bottom: 60px;
-            }
-
-
+            text-decoration: underline;
         }
     }
+}
 
-    .companies {
-        &__header {
-            margin-top: 32px;
-
-            text-align: center;
-            font-size: 13px;
-        }
-
-
-        &__container {
-            padding-bottom: 30px;
-            display: flex;
-            justify-content: center;
-            width: 50%;
-            margin: auto;
-            box-sizing: border-box;
-            display: grid;
-            grid-template-columns: 40% 40%;
-            align-items: center;
-            justify-content: center;
-            //border: 1px solid white;
-
-            @include media("<=t") {
-                width: 100%;
-            }
-
-            img {
-                height: 80px;
-
-            }
-
-        }
-
-    }
-
-    &__cta {
-        margin: auto;
-        display: flex;
-        // width: 50%;
-
-
-        button {
-            width: 80%;
-            margin: auto;
-        }
+.page {
+    &__container {
+        display: grid;
+        grid-template-columns: 50%50%;
 
         @include media("<=t") {
-            width: 80%;
-            display: flex;
-            flex-direction: column;
+            grid-template-columns: 100%;
+        }
+    }
+
+    &__left {
+        height: 100vh;
+        background: linear-gradient(0deg, rgba(188, 43, 212, 0.1), rgba(188, 43, 212, 0.1)), url("https://i.ibb.co/GxQfH6W/andrew-neel-ute2-XAFQU2-I-unsplash-1.png");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        transform: matrix(-1, 0, 0, 1, 0, 0);
+
+        @include media('<=t') {
+            height: 500px;
+
         }
 
+
+
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+
+        }
     }
-}
 
-.trusted {
-    background: #FFEA78;
-
-    &__container {
+    &__right {
         display: flex;
-
         flex-direction: column;
-        align-items: center;
-        padding: 100px 20px;
-        padding-bottom: 150px;
-    }
-
-
-    &__header {
-        color: grey;
-        font-family: 'Squada One', cursive;
-        font-weight: 600;
-    }
-
-
-    &__logos {
-        display: grid;
-        grid-template-columns: 40% 40%;
-        align-items: center;
         justify-content: center;
-        height: 50px;
+        padding: 0 160px;
+
+        button {
+            background: linear-gradient(111.4deg, #BC2BD4 -6.35%, #2BA1D4 64.08%);
+            /* Drop Shadow */
+
+            box-shadow: 8px 5px 20px rgba(38, 38, 47, 0.15);
+            border-radius: 5px;
+            width: 100%;
+            color: white;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 17px;
+            /* identical to box height */
+
+            padding: 20px 44px;
+            color: #FFFFFF;
+            font-size: 16px;
+
+            &:disabled {
+                background: lighgrey;
+                color: grey;
+            }
+        }
     }
 
-    img {
-        filter: contrast(.05);
-        height: 80px;
+    &__logo {
+        margin-bottom: 56px;
 
     }
 
-    #flutterwave-logo {
-        //filter: blur(10px);
-        filter: grayscale(1);
-    }
+
 }
 
-.footer {
-    background: teal;
-    min-height: 200px;
-    //margin-top: 50px;
+.form-input {
+    margin-bottom: 16px;
+    width: 100%;
 
-    &__container {
-        padding: 150px 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        color: white;
-        font-family: 'Squada One', cursive;
-        font-size: 18px;
-        letter-spacing: 1px;
+    label {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 19px;
+
+        color: #707070;
+
+    }
+
+    input {
+        width: 100%;
+        margin-bottom: 16px;
+        background: #F5F5F5;
+        border-radius: 5px;
+        padding: 19px 44px;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 19px;
+
+        color: #707070;
+
+        &:focus {
+            outline: 1px solid rgba(0, 0, 0, 0.1);
+        }
 
     }
 }
