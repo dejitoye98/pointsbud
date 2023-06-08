@@ -3,7 +3,7 @@ export default function ({ app, $axios, $route, store, redirect, $cookies, $conf
     //api.setBaseURL("//localhost:5000/api/v1");
     api.setBaseURL($config.API_BASE);
     let obj = {}
-    if ($cookies.get('loyal-token')) {
+    if ($cookies.get('profpitchcookie')) {
         obj = { 'Authorization': `Bearer ${$cookies.get('profpitchcookie')}` }
     }
     api.onRequest((config) => {
