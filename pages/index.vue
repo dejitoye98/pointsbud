@@ -51,7 +51,7 @@
                     </template>
                 </div>
 
-                <button @click="continueAuth">Continue</button>
+                <button :disabled="loading" @click="continueAuth">Continue</button>
 
                 <div class="already" style="width: 100%; text-align: center">
                     <template v-if="mode === 'register'">
@@ -193,7 +193,7 @@ export default {
             font-size: 16px;
 
             &:disabled {
-                background: lighgrey;
+                background: lightgrey;
                 color: grey;
             }
         }
