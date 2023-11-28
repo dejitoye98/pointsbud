@@ -66,9 +66,9 @@
                     </div>
                     <div class="links">
                         <a href="#home">Home</a>
-                        <a href="#">About</a>
-                        <a href="#">FAQ</a>
-                        <a href="#testimony">Testimony</a>
+                        <a href="#about">About</a>
+                        <a href="#faq">FAQ</a>
+                        <a href="#testimony">Testimonial</a>
                     </div>
 
                     <div class="ctas">
@@ -93,6 +93,8 @@
                         <div class="details__caption">
                             <p> Bridging Borders, Building Wealth — Your Global Gateway to Smart Investments. </p>   
                         </div>
+
+                       
                     </div>
 
                     
@@ -228,7 +230,7 @@
                     </div>
                 </div>
 
-                <div class="about">
+                <div class="about" id="about">
                     <div class="about__container">
                         <div class="about__left">
 
@@ -299,7 +301,7 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                     </div>
                 </div>
 
-                <div class="faq">
+                <div class="faq" id="faq">
                     <div class="faq__container">
 
 
@@ -364,7 +366,7 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                 </div>
 
 
-                <div class="testimonials">
+                <div class="testimonials" id="testimony">
                     <div class="testimonials__container">
                         <p class="testimonials__header">People say about us?</p>
 
@@ -522,7 +524,7 @@ export default {
             margin-bottom: 43px;
 
             @include media("<=t") {
-                font-size: 40px;
+                font-size: 30px;
                 margin-bottom: 20px;
             }
         }
@@ -671,7 +673,7 @@ export default {
                         
 
                         @include media("<=t"){
-                            font-size: 40px;
+                            font-size: 30px;
                            // width: 540px;
                             line-height: 70px;
                             width: 100%;
@@ -695,6 +697,7 @@ export default {
 
                     @include media('<=t') {
                         line-height: 40px;
+                        width: 100%;
                     }
                 }
             }
@@ -807,6 +810,7 @@ export default {
     @include media('<=t') {
      flex-direction: column;
      width: 90%;
+     background-color: transparent;
     }
 
     .logo {
@@ -827,6 +831,9 @@ export default {
             margin: 5px 0px ;
             width: 80%;
             justify-content: center;
+            display: flex;
+            display: flex;
+            gap: 16px;
             //display: none;
 
         }
@@ -847,6 +854,9 @@ export default {
     }
 
     .ctas {
+        @include media("<=t") {
+            display: none;
+        }
         button{
             color: #FFF;
 
@@ -957,7 +967,7 @@ export default {
         line-height: normal;
 
         @include media("<=t") {
-            font-size: 40px;
+            font-size: 30px;
             width: 100%;
             
         }
@@ -972,7 +982,7 @@ export default {
 
 
             @include media("<=t") {
-                font-size: 40px;
+                font-size: 30px;
                 width: 100%;
                 
             }
@@ -986,8 +996,9 @@ export default {
         font-family: Spartan;
         font-size: 18px;
         font-style: normal;
-        font-weight: 500;
+        font-weight: 400;
         line-height: 177%; 
+        font-family: 'League Spartan', sans-serif;
         @include media("<=t") {
             width: 100%;
             font-weight: 16px;
@@ -1039,6 +1050,12 @@ export default {
                     font-weight: 600;
                     line-height: 180%; 
                     font-weight: 400;
+
+                    font-family: 'League Spartan', sans-serif;
+
+                    @include media("<=t") {
+                        width: 100%;
+                    }
 
                 }
             }
@@ -1147,7 +1164,7 @@ export default {
             margin: 24px 0;
 
             @include media("<=t") {
-                font-size: 40px;
+                font-size: 30px;
                 
                 
             }
@@ -1159,10 +1176,10 @@ export default {
             color: #263238;
 
             text-align: justify;
-            font-family: Spartan;
+            font-family: 'League Spartan', sans-serif;
             font-size: 18px;
             font-style: normal;
-            font-weight: 500;
+            font-weight: 400;
             line-height: 177%; 
         }
     }
@@ -1229,7 +1246,7 @@ export default {
         line-height: 110%;
         @include media("<=t") {
             width: 100% !important; 
-            font-size: 40px;
+            font-size: 30px;
             display: flex;
 
             span {
@@ -1241,11 +1258,13 @@ export default {
         color: #263238;
 
         text-align: justify;
-        font-family: Spartan;
         font-size: 18px;
         font-style: normal;
-        font-weight: 500;
-        line-height: 177%
+        font-weight: 400;
+        line-height: 177%;
+        font-family: 'League Spartan', sans-serif;
+        margin-top: 10px;
+
     }
 
     &__right {
@@ -1292,7 +1311,8 @@ export default {
         margin-bottom: 15px;
 
         @include media("<=t") {
-            font-size: 40px;
+            font-size: 30px;
+            margin-top: 16px;
         }
         
     }
@@ -1363,7 +1383,7 @@ export default {
 
         @include media("<=t") {
            margin-top: 32px;
-           font-size: 40px;
+           font-size: 30px;
         }
     }
 
