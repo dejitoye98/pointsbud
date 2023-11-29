@@ -115,7 +115,7 @@
                         </div>
                         
                         <div class="credentials__item credentials__item--button">
-                            <button @click="showModal">Get Started</button>
+                            <button @click="showModal">Join the Waitlist</button>
                         </div>
                     </div>
                 </div>
@@ -322,9 +322,10 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                             <p class="faq__header">Frequently asked questions</p>
     
                             <div class="faq__items">
+                               
                                 <div class="faq__items__item">
                                     <p class="faq__items__item__text">
-                                        01. What services does Assetblend offer?
+                                        01. Who can invest on the AssetBlend platform?
                                     </p>
                                     <div class="faq__items__item__add">
                                         +
@@ -332,15 +333,7 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                                 </div>
                                 <div class="faq__items__item">
                                     <p class="faq__items__item__text">
-                                        Who can invest on the AssetBlend platform?
-                                    </p>
-                                    <div class="faq__items__item__add">
-                                        +
-                                    </div>
-                                </div>
-                                <div class="faq__items__item">
-                                    <p class="faq__items__item__text">
-                                        03. What security measures are in place during  registration and transactions?
+                                        02. What security measures are in place during  registration and transactions?
 
                                     </p>
                                     <div class="faq__items__item__add">
@@ -349,7 +342,7 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                                 </div>
                                 <div class="faq__items__item">
                                     <p class="faq__items__item__text">
-                                        04. Can I monitor my investments?
+                                        03. Can I monitor my investments?
                                     </p>
                                     <div class="faq__items__item__add">
                                         +
@@ -357,7 +350,7 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                                 </div>
                                 <div class="faq__items__item">
                                     <p class="faq__items__item__text">
-                                        05. Are there minimum investment requirements?
+                                        04. Are there minimum investment requirements?
                                     </p>
                                     <div class="faq__items__item__add">
                                         +
@@ -375,7 +368,7 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
 
                 <div class="testimonials" id="testimony">
                     <div class="testimonials__container">
-                        <p class="testimonials__header">People say about us?</p>
+                        <p class="testimonials__header">What people say about us...</p>
 
                         <div class="testimonials__content">
                             <div class="testimonials__item">
@@ -476,6 +469,7 @@ export default {
     position: fixed;
     width: 100%;
     min-height: 100vh;
+    margin-bottom: 100px;
     
 
     &__cancel {
