@@ -191,7 +191,7 @@
                                     
                                         <div class="how__items__item__content">
                                             <p class="how__items__item__content__header">
-                                                Buy Shares                                            </p>
+                                                Buy Properties                                            </p>
     
                                             <p class="how__items__item__content__caption">
                                                 Review the terms, sign electronically, and fund your investment
@@ -215,7 +215,7 @@
                                             </p>
     
                                             <p class="how__items__item__content__caption">
-                                                All while we manages the properties
+                                                All while we manage the properties
                                             </p>
                                         </div>
                                 </div>
@@ -324,36 +324,61 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                             <div class="faq__items">
                                
                                 <div class="faq__items__item">
-                                    <p class="faq__items__item__text">
-                                        01. Who can invest on the AssetBlend platform?
-                                    </p>
-                                    <div class="faq__items__item__add">
-                                        +
-                                    </div>
-                                </div>
-                                <div class="faq__items__item">
-                                    <p class="faq__items__item__text">
-                                        02. What security measures are in place during  registration and transactions?
+                                    <div class="faq__items__item__header">
 
-                                    </p>
-                                    <div class="faq__items__item__add">
-                                        +
+                                        <p class="faq__items__item__text">
+                                            01. Who can invest on the AssetBlend platform?
+                                        </p>
+                                        <div class="faq__items__item__add" @click="expandSection('faqs', 'one')">
+                                            +
+                                        </div>
+                                    </div>
+                                    <div class="faq-item__expanded faq-item__expanded--nopadding" v-if="sections.faqs.one">
+                                        Anyone that’s gone through our formal KYC process can contribute Collaborative Capital for our real estate  offerings
                                     </div>
                                 </div>
                                 <div class="faq__items__item">
-                                    <p class="faq__items__item__text">
-                                        03. Can I monitor my investments?
-                                    </p>
-                                    <div class="faq__items__item__add">
-                                        +
+                                    <div class="faq__items__item__header">
+
+
+                                        <p class="faq__items__item__text">
+                                            02. What security measures are in place during  registration and transactions?
+    
+                                        </p>
+                                        <div class="faq__items__item__add"  @click="expandSection('faqs', 'two')">
+                                            +
+                                        </div>
+                                    </div>
+                                    <div class="faq-item__expanded faq-item__expanded--nopadding" v-if="sections.faqs.two">
+                                        Anyone that’s gone through our formal KYC process can contribute Collaborative Capital for our real estate  offerings
                                     </div>
                                 </div>
                                 <div class="faq__items__item">
-                                    <p class="faq__items__item__text">
-                                        04. Are there minimum investment requirements?
-                                    </p>
-                                    <div class="faq__items__item__add">
-                                        +
+                                    <div class="faq__items__item__header">
+
+                                        <p class="faq__items__item__text">
+                                            03. Can I monitor my investments?
+                                        </p>
+                                        <div class="faq__items__item__add"  @click="expandSection('faqs', 'three')">
+                                            +
+                                        </div>
+                                    </div>
+                                    <div class="faq-item__expanded faq-item__expanded--nopadding"  v-if="sections.faqs.three">
+                                        Yes, you can monitor your investments through the investor dashboard on your profile                                    </div>
+                                </div>
+                                <div class="faq__items__item">
+                                    <div class="faq__items__item__header">
+
+                                        <p class="faq__items__item__text">
+                                            04. Are there minimum investment requirements?
+                                        </p>
+                                        <div class="faq__items__item__add"  @click="expandSection('faqs', 'four')">
+                                            +
+                                        </div>
+                                    </div>
+
+                                    <div class="faq-item__expanded faq-item__expanded--nopadding"  v-if="sections.faqs.four">
+                                        Yes , the minimum is $50 or it’s NGN equivalent based on the day’s prevailing rate
                                     </div>
                                 </div>
     
@@ -438,7 +463,13 @@ export default {
             show_modal: false,
             sections:  {
                 mission: false,
-                values: false
+                values: false,
+                faqs:{
+                    "one": false,
+                    "two": false,
+                    "three": false,
+                    "four": false
+                }
             }
         }
     },
@@ -446,13 +477,27 @@ export default {
         showModal(){
             this.show_modal = true
         },
-        expandSection(section) {
+        expandSection(section, meta) {
            // alert('ser')
             if (section === 'mission') {
                 this.sections.mission = !this.sections.mission;
             }
             else if (section === 'values') {
                 this.sections.values =  !this.sections.values;;
+            }
+            else if (section === 'faqs'){
+                if (meta === 'one') {
+                    this.sections.faqs.one =  !this.sections.faqs.one
+                }
+                if (meta === 'two') {
+                    this.sections.faqs.two =  !this.sections.faqs.two
+                }
+                if (meta === 'three') {
+                    this.sections.faqs.three = !this.sections.faqs.three
+                }
+                if (meta === 'four') {
+                    this.sections.faqs.four =  !this.sections.faqs.four
+                }
             }
         }
     }
@@ -1242,6 +1287,10 @@ export default {
 
             }
         }
+
+        &--nopadding {
+            padding: 0;
+        }
     }
     
     &__container{
@@ -1372,13 +1421,18 @@ export default {
         flex-direction: column;
 
         &__item{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            //display: flex;
+            //align-items: center;
+            //justify-content: space-between;
             padding: 20px 25px;
             background: #FFF2EE;
             border-radius: 10px;
             margin-bottom: 10px;
+
+            &__header {
+                display: flex;
+                justify-content: space-between;
+            }
 
             &__text {
                 color: #212529;
