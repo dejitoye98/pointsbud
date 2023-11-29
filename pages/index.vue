@@ -1452,6 +1452,7 @@ export default {
                 align-items: center;
                 flex-shrink: 0;
                 color: #FC4904;
+                cursor: pointer;
                 
             }
         }
