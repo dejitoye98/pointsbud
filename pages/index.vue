@@ -163,11 +163,11 @@
                                     
                                         <div class="how__items__item__content">
                                             <p class="how__items__item__content__header">
-                                                Select Property
+                                                Select Units
                                             </p>
     
                                             <p class="how__items__item__content__caption">
-                                                Determine how much money you want to invest and select your shares
+                                                Determine how much you want to invest in a property
                                             </p>
                                         </div>
                                 </div>
