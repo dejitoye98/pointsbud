@@ -247,7 +247,7 @@
                                 <p class="about__header__caption">AssetBlend pioneers accessible global investments, through collaborative capital in US real estate market. With expert founders and innovative plans, we empower investors, bridging borders and unlocking financial opportunitis for all.</p>
                             </div>
                             
-                            <div class="faq-item">
+                            <div class="faq-item"  @click="expandSection('mission')">
                                 <div class="faq-item__container">
                                     <p>Our Mission</p>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -255,9 +255,17 @@
                                     </svg>
                                         
                                 </div>
+                                <div class="faq-item__expanded" v-if="sections.mission">
+                                    <ul>
+                                        <li> Empowering global investors, we champion a democratized approach, facilitating seamless entry into the lucrative U.S. real estate and alternative assets market, dismantling financial barriers with accessible investments</li>
+                                        <li> Revolutionizing investment horizons, we champion a democratized model, opening doors for individuals worldwide to explore the U.S. real estate and alternative assets scene. We believe in breaking down financial barriers for all.</li>
+                                        <li>Transforming dreams into realities, we embrace a democratized ethos, empowering individuals across borders to venture into the dynamic U.S. real estate and alternative assets market, fostering financial inclusivity.</li>
+                                    </ul>
+                                    
+                                </div>
 
                             </div>
-                            <div class="faq-item">
+                            <div class="faq-item" @click="expandSection('values')">
                                 <div class="faq-item__container">
                                     <p>Our Core Values</p>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -265,18 +273,16 @@
                                     </svg>
                                         
                                 </div>
-                            </div>
-                            <div class="faq-item">
-
-                                <div class="faq-item__container">
-                                    <p>Our Aim and Objective</p>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M8.94995 4.07998L15.47 10.6C16.24 11.37 16.24 12.63 15.47 13.4L8.94995 19.92" stroke="#FC4904" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                        
+                                <div class="faq-item__expanded"  v-if="sections.values">
+                                    <ul>
+                                        <li>At the core of our values is a commitment to democratizing opportunities. We empower individuals globally to engage in the dynamic U.S. real estate and alternative assets market, embodying financial inclusivity.</li>
+                                        <li>We champion global accessibility to the U.S. real estate market, embodying financial inclusivity in our core values. Empowering individuals through accessible and impactful investments.
+                                        </li>
+                                    </ul>
+                                    
                                 </div>
                             </div>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
@@ -381,7 +387,8 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                                     Unlocking Opportunities with AssetBlend
                                 </p>
                                 <p>
-                                    AssetBlend has been a game-changer. The platform's innovative approach to pooling funds for US real estate and alternative investments aligned perfectly with my aspirations.
+                                    AssetBlend has been a game-changer. The platform's innovative approach to collaborative capital in US real estate market
+ and alternative investments aligned perfectly with my aspirations.
                                 </p>
 
                                 <div class="author">
@@ -401,7 +408,8 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                                     Unlocking Opportunities with AssetBlend
                                 </p>
                                 <p>
-                                    AssetBlend has been a game-changer. The platform's innovative approach to pooling funds for US real estate and alternative investments aligned perfectly with my aspirations.
+                                    AssetBlend has been a game-changer. The platform's innovative approach to collaborative capital in US real estate market
+ and alternative investments aligned perfectly with my aspirations.
                                 </p>
                             </div>
                             <div class="testimonials__item">
@@ -413,7 +421,8 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                                     Unlocking Opportunities with AssetBlend
                                 </p>
                                 <p>
-                                    AssetBlend has been a game-changer. The platform's innovative approach to pooling funds for US real estate and alternative investments aligned perfectly with my aspirations.
+                                    AssetBlend has been a game-changer. The platform's innovative approach to collaborative capital in US real estate market
+ and alternative investments aligned perfectly with my aspirations.
                                 </p>
                             </div>
                             
@@ -434,11 +443,24 @@ export default {
     data() {
         return {
             show_modal: false,
+            sections:  {
+                mission: false,
+                values: false
+            }
         }
     },
     methods: {
         showModal(){
             this.show_modal = true
+        },
+        expandSection(section) {
+           // alert('ser')
+            if (section === 'mission') {
+                this.sections.mission = !this.sections.mission;
+            }
+            else if (section === 'values') {
+                this.sections.values =  !this.sections.values;;
+            }
         }
     }
 }
@@ -502,6 +524,8 @@ export default {
             width: 95%;
             margin: auto;
             grid-template-columns: 100%;
+            padding: 16px;
+
         }
     }
 
@@ -575,6 +599,7 @@ export default {
             @include media('<=t') {
                 width: 100%;
                 margin-bottom: 8px;
+                text-align: center;
               //  padding: 16px;
 
             }
@@ -1207,6 +1232,23 @@ export default {
     flex-shrink: 0;
     margin-bottom: 24px;
     cursor: pointer;
+
+    &__expanded {
+        padding: 8px 30px;
+        @include media('<=t') {
+            padding: 16px 30px;
+        }
+
+        ul {
+            list-style: disc;
+            li {
+                margin-bottom: 10px;
+                font-family: DM Sans;
+                line-height: 30px;
+
+            }
+        }
+    }
     
     &__container{
         padding: 24px 30px;
