@@ -27,21 +27,32 @@
                             </defs>
                             </svg>
                             
-                        <div class="modal__title">
-                            <h2>Unlock Exclusive Access: Join the Assetblend Waitlist</h2>
-                            <p>Be the first to experience the future of global investing with AssetBlend. Join our exclusive waitlist and secure your spot for early access to a world of financial opportunities.</p>
 
-                            <div class="modal__input">
-                                <input placeholder="Enter your email"  type="text">
-                                <button>Join Now</button>
+                        <template v-if="!subscribed">
+
+                            <div class="modal__title">
+                                <h2>Unlock Exclusive Access: Join the Assetblend Waitlist</h2>
+                                <p>Be the first to experience the future of global investing with AssetBlend. Join our exclusive waitlist and secure your spot for early access to a world of financial opportunities.</p>
+    
+                                <div class="modal__input">
+                                    <input v-model="email" placeholder="Enter your email"  type="text">
+                                    <button :disabled="subscribing" @click="registerWaitlist">Join Now</button>
+                                </div>
+    
+                                
                             </div>
+    
+                            <div class="modal__image">
+                                <img src="https://res.cloudinary.com/dx9vdtrxz/image/upload/v1701131396/fjves9qgg0ye4i0d6onw.png" alt="">
+                            </div>
+                        </template>
 
-                            
-                        </div>
-
-                        <div class="modal__image">
-                            <img src="https://res.cloudinary.com/dx9vdtrxz/image/upload/v1701131396/fjves9qgg0ye4i0d6onw.png" alt="">
-                        </div>
+                        <template v-else>
+                            <div class="modal__title">
+                                <h2>Thanks for signing up</h2>
+                                <p>We'll reach out to you as soon as we're live!</p>
+                            </div>
+                        </template>
                     </div>
                     
                 </div>
@@ -73,7 +84,7 @@
 
                     <div class="ctas">
                         <!--<button>Join the waitlist</button>-->
-                        <button @click="showModal">Join Waitlist</button>
+                        <button  @click="showModal">Join Waitlist</button>
                     </div>
                 </div>
 
@@ -87,11 +98,14 @@
 
 
                         <div class="details__title">
-                            <h1>Unlock Global Investments Together.</h1>
+                            <h1>Unlock Global Investments Together</h1>
                         </div>
                         
                         <div class="details__caption">
-                            <p> Bridging Borders, Building Wealth — Your Global Gateway to Smart Investments. </p>   
+                            <p> Where dreams meet returns. Explore fractional real estate, open to everyone, securing consistent 4-10% historical returns </p>   
+                        </div>
+                        <div class="details__caption">
+                            <!--<p> </p>  --> 
                         </div>
 
                        
@@ -340,9 +354,23 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                                 <div class="faq__items__item">
                                     <div class="faq__items__item__header">
 
+                                        <p class="faq__items__item__text">
+                                            02. Who can invest on the AssetBlend platform?
+                                        </p>
+                                        <div class="faq__items__item__add" @click="expandSection('faqs', 'one')">
+                                            +
+                                        </div>
+                                    </div>
+                                    <div class="faq-item__expanded faq-item__expanded--nopadding" v-if="sections.faqs.one">
+                                        Anyone that’s gone through our formal KYC process can contribute Collaborative Capital for our real estate  offerings
+                                    </div>
+                                </div>
+                                <div class="faq__items__item">
+                                    <div class="faq__items__item__header">
+
 
                                         <p class="faq__items__item__text">
-                                            02. What security measures are in place during  registration and transactions?
+                                            03. What security measures are in place during  registration and transactions?
     
                                         </p>
                                         <div class="faq__items__item__add"  @click="expandSection('faqs', 'two')">
@@ -357,7 +385,7 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                                     <div class="faq__items__item__header">
 
                                         <p class="faq__items__item__text">
-                                            03. Can I monitor my investments?
+                                            04. Can I monitor my investments?
                                         </p>
                                         <div class="faq__items__item__add"  @click="expandSection('faqs', 'three')">
                                             +
@@ -370,7 +398,7 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                                     <div class="faq__items__item__header">
 
                                         <p class="faq__items__item__text">
-                                            04. Are there minimum investment requirements?
+                                            05. Are there minimum investment requirements?
                                         </p>
                                         <div class="faq__items__item__add"  @click="expandSection('faqs', 'four')">
                                             +
@@ -457,9 +485,58 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
 
 
 <script>
+
+if (process.browser) {
+    window.addEventListener('load', function() {
+
+        function elementIsInView(el, percentageScroll = 100) {
+            const elementTop = el.getBoundingClientRect().top;
+            return (
+                elementTop <= ((window.innerHeight || document.documentElement.clientHeight) * (percentageScroll / 100))
+            );
+        }
+
+        function handleScrollAnimation() {
+            const enterLeftElements = document.getElementsByClassName('enter-left');
+            const enterRightElements = document.getElementsByClassName('enter-right');
+            const enterUpElements = document.getElementsByClassName('enter-up');
+            const enterDownElements = document.getElementsByClassName('enter-down');
+
+            Array.from(enterLeftElements).forEach(el => {
+                if (elementIsInView(el, 100)) {
+                    el.classList.add('enter');
+                }
+            });
+            Array.from(enterRightElements).forEach(el => {
+                if (elementIsInView(el, 100)) {
+                    el.classList.add('enter');
+                }
+            });
+            Array.from(enterDownElements).forEach(el => {
+                if (elementIsInView(el, 100)) {
+                    el.classList.add('enter');
+                }
+            });
+            Array.from(enterUpElements).forEach(el => {
+                if (elementIsInView(el, 100)) {
+                    el.classList.add('enter');
+                }
+            });
+        }
+
+        // Consider using debounce or throttle for performance optimization
+        window.addEventListener('scroll', () => {
+            handleScrollAnimation();
+        });
+    });
+}
+
 export default {
     data() {
         return {
+            subscribing: false,
+            subscribed: false,
+            email: '',
             show_modal: false,
             sections:  {
                 mission: false,
@@ -474,6 +551,13 @@ export default {
         }
     },
     methods: {
+        registerWaitlist() {
+            this.subscribing = false;
+            setTimeout(() => {
+                this.subscribed = true;
+                this.subscribing = false
+            }, 3000)
+        },
         showModal(){
             this.show_modal = true
         },
@@ -618,6 +702,7 @@ export default {
         @include media('<=t') {
             display: flex;
             flex-direction: column;
+            height: fit-content;
         }
         //border: 1px solid white;
         input {
@@ -633,7 +718,7 @@ export default {
             line-height: 26px; /* 162.5% */
             letter-spacing: 0.5px;
             border: 0px;
-            color: white;
+            color: black;
             
             @include media('<=t') {
                 width: 100%;
@@ -1540,5 +1625,64 @@ export default {
     }
 }
 
+.enter-left {
+    transform: translateX(-100px);
+    opacity: 0;
+    transition: all 800ms ease-in;
+}
 
+.enter-left.enter {
+    opacity: 1;
+    transform: translateX(0px);
+    ::after{
+        z-index: 10000000;
+    }
+}
+.enter-right {
+    transform: translateX(100px);
+    opacity: 0;
+    transition: all 800ms ease-in;
+}
+
+.enter-right.enter {
+    opacity: 1;
+    transform: translateX(0px);
+    ::after{
+        z-index: 10000000;
+    }
+}
+
+.enter-up {
+    transform: translateY(-100px);
+    opacity: 0;
+    transition: all 800ms ease-in;
+}
+
+.enter-up.enter {
+    opacity: 1;
+    transform: translateY(0px);
+    ::after{
+        z-index: 10000000;
+    }
+}
+.enter-down {
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 800ms ease-in;
+}
+
+.enter-down.enter {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+
+button {
+   
+    &:disabled {
+        background-color: grey !important;
+        color: white !important;
+        cursor: default;
+    }
+}
 </style>
