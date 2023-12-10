@@ -24,7 +24,7 @@ export default {
             //{ name: "google-signin-client_id", content: "638411293504-minstvm8qj8vmftvuaacnea143ghnpj7.apps.googleusercontent.com" }
         ],
         link: [
-            //{ rel: "icon", type: "image/x-icon", href: "/pointsfavicon.png" },
+            { rel: "icon", type: "image/x-icon", href: "/assetblend_icon.png" },
             {
                 href: "https://fonts.googleapis.com/css?family=Quicksand:300,500|Playfair+Display:700i",
                 rel: "stylesheet",

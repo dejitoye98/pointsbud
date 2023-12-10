@@ -321,6 +321,64 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                     </div>
                 </div>
 
+                <div class="properties">
+                    <div style="display: flex; justify-content: center">
+
+                        <p class="properties__header">
+                            Featured <span>Properties</span>
+                        </p>
+                    </div>
+                    <div class="properties__container">
+
+                        <div class="properties__content">
+                            <div class="property" v-for="(item, index) in property_images" >
+                                <div class="property__container"  :style="{'backgroundImage': `url(${item.image})`, 'object-fit': 'cover',  'background-repeat': 'no-repeat', 'backgroundSize': '100% 100%'}">
+                                    <template v-if="item.type === 'Popular'">
+
+                                        <div class="property__tag">
+                                            <svg width="20" height="23" viewBox="0 0 20 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12.4076 11.2528C12.6672 10.8265 12.9355 10.3857 13.2006 9.93118C14.0877 8.41044 14.2505 6.87814 13.6846 5.37676C12.5427 2.34747 8.72575 0.501751 7.84209 0.207261L7.22073 0L6.25093 1.93998L6.71893 2.32231C6.72417 2.32651 7.244 2.78073 7.27865 3.4693C7.30824 4.0571 6.986 4.69229 6.32112 5.35736C5.8594 5.81904 5.35264 6.26547 4.8161 6.73805C2.55865 8.72608 0 10.98 0 15.2439C0 15.3024 0.000550676 15.3607 0.00165204 15.4185C0.0180119 16.3595 0.2201 17.2879 0.596308 18.1505C0.972516 19.0131 1.51543 19.7928 2.19387 20.445C3.55621 21.7701 5.38285 22.5097 7.28332 22.5056H11.6306L11.0939 21.4166C8.91356 16.9914 10.4555 14.459 12.4076 11.2528Z" fill="#FF1111"/>
+                                                <path d="M19.8227 15.1955C19.8102 15.1456 19.797 15.0955 19.7834 15.0451C19.2384 13.047 16.2217 10.4778 15.8795 10.1915L15.1924 9.61646L14.7418 10.3909C13.7151 12.1563 12.8339 13.7664 12.4498 15.5931C12.0118 17.6763 12.3066 19.7935 13.3513 22.0658L13.5534 22.5056H14.0669C14.9712 22.5082 15.8641 22.3032 16.6767 21.9063C17.4894 21.5094 18.2 20.9312 18.754 20.2163C19.3045 19.5171 19.6872 18.7007 19.8725 17.8302C20.0578 16.9598 20.0408 16.0583 19.8227 15.1955Z" fill="#FF1111"/>
+                                            </svg>
+                                                
+                                            Popular
+                                        </div>
+                                    </template>
+
+                                    <template v-else>
+                                        <div class="property__tag property__tag--new">
+                                            <svg width="20" height="22" viewBox="0 0 20 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M19.5387 8.55713L10.6731 0.400829C10.3849 0.135674 10.0054 -0.00782393 9.61384 0.000329345C9.2223 0.00848263 8.84906 0.167656 8.57214 0.444579L0.418438 8.59833L0 9.01672V21.037H7.85714V13.537H12.1429V21.037H20V8.98159L19.5387 8.55713Z" fill="#0BB68F"/>
+                                                </svg>
+
+                                            New Listing
+                                                
+                                        </div>
+                                    </template>
+
+                                    <div class="property__details">
+                                        <div class="property__details__detail">
+                                            <p>10.5%</p>
+                                            <span>Total Preferred Return</span>
+                                        </div>
+                                        <div class="property__details__detail">
+                                            <p>$100,000.00</p>
+                                            <span>Minimum investment</span>
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
+                                <div class="property__location">
+                                    <p>Mixed User</p>
+                                    <p>Brookly North 7th St</p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
                 <div class="faq" id="faq">
                     <div class="faq__container">
 
@@ -534,6 +592,27 @@ if (process.browser) {
 export default {
     data() {
         return {
+            property_images: [{
+                type: "Popular",
+                image: "https://res.cloudinary.com/dx9vdtrxz/image/upload/v1702241718/fb9syzqqls343cickg6l.png", 
+            }, {
+                type: "New Listing",
+                image: "https://res.cloudinary.com/dx9vdtrxz/image/upload/v1702241720/jrp9kshwlwlo24q60wpa.png"
+            }, {
+                type: "New Listing",
+                image: "https://res.cloudinary.com/dx9vdtrxz/image/upload/v1702241718/cjhdgc05wmugohjbkv2o.png",
+
+            }, {
+                type: "New Listing",
+                image: "https://res.cloudinary.com/dx9vdtrxz/image/upload/v1702241718/cjhdgc05wmugohjbkv2o.png",
+
+            
+            }, {
+                type: "New Listing",
+                image: "https://res.cloudinary.com/dx9vdtrxz/image/upload/v1702241718/cjhdgc05wmugohjbkv2o.png",
+
+            }],
+
             subscribing: false,
             subscribed: false,
             email: '',
@@ -1684,5 +1763,176 @@ button {
         color: white !important;
         cursor: default;
     }
+}
+
+.properties {
+    margin-bottom: 240px;
+    &__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow-x: scroll;
+        scrollbar-width: none;
+
+          /* For Firefox */
+          -ms-overflow-style: none;
+          //margin: auto;
+  
+          &::-webkit-scrollbar {
+              display: none;
+          }
+
+    }
+
+    &__header {
+        color: #101010;
+
+        font-family: Open Sans;
+        font-size: 60px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 110%;
+        margin-bottom: 49px;
+        
+        @include media("<=t") {
+            font-size: 30px;
+
+        }
+
+        span{
+            color: #FC4904;
+
+        }
+    }
+    &__content {
+        //border: 1px solid grey;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 50px;
+        width: 90%;;
+        //height: fit-content;
+        //overflow: scroll;
+    }
+    
+}
+
+.property {
+    border-radius: 30px;
+    min-width: 350px;
+    height: 350px;
+    background-color: black;
+    
+    @include media("<=t") {
+        min-width: 300px;
+        height: 300px
+    }
+
+    &__location {
+        margin-top:32px;
+        padding: 0px 14px;
+
+
+        p {
+            &:first-child {
+                color:#2B2B2B;
+                leading-trim: both;
+
+                text-edge: cap;
+                font-family: Open Sans;
+                font-size: 27.6px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: normal;
+            }
+
+            &:last-child {
+                color: #808080;
+
+                leading-trim: both;
+
+                text-edge: cap;
+                font-family: Open Sans;
+                font-size: 19.4px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: normal;
+            }
+        }
+    }
+    color: white;
+    &__container{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: space-between;
+        padding: 24px 14px;
+        width: 100%;
+        height: 100%;
+
+    }
+    &__tag {
+        border-radius: 20px;
+        background: #FFE1E1;padding: 10px 24px;
+        gap: 10px;
+        width: fit-content;
+        color: #F11;
+
+        leading-trim: both;
+        display: flex;
+
+        text-edge: cap;
+        font-family: Open Sans;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        
+
+        &--new {
+            background: #D7EEFF;
+            color: #0BB68F;
+
+
+        }
+
+
+    }
+
+
+    &__details {
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.80);
+        backdrop-filter: blur(2px);
+        display: flex;
+        justify-content: space-between;
+        padding: 19px;
+
+        &__detail {
+            p {
+                color: #2B2B2B;
+                leading-trim: both;
+
+                text-edge: cap;
+                font-family: Open Sans;
+                font-size: 19.4px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: normal;
+            }
+            span {
+                leading-trim: both;
+
+                text-edge: cap;
+                font-family: Open Sans;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 26px; 
+                color: #808080;
+            }
+        }
+    }
+    
 }
 </style>
