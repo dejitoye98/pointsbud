@@ -124,7 +124,7 @@
                         </div>
 
                         <div class="credentials__item">
-                            <p>550%</p>
+                            <p>8%</p>
                             <p>Investment ROI</p>
                         </div>
                         
