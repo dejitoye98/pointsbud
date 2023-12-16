@@ -238,7 +238,7 @@
 
                         <div class="how__right">
                             <div class="how__right__container">
-                                <img src="https://res.cloudinary.com/dx9vdtrxz/image/upload/v1700776859/gvmpkcv3s2dqkchg5h2t.jpg" alt="">
+                                <img src="https://i.ibb.co/16TRZQF/unsplash-oq-Y09o-VTa3k-1.png" alt="">
                             </div>
                         </div>
                     </div>
@@ -249,7 +249,7 @@
                         <div class="about__left">
 
                             <div class="about__image">
-                                <img src="https://res.cloudinary.com/dx9vdtrxz/image/upload/v1701129439/ysuo70lfpbllmhqzfska.png">
+                                <img src="https://i.ibb.co/gz56FV6/Image-Placeholder-2-1.png">
                             </div>
                         </div>
 
@@ -315,7 +315,7 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
 
                         <div class="secured__right">
                             <div class="secured__right__container">
-                                <img src="https://res.cloudinary.com/dx9vdtrxz/image/upload/v1700779801/vmzjritollk9ggzskddg.png" alt="">
+                                <img src="https://i.ibb.co/V28B6Q4/Frame-50-1.png" alt="">
                             </div>
                         </div>
                     </div>
@@ -384,7 +384,7 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
 
 
                         <div class="faq__left">
-                            <img src="https://res.cloudinary.com/dx9vdtrxz/image/upload/v1700779947/iaba3e0nplpkyrokayzw.jpg"/>
+                            <img src="https://i.ibb.co/zsKbpDv/fd5811dc25-1.png"/>
                         </div>
     
                         <div class="faq__right">
@@ -399,15 +399,17 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                                     <div class="faq__items__item__header">
 
                                         <p class="faq__items__item__text">
-                                            01. Who can invest on the AssetBlend platform?
+                                            01. What services does AssetBlend offer?
                                         </p>
-                                        <div class="faq__items__item__add" @click="expandSection('faqs', 'one')">
+                                        <div class="faq__items__item__add" @click="expandSection('faqs', 'zero')">
                                             +
                                         </div>
                                     </div>
-                                    <div class="faq-item__expanded faq-item__expanded--nopadding" v-if="sections.faqs.one">
-                                        Anyone that’s gone through our formal KYC process can contribute Collaborative Capital for our real estate  offerings
-                                    </div>
+                                    <div class="faq-item__expanded faq-item__expanded--nopadding" v-if="sections.faqs.zero">
+
+                                        Wealth Management: Tailored investment strategies and portfolio management.
+                                        
+                                        Risk Management Consulting: Assessing and advising on financial risks to optimize investment strategies.                                    </div>
                                 </div>
                                 <div class="faq__items__item">
                                     <div class="faq__items__item__header">
@@ -594,22 +596,22 @@ export default {
         return {
             property_images: [{
                 type: "Popular",
-                image: "https://res.cloudinary.com/dx9vdtrxz/image/upload/v1702241718/fb9syzqqls343cickg6l.png", 
+                image: "https://i.ibb.co/hRRhj2t/etienne-beauregard-riverin-B0a-Cv-AVSX8-E-unsplash-2.png", 
             }, {
                 type: "New Listing",
-                image: "https://res.cloudinary.com/dx9vdtrxz/image/upload/v1702241720/jrp9kshwlwlo24q60wpa.png"
+                image: "https://i.ibb.co/hRRhj2t/etienne-beauregard-riverin-B0a-Cv-AVSX8-E-unsplash-2.png"
             }, {
                 type: "New Listing",
-                image: "https://res.cloudinary.com/dx9vdtrxz/image/upload/v1702241718/cjhdgc05wmugohjbkv2o.png",
+                image: "https://i.ibb.co/hRRhj2t/etienne-beauregard-riverin-B0a-Cv-AVSX8-E-unsplash-2.png",
 
             }, {
                 type: "New Listing",
-                image: "https://res.cloudinary.com/dx9vdtrxz/image/upload/v1702241718/cjhdgc05wmugohjbkv2o.png",
+                image: "https://i.ibb.co/hRRhj2t/etienne-beauregard-riverin-B0a-Cv-AVSX8-E-unsplash-2.png",
 
             
             }, {
                 type: "New Listing",
-                image: "https://res.cloudinary.com/dx9vdtrxz/image/upload/v1702241718/cjhdgc05wmugohjbkv2o.png",
+                image: "https://i.ibb.co/hRRhj2t/etienne-beauregard-riverin-B0a-Cv-AVSX8-E-unsplash-2.png",
 
             }],
 
@@ -621,6 +623,7 @@ export default {
                 mission: false,
                 values: false,
                 faqs:{
+                    "zero": false,
                     "one": false,
                     "two": false,
                     "three": false,
@@ -649,7 +652,10 @@ export default {
                 this.sections.values =  !this.sections.values;;
             }
             else if (section === 'faqs'){
-                if (meta === 'one') {
+                if (meta === 'zero') {
+                    this.sections.faqs.zero =  !this.sections.faqs.one
+                }
+                if (meta === 'zero') {
                     this.sections.faqs.one =  !this.sections.faqs.one
                 }
                 if (meta === 'two') {
@@ -848,7 +854,7 @@ export default {
     &__header {
         background: #0F181F;
         padding-top: 40px;
-        background-image: url('https://res.cloudinary.com/dx9vdtrxz/image/upload/v1700775897/dvxihia0kt1vh7r771gc.png');
+        background-image: url('https://i.ibb.co/bXdLr6d/kindpng-2190956-1-3.png');
         background-repeat: no-repeat;
         background-position: right bottom;
 

@@ -50,9 +50,8 @@
             </div>
             <div class="foot__item">
                 <div class="foot__item__header">Follow us on</div>
-                <div class="foot__item__link">Legal Notice</div>
-                <div class="foot__item__link">Privacy Policy</div>
-                <div class="foot__item__link">Terms and Conditions</div>
+                <a class="foot__item__link" href="https://instagram.com/assetblend">Instagram</a>
+                <a class="foot__item__link" href="https://x.com/assetblend">Twitter</a>
             </div>
 
             <div class="foot__item">
