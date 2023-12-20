@@ -52,6 +52,7 @@
                 <div class="foot__item__header">Follow us on</div>
                 <a class="foot__item__link" href="https://instagram.com/assetblend">Instagram</a>
                 <a class="foot__item__link" href="https://x.com/assetblend">Twitter</a>
+                <a class="foot__item__link" href="mailto:support@joinassetblend.com">support@joinassetblend.com</a>
             </div>
 
             <div class="foot__item">
