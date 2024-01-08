@@ -43,7 +43,7 @@
                             </div>
     
                             <div class="modal__image">
-                                <img src="https://res.cloudinary.com/dx9vdtrxz/image/upload/v1701131396/fjves9qgg0ye4i0d6onw.png" alt="">
+                                <img src="" alt="">
                             </div>
                         </template>
 
@@ -238,7 +238,7 @@
 
                         <div class="how__right">
                             <div class="how__right__container">
-                                <img src="https://i.ibb.co/16TRZQF/unsplash-oq-Y09o-VTa3k-1.png" alt="">
+                                <img src="" alt="">
                             </div>
                         </div>
                     </div>
@@ -249,7 +249,7 @@
                         <div class="about__left">
 
                             <div class="about__image">
-                                <img src="https://i.ibb.co/gz56FV6/Image-Placeholder-2-1.png">
+                                <img src="">
                             </div>
                         </div>
 
@@ -315,7 +315,7 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
 
                         <div class="secured__right">
                             <div class="secured__right__container">
-                                <img src="https://i.ibb.co/V28B6Q4/Frame-50-1.png" alt="">
+                                <img src="" alt="">
                             </div>
                         </div>
                     </div>
@@ -384,7 +384,7 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
 
 
                         <div class="faq__left">
-                            <img src="https://i.ibb.co/zsKbpDv/fd5811dc25-1.png"/>
+                            <img src=""/>
                         </div>
     
                         <div class="faq__right">
