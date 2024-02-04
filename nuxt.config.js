@@ -19,7 +19,7 @@ export default {
                 name: "viewport",
                 content: "width=device-width, initial-scale=1",
             },
-            { hid: "description", name: "description", content: "" },
+            { hid: "description", name: "description", content: "Explore fractional real estate, open to everyone" },
             { name: "format-detection", content: "telephone=no" },
             //{ name: "google-signin-client_id", content: "638411293504-minstvm8qj8vmftvuaacnea143ghnpj7.apps.googleusercontent.com" }
         ],
