@@ -102,7 +102,7 @@
                         </div>
                         
                         <div class="details__caption">
-                            <p> Where dreams meet returns. Explore fractional real estate, open to everyone, securing consistent 4-10% historical returns </p>   
+                            <p> Where dreams meet returns. Explore fractional real estate, open to everyone, securing consistent 8-16% historical returns </p>   
                         </div>
                         <div class="details__caption">
                             <!--<p> </p>  --> 
@@ -238,7 +238,7 @@
 
                         <div class="how__right">
                             <div class="how__right__container">
-                                <img src="" alt="">
+                                <img src="https://d2z4yuv670prlb.cloudfront.net/046d2e7c393e5e6dbaa049db9329569a" alt="">
                             </div>
                         </div>
                     </div>
@@ -249,7 +249,7 @@
                         <div class="about__left">
 
                             <div class="about__image">
-                                <img src="">
+                                <img src="https://d2z4yuv670prlb.cloudfront.net/4f3a4462057babf3099a6191c33dd856">
                             </div>
                         </div>
 
@@ -315,7 +315,7 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
 
                         <div class="secured__right">
                             <div class="secured__right__container">
-                                <img src="" alt="">
+                                <img src="https://d2z4yuv670prlb.cloudfront.net/807257b25d0cbf4d42b6852558e8e363" alt="">
                             </div>
                         </div>
                     </div>
@@ -379,12 +379,12 @@ Security is not a one-time effort; it's an ongoing commitment. AssetBlend contin
                     </div>
                 </div>
 
-                <div class="faq" id="faq">
-                    <div class="faq__container">
+                <div class="faq" id="faq" style="margin-top: 20px">
+                    <div class="faq__container" style="padding: 20px 0; padding-bottom: 50px">
 
 
                         <div class="faq__left">
-                            <img src=""/>
+                            <img src="https://d2z4yuv670prlb.cloudfront.net/dec8217aa7d3479dcd7dd11f5b476407"/>
                         </div>
     
                         <div class="faq__right">
