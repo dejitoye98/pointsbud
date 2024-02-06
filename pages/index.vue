@@ -102,7 +102,7 @@
                         </div>
                         
                         <div class="details__caption">
-                            <p> Where dreams meet returns. Explore fractional real estate, open to everyone, securing consistent 6-16% historical returns </p>   
+                            <p> Where dreams meet returns. Explore fractional real estate, open to everyone, securing consistent 6-13% historical returns </p>   
                         </div>
                         <div class="details__caption">
                             <!--<p> </p>  --> 
@@ -124,7 +124,7 @@
                         </div>
 
                         <div class="credentials__item">
-                            <p>6% - 16%</p>
+                            <p>6% - 13%</p>
                             <p>Investment ROI</p>
                         </div>
                         
