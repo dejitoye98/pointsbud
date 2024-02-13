@@ -1056,6 +1056,8 @@ export default {
                         @include media("<=t") {
                             font-size: 30px;
                             line-height: 40px;
+                            margin-right: 0px;
+
                         }
             
                     }
