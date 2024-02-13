@@ -36,16 +36,26 @@
     
                                 <div class="modal__input">
 
-                                    <div style="width: 100%; display: grid; grid-template-columns: 45% 45%; gap: 10px; margin-bottom: 10px; justify-content: space-between">
 
-                                        <input v-model="name" placeholder="Your name"  type="text">
-                                        <input v-model="email" placeholder="Email"  type="text">
+                                    <div class="form-group">
+                                        <div class="form-input">
+    
+                                            <input v-model="name" placeholder="Your name"  type="text">
+                                        </div>
+    
+                                        <div class="form-input">
+    
+                                            <input v-model="email" placeholder="Email"  type="text">
+    
+                                        </div>
+
                                     </div>
 
-                                    <div>
-
+                                    <div class="form-input">
                                         <input style="width: 100%" v-model="phone" placeholder="Phone"  type="text">
+
                                     </div>
+
 
                                     <button style="width: 100%;" :disabled="subscribing" @click="registerWaitlist">Join Now</button>
                                 </div>
@@ -796,6 +806,27 @@ export default {
             flex-direction: column;
             height: fit-content;
         }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: 49% 49%;
+            justify-content: space-between;
+
+            @include media("<=t") {
+                grid-template-columns: 100%;
+            }
+        }
+
+        .form-input {
+            input {
+                width: 100%;
+            }
+            margin: 16px 0px;
+
+            @include media("<=t") {
+                margin: 5px 0px;
+            }
+        }
         //border: 1px solid white;
         input {
             background-color: white;
@@ -993,8 +1024,15 @@ export default {
                 padding: 35px 64px;
                 @include media("<=t") {
                     flex-direction: column;
-                    align-items: flex-start;
+                    align-items: center;
                     padding: 16px;
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 16px;
+                    width: 100%;
+                    justify-content: center;
+                    margin: auto;
+                    text-align: center;
                 }
 
                 &--button {
