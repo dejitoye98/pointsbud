@@ -809,8 +809,9 @@ export default {
 
         .form-group {
             display: grid;
-            grid-template-columns: 49% 49%;
+            grid-template-columns: 47% 47%;
             justify-content: space-between;
+            gap: 10px;
 
             @include media("<=t") {
                 grid-template-columns: 100%;
