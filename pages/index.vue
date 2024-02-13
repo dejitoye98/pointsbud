@@ -35,16 +35,26 @@
                                 <p>Be the first to experience the future of global investing with AssetBlend. Join our exclusive waitlist and secure your spot for early access to a world of financial opportunities.</p>
     
                                 <div class="modal__input">
-                                    <input v-model="email" placeholder="Enter your email"  type="text">
-                                    <button :disabled="subscribing" @click="registerWaitlist">Join Now</button>
+
+                                    <div style="width: 100%; display: grid; grid-template-columns: 45% 45%; gap: 10px; margin-bottom: 10px; justify-content: space-between">
+
+                                        <input v-model="name" placeholder="Your name"  type="text">
+                                        <input v-model="email" placeholder="Email"  type="text">
+                                    </div>
+
+                                    <div>
+
+                                        <input style="width: 100%" v-model="phone" placeholder="Phone"  type="text">
+                                    </div>
+
+                                    <button style="width: 100%;" :disabled="subscribing" @click="registerWaitlist">Join Now</button>
                                 </div>
+                            
     
                                 
                             </div>
     
-                            <div class="modal__image">
-                                <img src="" alt="">
-                            </div>
+                            
                         </template>
 
                         <template v-else>
@@ -703,7 +713,7 @@ export default {
        // border: 50px solid pink;
         height: 100%;
         min-height: 100vh;
-        padding-top: 10%;
+        padding-top: 5%;
         border: 1;
         @include media('<=t') {
             padding-top: 50px;
@@ -717,7 +727,7 @@ export default {
         padding: 36px;
         display: grid;
         position: relative;;
-        grid-template-columns: 45% 45%;
+        //grid-template-columns: 45% 45%;
         justify-content:center;
         gap: 16px;
         width: fit-content;
@@ -779,7 +789,7 @@ export default {
 
     &__input {
         //width: 395px;
-        height: 57.89px;
+        //height: 57.89px;
         width: 100%;
         @include media('<=t') {
             display: flex;
@@ -801,6 +811,8 @@ export default {
             letter-spacing: 0.5px;
             border: 0px;
             color: black;
+
+            margin-bottom: 10px;
             
             @include media('<=t') {
                 width: 100%;
@@ -826,7 +838,7 @@ export default {
         background: #FC4904;
         color: white;
         height: 100%;
-        margin-left: -10px;
+        //margin-left: -10px;
         border-radius: 5px;
         color: #F3F3F3;
 
