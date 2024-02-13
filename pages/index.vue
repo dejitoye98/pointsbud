@@ -880,6 +880,11 @@ export default {
         font-weight: 400;
         line-height: 28.9px;
 
+        &:disabled {
+            background: grey;
+            color: white;
+        }
+
         @include media('<=t') {
             width: 100%;
             margin-left: 0px;
