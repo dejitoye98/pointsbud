@@ -1,5 +1,4 @@
 
-import SuperadminLayout from '../../../../components/layouts/superadmin-layout.vue';
 <template>
     <SuperadminLayout>
         <template #content>
@@ -21,7 +20,7 @@ import SuperadminLayout from '../../../../components/layouts/superadmin-layout.v
                             <label for="">Summary</label>
                             <input v-model="payload.summary">
                         </div>
-                        
+                    
                         <div class="form-input">
                             <label for="">Market Value (USD)</label>
                             <input inputmode="numeric" v-model="payload.current_market_value">

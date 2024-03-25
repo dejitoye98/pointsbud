@@ -198,7 +198,7 @@
         
         
                         <div class="ctas">
-                            <button @click="login">Sign In</button>
+                            <button @click="login" :disabled="signing_in">Sign In</button>
                         </div>
                     </div>
                 </template>

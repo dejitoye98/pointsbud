@@ -111,6 +111,12 @@ export default {
         text-align: center;
         justify-content: center;
         cursor: pointer;
+
+        @include media("<=t") {
+            font-size: 13px;
+            padding: 8px;
+            min-width: 60px;
+        }
     }
 }
 
@@ -124,6 +130,10 @@ export default {
     display: grid;
     grid-template-columns: 22% 22% 22% 22%;
     gap: 16px;
+
+    @include media("<=t") {
+        grid-template-columns: 100%;
+    }
     
     &::-webkit-scrollbar {
         display: none;
