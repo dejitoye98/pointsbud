@@ -42,13 +42,20 @@ export default {
             {
                 src: 'https://accounts.google.com/gsi/client',
             },
+            {
+                src: 'https://js.paystack.co/v1/inline.js',
+            },
+            {
+                src: 'https://unpkg.com/vue2-editor/dist/vue2-editor.umd.min.js"',
+            },
 
 
         ],
     },
 
     // Global CSS: https://go.nuxtjs.dev/config-css
-    css: ["~assets/scss/colors.scss"],
+    css: ["~assets/scss/colors.scss", "~styles/css/main.css"],
+
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [{ src: "~/plugins/api", ssr: true }, "@/plugins/money.js", "@/plugins/input.js"],

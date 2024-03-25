@@ -5,7 +5,6 @@ export const state = () => ({
     dashboard_title: 'Dashboard',
     token: "",
     show_mobile_navigation: false,
-    notifications: [],
     
     
     properties: [],
@@ -29,40 +28,11 @@ export const mutations = ({
     setProperties(state, value) {
         state.properties = value
     },
-
-    setNotifications(state, value) {
-        state.notifications = value
-    }
 })
 
 
 
 export const actions = {
-    async fetchNotifications({dispatch, commit}, payload){
-        function objectToQueryString(obj) {
-            const keyValuePairs = [];
-            for (const key of Object.keys(obj)) {
-                if (obj.hasOwnProperty(key)) {
-                    keyValuePairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
-                }
-            }
-            return keyValuePairs.join('&');
-        }
-        try {
-            let url = `/notifications?`;
-            if (payload) {
-                url += objectToQueryString(payload);
-            }
-            
-            const resp = await this.$api.get(url);
-            commit('setNotifications', resp.data.data?.items);
-            return resp.data.data.items;
-        } catch (error) {
-            // Log or handle the error appropriately
-            console.error('Error fetching properties:', error);
-            throw error; // Re-throw the error to propagate it further
-        }
-    },
     async fetchProperties({dispatch, commit}, payload){
         function objectToQueryString(obj) {
             const keyValuePairs = [];
@@ -73,20 +43,18 @@ export const actions = {
             }
             return keyValuePairs.join('&');
         }
-        try {
-            let url = `/properties?`;
-            if (payload) {
-                url += objectToQueryString(payload);
-            }
-            
-            const resp = await this.$api.get(url);
-            commit('setProperties', resp.data.data?.items);
-            return resp.data.data.items;
-        } catch (error) {
-            // Log or handle the error appropriately
-            console.error('Error fetching properties:', error);
-            throw error; // Re-throw the error to propagate it further
+      return new Promise(async (resolve, reject) => {
+        let url = `/properties?`;
+        if (payload) {
+            url += objectToQueryString(payload)
         }
+        await this.$api.get(url).then(resp=>{
+            commit('setProperties', resp.data.data?.items)
+            resolve(resp.data.data.items)
+        }).catch(err=>{
+            reject(err)
+        })
+      })  
     },
     login({ dispatch, commit }, payload) {
         this.$cookies.remove('aff-token', { path: '' })
@@ -136,6 +104,5 @@ export const getters = {
     token: state => state.token,
     show_mobile_navigation: state=> state.show_mobile_navigation,
 
-    properties: state => state.properties,
-    notifications: state => state.notifications
+    properties: state => state.properties
 }

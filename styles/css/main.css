@@ -1,0 +1,201 @@
+.padding-16-x {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+.padding-24-x {
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+
+.padding-16 {
+    padding: 16px;
+}
+
+.padding-24 {
+    padding: 24px;
+}
+.padding-16-y {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+.padding-16-y {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+.padding-24-y {
+    padding-top: 24px;
+    padding-bottom: 24px;
+}
+
+.space-between {
+    display: flex;
+    justify-content: space-between;
+}
+.relative {
+    position: relative;
+    
+}
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.flex-center-x {
+    display: flex;
+    justify-content: center;
+}
+.flex-x-center {
+    display: flex;
+    justify-content: center;
+}
+
+.flex-center-y {
+    display: flex;
+    align-items: center;
+}
+.flex-y-center {
+    display: flex;
+    align-items: center;
+}
+
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+.flex-justify-end {
+    display: flex;
+    justify-content: flex-end;
+}
+.flex-align-end {
+    display: flex;
+    align-items: flex-end;
+}
+.flex-align-center {
+    display: flex;
+    align-items: center;
+}
+
+
+
+.bold-600 {
+    font-weight: 600;
+}
+
+
+.bold-700 {
+    font-weight: 700;
+}
+.bold-800 {
+    font-weight: 600;
+}
+
+
+.flex-wrap-wrap{
+    flex-wrap: wrap;
+    display: flex;
+}
+
+
+
+.big-btn {
+    color: #FFF;
+    text-align: center;
+    font-family: Poppins;
+    font-size: 14.422px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    width: 287.242px;
+    height: 56px;
+    flex-shrink: 0;
+    border-radius: 100px;
+    background: #1C1C1B;
+    margin: auto;
+    margin-top: 24px;
+}
+
+.red-btn {
+    background-color: #E53945;
+}
+
+.big-btn:disabled {
+    background: lightgrey;
+        color: darkgrey;
+}
+
+.sticky {
+    position: sticky;
+}
+
+.sticky-top{
+    position: sticky;
+    top: 0;
+}
+
+.sticky-top-left {
+    position: sticky;
+    top: 0;
+    left: 0;
+}
+
+.sticky-top-right {
+    position: sticky;
+    top: 0;
+    right: 0;
+}
+
+.sticky-bottom-all {
+    position: sticky;
+    bottom: 0;
+    right :0;
+}
+
+.gold-text {
+    color: gold;
+    
+}
+
+.orange-text {
+    color: #f79939;
+    
+}
+
+.border-radius-10 {
+    border-radius: 10px !important; 
+}
+
+.primary-text {
+    color: #E53945 !important;
+
+}
+
+.text-center {
+    text-align: center;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.green-text {
+    color: #5ac091;
+}
+
+.smallbutton {
+    padding: 8px 16px;;
+    border-radius: 20px;
+    background-color:#DC5921;
+    color: white;
+    font-weight: 500;
+    width: fit-content;
+    font-size: 14px;
+}

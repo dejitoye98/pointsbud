@@ -317,8 +317,8 @@
     label {
         font-size: 15px;
         //color: darkgrey;
-        font-weight: 400;
-        color: $charcoal;
+        font-weight: 500;
+        color: #282828;
 
         span {
             color: red;
@@ -330,7 +330,8 @@
     textarea,
     select,
     :deep(input) {
-        border: 0.5px solid rgb(226, 232, 240);
+        border: 0.5px solid #d6d7d8;
+
         border-image-repeat: stretch;
         border-image-source: none;
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -345,7 +346,7 @@
         font-weight: 400;
         appearance: none;
         //background-color: white;
-        background-color: rgb(247, 250, 252);
+        background-color: white;
         //border: none;
         letter-spacing: 0.6px;
 
@@ -411,5 +412,19 @@
 
     input:checked+.radio-indicator {
         background: $primary;
+    }
+}
+
+
+@mixin normalbutton {
+    background-color: #FC4904;
+    padding: 20px;
+    color: white;
+    border-radius: 50px;
+    width: 100%;
+    
+    &:disabled {
+        background-color: lightgrey;
+        color: grey;
     }
 }
