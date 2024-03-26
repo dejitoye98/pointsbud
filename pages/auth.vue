@@ -335,6 +335,7 @@ export default {
 
 .clickable {
     cursor: pointer;
+    color: $primary;
 }
 .login__container {
     padding-bottom: 50px;
@@ -367,11 +368,11 @@ export default {
         }
 
         span {
-            font-size: 12px;
+            font-size: 14px;
             font-family: "Open Sans", sans-serif;
             display: block;
             @include media(">t") {
-                font-size: 13px;
+                font-size: 15px;
                 text-align: center;
             }
         }
@@ -407,7 +408,7 @@ export default {
 
         @include media(">t") {
             
-            font-size: 15px;
+            font-size: 16px;
         }
     }
 
@@ -415,6 +416,8 @@ export default {
         border: 1px solid #E8E8E8;
         padding: 16px;
         border-radius: 10px;
+        appearance: none;
+        -webkit-appearance: none;
         ::placeholder {
             color: #E8E8E8;
             font-size: 12px;
@@ -428,7 +431,8 @@ export default {
         &:focus {
             background-color: #FFEDE6;
             border: 1px solid #FC4904;
-            outline: 1px solid #FC4904;
+            outline: 0;
+            //outline: 1px solid #FC4904;
             
         }
 
