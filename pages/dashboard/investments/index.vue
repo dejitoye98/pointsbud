@@ -58,7 +58,7 @@ import DashboardLayout from '../../../components/layouts/dashboard-layout.vue';
                                 
                             </div>
                             <div class="flex-col">
-                                <p>Number of Investment</p>
+                                <p>Number of Investments</p>
 
                                 <template v-if="!loading_stats && stats.total">
 
@@ -331,6 +331,10 @@ export default {
     display: flex;
     gap: 16px;
     cursor: pointer;
+
+    @include media("<=t") {
+        flex-direction: column;
+    }
     &:hover{
         transform: scale(1.01);
     }

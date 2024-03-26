@@ -6,7 +6,7 @@
 
 
                 <div class="logo flex-col flex-center-y">
-                    <svg @click="close" style="cursor: pointer;" width="16" height="16" viewBox="0 0 8 8" fill="none"
+                    <svg @click="close" style="cursor: pointer; gap: 16px" width="16" height="16" viewBox="0 0 8 8" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path d="M1 1L7 7" stroke="black" stroke-width="0.5" stroke-linecap="round" />
                     <path d="M7 1L1 7" stroke="black" stroke-width="0.5" stroke-linecap="round" />
@@ -76,6 +76,7 @@ export default {
                     url = '/dashboard'
             }
             this.$router.push(url)
+            this.close()
         }
     },
     computed: {

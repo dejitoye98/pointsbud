@@ -89,53 +89,57 @@ button {
 
 .form-input {
     display: flex;
-   flex-direction: column;
-   margin-bottom: 16px;
-   position: relative;
-
-   svg {
-    position: absolute;
-    top: 45px;
-    right: 10px;
-}
-
-
-    label {
-        font-size: 12px;
-        font-family: 'Open Sans', sans-serif;
-        color: #232323;
-        margin-bottom: 5px;
-
-        @include media(">t") {
-            
-            font-size: 15px;
-        }
-    }
-
-    input {
-        border: 1px solid #E8E8E8;
-        padding: 16px;
-        border-radius: 10px;
-        ::placeholder {
-            color: #E8E8E8;
-            font-size: 12px;
-        }
-
-        @include media(">t") {
-            
-            font-size: 15px;
-        }
-
-        &:focus {
-            background-color: #FFEDE6;
-            border: 1px solid #FC4904;
-            outline: 1px solid #FC4904;
-            
-        }
-
-        
-    }
-}
+    flex-direction: column;
+    margin-bottom: 16px;
+    position: relative;
+ 
+    svg {
+     position: absolute;
+     top: 45px;
+     right: 10px;
+ }
+ 
+ 
+     label {
+         font-size: 12px;
+         font-family: 'Open Sans', sans-serif;
+         color: #232323;
+         margin-bottom: 5px;
+ 
+         @include media(">t") {
+             
+             font-size: 16px;
+         }
+     }
+ 
+     input {
+         border: 1px solid #E8E8E8;
+         padding: 16px;
+         border-radius: 10px;
+         appearance: none;
+         -webkit-appearance: none;
+         ::placeholder {
+             color: #E8E8E8;
+             font-size: 12px;
+         }
+ 
+         @include media(">t") {
+             
+             font-size: 15px;
+         }
+ 
+         &:focus {
+             background-color: #FFEDE6;
+             border: 1px solid #FC4904;
+             outline: 0;
+             //outline: 1px solid #FC4904;
+             
+         }
+ 
+         
+     }
+ }
+ 
 </style>
 
 <script>
