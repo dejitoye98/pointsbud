@@ -231,6 +231,7 @@ export default{
         this.$store.commit('dashboard/setDashboardTitle', 'Properties' )
         this.getProperty();
         this.getUserInvestment()
+       // alert(JSON.stringify(this.userDetails))
     },
     data() {
         return {
@@ -252,10 +253,53 @@ export default{
         changeFocusedImage(image) {
             this.focused_image = image
         },
+
+        payWithPayaza() {
+            try {
+
+                const payazaCheckout = PayazaCheckout.setup({
+                    merchant_key:  "PZ78-PKLIVE-FA9BB0D3-592F-4F8D-BA29-85F8B267F4A8",
+                    connection_mode: "Live", // Live || Test
+                    checkout_amount: Number(this.invest_amount),
+                    currency_code: "USD", // NGN || USD
+                    email_address: this.userDetails.email,
+                    first_name: this.userDetails.first_name,
+                    last_name: this.userDetails.last_name,
+                    phone_number: "01232425262",
+                    transaction_reference: "PL" + Math.floor(
+                        (Math.random() * 10000000) + 1
+                    ),
+                    callback: (resp) => {
+                        if (resp.type === 'success') {
+                            this.$api.post('/transactions/payaza', {...resp.data,
+                                user_id: this.userDetails.id,
+                                property_id: this.property_id
+                            })
+                        }
+
+                    }
+                });
+
+
+                payazaCheckout.setCallback(callback)
+
+                payazaCheckout.showPopup();
+            }catch(e) {
+                alert(e)
+            }
+
+
+            
+        },
         proceedToPayment() {
         
             this.loading_payment = true;
-            FlutterwaveCheckout({
+            this.payWithPayaza()
+
+
+
+            
+            /*FlutterwaveCheckout({
                 public_key: this.$config.FLW_PUBLIC_KEY || "FLWPUBK_TEST-ad1d316f90548fca239af66bd32bd954-X",
                 tx_ref: `pointsbud_dinetx_${Date.now()}`,
                 amount: this.invest_amount,
@@ -294,9 +338,9 @@ export default{
                     this.$api.post("/dineorders/verify-flw", payload).then(resp => {
                         this.socketClient.emit("order-paid", { ...payload, business_slug: this.$route.params.slug, ...resp.data.data });
                         this.$router.push(`/menu/${this.$route.params.slug}?receipt_generated=${resp.data.data.receipt_id}`);
-                    });*/
+                    });
                 }
-            });
+            });*/
             
         },
         getProperty() {

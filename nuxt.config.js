@@ -48,6 +48,10 @@ export default {
             {
                 src: 'https://unpkg.com/vue2-editor/dist/vue2-editor.umd.min.js"',
             },
+            {
+                src: "https://checkout.payaza.africa/js/v1/bundle.js",
+                defer: true
+            },
 
 
         ],

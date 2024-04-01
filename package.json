@@ -13,6 +13,7 @@
         "@nuxtjs/google-analytics": "^2.4.0",
         "@nuxtjs/style-resources": "^1.2.1",
         "@nuxtjs/toast": "^3.3.1",
+        "@payaza/web-sdk": "^0.1.0-beta.12",
         "@rushstack/eslint-patch": "^1.2.0",
         "@vue/eslint-config-airbnb": "^7.0.0",
         "chart.js": "^2.9.4",
