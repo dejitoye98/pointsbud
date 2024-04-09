@@ -44,7 +44,7 @@
                     <div class="sidebar__item">
                         <div class="form-input">
                             <label for="">Academic Qualification/History</label>
-                            <input v-model="form.academic_qualification">
+                            <textarea v-model="form.academic_qualification"></textarea>
                         </div>
                     </div>
                     <div class="sidebar__item">
@@ -113,6 +113,10 @@ export default {
 
 
 <style lang="scss" scoped>
+
+textarea {
+    height: 300px;
+}
 .container {
     display: flex;
     justify-content: space-between;
