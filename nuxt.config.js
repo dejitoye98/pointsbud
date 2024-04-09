@@ -9,7 +9,7 @@ export default {
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
-        title: "AssetBlend",
+        title: "Straight Green Card",
         htmlAttrs: {
             lang: "en",
         },
