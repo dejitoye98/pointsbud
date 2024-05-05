@@ -49,6 +49,24 @@
                     </div>
                     <div class="sidebar__item">
                         <div class="form-input">
+                            <label for="">Proposed endeavor</label>
+                            <textarea v-model="form.proposed_endeavor"></textarea>
+                        </div>
+                    </div>
+                    <div class="sidebar__item">
+                        <div class="form-input">
+                            <label for="">Certifications</label>
+                            <textarea v-model="form.certifications"></textarea>
+                        </div>
+                    </div>
+                    <div class="sidebar__item">
+                        <div class="form-input">
+                            <label for="">Achievements/Contributions</label>
+                            <textarea v-model="form.achievements"></textarea>
+                        </div>
+                    </div>
+                    <div class="sidebar__item">
+                        <div class="form-input">
                             <label for="">Chapter to produce</label>
                             <input v-model="form.chapter"></input>
                         </div>
@@ -80,11 +98,43 @@
 
 <script>
 import { VueEditor } from "vue2-editor";
+import socket from "socket.io-client"
+
 
 export default {
     components: {
         VueEditor
     },
+
+    data() {
+        return {
+            socketClient: null,
+            generating: false
+        }
+    },
+
+
+    mounted() {
+        this.socketClient = socket("http://localhost:5000");
+
+        this.socketClient.on('connect', () => {
+            console.log('Connected to server');
+           // this.getBusiness()
+        });
+
+        this.socketClient.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
+
+        this.socketClient.on("GeneratedText", (data) => {
+            this.generating = true
+            this.output += data;
+        })
+        this.socketClient.on("EndedGeneratedText", (data) => {
+            this.generating = false
+        })
+    },
+    
     data() {
         return {
             
@@ -99,7 +149,7 @@ export default {
         generate(){
             this.generating = true
             this.$api.post('/generate', this.form).then(resp=> {
-                this.output = resp.data.data
+                //this.output = resp.data.data
             }).finally(()=> {
                 this.generating = false
             })
@@ -128,7 +178,8 @@ textarea {
     width: 30%;
     border-right: 1px solid lightgrey;
     height: 100%;
-
+    max-height: 100vh;
+    overflow: scroll;
     &__container {
         display: flex;
         flex-direction: column;
