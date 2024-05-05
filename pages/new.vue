@@ -115,7 +115,7 @@ export default {
 
 
     mounted() {
-        this.socketClient = socket("http://localhost:5000");
+        this.socketClient = socket(this.$config.SOCKET_BASE);
 
         this.socketClient.on('connect', () => {
             console.log('Connected to server');
