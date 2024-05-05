@@ -44,25 +44,25 @@
                     <div class="sidebar__item">
                         <div class="form-input">
                             <label for="">Academic Qualification/History</label>
-                            <textarea v-model="form.academic_qualification"></textarea>
+                            <textarea placeholder="Academic Qualification" v-model="form.academic_qualification"></textarea>
                         </div>
                     </div>
                     <div class="sidebar__item">
                         <div class="form-input">
                             <label for="">Proposed endeavor</label>
-                            <textarea v-model="form.proposed_endeavor"></textarea>
+                            <textarea  placeholder="Enter the proposed endeavour here" v-model="form.proposed_endeavor"></textarea>
                         </div>
                     </div>
                     <div class="sidebar__item">
                         <div class="form-input">
                             <label for="">Certifications</label>
-                            <textarea v-model="form.certifications"></textarea>
+                            <textarea placeholder="Enter certifications here" v-model="form.certifications"></textarea>
                         </div>
                     </div>
                     <div class="sidebar__item">
                         <div class="form-input">
                             <label for="">Achievements/Contributions</label>
-                            <textarea v-model="form.achievements"></textarea>
+                            <textarea placeholder="Enter achievements here" v-model="form.achievements"></textarea>
                         </div>
                     </div>
                     <div class="sidebar__item">
