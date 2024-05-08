@@ -29,6 +29,12 @@
                   
                 </div>
                 <div class="form-input">
+                    <label for="">Proposed Endeavor</label>
+                    <input name="" id="" v-model="payload.proposed_endeavor">
+                    
+                  
+                </div>
+                <div class="form-input">
                     <label for="">Petitioner's Information</label>
                     <textarea name="" id="" v-model="payload.petitioner_summary">
                     
