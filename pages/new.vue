@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="display: none;">
         <div class="container">
             <div class="sidebar">
                 <div class="sidebar__container">

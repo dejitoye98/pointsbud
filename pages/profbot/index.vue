@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+    <div class="page" style="display: none;"> 
         <div class="page__container">
 
             <div class="prof-sidebar sidebar">
@@ -91,7 +91,7 @@ export default {
 
         this.socketClient.on("GeneratedText", (data) => {
             this.generating = true
-            this.output += data;
+            this.output += data.trim();
         })
         this.socketClient.on("EndedGeneratedText", (data) => {
             this.generating = false
