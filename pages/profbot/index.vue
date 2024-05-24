@@ -1,5 +1,5 @@
 <template>
-    <div class="page" style="display: none;"> 
+    <div class="page"> 
         <div class="page__container">
 
             <div class="prof-sidebar sidebar">
