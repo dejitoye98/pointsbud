@@ -73,7 +73,7 @@
                     </div>
 
                     <div class="sidebar__item">
-                        <button @click="generate" :disabled="generating">Generate</button>
+                        <button @click="generate" >Generate</button>
                     </div>
 
                 </div>
