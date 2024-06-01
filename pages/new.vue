@@ -99,6 +99,8 @@
 <script>
 import { VueEditor } from "vue2-editor";
 import socket from "socket.io-client"
+import crypto from 'crypto';
+
 
 
 export default {
