@@ -109,12 +109,18 @@ export default {
     data() {
         return {
             socketClient: null,
-            generating: false
+            generating: false,
+            session_id: ''
         }
     },
 
 
     mounted() {
+        // create session id 
+
+
+        this.createSessionId()
+
         this.socketClient = socket(this.$config.SOCKET_BASE);
 
         this.socketClient.on('connect', () => {
@@ -126,11 +132,11 @@ export default {
             console.log('Disconnected from server');
         });
 
-        this.socketClient.on("GeneratedText", (data) => {
+        this.socketClient.on(`GeneratedText sess:${this.session_id}`, (data) => {
             this.generating = true
             this.output += data;
         })
-        this.socketClient.on("EndedGeneratedText", (data) => {
+        this.socketClient.on(`EndedGeneratedText  sess:${this.session_id}`, (data) => {
             this.generating = false
         })
     },
@@ -146,9 +152,20 @@ export default {
         }
     },
     methods: {
+        generateUniqueCode(length = 6) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const codeLength = 4;
+            const randomBytes = crypto.randomBytes(length);
+            const code = [...randomBytes].map(byte => characters[byte % characters.length]).join('');
+            return code;
+        },
+        createSessionId(){
+            const code = this.generateUniqueCode();
+            this.session_id = code;
+        },
         generate(){
             this.generating = true
-            this.$api.post('/generate', this.form).then(resp=> {
+            this.$api.post('/generate?session_id='+this.session_id, this.form).then(resp=> {
                 //this.output = resp.data.data
             }).finally(()=> {
                 this.generating = false
