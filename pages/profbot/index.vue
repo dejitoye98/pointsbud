@@ -1,48 +1,93 @@
 <template>
     <div class="page"> 
+
+        
         <div class="page__container">
 
-            <div class="prof-sidebar sidebar">
-                <div class="">
+            <CreateRecommendationTemplateModal @close="show_template_modal = false" @createdTemplate="getTemplates" v-if="show_template_modal"></CreateRecommendationTemplateModal>
+            
+            <CreateRecommendationTemplateModal :data="focused_template" mode='edit' @close="show_viewtemplate_modal = false" @editedTemplate="getTemplates" v-if="show_viewtemplate_modal"></CreateRecommendationTemplateModal>
+
+
+            <div class="fullsidebar flex-col">
+
+                <div class="head">
+                    <div class="head__header padding-24 space-between flex-center-y">
+                        <p class="header-text" style="font-size: 18px; font-weight: 600">Templates</p>
+                        <button @click="show_template_modal = true">Add new</button>
+                    </div>
+
+
+                    <div class="padding-24-x">
+                        <p>Choose a template</p>
+                    </div>
+                    <div class="list padding-24 grid grid-cols-2 gap-2" style="border-bottom: 1px solid black">
+                        <div class="template" @click="chosen_template_id = template.id" :key="index" v-for="(template, index) of templates" :class="[chosen_template_id === template.id? 'selected-template': '']">
+                            <p>{{template.name}}</p>
+
+                            <button class="normal-button" @click.stop="viewTemplate(template)">View</button>
+                            
+                        </div>
+                      
+                    </div>
+                </div>
+
+
+                <div class="body padding-24">
+
+                    <div class="form-input">
+                        <label for="">Recommender's Name</label>
+                        <input   v-model="payload.recommender_name">
+                        
+                       
+                        
+                    </div>
+                    <div class="form-input">
+                        <label for="">Recommender's Information</label>
+                        <textarea name="" id=""  v-model="payload.recommender_summary">
+                        
+                        </textarea>
+                        
+                    </div>
+                    <div class="form-input">
+                        <label for="">Petitioner's Name</label>
+                        <input name="" id="" v-model="payload.petitioner_name">
+                        
+                      
+                    </div>
+                    <div class="form-input">
+                        <label for="">Proposed Endeavor</label>
+                        <input name="" id="" v-model="payload.proposed_endeavor">
+                        
+                      
+                    </div>
+                    <div class="form-input">
+                        <label for="">Petitioner's Information</label>
+                        <textarea name="" id="" v-model="payload.petitioner_summary">
+                        
+                        </textarea>
+                    </div>
+
+                </div>
                 
+
+                <div class="padding-24">
+
+                    <button  @click="generate">Generate Letter</button>
                 </div>
-                <div class="form-input">
-                    <label for="">Recommender's Name</label>
-                    <input   v-model="payload.recommender_name">
-                    
-                   
-                    
-                </div>
-                <div class="form-input">
-                    <label for="">Recommender's Information</label>
-                    <textarea name="" id=""  v-model="payload.recommender_summary">
-                    
-                    </textarea>
-                    
-                </div>
-            </div>
-            <div class="pet-sidebar sidebar">
-                <div class="form-input">
-                    <label for="">Petitioner's Name</label>
-                    <input name="" id="" v-model="payload.petitioner_name">
-                    
-                  
-                </div>
-                <div class="form-input">
-                    <label for="">Proposed Endeavor</label>
-                    <input name="" id="" v-model="payload.proposed_endeavor">
-                    
-                  
-                </div>
-                <div class="form-input">
-                    <label for="">Petitioner's Information</label>
-                    <textarea name="" id="" v-model="payload.petitioner_summary">
-                    
-                    </textarea>
-                </div>
+
+
+
+                
+                
                
-            </div>
+            
     
+
+
+            </div>
+
+            
             <div class="main">
                 <div class="main__container">
 
@@ -54,7 +99,6 @@
                             
                             </div>
                         <div class="cta">
-                            <button :disabled="generating" @click="generate">Generate Letter</button>
                         </div>
                     </div>
                     <div class="form">
@@ -72,12 +116,17 @@
 <script>
 import { VueEditor } from "vue2-editor";
 import socket from "socket.io-client"
+import CreateRecommendationTemplateModal from "../../components/modals/CreateRecommendationTemplateModal.vue";
 
 export default {
     components: {
-        VueEditor
-    },
+    VueEditor,
+    CreateRecommendationTemplateModal
+},
     mounted() {
+
+        this.sess = this.getSession();
+
         this.socketClient = socket(this.$config.SOCKET_BASE);
 
         this.socketClient.on('connect', () => {
@@ -89,11 +138,11 @@ export default {
             console.log('Disconnected from server');
         });
 
-        this.socketClient.on("GeneratedText", (data) => {
+        this.socketClient.on("GeneratedText " + this.sess, (data) => {
             this.generating = true
             this.output += data.trim();
         })
-        this.socketClient.on("EndedGeneratedText", (data) => {
+        this.socketClient.on("EndedGeneratedText " + this.sess, (data) => {
             this.generating = false
         })
     },
@@ -103,27 +152,75 @@ export default {
             payload: {
 
             },
+            sess:"",
+
+            chosen_template_id: null,
+            
+            templates: [],
+            show_template_modal: false,
+            show_viewtemplate_modal: false,
             socketClient: null,
-            gnerating: false,
+            generating: false,
             output: '',
+            focused_template: null,
 
         }
     },
 
+    created() {
+        this.getTemplates()
+    },
+
     methods: {
         generate() {
-            this.$api.post('/generate-recommendation-letter', this.payload);
+            this.$api.post('/generate-recommendation-letter', {chosen_template_id: this.chosen_template_id, ...this.payload, sess: this.sess});
+        },
+        getTemplates() {
+            this.$api.get('/recommendation-templates').then(resp=> {
+                this.templates = resp.data.data;
+            })
+        },
+        viewTemplate(template){
+            this.show_viewtemplate_modal = true;
+            this.focused_template = template
+        },
+
+        getSession() {
+            return new Date().getTime().toString()
         }
     }
 }
 </script>
 
+
 <style lang="scss" scoped>
+
+.selected-template {
+    background-color: $secondary !important;
+}
+
+.template {
+    background-color: white;
+   //width: 100%;
+    padding: 16px;;
+    border-radius: 10px;
+    border: 1px solid lightgrey;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    cursor: pointer;
+
+    &:hover {
+        background-color: rgb(231, 231, 231)smoke;
+    }
+}
 .page{
 
     &__container {
         display: grid;
-        grid-template-columns: 20% 20% 60%;
+        grid-template-columns: 40% 60%;
         justify-content: space-between;
     }
 
@@ -133,6 +230,10 @@ export default {
     background-color: whitesmoke;
     margin-bottom: 20px;
     align-items: center;
+}
+
+.fullsidebar {
+    background-color: whitesmoke;
 }
 .prof-sidebar {
     background-color: whitesmoke;
@@ -149,11 +250,12 @@ export default {
     background-color: whitesmoke;
 }
 .form-input {
-    label {
-        font-size: 20px;
-        font-weight: 600;
-    }
     @include plain-form-input;
+
+    label {
+        font-size: 16px;
+        font-weight: 400;
+    }
 }
 .sidebar {
     padding: 16px;
@@ -164,6 +266,13 @@ button {
     @include smallbutton;
 }
 
+
+.normal-button {
+    background-color: white;
+    color: black;
+    font-weight: 400;
+    padding: 8px;
+}
 h2 {
     font-size: 20px;
 }

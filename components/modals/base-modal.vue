@@ -1,7 +1,7 @@
 <template>
   <div class="modal">
     <div class="modal__mask" @click="close">
-      <div class="modal__container" style="width:">
+      <div class="modal__container" :style="style">
         <div class="modal__body" @click.stop>
           <div class="modal__header" v-if="show_header || typeof (show_header) == 'undefined'">
             <slot name="header"></slot>
@@ -19,10 +19,16 @@
 
 <script>
 export default {
-  props: ["show_header", "show_footer"],
+  props: ["show_header", "show_footer", "style", "closable"],
   methods: {
     close() {
-      this.$emit("close", true);
+      if (typeof (this.closable) === 'boolean' && this.closable === false) {
+        return
+      }
+      else {
+
+        this.$emit("close", true);
+      }
     }
   }
 };
@@ -52,7 +58,7 @@ export default {
 }
 
 .modal {
-  z-index: 10000000000000;
+  z-index: 100000;
   height: 100vh;
   width: 100%;
   position: fixed;
@@ -61,17 +67,21 @@ export default {
   transform: scale(1);
 
   &__header {
-    padding: 24px;
-    font-size: 18px;
-    border-bottom: 2px solid whitesmoke;
+    //padding: 16px;
+    font-size: 16px;
+   // border-bottom: 1px solid whitesmoke;
     // text-transform: uppercase;
     font-weight: 500;
+    font-family: Poppins !important;
+    font-family: Poppins !important;
+    font-weight: 600 !important;
+    font-size: 18px !important;
   }
 
   &__mask {
     width: 100%;
     height: 100%;
-    padding: 64px 0;
+    padding: 8px 0;
     position: fixed;
     overflow: scroll;
 
@@ -79,7 +89,7 @@ export default {
     background: rgba(0, 0, 0, 0);
     animation: fadeIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 
-    padding-bottom: 300px;
+    padding-bottom: 200px;
 
     @include media("<=dashbreak") {
       margin-left: 0 !important;
@@ -89,6 +99,14 @@ export default {
   &__container {
     //animation
     animation: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+    height: fit-content;
+    margin: auto;
+
+    position: relative;
+    //top: 30%;
+    //transform: translateY(-50%);
+
+
 
     @include media("<=dashbreak") {
       margin-left: 0 !important;
@@ -97,10 +115,12 @@ export default {
 
   &__body {
     background: white;
-    width: max-content;
+    //width: max-content;
     margin: auto;
     height: max-content;
-    border-radius: 10px;
+    border-radius: 5px;
+    max-width: 500px !important;
+    
 
     @include media("<=t") {
       width: 90%;
@@ -108,13 +128,21 @@ export default {
   }
 
   &__footer {
+
     display: flex;
     justify-content: flex-end;
     padding: 0 24px 24px 16px;
+    background: white !important;
 
     button {
       @include smallbutton;
       background: $lightaccent;
+      border-radius: 5px;
+      padding: 10px 24px;
+
+      &:disabled {
+        background-color: white !important;
+      }
     }
   }
 }
