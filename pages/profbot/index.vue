@@ -3,6 +3,28 @@
 
         
         <div class="page__container">
+            <BaseModal v-if="show_confirmation_modal" @close="show_confirmation_modal = false">
+                <template #header>
+                    <div class="padding-16">
+                        Delete Template
+                    </div>
+                </template>
+
+                <template #body>
+                    <div class="padding-16">
+                       <p>Are you sure you want to delete this template?</p>
+                    </div>
+
+                    
+                </template>
+
+                <template #footer>
+                    <div>
+                        <button @click="show_confirmation_modal=false">Cancel</button>
+                        <button style="background-color: white; color: black" @click="deleteTemplate">Delete</button>
+                    </div>
+                </template>
+            </BaseModal>
 
             <CreateRecommendationTemplateModal @close="show_template_modal = false" @createdTemplate="getTemplates" v-if="show_template_modal"></CreateRecommendationTemplateModal>
             
@@ -22,11 +44,12 @@
                         <p>Choose a template</p>
                     </div>
                     <div class="list padding-24 grid grid-cols-2 gap-2" style="border-bottom: 1px solid black">
-                        <div class="template" @click="chosen_template_id = template.id" :key="index" v-for="(template, index) of templates" :class="[chosen_template_id === template.id? 'selected-template': '']">
+                        <div class="template" @click.stop="chosen_template_id = template.id" :key="index" v-for="(template, index) of templates" :class="[chosen_template_id === template.id? 'selected-template': '']">
                             <p>{{template.name}}</p>
 
                             <button class="normal-button" @click.stop="viewTemplate(template)">View</button>
-                            
+                            <button class="normal-button delete-btn" :disabled="deleting" @click.stop="triggerDeleteTemplate(template.id)">Delete</button>
+
                         </div>
                       
                     </div>
@@ -149,6 +172,7 @@ export default {
     
     data() {
         return {
+            deleting: false,
             payload: {
 
             },
@@ -157,8 +181,14 @@ export default {
             chosen_template_id: null,
             
             templates: [],
+
+
             show_template_modal: false,
+
+
             show_viewtemplate_modal: false,
+
+            show_confirmation_modal: false,
             socketClient: null,
             generating: false,
             output: '',
@@ -187,6 +217,23 @@ export default {
 
         getSession() {
             return new Date().getTime().toString()
+        },
+        triggerDeleteTemplate(template_id){
+            this.chosen_template_id = template_id
+            this.show_confirmation_modal = true;
+        },
+        editTemplate() {
+            this.$api.put('/templates/' + this.chosen_template_id, {
+                data: JSON.stringify(this.payload)
+            })
+        },
+        async deleteTemplate() {
+            this.deleting = true;
+            await this.$api.delete('/recommendation-templates/' + this.chosen_template_id);
+            this.deleting = false
+            this.show_confirmation_modal = false;
+            this.getTemplates()
+
         }
     }
 }
@@ -197,6 +244,10 @@ export default {
 
 .selected-template {
     background-color: $secondary !important;
+}
+
+.delete-btn {
+    color: red;
 }
 
 .template {

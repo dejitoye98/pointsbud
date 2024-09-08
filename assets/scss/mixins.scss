@@ -50,6 +50,7 @@
     textarea, input[type='text'], select, :deep(input){ 
         border: 0px solid #000;
         appearance: none;
+        border: 1px solid lightgrey;
 
         //background: #F3F3F3;
         padding: 10px 16px;
