@@ -1,6 +1,19 @@
 <template>
     <div class="page"> 
 
+        <BaseModal>
+            <template #header>
+                <div class="padding-16">
+                    
+                </div>
+            </template>
+        
+            <template #body>
+                <div class="padding-16">
+                    Loading, please wait...
+                </div>
+            </template>
+        </BaseModal>
         
         <div class="page__container">
             <BaseModal v-if="show_confirmation_modal" @close="show_confirmation_modal = false">
@@ -96,7 +109,7 @@
 
                 <div class="padding-24">
 
-                    <button  @click="generate">Generate Letter</button>
+                    <button  @click="generate" :disabled="loading">Generate Letter</button>
                 </div>
 
 
@@ -173,6 +186,7 @@ export default {
     data() {
         return {
             deleting: false,
+            loading: false,
             payload: {
 
             },
@@ -202,8 +216,10 @@ export default {
     },
 
     methods: {
-        generate() {
-            this.$api.post('/generate-recommendation-letter', {chosen_template_id: this.chosen_template_id, ...this.payload, sess: this.sess});
+        async generate() {
+            this.loading = true;
+            await this.$api.post('/generate-recommendation-letter', {chosen_template_id: this.chosen_template_id, ...this.payload, sess: this.sess});
+            this.loading = false;
         },
         getTemplates() {
             this.$api.get('/recommendation-templates').then(resp=> {
@@ -216,7 +232,10 @@ export default {
         },
 
         getSession() {
-            return new Date().getTime().toString()
+            let session = window.localStorage.getItem("sessionToken")
+            if (!session)  session = new Date().getTime().toString();
+            window.localStorage.setItem("sessionToken", session)
+            return session;
         },
         triggerDeleteTemplate(template_id){
             this.chosen_template_id = template_id
