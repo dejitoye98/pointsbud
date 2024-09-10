@@ -1,19 +1,7 @@
 <template>
     <div class="page"> 
 
-        <BaseModal>
-            <template #header>
-                <div class="padding-16">
-                    
-                </div>
-            </template>
-        
-            <template #body>
-                <div class="padding-16">
-                    Loading, please wait...
-                </div>
-            </template>
-        </BaseModal>
+       
         
         <div class="page__container">
             <BaseModal v-if="show_confirmation_modal" @close="show_confirmation_modal = false">
