@@ -3,12 +3,13 @@
         <ShopCartModal @close="show_cart_modal = false" v-if="show_cart_modal && this.cart.length">
 
         </ShopCartModal>
-        <div class="page__container" v-if="business && products">
+        <div class="page__container">
             <div class="sidebar">
 
+                
             </div>
 
-            <div class="main">
+            <div class="main" v-if="business">
                 <div class="navbar">
                     <div class="navbar__container space-between flex-center-y">
 
@@ -128,8 +129,8 @@ export default {
 
 
             products: [],
-            business: {},
-            categories: [],
+            business: null,
+            categories: null,
 
 
             show_cart_modal: false,
