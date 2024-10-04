@@ -137,7 +137,7 @@ export default {
     },
     methods: {},
     async fetch() {
-        const response = await this.$api.get('/businesses/store-products?slug=keffies-ventures');
+        const response = await this.$api.get('/businesses/store-products?slug=Alhaja');
         const { business, products } = response.data.data;
         const categories = business.categories;
         this.business = business;
