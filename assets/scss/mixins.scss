@@ -1,12 +1,30 @@
 @mixin card {
-    background: white;
-    // border: 0.5px solid rgba(211, 211, 211, 0.24);
-    //box-shadow: rgba(0, 0, 0, 0.09) 0px 3px 12px;
-    //box-shadow: rgba(0, 0, 0, 0.012) 0px 0px 0px 1px, rgba(209, 213, 219, 0.728) 0px 0px 0px 1px inset;
-    // box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.023), 0 4px 10px 0 rgba(0, 0, 0, 0.001);
+    background-color: white;
+    max-height: fit-content;
+    max-width: 100%;
+  
+    border-radius: 20px;
+      background: #FFF;
+      display: flex;
+      margin-left: 5px;
+     // height: 505.96px;
+      flex-direction: column;
+      align-items: flex-start;
+      flex-shrink: 0;
+      max-height: fit-content;
+    
 }
 
+@mixin card-shadow {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+
+}
+
+@mixin dashboard-shadow {
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 0.5px inset;    
+
+}
+ 
 
 @mixin editbutton {
     margin-left: 16px;
@@ -21,80 +39,6 @@
         color: black;
         border: 1px solid black;
     }
-}
-@mixin greyforminput {
-    margin-bottom: 10px;
-
-    .required {
-        color: $primary;
-        font-size: 15px;
-        font-weight: 600;
-    }
-    
-    label {
-        color: var(--Neutral-Colors-700, #323232);
-        font-feature-settings: 'clig' off, 'liga' off;
-        font-family: "Open Sans", sans-serif !important;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 18.028px;
-        margin-bottom: 5px;
-        letter-spacing: 0.5px;
-
-        @include media("<=t") {
-            font-size: 15px;
-        }
-    }
-
-    textarea, input[type='text'], select, :deep(input){ 
-        border: 0px solid #000;
-        appearance: none;
-        border: 1px solid lightgrey;
-
-        //background: #F3F3F3;
-        padding: 10px 16px;
-        width: 100%;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 23px; /* 191.667% */
-        letter-spacing: 0.5px;
-        color: $charcoal;
-        font-family: "Open Sans", sans-serif !important;
-
-        //border-radius: 22.5px;
-        background: #F5F5F5;
-
-
-        background: #F5F5F5;
-
-        border-radius: 7.211px;
-        //border: 1px solid lightgrey;
-
-        @include media(">=t") {
-            font-size: 13px;
-        }
-        //margin-bottom: 16px;
-
-        
-        
-        //color: #78858F;
-
-        
-
-
-        
-
-        &:focus {
-            outline: 0;
-        }
-        
-
-
-
-    }
-    
 }
 
 @mixin largebutton {
@@ -154,12 +98,12 @@
     appearance: none;
     background-color: $lightaccent;
     // border: 0.5px solid rgba(27, 31, 35, .15);
-    border-radius: 10px;
+    border-radius: 5px;
     box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
     box-sizing: border-box;
     color: black;
     cursor: pointer;
-    display: inline-block;
+    display: flex;
     //font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
     font-size: 14px;
     font-weight: 500;
@@ -176,6 +120,10 @@
     white-space: nowrap;
     font-weight: 500;
     color: white;
+    align-items: center;
+    justify-content: center;
+    font-family: "Open Sans", sans-serif !important;
+    
 
     &:focus:not(:focus-visible):not(.focus-visible) {
         box-shadow: none;
@@ -197,6 +145,10 @@
         border-color: rgba(27, 31, 35, .1);
         color: rgba(255, 255, 255, .8);
         cursor: default;
+
+        &:hover {
+            background: lightgrey !important;
+        }
     }
 
     &:active {
@@ -383,16 +335,23 @@
     }
 }
 
+@mixin classic-border-background {
+    background: rgb(249, 250, 250);
+    border: 1px solid rgb(181, 189, 196);
+}
+
 @mixin plain-form-input {
     display: flex;
     flex-direction: column;
     margin-bottom: 16px;
 
+
+
     label {
         font-size: 15px;
         //color: darkgrey;
-        font-weight: 500;
-        color: #282828;
+        font-weight: 400;
+        color: $charcoal;
 
         span {
             color: red;
@@ -404,29 +363,51 @@
     textarea,
     select,
     :deep(input) {
-        border: 0.5px solid #d6d7d8;
 
-        border-image-repeat: stretch;
-        border-image-source: none;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        //border: 1.5px solid rgba(169, 169, 169, 0.64);
-        min-height: 45px;
+
         border-radius: 5px;
-        padding: 8px;
+        //background: rgb(249, 250, 250);
+        border: 1px solid rgb(181, 189, 196);
+        font-size: 16px;
+        //height: 50px;
+        line-height: 24px;
+        padding: 7px 8px;
+        color: rgb(8, 9, 10);
+        box-shadow: none;
+        font-family: "Open Sans", sans-serif !important;
+        &:focus{
+            background-color: #fff;
+            border-color: $lightaccent;
+            box-shadow: 1px 1px 0 $lightaccent;
+            outline: 0 !important;
+        }
+        
+
+
+        /*
+        width: 100%;
+        height: 50px;
+        border-radius: 10px;
+        padding-left: 12px;
+        font-size: 16px;
+        font-weight: normal;
+        border: 1px solid lightgrey;
+        transition: border-color 150ms ease-in-out 0s;
         outline: none;
-        font-size: 15px;
-        //color: $faint;
-        color: $charcoal;
-        font-weight: 400;
+        color: rgb(33, 49, 60);
+        background-color: rgb(255, 255, 255);
+        padding-right: 12px;
+        padding: 12px;
         appearance: none;
-        //background-color: white;
-        background-color: white;
-        //border: none;
-        letter-spacing: 0.6px;
+        -webkit-appearance: none;
+
+        &:hover {
+            box-shadow: rgb(231 238 236) 0px 0px 0px 3px;
+        }
 
         &:focus {
             border: 1px solid lightgrey;
-        }
+        }*/
     }
 
     .input {
@@ -434,9 +415,60 @@
     }
 }
 
+@mixin processing-btn {
+    color: rgb(183, 119, 0) !important;
+    background-color: rgba(255, 166, 0, 0.27) !important;
+}
+
+@mixin done-btn {
+    color: teal !important;
+    background-color: #5ac09081 !important;
+}
+
+@mixin reject-btn {
+    color: #E53945 !important;
+    background: #e539445f !important;
+}
+@mixin delivered-btn {
+    color: #0000FF !important;
+    background: #0000ff42 !important;
+}
+
+
+@mixin big-btn {
+    color: #FFF;
+    text-align: center;
+    font-family: Poppins;
+    font-size: 14.422px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    width: 287.242px;
+    height: 56px;
+    flex-shrink: 0;
+    border-radius: 100px;
+    background: #1C1C1B;
+    margin: auto;
+    margin-top: 24px;
+
+    &:disabled {
+        background: lightgrey;
+        color: darkgrey;
+    }
+}
+
+@mixin paid-btn {
+    color: #006400;
+    background-color: #00640027;
+}
+
+@mixin pending-btn {
+    color: darkgoldenrod;
+    background-color: rgba(255, 255, 0, 0.188);
+}
 @mixin radio-label {
     position: relative;
-    background-color: rgb(246, 246, 246);
+    background-color: white;
     display: flex;
     padding: 8px 8px;
     align-items: center;
@@ -445,6 +477,10 @@
     margin-right: 8px;
     transition: all 100ms ease-in-out;
     height: 50px;
+
+    @include media("<=t") {
+        margin-right: 0px;
+    }
 
     //background: none !important;
 
@@ -469,8 +505,8 @@
     }
 
     .radio-indicator {
-        width: 20px;
-        height: 20px;
+        min-width: 20px;
+        min-height: 20px;
         margin-right: 16px;
         border-radius: 50%;
         background: white;
@@ -490,15 +526,357 @@
 }
 
 
-@mixin normalbutton {
-    background-color: #FC4904;
-    padding: 20px;
-    color: white;
-    border-radius: 50px;
-    width: 100%;
-    
-    &:disabled {
-        background-color: lightgrey;
-        color: grey;
+
+@mixin checkbox-label {
+    position: relative;
+    background-color: white;
+    display: flex;
+    padding: 8px 8px;
+    align-items: center;
+    border: 1.5px solid #ced4da58 !important;
+    border-radius: 3px;
+    margin-right: 8px;
+    transition: all 100ms ease-in-out;
+    height: 50px;
+
+    @include media("<=t") {
+        margin-right: 0px;
+    }
+
+    //background: none !important;
+
+    //border: 1px solid grey;
+
+    &:hover {
+        background: rgba(211, 211, 211, 0.382);
+    }
+
+    &:focus-within {
+        //background: lightgray;
+    }
+
+    input {
+        cursor: pointer;
+        border: 0;
+        position: absolute !important;
+        width: 100% !important;
+        height: 100% !important;
+        opacity: 0;
+        //background: none !important;
+    }
+
+    .radio-indicator {
+        min-width: 10px;
+        min-height: 10px;
+        margin-right: 16px;
+        //border-radius: 50%;
+        background: white;
+        border: 0.5px solid rgba(203, 201, 201, 0.709);
+        display: block;
+    }
+
+    .radio-text {
+        font-size: 14px;
+        font-weight: 400;
+        color: $faint;
+    }
+
+    input:checked+.radio-indicator {
+        background: $primary;
     }
 }
+
+@mixin smallbutton {
+    //width: 95px;
+    width: fit-content;
+    //height: 40px;
+    flex-shrink: 0;
+    color: white;
+    text-align: center;
+    /* Button Text */
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px; /* 114.286% */
+    letter-spacing: 0.50px;
+   // text-transform: uppercase;
+    border-radius: 10px;
+    padding: 10px 16px;
+    background-color: $primary;
+    font-family: "Inter", sans-serif;
+
+    &:hover {
+        background-color: #A11D26;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    }
+
+
+
+    &:disabled {
+        color:  #B0BAC9;
+        text-align: center;
+        /* Button Text */
+        font-size: 14px;
+        font-style: normal;
+        background: transparent;
+        
+    }
+}
+
+@mixin mediumbutton {
+
+}
+
+@mixin greyforminput {
+    margin-bottom: 10px;
+
+    .required {
+        color: $primary;
+        font-size: 15px;
+        font-weight: 600;
+    }
+    
+    label {
+        color: var(--Neutral-Colors-700, #323232);
+        font-feature-settings: 'clig' off, 'liga' off;
+        font-family: "Open Sans", sans-serif !important;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 18.028px;
+        margin-bottom: 5px;
+        letter-spacing: 0.5px;
+
+        @include media("<=t") {
+            font-size: 15px;
+        }
+    }
+
+    textarea, input[type='text'], select, :deep(input){ 
+        border: 0px solid #000;
+        appearance: none;
+
+        //background: #F3F3F3;
+        padding: 10px 16px;
+        width: 100%;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 23px; /* 191.667% */
+        letter-spacing: 0.5px;
+        color: $charcoal;
+        font-family: "Open Sans", sans-serif !important;
+
+        //border-radius: 22.5px;
+        background: #F5F5F5;
+
+
+        background: #F5F5F5;
+
+        border-radius: 7.211px;
+        border: 1px solid lightgrey;
+
+        @include media(">=t") {
+            font-size: 13px;
+        }
+        //margin-bottom: 16px;
+
+        
+        
+        //color: #78858F;
+
+        
+
+
+        
+
+        &:focus {
+            outline: 0;
+        }
+        
+
+
+
+    }
+    
+}
+@mixin outlinedinput {
+    margin-bottom: 10px;
+
+    .required {
+        color: $primary;
+        font-size: 15px;
+        font-weight: 600;
+    }
+    
+    label {
+        color: var(--Neutral-Colors-700, #323232);
+        font-feature-settings: 'clig' off, 'liga' off;
+        font-family: Poppins;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 18.028px;
+        margin-bottom: 5px;
+        letter-spacing: 0.5px;
+
+        @include media("<=t") {
+            font-size: 15px;
+        }
+    }
+
+    textarea, input[type='text'], select, :deep(input){ 
+        border: 1px solid #000;
+        appearance: none;
+
+        //background: #F3F3F3;
+        padding: 10px 16px;
+        width: 100%;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 23px; /* 191.667% */
+        letter-spacing: 0.5px;
+        color: $charcoal;
+        font-family: "Inter", sans-serif !important;
+
+        //border-radius: 22.5px;
+        background-color: white;
+
+        border-radius: 7.211px;
+        //margin-bottom: 16px;
+
+        
+        
+        //color: #78858F;
+
+        
+
+
+        
+
+        &:focus {
+            outline: 0;
+        }
+        
+
+
+
+    }
+    
+}
+
+@mixin outlinedbutton {
+    color: black;
+            text-align: center;
+            font-size: 13px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+            letter-spacing: 1.08px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 16px;
+}
+
+@mixin inter {
+    font-family: "Inter", sans-serif !important;
+}
+
+
+
+
+
+@mixin checkbox-input {
+
+    .container {
+        display: block;
+        position: relative;
+        padding-right: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        color: #000;
+        font-size: 12px;
+        font-style: normal;
+        //text-transform: uppercase;
+        font-weight: 500;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        color: #333;
+
+        font-feature-settings: 'clig' off, 'liga' off;
+        /* Text Single/300/Regular */
+        font-family: Poppins;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 22px; 
+
+        
+      }
+      
+      /* Hide the browser's default checkbox */
+      .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+      
+      /* Create a custom checkbox */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 20px;
+        width: 20px;
+        //background-color: white;
+        border-radius: 5px;
+        border-radius: 38.208px;
+        border: 1.415px solid #757575;
+      }
+      
+      /* On mouse-over, add a grey background color */
+      .container:hover input ~ .checkmark {
+        background-color: black;
+      }
+      
+      /* When the checkbox is checked, add a blue background */
+      .container input:checked ~ .checkmark {
+        background-color: black;
+      }
+      
+      /* Create the checkmark/indicator (hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+      
+      /* Show the checkmark when checked */
+      .container input:checked ~ .checkmark:after {
+        display: block;
+      }
+      
+      /* Style the checkmark/indicator */
+      .container .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        //border: solid white;
+        //border-width: 0 3px 3px 0;
+        //-webkit-transform: rotate(45deg);
+       // -ms-transform: rotate(45deg);
+        //transform: rotate(45deg);
+      }
+    }
+

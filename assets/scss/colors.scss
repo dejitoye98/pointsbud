@@ -1,18 +1,36 @@
-
 //$primary: #36846b;
 //$background: #F1F8F9;
 //$lightaccent: #4bb39a;
-$secondary: #FFEA78;
-$secondaryaccent: #f1b24b;
-$primary: #FC4904;
-$secondprimary: #DC5921;
+$secondary: #f79939;
+$border-grey: #E0E0E0;
+//$secondary: #f798392b;
+
+$secondaryaccent: #5ac091;
+$primary: #E53945;
+$deepprimary: #A02730;
 $lightaccent: $primary; //$lightaccent: #d68438;
 $darkaccent: #DD6B6B;
+//$darkaccent: #763f3f;
+$darkaccent: #dd6b6b36;
+
+$secondarylight: #f798398b;
+
+$something: #fbfeff;
+
 $faint: #686868;
 $sidebar_item_hover_color: rgba(36, 2, 60, 0.032);
 $sidebar_text_color: black;
 $sidebar_text_active_color: $primary;
 $chartcolor: rgb(199, 255, 199);
 //$dashboard-background-color: #f1f5f86e;
-$dashboard-background-color: white;
+$dashboard-background-color: rgb(255, 255, 255);
 $charcoal: #36454F;
+
+$input_background: #F3F3F3;
+
+
+.pac-container {
+    z-index: 100000000000000 !important;
+
+
+}
