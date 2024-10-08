@@ -44,10 +44,28 @@
                 </div>
 
                 <div class="tabs">
-                    <div class="tab active-tab">Store</div>
-                    <div class="tab">Deals</div>
+                    <div class="tab active-tab">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3.33333 4.99992V3.33325H16.6667V4.99992H3.33333ZM3.33333 16.6666V11.6666H2.5V9.99992L3.33333 5.83325H16.6667L17.5 9.99992V11.6666H16.6667V16.6666H15V11.6666H11.6667V16.6666H3.33333ZM5 14.9999H10V11.6666H5V14.9999ZM4.20833 9.99992H15.7917L15.2917 7.49992H4.70833L4.20833 9.99992Z" fill="black"/>
+                            </svg>
+                            
+                        Store
+                    </div>
+                    <div class="tab">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.5 12.5H10.625C11.3125 12.5 11.875 11.9375 11.875 11.25C11.875 10.5625 11.3125 10 10.625 10H9.375C8.6875 10 8.125 9.4375 8.125 8.75C8.125 8.0625 8.6875 7.5 9.375 7.5H12.5M10 5.625V7.08375M10 11.875V14.375M16.875 6.25V16.875H3.75M3.125 13.75V3.125H15" stroke="black" stroke-width="1.25" stroke-linejoin="round"/>
+                            </svg>
+                            
+                        Deals
+                    </div>
                     <div class="tab" v-if="false">Reservations</div>
-                    <div class="tab">Purchase History</div>
+                    <div class="tab">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 17.5C8.08333 17.5 6.41333 16.8647 4.99 15.5942C3.56667 14.3236 2.75056 12.7367 2.54167 10.8333H4.25C4.44444 12.2778 5.08694 13.4722 6.1775 14.4167C7.26806 15.3611 8.54222 15.8333 10 15.8333C11.625 15.8333 13.0036 15.2675 14.1358 14.1358C15.2681 13.0042 15.8339 11.6256 15.8333 10C15.8328 8.37444 15.2669 6.99611 14.1358 5.865C13.0047 4.73389 11.6261 4.16778 10 4.16667C9.04167 4.16667 8.14583 4.38889 7.3125 4.83333C6.47917 5.27778 5.77778 5.88889 5.20833 6.66667H7.5V8.33333H2.5V3.33333H4.16667V5.29167C4.875 4.40278 5.73972 3.71528 6.76083 3.22917C7.78194 2.74306 8.86167 2.5 10 2.5C11.0417 2.5 12.0175 2.69806 12.9275 3.09417C13.8375 3.49028 14.6292 4.02472 15.3025 4.6975C15.9758 5.37028 16.5106 6.16194 16.9067 7.0725C17.3028 7.98306 17.5006 8.95889 17.5 10C17.4994 11.0411 17.3017 12.0169 16.9067 12.9275C16.5117 13.8381 15.9769 14.6297 15.3025 15.3025C14.6281 15.9753 13.8364 16.51 12.9275 16.9067C12.0186 17.3033 11.0428 17.5011 10 17.5ZM12.3333 13.5L9.16667 10.3333V5.83333H10.8333V9.66667L13.5 12.3333L12.3333 13.5Z" fill="black"/>
+                            </svg>
+                            
+                        Purchase History
+                    </div>
                 </div>
 
                 <div class="search">
@@ -55,11 +73,11 @@
                         <path d="M16.2375 16.7948L11.0192 11.5765C10.6025 11.9315 10.1233 12.2062 9.58167 12.4006C9.04001 12.5951 8.49556 12.6923 7.94834 12.6923C6.6139 12.6923 5.48445 12.2303 4.56001 11.3065C3.63556 10.3826 3.17334 9.2534 3.17334 7.91896C3.17334 6.58452 3.63501 5.45479 4.55834 4.52979C5.48167 3.60479 6.61056 3.14174 7.94501 3.14063C9.27945 3.13952 10.4095 3.60174 11.335 4.52729C12.2606 5.45285 12.7233 6.58257 12.7233 7.91646C12.7233 8.49535 12.6208 9.05563 12.4158 9.59729C12.2108 10.139 11.9414 10.6023 11.6075 10.9873L16.8258 16.2048L16.2375 16.7948ZM7.94917 11.8581C9.05473 11.8581 9.98806 11.4776 10.7492 10.7165C11.5103 9.95535 11.8908 9.02174 11.8908 7.91563C11.8908 6.80952 11.5103 5.87618 10.7492 5.11563C9.98806 4.35507 9.05473 3.97452 7.94917 3.97396C6.84362 3.9734 5.91001 4.35396 5.14834 5.11563C4.38667 5.87729 4.00612 6.81063 4.00667 7.91563C4.00723 9.02063 4.38778 9.95396 5.14834 10.7156C5.9089 11.4773 6.84223 11.8578 7.94834 11.8573" fill="black"/>
                     </svg>
                         
-                    <input type="text" placeholder="search for anything">
+                    <input type="text" v-model="search_term" @input="debounceSearch" placeholder="search for anything">
 
                 </div>
                 
-                <div class="list"> 
+                <div class="list" v-if="!search_mode"> 
                 
                     <div class="section" v-for="(category, index) in Object.keys(categoryProductMapping)">
                         <p class="category-name" >{{category}}</p>
@@ -97,6 +115,19 @@
 
                 </div>
 
+                <div class="list" v-else>
+                    <div class="section">
+                        <SimpleListShopItem :item="product" v-for="(product, index) in searchedProducts" :key="index"></SimpleListShopItem>
+
+                        <template v-if="searching_db">
+                            <div class="flex-col flex-center-x flex-center-y">
+                                <LoadingState></LoadingState>
+                                <span>Searching items...</span>
+                            </div>
+                        </template>
+                    </div>
+                    
+                </div>
 
                 <div class="bottom-sticky">
                     <div class="floating-cart" v-if="cart?.length" @click="show_cart_modal = !show_cart_modal">
@@ -132,6 +163,11 @@ export default {
     data() {
         return {
 
+            search_mode: false,
+            search_timeout: null,
+            search_term: "",
+            searching_db: false,
+            searched_products: [],
 
 
             products: [],
@@ -142,7 +178,35 @@ export default {
             show_cart_modal: false,
         };
     },
-    methods: {},
+    methods: {
+        debounce(func, delay) {
+            clearTimeout(this.search_timeout); // Clear the previous timer
+
+            this.search_timeout = setTimeout(() => {
+                func();
+            }, delay);
+        },
+
+    // The search function to execute after debounce
+        search() {
+            console.log("Searching for:", this.search_term);
+            if (this.search_term) this.search_mode = true;
+            this.searchDb()
+        // Add your search logic here (API call, etc.)
+        },
+
+        debounceSearch() {
+            this.debounce(this.search, 1500)
+        },
+        searchDb() {
+            this.searching_db = true;
+            this.$api.get('/products?business_id=149&name='+this.search_term).then(resp=> {
+                this.searched_products = resp.data.data;
+            }).finally(()=> {
+                this.searching_db = false;
+            })
+        }
+    },
     async fetch() {
         const response = await this.$api.get('/businesses/store-products?slug=Alhaja');
         const { business, products } = response.data.data;
@@ -153,6 +217,37 @@ export default {
     },
     computed: {
         ...mapGetters("shop", ['cart']),
+        searchedProducts() {
+            let final = []
+            if (this.search_term) {
+
+                const products = this.products.filter(p=> {
+                    return p.name.toLowerCase().indexOf(this.search_term.toLowerCase()) > -1 
+                    || p.description?.toLowerCase().indexOf(this.search_term.toLowerCase()) > -1 
+                    //|| p.cateo.toLowerCase().indexOf(this.search_term.toLowerCase()) > -1 
+                })
+
+                final = products;
+
+                const categories = this.categories.filter(c=> c.name?.toLowerCase().indexOf(this.search_term.toLowerCase()) > -1);
+                let category_products  = this.products.filter(p=> categories.map(c=> c.id).includes(p.category_id))
+                if (category_products.length) {
+                    for (let p of category_products) {
+                        if (!final.find(pr=> pr.name == p.name)) 
+                        final.push(p)
+                    }
+                
+                }
+                if (this.searched_products.length) {
+                    for (let p of this.searched_products) {
+                        if (!final.find(pr=> pr.name == p.name)) 
+                        final.push(p)
+                    }
+                }
+                
+            }
+            return final
+        },
         categoryProductMapping() {
             const mapping = {
 
@@ -170,6 +265,15 @@ export default {
                 }
             }
             return mapping;
+        }
+    },
+    watch: {
+        search_term(value) {
+            if (!value) {
+                this.search_mode = false;
+                this.searched_products = []
+
+            }
         }
     },
     components: { SimpleListShopItem, ShopCartModal }
@@ -290,6 +394,9 @@ export default {
     padding: 16px;
 
     .tab {
+        display: flex;
+        gap: 2;
+        justify-content: center;
         border-radius: 100px;
         background-color: $border-grey;
         padding: 8px 16px;
