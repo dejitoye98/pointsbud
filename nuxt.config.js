@@ -9,7 +9,7 @@ export default {
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
-        title: "Straight Green Card",
+        title: "PointsBud",
         htmlAttrs: {
             lang: "en",
         },
@@ -25,7 +25,7 @@ export default {
             //{ name: "google-signin-client_id", content: "638411293504-minstvm8qj8vmftvuaacnea143ghnpj7.apps.googleusercontent.com" }
         ],
         link: [
-            { rel: "icon", type: "image/x-icon", href: "/assetblend_icon.png" },
+            { rel: "icon", type: "image/x-icon", href: "" },
             {
                 href: "https://fonts.googleapis.com/css?family=Quicksand:300,500|Playfair+Display:700i",
                 rel: "stylesheet",
