@@ -84,6 +84,12 @@
                             </div>
                         </SimpleListShopItem>
 
+                        <div v-if="categoryProductMapping[category][0].remaining_products" class="padding-16 see-more">
+                            <p class="text-center">
+                                See {{ categoryProductMapping[category][0].remaining_products }} more products
+                            </p>
+                        </div>
+
                         
                     </div>
 
@@ -337,5 +343,11 @@ export default {
     }
 
     
+}
+
+.see-more {
+    background-color: whitesmoke;
+    font-weight: 600;
+    cursor: pointer;
 }
 </style>
