@@ -46,7 +46,7 @@
                 <div class="tabs">
                     <div class="tab active-tab">Store</div>
                     <div class="tab">Deals</div>
-                    <div class="tab">Reservations</div>
+                    <div class="tab" v-if="false">Reservations</div>
                     <div class="tab">Purchase History</div>
                 </div>
 
