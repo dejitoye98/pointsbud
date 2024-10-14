@@ -42,7 +42,15 @@
                         <button class="pay-button">Pay</button>
                     </div>
                 </div>
-
+                <div class="notifier flex gap-2 padding-16">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 2.5L17.5 16.6667H2.5L10 2.5Z" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10 8.33337V11.6667" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10 14.1666V14.175" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        
+                    <p>This store has archived 34 items available at the physical store.</p>
+                </div>
                 <div class="tabs">
                     <div class="tab active-tab">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -67,6 +75,8 @@
                         Purchase History
                     </div>
                 </div>
+
+                
 
                 <div class="search">
                     <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -179,6 +189,9 @@ export default {
         };
     },
     methods: {
+
+        
+
         debounce(func, delay) {
             clearTimeout(this.search_timeout); // Clear the previous timer
 
@@ -208,7 +221,7 @@ export default {
         }
     },
     async fetch() {
-        const response = await this.$api.get('/businesses/store-products?slug=Alhaja');
+        const response = await this.$api.get('/businesses/store-products?slug=de-ethernex');
         const { business, products } = response.data.data;
         const categories = business.categories;
         this.business = business;
@@ -285,6 +298,11 @@ export default {
 * {
     font-family: "Inter", sans-serif;
     font-size: 14px;
+}
+
+.notifier {
+    background-color: #f0f0f0; /* Light gray background */
+    color: black; /* Dark text color */
 }
 
 .ad {

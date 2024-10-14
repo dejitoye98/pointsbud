@@ -4,7 +4,7 @@
 
             <div class="item__container">
 
-                <div class="gap-2 flex flex-center-y">
+                <div class="gap-1 flex flex-center-y">
                     <template v-if="item.thumbnail || item.description">
     
     
@@ -30,13 +30,17 @@
                 </div>
         
                 <div style="justify-content: flex-end; width: 100%" class="flex gap-2 flex-center-y">
-         
+                    
                     <div v-if="item.unitprice">
-                        {{ "NGN" | currencySymbol }} {{ item.unitprice }}
+                        {{ "NGN" | currencySymbol }}{{ item.unitprice }}
                     </div>
     
-                    <div v-else>
-                        {{ "NGN" | currencySymbol }} 1,000
+                    <div class="flex gap-2" v-else>
+                        <div>{{ "NGN" | currencySymbol }}{{getPriceRanges(4000).lowerRange}}  </div>
+                        <div> - </div>
+                        <div> {{ "NGN" | currencySymbol }}{{getPriceRanges(4500).upperRange}} </div>
+
+                        
                     </div>
                     <div v-if="!isInCart" >
                         <button class="quantity-choose" @click.stop="addToCart">+</button>
@@ -77,6 +81,43 @@ export default {
         }
     },
     methods: {
+    getPriceRanges(itemPrice) {
+            let lowerRange, upperRange, interval;
+
+            // Determine the interval based on the magnitude of the item price
+            if (itemPrice < 1000) { // For prices in the hundreds
+                interval = 50;
+            } else if (itemPrice < 10000) { // For prices in the thousands
+                interval = 500;
+            } else if (itemPrice < 100000) { // For prices in the tens of thousands
+                interval = 5000;
+            } else if (itemPrice < 1000000) { // For prices in the hundreds of thousands
+                interval = 50000;
+            } else { // For prices in the millions and above
+                interval = 500000;
+            }
+
+            // Calculate the lower range as the nearest lower multiple of the interval minus one interval
+            lowerRange = Math.floor(itemPrice / interval) * interval - interval;
+            // Calculate the upper range as the nearest lower multiple of the interval plus one interval
+            upperRange = lowerRange + interval * 2; 
+
+            return {
+                lowerRange: lowerRange,
+                upperRange: upperRange,
+            };
+        },   
+        generateRandomThreeDigitNumber() {
+            return Math.floor(Math.random() * 9) * 100 + 100; // Generates a number like 100, 200, ..., 900
+        },
+
+        priceUpperBound(price) {
+            return 1000  + (price * 0.15);
+        },
+
+        priceLowerBound(price) {
+            return 1000  - (price * 0.15);
+        },
         decreaseQuantity() {
             if (this.isInCart.quantity) {
                 this.$store.dispatch('shop/decreaseItemQuantity', this.item.id)
