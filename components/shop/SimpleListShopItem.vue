@@ -36,9 +36,11 @@
                     </div>
     
                     <div class="flex gap-2" v-else>
+                        <!-- 
                         <div>{{ "NGN" | currencySymbol }}{{getPriceRanges(4000).lowerRange}}  </div>
                         <div> - </div>
                         <div> {{ "NGN" | currencySymbol }}{{getPriceRanges(4500).upperRange}} </div>
+                        -->
 
                         
                     </div>
