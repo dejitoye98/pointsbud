@@ -206,10 +206,10 @@ p {
     border: 1px $border-grey solid;
 }
 .thumbnail {
-    min-width: 150px;
-    min-height: 170px;
-    max-width: 150px;
-    max-height: 170px;
+    min-width:  100px;
+    min-height: 100px;
+    max-width: 100px;
+    max-height: 100px;
     border-radius: 10px;
     object-fit: cover;
 }
@@ -230,7 +230,7 @@ p {
     background-color: white;
     //padding: 8px 0px 8px 16px;
     border-bottom: 1px solid $border-grey;
-    border:1px solid $border-grey;
+   // border:1px solid $border-grey;
     
     &__container {
         display: grid;
