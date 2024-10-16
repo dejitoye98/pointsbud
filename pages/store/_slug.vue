@@ -1,8 +1,10 @@
 <template>
-    <div>
+    <div class="page">
         <ShopCartModal @close="show_cart_modal = false" v-if="show_cart_modal && this.cart.length">
 
         </ShopCartModal>
+
+    
         <div class="page__container">
             <div class="sidebar">
 
@@ -13,24 +15,18 @@
                 <div class="navbar">
                     <div class="navbar__container space-between flex-center-y">
 
-                        <div class="logo flex gap-2 flex-center-y">
-                            <HalfLogo></HalfLogo>
+                        <div class="logo flex gap-2 flex-center-x flex-center-y">
+                            <HalfLogo color="white"></HalfLogo>
                             <p>{{business.name}}</p>
                         </div>
 
                         <div>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_518_2)">
-                                <path d="M20 9.99C20 4.475 15.52 0 10 0C4.48 0 0 4.475 0 9.99C0 13.0275 1.38 15.765 3.54 17.6025C3.56 17.6225 3.58 17.6225 3.58 17.6425C3.76 17.7825 3.94 17.9225 4.14 18.0625C4.24 18.1225 4.32 18.2012 4.42 18.2812C6.07325 19.4003 8.02362 19.9989 10.02 20C12.0164 19.9989 13.9667 19.4003 15.62 18.2812C15.72 18.2212 15.8 18.1425 15.9 18.0813C16.08 17.9425 16.28 17.8025 16.46 17.6625C16.48 17.6425 16.5 17.6425 16.5 17.6225C18.62 15.7637 20 13.0275 20 9.99ZM10 18.7413C8.12 18.7413 6.4 18.1412 4.98 17.1425C5 16.9825 5.04 16.8238 5.08 16.6638C5.19957 16.2303 5.37433 15.8139 5.6 15.425C5.82 15.045 6.08 14.705 6.4 14.405C6.7 14.105 7.06 13.8263 7.42 13.6063C7.8 13.3863 8.2 13.2262 8.64 13.1062C9.08357 12.9874 9.5408 12.9273 10 12.9275C11.3634 12.9172 12.6769 13.4402 13.66 14.385C14.12 14.845 14.48 15.3846 14.74 16.0038C14.88 16.3638 14.98 16.7433 15.04 17.1425C13.564 18.1802 11.8043 18.7384 10 18.7413ZM6.94 9.49125C6.76414 9.08766 6.67554 8.65147 6.68 8.21125C6.68 7.7725 6.76 7.3325 6.94 6.9325C7.12 6.5325 7.36 6.17375 7.66 5.87375C7.96 5.57375 8.32 5.335 8.72 5.155C9.12 4.975 9.56 4.895 10 4.895C10.46 4.895 10.88 4.975 11.28 5.155C11.68 5.335 12.04 5.575 12.34 5.87375C12.64 6.17375 12.88 6.53375 13.06 6.9325C13.24 7.3325 13.32 7.7725 13.32 8.21125C13.32 8.67125 13.24 9.09125 13.06 9.49C12.8873 9.88463 12.6432 10.244 12.34 10.55C12.0339 10.8527 11.6745 11.0964 11.28 11.2688C10.4534 11.6077 9.5266 11.6077 8.7 11.2688C8.30547 11.0964 7.94612 10.8527 7.64 10.55C7.33656 10.2483 7.0983 9.88878 6.94 9.49125ZM16.22 16.1238C16.22 16.0838 16.2 16.0638 16.2 16.0238C16.0037 15.3979 15.7137 14.8053 15.34 14.2663C14.966 13.7232 14.5067 13.2441 13.98 12.8475C13.5776 12.5447 13.1413 12.2896 12.68 12.0875C12.8889 11.9478 13.0832 11.7874 13.26 11.6087C13.5582 11.3144 13.82 10.9854 14.04 10.6288C14.4845 9.90167 14.7133 9.06332 14.7 8.21125C14.7065 7.58061 14.584 6.9553 14.34 6.37375C14.0994 5.81331 13.7531 5.30447 13.32 4.875C12.8865 4.45131 12.3778 4.11218 11.82 3.875C11.2376 3.63107 10.6114 3.50898 9.98 3.51625C9.34852 3.50937 8.72232 3.63189 8.14 3.87625C7.57605 4.11054 7.0657 4.45716 6.64 4.895C6.2141 5.32621 5.87466 5.83494 5.64 6.39375C5.39597 6.9753 5.27346 7.60061 5.28 8.23125C5.28 8.67125 5.34 9.09083 5.46 9.49C5.58 9.91 5.74 10.29 5.96 10.6488C6.16 11.0088 6.44 11.3288 6.74 11.6288C6.92 11.8088 7.12 11.9683 7.34 12.1075C6.87662 12.3138 6.44008 12.5757 6.04 12.8875C5.52 13.2875 5.06 13.7662 4.68 14.2862C4.30284 14.8233 4.01262 15.4164 3.82 16.0438C3.8 16.0838 3.8 16.1237 3.8 16.1437C2.22 14.545 1.24 12.3875 1.24 9.99C1.24 5.175 5.18 1.23875 10 1.23875C14.82 1.23875 18.76 5.175 18.76 9.99C18.7574 12.2899 17.8441 14.4953 16.22 16.1238Z" fill="black"/>
-                                </g>
-                                <defs>
-                                <clipPath id="clip0_518_2">
-                                <rect width="20" height="20" fill="white"/>
-                                </clipPath>
-                                </defs>
-                                </svg>
-                                
+                                <path d="M15.8737 4.09204C15.1096 3.32046 14.1996 2.70868 13.1966 2.29234C12.1937 1.876 11.1179 1.66344 10.032 1.66704C5.48203 1.66704 1.7737 5.37537 1.7737 9.92537C1.7737 11.3837 2.15703 12.8004 2.8737 14.0504L1.70703 18.3337L6.08203 17.1837C7.29036 17.842 8.6487 18.192 10.032 18.192C14.582 18.192 18.2904 14.4837 18.2904 9.9337C18.2904 7.72537 17.432 5.65037 15.8737 4.09204ZM10.032 16.792C8.7987 16.792 7.59036 16.4587 6.53203 15.8337L6.28203 15.6837L3.68203 16.367L4.3737 13.8337L4.20703 13.5754C3.52165 12.4813 3.1578 11.2164 3.15703 9.92537C3.15703 6.14204 6.24036 3.0587 10.0237 3.0587C11.857 3.0587 13.582 3.77537 14.8737 5.07537C15.5134 5.71192 16.0203 6.46916 16.3651 7.30314C16.7098 8.13713 16.8855 9.03127 16.882 9.9337C16.8987 13.717 13.8154 16.792 10.032 16.792ZM13.7987 11.6587C13.5904 11.5587 12.5737 11.0587 12.3904 10.9837C12.1987 10.917 12.0654 10.8837 11.9237 11.0837C11.782 11.292 11.3904 11.7587 11.2737 11.892C11.157 12.0337 11.032 12.0504 10.8237 11.942C10.6154 11.842 9.9487 11.617 9.16536 10.917C8.5487 10.367 8.14036 9.69204 8.01536 9.4837C7.8987 9.27537 7.9987 9.16704 8.10703 9.0587C8.1987 8.96704 8.31536 8.81704 8.41536 8.70037C8.51536 8.5837 8.55703 8.49204 8.6237 8.3587C8.69036 8.21704 8.65703 8.10037 8.60703 8.00037C8.55703 7.90037 8.14036 6.8837 7.9737 6.46704C7.80703 6.06704 7.63203 6.11704 7.50703 6.1087H7.10703C6.96536 6.1087 6.7487 6.1587 6.55703 6.36704C6.3737 6.57537 5.84036 7.07537 5.84036 8.09204C5.84036 9.1087 6.58203 10.092 6.68203 10.2254C6.78203 10.367 8.14036 12.4504 10.207 13.342C10.6987 13.5587 11.082 13.6837 11.382 13.7754C11.8737 13.9337 12.3237 13.9087 12.682 13.8587C13.082 13.8004 13.907 13.3587 14.0737 12.8754C14.2487 12.392 14.2487 11.9837 14.1904 11.892C14.132 11.8004 14.007 11.7587 13.7987 11.6587Z" :fill="'white'"/>
+                            </svg>
                         </div>
+
+                        
                     </div>
                 </div>
 
@@ -42,7 +38,7 @@
                         <button class="pay-button">Pay</button>
                     </div>
                 </div>
-                <div class="notifier flex gap-2 padding-16">
+                <div class="notifier flex gap-2 padding-16" v-if="false">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M10 2.5L17.5 16.6667H2.5L10 2.5Z" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M10 8.33337V11.6667" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
@@ -51,29 +47,39 @@
                         
                     <p>This store has archived 34 items available at the physical store.</p>
                 </div>
-                <div class="tabs">
+
+                <div>
+
+                </div>
+                <div class="tabs" v-if="false">
+                    
                     <div class="tab active-tab">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3.33333 4.99992V3.33325H16.6667V4.99992H3.33333ZM3.33333 16.6666V11.6666H2.5V9.99992L3.33333 5.83325H16.6667L17.5 9.99992V11.6666H16.6667V16.6666H15V11.6666H11.6667V16.6666H3.33333ZM5 14.9999H10V11.6666H5V14.9999ZM4.20833 9.99992H15.7917L15.2917 7.49992H4.70833L4.20833 9.99992Z" fill="black"/>
+                            <path d="M3.33333 4.99992V3.33325H16.6667V4.99992H3.33333ZM3.33333 16.6666V11.6666H2.5V9.99992L3.33333 5.83325H16.6667L17.5 9.99992V11.6666H16.6667V16.6666H15V11.6666H11.6667V16.6666H3.33333ZM5 14.9999H10V11.6666H5V14.9999ZM4.20833 9.99992H15.7917L15.2917 7.49992H4.70833L4.20833 9.99992Z" fill="white"/>
                             </svg>
                             
-                        Store
+                        Bookmark this Store on PointsBud
                     </div>
-                    <div class="tab">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.5 12.5H10.625C11.3125 12.5 11.875 11.9375 11.875 11.25C11.875 10.5625 11.3125 10 10.625 10H9.375C8.6875 10 8.125 9.4375 8.125 8.75C8.125 8.0625 8.6875 7.5 9.375 7.5H12.5M10 5.625V7.08375M10 11.875V14.375M16.875 6.25V16.875H3.75M3.125 13.75V3.125H15" stroke="black" stroke-width="1.25" stroke-linejoin="round"/>
-                            </svg>
-                            
-                        Deals
-                    </div>
-                    <div class="tab" v-if="false">Reservations</div>
-                    <div class="tab">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 17.5C8.08333 17.5 6.41333 16.8647 4.99 15.5942C3.56667 14.3236 2.75056 12.7367 2.54167 10.8333H4.25C4.44444 12.2778 5.08694 13.4722 6.1775 14.4167C7.26806 15.3611 8.54222 15.8333 10 15.8333C11.625 15.8333 13.0036 15.2675 14.1358 14.1358C15.2681 13.0042 15.8339 11.6256 15.8333 10C15.8328 8.37444 15.2669 6.99611 14.1358 5.865C13.0047 4.73389 11.6261 4.16778 10 4.16667C9.04167 4.16667 8.14583 4.38889 7.3125 4.83333C6.47917 5.27778 5.77778 5.88889 5.20833 6.66667H7.5V8.33333H2.5V3.33333H4.16667V5.29167C4.875 4.40278 5.73972 3.71528 6.76083 3.22917C7.78194 2.74306 8.86167 2.5 10 2.5C11.0417 2.5 12.0175 2.69806 12.9275 3.09417C13.8375 3.49028 14.6292 4.02472 15.3025 4.6975C15.9758 5.37028 16.5106 6.16194 16.9067 7.0725C17.3028 7.98306 17.5006 8.95889 17.5 10C17.4994 11.0411 17.3017 12.0169 16.9067 12.9275C16.5117 13.8381 15.9769 14.6297 15.3025 15.3025C14.6281 15.9753 13.8364 16.51 12.9275 16.9067C12.0186 17.3033 11.0428 17.5011 10 17.5ZM12.3333 13.5L9.16667 10.3333V5.83333H10.8333V9.66667L13.5 12.3333L12.3333 13.5Z" fill="black"/>
-                            </svg>
-                            
-                        Purchase History
-                    </div>
+
+                    <template v-if="false">
+
+                        <div class="tab">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7.5 12.5H10.625C11.3125 12.5 11.875 11.9375 11.875 11.25C11.875 10.5625 11.3125 10 10.625 10H9.375C8.6875 10 8.125 9.4375 8.125 8.75C8.125 8.0625 8.6875 7.5 9.375 7.5H12.5M10 5.625V7.08375M10 11.875V14.375M16.875 6.25V16.875H3.75M3.125 13.75V3.125H15" stroke="black" stroke-width="1.25" stroke-linejoin="round"/>
+                                </svg>
+                                
+                            Deals
+                        </div>
+                        <div class="tab" v-if="false">Reservations</div>
+                        <div class="tab">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 17.5C8.08333 17.5 6.41333 16.8647 4.99 15.5942C3.56667 14.3236 2.75056 12.7367 2.54167 10.8333H4.25C4.44444 12.2778 5.08694 13.4722 6.1775 14.4167C7.26806 15.3611 8.54222 15.8333 10 15.8333C11.625 15.8333 13.0036 15.2675 14.1358 14.1358C15.2681 13.0042 15.8339 11.6256 15.8333 10C15.8328 8.37444 15.2669 6.99611 14.1358 5.865C13.0047 4.73389 11.6261 4.16778 10 4.16667C9.04167 4.16667 8.14583 4.38889 7.3125 4.83333C6.47917 5.27778 5.77778 5.88889 5.20833 6.66667H7.5V8.33333H2.5V3.33333H4.16667V5.29167C4.875 4.40278 5.73972 3.71528 6.76083 3.22917C7.78194 2.74306 8.86167 2.5 10 2.5C11.0417 2.5 12.0175 2.69806 12.9275 3.09417C13.8375 3.49028 14.6292 4.02472 15.3025 4.6975C15.9758 5.37028 16.5106 6.16194 16.9067 7.0725C17.3028 7.98306 17.5006 8.95889 17.5 10C17.4994 11.0411 17.3017 12.0169 16.9067 12.9275C16.5117 13.8381 15.9769 14.6297 15.3025 15.3025C14.6281 15.9753 13.8364 16.51 12.9275 16.9067C12.0186 17.3033 11.0428 17.5011 10 17.5ZM12.3333 13.5L9.16667 10.3333V5.83333H10.8333V9.66667L13.5 12.3333L12.3333 13.5Z" fill="black"/>
+                                </svg>
+                                
+                            Purchase History
+                        </div>
+
+                    </template>
                 </div>
 
                 
@@ -89,28 +95,71 @@
                 
                 <div class="list" v-if="!search_mode"> 
                 
+                    
                     <div class="section" v-for="(category, index) in Object.keys(categoryProductMapping)">
-                        <p class="category-name" >{{category}}</p>
-                        <SimpleListShopItem :item="item" v-for="(item, index) in categoryProductMapping[category]" :key="index">
-                            <div class="gap-2 flex flex-center-y">
-                                <svg width="12" height="12" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M13.3333 10L8.33325 5L7.15825 6.175L10.9749 10L7.15825 13.825L8.33325 15L13.3333 10Z" fill="#636363"/>
-                                    </svg>
-                                    
-                                <p>{{item.name}}</p>
-                                <p class="single-line-ellipsis">{{item.description}}</p>
-                            </div>
+                        <div class="category-pane flex space-between">
 
-                            <div class="flex gap-2 flex-center-y">
+                            <p class="category-name" >{{category}}</p>
 
-                                <div>
-                                    {{ "NGN" | currencySymbol }} 200.00
+                            <template v-if="!expanded_categories.includes(category)">
+                                <button style="padding: 2px 10px; font-weight: 600; color: black; border-radius: 20px; background: rgba(220, 220, 220, 0.683)" class="gap-2 flex flex-center-y" @click="showCategoryImages(category)">
+                                    <svg class="flex" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_73_13)">
+                                        <path d="M17.4987 14.1663H5.83203V2.49967H17.4987M17.4987 0.833008H5.83203C5.39 0.833008 4.96608 1.0086 4.65352 1.32116C4.34096 1.63372 4.16536 2.05765 4.16536 2.49967V14.1663C4.16536 14.6084 4.34096 15.0323 4.65352 15.3449C4.96608 15.6574 5.39 15.833 5.83203 15.833H17.4987C17.9407 15.833 18.3646 15.6574 18.6772 15.3449C18.9898 15.0323 19.1654 14.6084 19.1654 14.1663V2.49967C19.1654 2.05765 18.9898 1.63372 18.6772 1.32116C18.3646 1.0086 17.9407 0.833008 17.4987 0.833008ZM2.4987 4.16634H0.832031V17.4997C0.832031 17.9417 1.00763 18.3656 1.32019 18.6782C1.63275 18.9907 2.05667 19.1663 2.4987 19.1663H15.832V17.4997H2.4987M13.2987 8.57467L11.007 11.5247L9.3737 9.55801L7.08203 12.4997H16.2487L13.2987 8.57467Z" fill="black"/>
+                                        </g>
+                                        <defs>
+                                        <clipPath id="clip0_73_13">
+                                        <rect width="20" height="20" fill="black"/>
+                                        </clipPath>
+                                        </defs>
+                                        </svg>
+                                        
+                                       
+                                    Show Images</button>
+                            </template>
+                            
+
+                            <template v-else>
+                                <button  style="padding: 2px 10px; color: black; font-weight: 600; border-radius: 20px; background: rgba(220, 220, 220, 0.683)" class="gap-2 flex flex-center-y" @click="showCategoryImages(category)">
+                                    <svg class="flex" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_73_13)">
+                                        <path d="M17.4987 14.1663H5.83203V2.49967H17.4987M17.4987 0.833008H5.83203C5.39 0.833008 4.96608 1.0086 4.65352 1.32116C4.34096 1.63372 4.16536 2.05765 4.16536 2.49967V14.1663C4.16536 14.6084 4.34096 15.0323 4.65352 15.3449C4.96608 15.6574 5.39 15.833 5.83203 15.833H17.4987C17.9407 15.833 18.3646 15.6574 18.6772 15.3449C18.9898 15.0323 19.1654 14.6084 19.1654 14.1663V2.49967C19.1654 2.05765 18.9898 1.63372 18.6772 1.32116C18.3646 1.0086 17.9407 0.833008 17.4987 0.833008ZM2.4987 4.16634H0.832031V17.4997C0.832031 17.9417 1.00763 18.3656 1.32019 18.6782C1.63275 18.9907 2.05667 19.1663 2.4987 19.1663H15.832V17.4997H2.4987M13.2987 8.57467L11.007 11.5247L9.3737 9.55801L7.08203 12.4997H16.2487L13.2987 8.57467Z" fill="black"/>
+                                        </g>
+                                        <defs>
+                                        <clipPath id="clip0_73_13">
+                                        <rect width="20" height="20" fill="black"/>
+                                        </clipPath>
+                                        </defs>
+                                        </svg>
+                                        
+                                       
+                                    Hide Images</button>
+                            </template>
+                            
+                        </div>
+                        <div class="flex-col">
+
+                            <SimpleListShopItem :parent_expanded="expanded_categories.includes(category)" :item="item" v-for="(item, index) in categoryProductMapping[category]" :key="index">
+                                <div class="gap-2 flex flex-center-y">
+                                    <svg width="12" height="12" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M13.3333 10L8.33325 5L7.15825 6.175L10.9749 10L7.15825 13.825L8.33325 15L13.3333 10Z" fill="#636363"/>
+                                        </svg>
+                                        
+                                    <p>{{item.name}}</p>
+                                    <p class="single-line-ellipsis">{{item.description}}</p>
                                 </div>
-                                <div>
-                                    <button class="quantity-choose">+</button>
+    
+                                <div class="flex gap-2 flex-center-y">
+    
+                                    <div>
+                                        {{ "NGN" | currencySymbol }} 200.00
+                                    </div>
+                                    <div>
+                                        <button class="quantity-choose">+</button>
+                                    </div>
                                 </div>
-                            </div>
-                        </SimpleListShopItem>
+                            </SimpleListShopItem>
+                        </div>
 
                         <div v-if="categoryProductMapping[category][0].remaining_products" class="padding-16 see-more">
                             <p class="text-center">
@@ -142,17 +191,45 @@
                 <div class="bottom-sticky">
                     <div class="floating-cart" v-if="cart?.length" @click="show_cart_modal = !show_cart_modal">
 
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14.1667 15C14.6087 15 15.0326 15.1756 15.3452 15.4881C15.6577 15.8007 15.8333 16.2246 15.8333 16.6666C15.8333 17.1087 15.6577 17.5326 15.3452 17.8451C15.0326 18.1577 14.6087 18.3333 14.1667 18.3333C13.7246 18.3333 13.3007 18.1577 12.9882 17.8451C12.6756 17.5326 12.5 17.1087 12.5 16.6666C12.5 15.7416 13.2417 15 14.1667 15ZM0.833344 1.66663H3.55834L4.34168 3.33329H16.6667C16.8877 3.33329 17.0997 3.42109 17.2559 3.57737C17.4122 3.73365 17.5 3.94561 17.5 4.16663C17.5 4.30829 17.4583 4.44996 17.4 4.58329L14.4167 9.97496C14.1333 10.4833 13.5833 10.8333 12.9583 10.8333H6.75001L6.00001 12.1916L5.97501 12.2916C5.97501 12.3469 5.99696 12.3999 6.03603 12.4389C6.0751 12.478 6.12809 12.5 6.18334 12.5H15.8333V14.1666H5.83334C5.39132 14.1666 4.96739 13.991 4.65483 13.6785C4.34227 13.3659 4.16668 12.942 4.16668 12.5C4.16668 12.2083 4.24168 11.9333 4.36668 11.7L5.50001 9.65829L2.50001 3.33329H0.833344V1.66663ZM5.83334 15C6.27537 15 6.69929 15.1756 7.01185 15.4881C7.32441 15.8007 7.50001 16.2246 7.50001 16.6666C7.50001 17.1087 7.32441 17.5326 7.01185 17.8451C6.69929 18.1577 6.27537 18.3333 5.83334 18.3333C5.39132 18.3333 4.96739 18.1577 4.65483 17.8451C4.34227 17.5326 4.16668 17.1087 4.16668 16.6666C4.16668 15.7416 4.90834 15 5.83334 15ZM13.3333 9.16663L15.65 4.99996H5.11668L7.08334 9.16663H13.3333Z" fill="white"/>
-                            </svg>
+                        <svg width="20" height="20" viewBox="0 0 20 20" :fill="current_tab == 'store' ? 'white' : 'whitesmoke' " xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3.33333 4.99967V3.33301H16.6667V4.99967H3.33333ZM3.33333 16.6663V11.6663H2.5V9.99967L3.33333 5.83301H16.6667L17.5 9.99967V11.6663H16.6667V16.6663H15V11.6663H11.6667V16.6663H3.33333ZM5 14.9997H10V11.6663H5V14.9997Z" :fill="current_tab == 'store' ? 'white' : 'whitesmoke' "/>
+                        </svg>
                             
 
 
                     </div>
                 </div>
 
-                <div class="bottom-nav" v-if="false">
-                    <div>Hi</div>
+                <div class="bottom-nav">
+                    <div class="navigation-item" @click="current_tab='store'">
+
+                        <div class="navigation-item__container" :style="{'borderTop': current_tab === 'store' ? '5px solid white' : '' }">
+                            <svg width="20" height="20" viewBox="0 0 20 20" :fill="current_tab === 'search' ? 'white' : 'whitesmoke'" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3.33333 4.99967V3.33301H16.6667V4.99967H3.33333ZM3.33333 16.6663V11.6663H2.5V9.99967L3.33333 5.83301H16.6667L17.5 9.99967V11.6663H16.6667V16.6663H15V11.6663H11.6667V16.6663H3.33333ZM5 14.9997H10V11.6663H5V14.9997Z" :fill="current_tab === 'search' ? 'white' : 'whitesmoke'"/>
+                            </svg>
+                                
+                        </div>
+
+                    </div>
+                   <div class="navigation-item" @click="current_tab='search'">
+                        
+                        <div class="navigation-item__container" :style="{'borderTop': current_tab === 'search' ? '5px solid white' : '' }">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M15.2642 12.0274C16.3034 10.6877 16.7931 9.00245 16.6338 7.31448C16.4745 5.6265 15.6781 4.06261 14.4067 2.94097C13.1352 1.81933 11.4842 1.22419 9.78958 1.27663C8.09491 1.32907 6.48388 2.02515 5.28422 3.22326C4.08352 4.4222 3.38516 6.03386 3.33147 7.72981C3.27777 9.42576 3.87278 11.0784 4.99524 12.3509C6.1177 13.6234 7.68313 14.42 9.37253 14.5783C11.0619 14.7367 12.7481 14.2449 14.0876 13.2033L14.1234 13.2408L17.6584 16.7766C17.7358 16.854 17.8277 16.9154 17.9289 16.9573C18.03 16.9992 18.1385 17.0208 18.248 17.0208C18.3575 17.0208 18.4659 16.9992 18.567 16.9573C18.6682 16.9154 18.7601 16.854 18.8376 16.7766C18.915 16.6992 18.9764 16.6072 19.0183 16.5061C19.0602 16.4049 19.0818 16.2965 19.0818 16.187C19.0818 16.0775 19.0602 15.9691 19.0183 15.8679C18.9764 15.7668 18.915 15.6748 18.8376 15.5974L15.3017 12.0624L15.2642 12.0274ZM13.5342 4.40242C14.0047 4.86532 14.3789 5.4168 14.6352 6.02504C14.8915 6.63328 15.0249 7.28624 15.0276 7.94627C15.0302 8.6063 14.9022 9.26034 14.6509 9.87064C14.3995 10.4809 14.0298 11.0355 13.5631 11.5022C13.0964 11.9689 12.5419 12.3386 11.9316 12.5899C11.3213 12.8413 10.6673 12.9693 10.0072 12.9666C9.3472 12.9639 8.69424 12.8306 8.086 12.5743C7.47776 12.318 6.92628 11.9438 6.46339 11.4733C5.53832 10.533 5.02226 9.26529 5.02764 7.94627C5.03301 6.62726 5.55937 5.36379 6.49206 4.4311C7.42475 3.4984 8.68822 2.97205 10.0072 2.96667C11.3263 2.9613 12.594 3.47736 13.5342 4.40242Z" :fill="current_tab === 'search' ? 'white' : 'whitesmoke'"/>
+                            </svg>
+                                
+                        </div>
+                   </div>
+                   <div class="navigation-item" @click="current_tab='whatsapp'">
+                    <div class="navigation-item__container"  :style="{'borderTop': current_tab === 'whatsapp' ? '5px solid white' : '' }">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.1654 15.0003C13.2404 15.0003 12.4987 15.742 12.4987 16.667C12.4987 17.109 12.6743 17.5329 12.9869 17.8455C13.2994 18.1581 13.7233 18.3337 14.1654 18.3337C14.6074 18.3337 15.0313 18.1581 15.3439 17.8455C15.6564 17.5329 15.832 17.109 15.832 16.667C15.832 16.225 15.6564 15.801 15.3439 15.4885C15.0313 15.1759 14.6074 15.0003 14.1654 15.0003ZM0.832031 1.66699V3.33366H2.4987L5.4987 9.65866L4.36536 11.7003C4.24036 11.9337 4.16536 12.2087 4.16536 12.5003C4.16536 12.9424 4.34096 13.3663 4.65352 13.6788C4.96608 13.9914 5.39 14.167 5.83203 14.167H15.832V12.5003H6.18203C6.12678 12.5003 6.07379 12.4784 6.03472 12.4393C5.99565 12.4002 5.9737 12.3472 5.9737 12.292C5.9737 12.2503 5.98203 12.217 5.9987 12.192L6.7487 10.8337H12.957C13.582 10.8337 14.132 10.4837 14.4154 9.97533L17.3987 4.58366C17.457 4.45033 17.4987 4.30866 17.4987 4.16699C17.4987 3.94598 17.4109 3.73402 17.2546 3.57774C17.0983 3.42146 16.8864 3.33366 16.6654 3.33366H4.34036L3.55703 1.66699M5.83203 15.0003C4.90703 15.0003 4.16536 15.742 4.16536 16.667C4.16536 17.109 4.34096 17.5329 4.65352 17.8455C4.96608 18.1581 5.39 18.3337 5.83203 18.3337C6.27406 18.3337 6.69798 18.1581 7.01054 17.8455C7.3231 17.5329 7.4987 17.109 7.4987 16.667C7.4987 16.225 7.3231 15.801 7.01054 15.4885C6.69798 15.1759 6.27406 15.0003 5.83203 15.0003Z" :fill="current_tab === 'search' ? 'white' : 'whitesmoke'"/>
+                            </svg>
+                            
+                    </div>
+                        
+                   </div>
+                    
                 </div>
             </div>
 
@@ -173,6 +250,8 @@ export default {
     data() {
         return {
 
+            current_tab: 'store',
+
             search_mode: false,
             search_timeout: null,
             search_term: "",
@@ -186,10 +265,30 @@ export default {
 
 
             show_cart_modal: false,
+
+            expanded_categories: [],
         };
     },
     methods: {
 
+        showCategoryImages(category) {
+            if (this.expanded_categories.find(c=> c === category)) {
+                const index = this.expanded_categories.indexOf(this.expanded_categories.find(c=> c=== category));
+                this.expanded_categories.splice(index, 1);
+                return
+            }
+            this.expanded_categories.push(category)
+        },
+        goToBusinessWhatsapp() {
+            if(this.business.contact_phone) {
+                
+                window.open(`whatsapp://send?text=Hi&phone=${this.business.contact_phone}`, '__blank')
+            }
+            else {
+                window.open(`whatsapp://send?text=Hi&phone=${this.business.contact_phone}`, "__blank")
+
+            }
+        },
         
 
         debounce(func, delay) {
@@ -300,6 +399,45 @@ export default {
     font-size: 14px;
 }
 
+
+.list {
+    background-color: whitesmoke;
+}
+
+.category-pane{ 
+   
+    background-color: white;
+//    border-radius: 10px;
+padding: 16px;
+border-bottom: 1px solid lightgrey;
+background-color: rgb(235, 235, 235);
+}
+.bottom-cta {
+    display: flex;
+    gap: 10px;
+    background-color: lightgrey !important;
+    color: black !important;
+    padding: 8px 16px;
+    align-items: center;
+    justify-content: space-between;
+    display: flex;
+    width: 100%;
+    display: flex;
+    font-size: 20px !important;
+    font-weight: 500;
+    //box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  //  border-top: 0.5px solid black;;
+
+}
+
+.page {
+    position: relative;
+
+    &__container {
+        padding-bottom: 100px;
+    }
+}
+
 .notifier {
     background-color: #f0f0f0; /* Light gray background */
     color: black; /* Dark text color */
@@ -339,7 +477,7 @@ export default {
 .category-name {
     font-family: Poppins, 'san-serif' !important;
     font-size: 16px;
-    border-bottom: 1px solid $border-grey;
+   // border-bottom: 1px solid $border-grey;
 
     //font-style: italic;
     font-weight: 600;
@@ -347,23 +485,40 @@ export default {
 }
 
 .active-tab {
-    background-color: #FFCDD2 !important;
+    //background-color: #FFCDD2 !important;
+    background-color: $primary !important;
+    color: white;
 }
 .logo {
 
      p {
-        font-size: 18px ;
-        font-family: Poppins !important;
+        font-size: 15px ;
+        font-family: "Inter", sans-serif !important;
         font-weight: 600;
 
      }
 }
 
 .navbar {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;   
+     background-color: $primary !important;
+    color: white !important;
 
+    position: fixed;
+    z-index: 1000;
+    width: 95%;
+    margin: 2.5% !important;
+    border-radius: 100px;
+    height: 60px;
+    align-items: center;
+
+    
     &__container {
         padding: 16px;
+        display: flex;
+        align-items: center;
+
+        
 
     }
 }
@@ -374,9 +529,12 @@ export default {
 }
 
 .search {
+    padding-top: 60px;
     padding: 16px;
     position: relative;
-
+   // border-bottom: 1px solid grey;
+   //   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+   border-bottom: 1px solid lightgrey;
     .icon {
         position: absolute;
         top: 28px;
@@ -385,12 +543,13 @@ export default {
     }
 
     input {
-        border: 1px solid grey;
+        border: 1px solid $border-grey;
         padding: 8px;
         border-radius: 10px;
         padding-left: 32px;
         width: 100%;
         height: 40px;
+        margin-top: 50px;
     }
 }
 
@@ -402,6 +561,7 @@ export default {
     padding: 8px 0;
     font-weight: 400;
     //padding: 8px 0px 8px 16px;
+    
     border-bottom: 1px solid $border-grey;
 
 }
@@ -425,6 +585,13 @@ export default {
     }
 }
 
+.bookmark-btn {
+    background-color: black;
+    color: white;
+    border-radius: 10px;
+    padding: 8px 16px;
+}
+
 .pay-button {
     background-color: $primary;
     color: white;
@@ -434,17 +601,50 @@ export default {
 
 
 .bottom-nav {
-    min-height: 80px;
-    //height: 50px;
-    background-color: $border-grey;
+    display: grid;
+    flex-direction: column;
+    
     position: fixed;
+    grid-template-columns: 30% 30% 30%;
+    justify-content: center;
     width: 100%;
-    bottom: 0;
-    left: 0;
+    bottom: 2.5%;
+    border-radius: 100px;
+    //padding: 16px;
+    width: 95%;
+    left: 2.5%;
+    height: 60px;
+    
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    font-size: 20px !important;
+    background-color: $primary;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        //margin-left: 5px;
+
+    .navigation-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        //border-right: 1px solid $border-grey;
+        border-radius: 100px;
+
+        &__container {
+            padding: 16px;
+
+            width: 50%;
+            margin: auto;
+            border-radius: 2px;
+        }
+
+    }
+
 }
 
 .bottom-sticky {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     right: 0;
     padding: 16px;
@@ -474,5 +674,19 @@ export default {
     background-color: whitesmoke;
     font-weight: 600;
     cursor: pointer;
+
+}
+
+.bookmark {
+    button {
+      
+
+    }
+}
+.whatsapp{
+    button {
+       
+        
+    }
 }
 </style>

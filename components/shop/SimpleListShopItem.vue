@@ -1,6 +1,25 @@
 <template>
     <div>
-        <div class="item" @click="expanded = !expanded">
+        <BaseModal v-if="zoom_image" @close="zoom_image = false">
+            <template #header>
+                <div class="padding-16 space-between flex-center-y flex">
+                    <p>{{item.name}}</p>
+                   
+                    <svg @click="zoom_image=false" style="cursor: pointer;" width="16" height="16" viewBox="0 0 8 8" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L7 7" stroke="black" stroke-width="0.5" stroke-linecap="round" />
+                        <path d="M7 1L1 7" stroke="black" stroke-width="0.5" stroke-linecap="round" />
+                    </svg>
+                </div>
+            </template>
+            <template #body>
+                <div style="height: 100%; width: 100%;">
+                    <img style="width: 100%; object-fit: fill" :src="item.thumbnail">
+
+                </div>
+            </template>
+        </BaseModal>
+        <div class="item" @click="expanded = !expanded" :style="{'borderBottom' : expanded? 'none !important' : '#E0E0E0'}">
 
             <div class="item__container">
 
@@ -60,10 +79,10 @@
 
         <div class="expanded padding-16" v-if="expanded">
             <div v-if="item.thumbnail || item.description" class="flex gap-8">
-                <img class="thumbnail" :src="item.thumbnail | getFoodImage">
+                <img  @click="zoom_image = true" class="thumbnail" :src="item.thumbnail | getFoodImage">
                 <div class="flex-col">
                     <p>{{item.description}}</p>
-                    <a style="color: #1E88E5" :href="'https://www.google.com/search?q=' + item.name" rel="__blank">View on Google</a>
+                    <a style="color: #1E88E5" :href="'https://www.google.com/search?q=' + item.name + ' images'">View on Google</a>
 
                 </div>
             </div>
@@ -76,10 +95,16 @@
 import {mapGetters} from 'vuex'
 export default {
     
-    props: ['item'],
+    props: ['item', 'parent_expanded'],
     data() {
         return {
+            zoom_image:false,
             expanded: false,
+        }
+    },
+    watch: {
+        parent_expanded(value) {
+            this.expanded = value;
         }
     },
     methods: {
@@ -167,6 +192,10 @@ export default {
 * {
     font-family: "Inter", sans-serif !important;
 }
+
+p {
+    font-size: 16px;
+}
 .quantity-choose {
     border-radius: 100%;
     height: 25px;
@@ -186,12 +215,20 @@ export default {
     border: 1px $border-grey solid;
 }
 .thumbnail {
-    width: 150px;
-    height: 100px;
+    min-width: 150px;
+    min-height: 170px;
+    max-width: 150px;
+    max-height: 170px;
     border-radius: 10px;
     object-fit: cover;
 }
 
+
+.expanded {
+    border-bottom: 1px solid $border-grey;
+    background-color: white;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
 
 .item {
     //padding: 16px;
@@ -202,7 +239,7 @@ export default {
     background-color: white;
     //padding: 8px 0px 8px 16px;
     border-bottom: 1px solid $border-grey;
-
+    
     &__container {
         display: grid;
         padding: 8px 10px;
@@ -210,10 +247,11 @@ export default {
         justify-content: space-between;
         //border: 1px solid grey;
         width: 100%;
+        padding: 10px ;
     }
 
     &__name {
-        font-weight: 500 !important;
+        font-weight: 400 !important;
     }
 
 }
