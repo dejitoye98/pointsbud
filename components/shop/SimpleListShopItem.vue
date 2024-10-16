@@ -25,21 +25,12 @@
 
                 <div class="gap-1 flex flex-center-y">
                     <template v-if="item.thumbnail || item.description">
-    
-    
-                        <svg v-if="!expanded" style="min-width: 12px;" width="12" height="12" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13.3333 10L8.33325 5L7.15825 6.175L10.9749 10L7.15825 13.825L8.33325 15L13.3333 10Z" fill="#636363"/>
+
+                        <svg v-if="!expanded" style="min-width: 20px;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8.33203 14.1663V5.83301L12.4987 9.99967L8.33203 14.1663Z" fill="black"/>
                         </svg>
-        
-                        <svg  style="min-width: 12px;" v-else width="12" height="12" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_526_3)">
-                            <path d="M14.5167 2.04332L15.4 2.92749L10.5858 7.74332C10.5087 7.82095 10.417 7.88256 10.3159 7.9246C10.2149 7.96664 10.1065 7.98828 9.99709 7.98828C9.88765 7.98828 9.77929 7.96664 9.67825 7.9246C9.57721 7.88256 9.48548 7.82095 9.40834 7.74332L4.59167 2.92749L5.47501 2.04416L9.99584 6.56416L14.5167 2.04332Z" fill="black"/>
-                            </g>
-                            <defs>
-                            <clipPath id="clip0_526_3">
-                            <rect width="10" height="20" fill="white" transform="matrix(0 1 -1 0 20 0)"/>
-                            </clipPath>
-                            </defs>
+                        <svg v-else style="min-width: 20px;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.83464 8.33301L14.168 8.33301L10.0013 12.4997L5.83464 8.33301Z" fill="black"/>
                         </svg>
                     </template>
                         
@@ -239,6 +230,7 @@ p {
     background-color: white;
     //padding: 8px 0px 8px 16px;
     border-bottom: 1px solid $border-grey;
+    border:1px solid $border-grey;
     
     &__container {
         display: grid;
