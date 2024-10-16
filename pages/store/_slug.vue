@@ -15,7 +15,7 @@
                 <div class="navbar">
                     <div class="navbar__container gap-1 space-between flex-center-y">
 
-                        <div class="logo flex gap-1 flex-center-x flex-center-y">
+                        <div style="width: 50%;" class="logo flex gap-1 flex-center-x flex-center-y">
                             <HalfLogo color="whitesmoke"></HalfLogo>
                             <p class="single-line-ellipsis">{{business.name}}</p>
                         </div>
