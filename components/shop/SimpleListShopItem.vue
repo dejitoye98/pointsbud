@@ -37,10 +37,8 @@
 
                         
 
-                    <div class="flex flex-col">
 
                         <p class="item__name single-line-ellipsis">{{item.name}}</p>
-                    </div>
 
                 </div>
         
@@ -255,7 +253,6 @@ p {
         font-weight: 400 !important;
         font-size: 13px;
         font-family: "Open Sans", sans-serif;
-        width: 50%;
 
     }
     &__description {
