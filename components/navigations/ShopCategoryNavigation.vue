@@ -66,8 +66,9 @@ export default {
 }
 .component {
     font-size: 16px;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
+    border-top: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+    font-weight: 600;
 }
 
 .category {
