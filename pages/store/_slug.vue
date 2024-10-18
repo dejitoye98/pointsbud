@@ -16,8 +16,8 @@
                     <div class="navbar__container gap-1 space-between flex-center-y">
 
                         <div style="width: 50%;" class="logo flex gap-1 flex-center-x flex-center-y">
-                            <HalfLogo color="whitesmoke"></HalfLogo>
-                            <p class="single-line-ellipsis">{{business.name}}</p>
+                            <HalfLogo color="black"></HalfLogo>
+                            <p class="single-line-ellipsis" style="color:black">{{business.name}}</p>
                         </div>
 
                         <div>
@@ -26,7 +26,7 @@
                                     <path d="M4.16797 17.5V4.16667C4.16797 3.70833 4.3313 3.31611 4.65797 2.99C4.98464 2.66389 5.37686 2.50056 5.83464 2.5H14.168C14.6263 2.5 15.0188 2.66333 15.3455 2.99C15.6721 3.31667 15.8352 3.70889 15.8346 4.16667V17.5L10.0013 15L4.16797 17.5ZM5.83464 14.9583L10.0013 13.1667L14.168 14.9583V4.16667H5.83464V14.9583Z" fill="white"/>
                                     </svg>
                                 <span>
-                                    Bookmark
+                                    Bookmark Store
                                 </span>                                
                             </button>
                         </div>
@@ -85,6 +85,13 @@
     
                         </template>
                     </div>
+
+
+                    <div style="position: sticky; top: 0; left: 0; background: white;">
+
+                        <ShopCategoryNavigation @changeCategory="changeCategory" :current_category="current_category" :categories="filteredCategories"></ShopCategoryNavigation>
+                    </div>
+                    
     
 
                     <template v-if="current_tab === 'store'">
@@ -101,12 +108,16 @@
                             <div class="list" v-if="!search_mode"> 
                             
                                 
-                                <div class="section" v-for="(category, index) in Object.keys(categoryProductMapping)">
+                                <div class="section" v-for="(category, index) in Object.keys(categoryProductMapping)" :id="category">
                                     <div class="category-pane flex space-between">
             
                                         <p class="category-name" >{{category}}</p>
+
+                                        <div class="flex flex-center-y" v-if="categoryProductMapping[category][0].remaining_products">
+                                            <p class="primary primary-text">See all</p>
+                                        </div>
             
-                                        <template v-if="!expanded_categories.includes(category)">
+                                        <template v-if="!expanded_categories.includes(category) && false">
                                             <button style="padding: 2px 10px; font-weight: 600; color: black; border-radius: 20px; background: rgba(0, 0, 0, 0.144)" class="gap-2 flex flex-center-y" @click="showCategoryImages(category)">
                                                 <svg class="flex" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <g clip-path="url(#clip0_73_13)">
@@ -124,7 +135,7 @@
                                         </template>
                                         
             
-                                        <template v-else>
+                                        <template v-else-if="false">
                                             <button  style="padding: 2px 10px; color: black; font-weight: 600; border-radius: 20px; background: rgba(0, 0, 0, 0.144)" class="gap-2 flex flex-center-y" @click="showCategoryImages(category)">
                                                 <svg class="flex" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <g clip-path="url(#clip0_73_13)">
@@ -197,9 +208,7 @@
 
                     <template v-else-if="current_tab === 'search'">
                         <div class="search">
-                            <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M16.2375 16.7948L11.0192 11.5765C10.6025 11.9315 10.1233 12.2062 9.58167 12.4006C9.04001 12.5951 8.49556 12.6923 7.94834 12.6923C6.6139 12.6923 5.48445 12.2303 4.56001 11.3065C3.63556 10.3826 3.17334 9.2534 3.17334 7.91896C3.17334 6.58452 3.63501 5.45479 4.55834 4.52979C5.48167 3.60479 6.61056 3.14174 7.94501 3.14063C9.27945 3.13952 10.4095 3.60174 11.335 4.52729C12.2606 5.45285 12.7233 6.58257 12.7233 7.91646C12.7233 8.49535 12.6208 9.05563 12.4158 9.59729C12.2108 10.139 11.9414 10.6023 11.6075 10.9873L16.8258 16.2048L16.2375 16.7948ZM7.94917 11.8581C9.05473 11.8581 9.98806 11.4776 10.7492 10.7165C11.5103 9.95535 11.8908 9.02174 11.8908 7.91563C11.8908 6.80952 11.5103 5.87618 10.7492 5.11563C9.98806 4.35507 9.05473 3.97452 7.94917 3.97396C6.84362 3.9734 5.91001 4.35396 5.14834 5.11563C4.38667 5.87729 4.00612 6.81063 4.00667 7.91563C4.00723 9.02063 4.38778 9.95396 5.14834 10.7156C5.9089 11.4773 6.84223 11.8578 7.94834 11.8573" fill="black"/>
-                            </svg>
+                          
                                 
                             <input type="text" v-model="search_term" @input="debounceSearch" placeholder="search for anything">
         
@@ -228,7 +237,7 @@
                     <div class="floating-cart" v-if="cart?.length" @click="show_cart_modal = !show_cart_modal">
 
                         <svg width="20" height="20" viewBox="0 0 20 20" :fill="current_tab == 'store' ? '#E53945' : 'black' " xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3.33333 4.99967V3.33301H16.6667V4.99967H3.33333ZM3.33333 16.6663V11.6663H2.5V9.99967L3.33333 5.83301H16.6667L17.5 9.99967V11.6663H16.6667V16.6663H15V11.6663H11.6667V16.6663H3.33333ZM5 14.9997H10V11.6663H5V14.9997Z" :fill="current_tab == 'store' ? 'white' : 'whitesmoke' "/>
+                            <path d="M3.33333 4.99967V3.33301H16.6667V4.99967H3.33333ZM3.33333 16.6663V11.6663H2.5V9.99967L3.33333 5.83301H16.6667L17.5 9.99967V11.6663H16.6667V16.6663H15V11.6663H11.6667V16.6663H3.33333ZM5 14.9997H10V11.6663H5V14.9997Z" :fill="current_tab == 'store' ? '#E53945' : 'black' "/>
                         </svg>
                             
 
@@ -240,8 +249,8 @@
                     <div class="navigation-item" @click="current_tab='store'">
 
                         <div class="navigation-item__container" :style="{'borderTop': current_tab === 'store' ? '3px solid #E53945' : '' }">
-                            <svg width="20" height="20" viewBox="0 0 20 20" :fill="current_tab === 'search' ? '#E53945' : 'black'" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M3.33333 4.99967V3.33301H16.6667V4.99967H3.33333ZM3.33333 16.6663V11.6663H2.5V9.99967L3.33333 5.83301H16.6667L17.5 9.99967V11.6663H16.6667V16.6663H15V11.6663H11.6667V16.6663H3.33333ZM5 14.9997H10V11.6663H5V14.9997Z" :fill="current_tab === 'store' ? 'white' : 'whitesmoke'"/>
+                            <svg width="24" height="24" viewBox="0 0 20 20" :fill="current_tab === 'store' ? '#E53945' : 'black'" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3.33333 4.99967V3.33301H16.6667V4.99967H3.33333ZM3.33333 16.6663V11.6663H2.5V9.99967L3.33333 5.83301H16.6667L17.5 9.99967V11.6663H16.6667V16.6663H15V11.6663H11.6667V16.6663H3.33333ZM5 14.9997H10V11.6663H5V14.9997Z" :fill="current_tab === 'store' ? '#E53945' : 'black'"/>
                             </svg>
                                 
                         </div>
@@ -250,16 +259,16 @@
                    <div class="navigation-item" @click="current_tab='search'">
                         
                         <div class="navigation-item__container" :style="{'borderTop': current_tab === 'search' ? '3px solid #E53945' : '' }">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M15.2642 12.0274C16.3034 10.6877 16.7931 9.00245 16.6338 7.31448C16.4745 5.6265 15.6781 4.06261 14.4067 2.94097C13.1352 1.81933 11.4842 1.22419 9.78958 1.27663C8.09491 1.32907 6.48388 2.02515 5.28422 3.22326C4.08352 4.4222 3.38516 6.03386 3.33147 7.72981C3.27777 9.42576 3.87278 11.0784 4.99524 12.3509C6.1177 13.6234 7.68313 14.42 9.37253 14.5783C11.0619 14.7367 12.7481 14.2449 14.0876 13.2033L14.1234 13.2408L17.6584 16.7766C17.7358 16.854 17.8277 16.9154 17.9289 16.9573C18.03 16.9992 18.1385 17.0208 18.248 17.0208C18.3575 17.0208 18.4659 16.9992 18.567 16.9573C18.6682 16.9154 18.7601 16.854 18.8376 16.7766C18.915 16.6992 18.9764 16.6072 19.0183 16.5061C19.0602 16.4049 19.0818 16.2965 19.0818 16.187C19.0818 16.0775 19.0602 15.9691 19.0183 15.8679C18.9764 15.7668 18.915 15.6748 18.8376 15.5974L15.3017 12.0624L15.2642 12.0274ZM13.5342 4.40242C14.0047 4.86532 14.3789 5.4168 14.6352 6.02504C14.8915 6.63328 15.0249 7.28624 15.0276 7.94627C15.0302 8.6063 14.9022 9.26034 14.6509 9.87064C14.3995 10.4809 14.0298 11.0355 13.5631 11.5022C13.0964 11.9689 12.5419 12.3386 11.9316 12.5899C11.3213 12.8413 10.6673 12.9693 10.0072 12.9666C9.3472 12.9639 8.69424 12.8306 8.086 12.5743C7.47776 12.318 6.92628 11.9438 6.46339 11.4733C5.53832 10.533 5.02226 9.26529 5.02764 7.94627C5.03301 6.62726 5.55937 5.36379 6.49206 4.4311C7.42475 3.4984 8.68822 2.97205 10.0072 2.96667C11.3263 2.9613 12.594 3.47736 13.5342 4.40242Z" :fill="current_tab === 'search' ? 'white' : 'whitesmoke'"/>
+                            <svg  width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M15.2642 12.0274C16.3034 10.6877 16.7931 9.00245 16.6338 7.31448C16.4745 5.6265 15.6781 4.06261 14.4067 2.94097C13.1352 1.81933 11.4842 1.22419 9.78958 1.27663C8.09491 1.32907 6.48388 2.02515 5.28422 3.22326C4.08352 4.4222 3.38516 6.03386 3.33147 7.72981C3.27777 9.42576 3.87278 11.0784 4.99524 12.3509C6.1177 13.6234 7.68313 14.42 9.37253 14.5783C11.0619 14.7367 12.7481 14.2449 14.0876 13.2033L14.1234 13.2408L17.6584 16.7766C17.7358 16.854 17.8277 16.9154 17.9289 16.9573C18.03 16.9992 18.1385 17.0208 18.248 17.0208C18.3575 17.0208 18.4659 16.9992 18.567 16.9573C18.6682 16.9154 18.7601 16.854 18.8376 16.7766C18.915 16.6992 18.9764 16.6072 19.0183 16.5061C19.0602 16.4049 19.0818 16.2965 19.0818 16.187C19.0818 16.0775 19.0602 15.9691 19.0183 15.8679C18.9764 15.7668 18.915 15.6748 18.8376 15.5974L15.3017 12.0624L15.2642 12.0274ZM13.5342 4.40242C14.0047 4.86532 14.3789 5.4168 14.6352 6.02504C14.8915 6.63328 15.0249 7.28624 15.0276 7.94627C15.0302 8.6063 14.9022 9.26034 14.6509 9.87064C14.3995 10.4809 14.0298 11.0355 13.5631 11.5022C13.0964 11.9689 12.5419 12.3386 11.9316 12.5899C11.3213 12.8413 10.6673 12.9693 10.0072 12.9666C9.3472 12.9639 8.69424 12.8306 8.086 12.5743C7.47776 12.318 6.92628 11.9438 6.46339 11.4733C5.53832 10.533 5.02226 9.26529 5.02764 7.94627C5.03301 6.62726 5.55937 5.36379 6.49206 4.4311C7.42475 3.4984 8.68822 2.97205 10.0072 2.96667C11.3263 2.9613 12.594 3.47736 13.5342 4.40242Z" :fill="current_tab === 'search' ? '#E53945' : 'black'"/>
                             </svg>
                                 
                         </div>
                    </div>
                    <div class="navigation-item" @click="current_tab='cart'">
                     <div class="navigation-item__container"  :style="{'borderTop': current_tab === 'cart' ? '3px solid #E53945' : '' }">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14.1654 15.0003C13.2404 15.0003 12.4987 15.742 12.4987 16.667C12.4987 17.109 12.6743 17.5329 12.9869 17.8455C13.2994 18.1581 13.7233 18.3337 14.1654 18.3337C14.6074 18.3337 15.0313 18.1581 15.3439 17.8455C15.6564 17.5329 15.832 17.109 15.832 16.667C15.832 16.225 15.6564 15.801 15.3439 15.4885C15.0313 15.1759 14.6074 15.0003 14.1654 15.0003ZM0.832031 1.66699V3.33366H2.4987L5.4987 9.65866L4.36536 11.7003C4.24036 11.9337 4.16536 12.2087 4.16536 12.5003C4.16536 12.9424 4.34096 13.3663 4.65352 13.6788C4.96608 13.9914 5.39 14.167 5.83203 14.167H15.832V12.5003H6.18203C6.12678 12.5003 6.07379 12.4784 6.03472 12.4393C5.99565 12.4002 5.9737 12.3472 5.9737 12.292C5.9737 12.2503 5.98203 12.217 5.9987 12.192L6.7487 10.8337H12.957C13.582 10.8337 14.132 10.4837 14.4154 9.97533L17.3987 4.58366C17.457 4.45033 17.4987 4.30866 17.4987 4.16699C17.4987 3.94598 17.4109 3.73402 17.2546 3.57774C17.0983 3.42146 16.8864 3.33366 16.6654 3.33366H4.34036L3.55703 1.66699M5.83203 15.0003C4.90703 15.0003 4.16536 15.742 4.16536 16.667C4.16536 17.109 4.34096 17.5329 4.65352 17.8455C4.96608 18.1581 5.39 18.3337 5.83203 18.3337C6.27406 18.3337 6.69798 18.1581 7.01054 17.8455C7.3231 17.5329 7.4987 17.109 7.4987 16.667C7.4987 16.225 7.3231 15.801 7.01054 15.4885C6.69798 15.1759 6.27406 15.0003 5.83203 15.0003Z" :fill="current_tab === 'cart' ? 'white' : 'whitesmoke'"/>
+                        <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.1654 15.0003C13.2404 15.0003 12.4987 15.742 12.4987 16.667C12.4987 17.109 12.6743 17.5329 12.9869 17.8455C13.2994 18.1581 13.7233 18.3337 14.1654 18.3337C14.6074 18.3337 15.0313 18.1581 15.3439 17.8455C15.6564 17.5329 15.832 17.109 15.832 16.667C15.832 16.225 15.6564 15.801 15.3439 15.4885C15.0313 15.1759 14.6074 15.0003 14.1654 15.0003ZM0.832031 1.66699V3.33366H2.4987L5.4987 9.65866L4.36536 11.7003C4.24036 11.9337 4.16536 12.2087 4.16536 12.5003C4.16536 12.9424 4.34096 13.3663 4.65352 13.6788C4.96608 13.9914 5.39 14.167 5.83203 14.167H15.832V12.5003H6.18203C6.12678 12.5003 6.07379 12.4784 6.03472 12.4393C5.99565 12.4002 5.9737 12.3472 5.9737 12.292C5.9737 12.2503 5.98203 12.217 5.9987 12.192L6.7487 10.8337H12.957C13.582 10.8337 14.132 10.4837 14.4154 9.97533L17.3987 4.58366C17.457 4.45033 17.4987 4.30866 17.4987 4.16699C17.4987 3.94598 17.4109 3.73402 17.2546 3.57774C17.0983 3.42146 16.8864 3.33366 16.6654 3.33366H4.34036L3.55703 1.66699M5.83203 15.0003C4.90703 15.0003 4.16536 15.742 4.16536 16.667C4.16536 17.109 4.34096 17.5329 4.65352 17.8455C4.96608 18.1581 5.39 18.3337 5.83203 18.3337C6.27406 18.3337 6.69798 18.1581 7.01054 17.8455C7.3231 17.5329 7.4987 17.109 7.4987 16.667C7.4987 16.225 7.3231 15.801 7.01054 15.4885C6.69798 15.1759 6.27406 15.0003 5.83203 15.0003Z" :fill="current_tab === 'cart' ? '#E53945' : 'black'"/>
                             </svg>
                             
                     </div>
@@ -267,8 +276,8 @@
                    </div>
                    <div class="navigation-item" @click="current_tab='whatsapp'">
                     <div class="navigation-item__container"  :style="{'borderTop': current_tab === 'whatsapp' ? '3px solid #E53945' : '' }">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15.8737 4.09204C15.1096 3.32046 14.1996 2.70868 13.1966 2.29234C12.1937 1.876 11.1179 1.66344 10.032 1.66704C5.48203 1.66704 1.7737 5.37537 1.7737 9.92537C1.7737 11.3837 2.15703 12.8004 2.8737 14.0504L1.70703 18.3337L6.08203 17.1837C7.29036 17.842 8.6487 18.192 10.032 18.192C14.582 18.192 18.2904 14.4837 18.2904 9.9337C18.2904 7.72537 17.432 5.65037 15.8737 4.09204ZM10.032 16.792C8.7987 16.792 7.59036 16.4587 6.53203 15.8337L6.28203 15.6837L3.68203 16.367L4.3737 13.8337L4.20703 13.5754C3.52165 12.4813 3.1578 11.2164 3.15703 9.92537C3.15703 6.14204 6.24036 3.0587 10.0237 3.0587C11.857 3.0587 13.582 3.77537 14.8737 5.07537C15.5134 5.71192 16.0203 6.46916 16.3651 7.30314C16.7098 8.13713 16.8855 9.03127 16.882 9.9337C16.8987 13.717 13.8154 16.792 10.032 16.792ZM13.7987 11.6587C13.5904 11.5587 12.5737 11.0587 12.3904 10.9837C12.1987 10.917 12.0654 10.8837 11.9237 11.0837C11.782 11.292 11.3904 11.7587 11.2737 11.892C11.157 12.0337 11.032 12.0504 10.8237 11.942C10.6154 11.842 9.9487 11.617 9.16536 10.917C8.5487 10.367 8.14036 9.69204 8.01536 9.4837C7.8987 9.27537 7.9987 9.16704 8.10703 9.0587C8.1987 8.96704 8.31536 8.81704 8.41536 8.70037C8.51536 8.5837 8.55703 8.49204 8.6237 8.3587C8.69036 8.21704 8.65703 8.10037 8.60703 8.00037C8.55703 7.90037 8.14036 6.8837 7.9737 6.46704C7.80703 6.06704 7.63203 6.11704 7.50703 6.1087H7.10703C6.96536 6.1087 6.7487 6.1587 6.55703 6.36704C6.3737 6.57537 5.84036 7.07537 5.84036 8.09204C5.84036 9.1087 6.58203 10.092 6.68203 10.2254C6.78203 10.367 8.14036 12.4504 10.207 13.342C10.6987 13.5587 11.082 13.6837 11.382 13.7754C11.8737 13.9337 12.3237 13.9087 12.682 13.8587C13.082 13.8004 13.907 13.3587 14.0737 12.8754C14.2487 12.392 14.2487 11.9837 14.1904 11.892C14.132 11.8004 14.007 11.7587 13.7987 11.6587Z" :fill="current_tab === 'search' ? 'white' : 'whitesmoke'"/>
+                        <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15.8737 4.09204C15.1096 3.32046 14.1996 2.70868 13.1966 2.29234C12.1937 1.876 11.1179 1.66344 10.032 1.66704C5.48203 1.66704 1.7737 5.37537 1.7737 9.92537C1.7737 11.3837 2.15703 12.8004 2.8737 14.0504L1.70703 18.3337L6.08203 17.1837C7.29036 17.842 8.6487 18.192 10.032 18.192C14.582 18.192 18.2904 14.4837 18.2904 9.9337C18.2904 7.72537 17.432 5.65037 15.8737 4.09204ZM10.032 16.792C8.7987 16.792 7.59036 16.4587 6.53203 15.8337L6.28203 15.6837L3.68203 16.367L4.3737 13.8337L4.20703 13.5754C3.52165 12.4813 3.1578 11.2164 3.15703 9.92537C3.15703 6.14204 6.24036 3.0587 10.0237 3.0587C11.857 3.0587 13.582 3.77537 14.8737 5.07537C15.5134 5.71192 16.0203 6.46916 16.3651 7.30314C16.7098 8.13713 16.8855 9.03127 16.882 9.9337C16.8987 13.717 13.8154 16.792 10.032 16.792ZM13.7987 11.6587C13.5904 11.5587 12.5737 11.0587 12.3904 10.9837C12.1987 10.917 12.0654 10.8837 11.9237 11.0837C11.782 11.292 11.3904 11.7587 11.2737 11.892C11.157 12.0337 11.032 12.0504 10.8237 11.942C10.6154 11.842 9.9487 11.617 9.16536 10.917C8.5487 10.367 8.14036 9.69204 8.01536 9.4837C7.8987 9.27537 7.9987 9.16704 8.10703 9.0587C8.1987 8.96704 8.31536 8.81704 8.41536 8.70037C8.51536 8.5837 8.55703 8.49204 8.6237 8.3587C8.69036 8.21704 8.65703 8.10037 8.60703 8.00037C8.55703 7.90037 8.14036 6.8837 7.9737 6.46704C7.80703 6.06704 7.63203 6.11704 7.50703 6.1087H7.10703C6.96536 6.1087 6.7487 6.1587 6.55703 6.36704C6.3737 6.57537 5.84036 7.07537 5.84036 8.09204C5.84036 9.1087 6.58203 10.092 6.68203 10.2254C6.78203 10.367 8.14036 12.4504 10.207 13.342C10.6987 13.5587 11.082 13.6837 11.382 13.7754C11.8737 13.9337 12.3237 13.9087 12.682 13.8587C13.082 13.8004 13.907 13.3587 14.0737 12.8754C14.2487 12.392 14.2487 11.9837 14.1904 11.892C14.132 11.8004 14.007 11.7587 13.7987 11.6587Z" :fill="current_tab === 'search' ? '#E53945' : 'black'"/>
                         </svg>
                     </div>
                         
@@ -289,11 +298,14 @@
 import ShopCartModal from '../../components/modals/ShopCartModal.vue';
 import SimpleListShopItem from '../../components/shop/SimpleListShopItem.vue';
 import {mapGetters} from 'vuex';
+import ShopCategoryNavigation from '../../components/navigations/ShopCategoryNavigation.vue';
 
 export default {
     data() {
         return {
 
+            current_category: "",
+            loading_data: true,
             current_tab: 'store',
 
             search_mode: false,
@@ -314,6 +326,11 @@ export default {
         };
     },
     methods: {
+
+        changeCategory(category_name) {
+            const category_element = document.getElementById(category_name);
+            category_element?.scrollIntoView({behavior: 'smooth'})
+        },
 
         showCategoryImages(category) {
             if (this.expanded_categories.find(c=> c === category)) {
@@ -370,9 +387,32 @@ export default {
         this.business = business;
         this.products = products;
         this.categories = categories;
+        this.loading_data = false
     },
     computed: {
         ...mapGetters("shop", ['cart']),
+        filteredCategories() {
+            let array = [] 
+           
+            if (this.categories) {
+
+    
+                for (let c of this.categories) {
+                    const category_products = this.products
+                        .filter(p => p.category_id === c.id)
+                        .sort((a, b) => a.name.localeCompare(b.name));
+                    if (category_products.length) {
+                        array.push(c)
+                    }
+                }
+            }
+            array.sort((a, b)=> {
+                a.name.localeCompare(b.name)
+            });
+
+            return array
+        },
+
         searchedProducts() {
             let final = []
             if (this.search_term) {
@@ -424,6 +464,12 @@ export default {
         }
     },
     watch: {
+        loading_data(value) {
+            if (!value) {
+                // set the current_category to the first category
+                this.current_category = Object.keys(this.categoryProductMapping)[0]
+            }
+        },
         search_term(value) {
             if (!value) {
                 this.search_mode = false;
@@ -432,7 +478,7 @@ export default {
             }
         }
     },
-    components: { SimpleListShopItem, ShopCartModal }
+    components: { SimpleListShopItem, ShopCartModal, ShopCategoryNavigation }
 }
 </script>
 
@@ -457,7 +503,7 @@ export default {
     padding: 10px 16px;
     border-bottom: 1px solid lightgrey;
     //border-bottom: 0;
-    background-color: rgb(234, 234, 234);
+    background-color: white;
 }
 .bottom-cta {
     display: flex;
@@ -523,7 +569,7 @@ export default {
 }
 
 .category-name {
-    font-family: Poppins, 'san-serif' !important;
+    font-family: Inter, 'san-serif' !important;
     font-size: 16px;
    // border-bottom: 1px solid $border-grey;
 
@@ -543,17 +589,17 @@ export default {
         font-size: 15px ;
         font-family: "Inter", sans-serif !important;
         font-weight: 600;
-        color: whitesmoke !important;
+        color: black !important;
 
      }
 }
 
 .navbar {
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;   
-    background-color: $primary;
-    color: white !important;
+    box-shadow: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
+        background-color: lightgrey;
+    color: black !important;
 
-    position: sticky;
+   // position: sticky;
     z-index: 1000;
     width: 100%;
    // margin: 2.5% !important;
@@ -563,8 +609,8 @@ export default {
     border-right: 0;
     border-top: 0;
     margin: auto;
-    top: 0;
-    left: 0;
+   // top: 0;
+   // left: 0;
    // margin-top: 10px;
 
 
@@ -593,7 +639,7 @@ export default {
    border-bottom: 1px solid lightgrey;
     .icon {
         position: absolute;
-        top: 28px;
+        top: 0px;
         left: 25px ;
 
     }
@@ -605,7 +651,6 @@ export default {
         padding-left: 32px;
         width: 100%;
         height: 40px;
-        margin-top: 50px;
         background-color: white;
     }
 }
@@ -684,7 +729,7 @@ export default {
     
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     font-size: 20px !important;
-    background-color: $primary;
+    background-color: lightgrey;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
         //margin-left: 5px;
 

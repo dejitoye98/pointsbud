@@ -1,0 +1,71 @@
+<template>
+    <div class="component">
+        <BaseModal v-if="show_modal" @close="show_modal= fals">
+            <template #header>
+                <div class="padding-16 modal-header">
+                    <p>Browse Categories</p>    
+                </div>
+            </template>
+
+            <template #body>
+                <div class="padding-16">
+                    <div class="category" v-for="(category, index) in categories" :key="index" @click="changeCategory(category.name)">
+                        <div class="category__container">
+                            <p>{{category.name}}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </template>
+        </BaseModal>
+        <div class="flex space-between flex-center-y padding-16-x padding-8-y" @click="show_modal=true">
+            <div class="flex flex-center-y padding-16 gap-2">
+                <div>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.5 4.6875C2.5 4.43886 2.59877 4.2004 2.77459 4.02459C2.9504 3.84877 3.18886 3.75 3.4375 3.75H16.5625C16.8111 3.75 17.0496 3.84877 17.2254 4.02459C17.4012 4.2004 17.5 4.43886 17.5 4.6875C17.5 4.93614 17.4012 5.1746 17.2254 5.35041C17.0496 5.52623 16.8111 5.625 16.5625 5.625H3.4375C3.18886 5.625 2.9504 5.52623 2.77459 5.35041C2.59877 5.1746 2.5 4.93614 2.5 4.6875ZM2.5 9.6875C2.5 9.43886 2.59877 9.2004 2.77459 9.02459C2.9504 8.84877 3.18886 8.75 3.4375 8.75H16.5625C16.8111 8.75 17.0496 8.84877 17.2254 9.02459C17.4012 9.2004 17.5 9.43886 17.5 9.6875C17.5 9.93614 17.4012 10.1746 17.2254 10.3504C17.0496 10.5262 16.8111 10.625 16.5625 10.625H3.4375C3.18886 10.625 2.9504 10.5262 2.77459 10.3504C2.59877 10.1746 2.5 9.93614 2.5 9.6875ZM2.5 14.6875C2.5 14.4389 2.59877 14.2004 2.77459 14.0246C2.9504 13.8488 3.18886 13.75 3.4375 13.75H16.5625C16.8111 13.75 17.0496 13.8488 17.2254 14.0246C17.4012 14.2004 17.5 14.4389 17.5 14.6875C17.5 14.9361 17.4012 15.1746 17.2254 15.3504C17.0496 15.5262 16.8111 15.625 16.5625 15.625H3.4375C3.18886 15.625 2.9504 15.5262 2.77459 15.3504C2.59877 15.1746 2.5 14.9361 2.5 14.6875Z" fill="black"/>
+                    </svg>
+                        
+                </div>
+                <p>{{current_category || 'Category'}}</p>
+            </div>
+            <div>
+                <p>Click to jump</p>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    props: ['categories', 'current_category'],
+    data(){
+        return {
+            show_modal: false,
+        }
+    },
+    methods: {
+        changeCategory(category_name) {
+            this.$emit('changeCategory', category_name)
+            this.show_modal = false;
+        }
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+
+.modal-header {
+    font-family: Poppins !important;
+}
+.component {
+    font-size: 16px;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+.category {
+    &__container{
+        padding: 16px;
+    }
+}
+</style>

@@ -23,8 +23,8 @@
 
             <div class="item__container">
 
-                <div class="gap-1 flex flex-center-y">
-                    <template v-if="item.thumbnail || item.description">
+                <div class="gap-3 flex flex-center-y full-width">
+                    <template v-if="(item.thumbnail || item.description) && false" >
 
                         <svg v-if="!expanded" style="min-width: 20px;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M8.33203 14.1663V5.83301L12.4987 9.99967L8.33203 14.1663Z" fill="black"/>
@@ -33,10 +33,15 @@
                             <path d="M5.83464 8.33301L14.168 8.33301L10.0013 12.4997L5.83464 8.33301Z" fill="black"/>
                         </svg>
                     </template>
-                        
+                    <img style="max-height: 50px; max-width: 60px; min-height: 50px; min-width: 60px; height: 50px; width: 60px; object-fit: cover; border-radius: 10px;" loading="lazy" :src="item.thumbnail">
 
                         
-                    <p class="item__name">{{item.name}}</p>
+
+                    <div class="flex flex-col">
+
+                        <p class="item__name single-line-ellipsis">{{item.name}}</p>
+                    </div>
+
                 </div>
         
                 <div style="justify-content: flex-end; width: 100%" class="flex gap-2 flex-center-y">
@@ -192,18 +197,23 @@ p {
     height: 25px;
     width: 25px;
     color: black;
-    font-weight: 700;
+    font-weight: 800;
     background-color: $border-grey;
     display: flex;
-    align-products: center;
+    align-items: center;
     justify-content: center;
+    
 }
 
 
 .quantity-input {
-    width: 20px;
+    width: 40px;
     padding: 2px;
     border: 1px $border-grey solid;
+    display: flex;
+    align-items:center;
+    text-align: center;
+    border-radius: 5px;
 }
 .thumbnail {
     min-width:  100px;
@@ -224,7 +234,6 @@ p {
 .item {
     //padding: 16px;
     display: flex;
-    font-size: 14px;
     color: $charcoal !important;
     font-weight: 400;
     background-color: white;
@@ -244,7 +253,25 @@ p {
 
     &__name {
         font-weight: 400 !important;
+        font-size: 13px;
+        font-family: "Open Sans", sans-serif;
+        width: 50%;
+
+    }
+    &__description {
+        font-weight: 300 !important;
+        font-size: 12px;
+        font-family: "Open Sans", sans-serif;
+        color: $charcoal;
+
     }
 
+}
+.single-line-ellipsis{
+    white-space: nowrap;       /* Prevents text from wrapping to the next line */
+    overflow: hidden;          /* Hides overflowing text */
+    text-overflow: ellipsis;   /* Adds an ellipsis ("...") to represent the clipped text */
+    width: 100%;              /* Set a fixed width to see the effect */
+    //border: 1px solid #ccc;
 }
 </style>
