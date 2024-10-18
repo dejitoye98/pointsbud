@@ -26,7 +26,7 @@
                     </svg>
                         
                 </div>
-                <p>{{current_category || 'Category'}}</p>
+                <p>{{local_category || 'Category'}}</p>
             </div>
             <div>
                 <p>Click to jump</p>
@@ -37,16 +37,23 @@
 
 <script>
 export default {
-    props: ['categories', 'current_category'],
+    props: ['categories', 'current_category', 'local_category'],
     data(){
         return {
             show_modal: false,
+            local_category: ''
+        }
+    },
+    created() {
+        if (this.current_category) {
+            this.local_category = this.current_category
         }
     },
     methods: {
         changeCategory(category_name) {
             this.$emit('changeCategory', category_name)
             this.show_modal = false;
+            this.local_category = category_name
         }
     }
 }
@@ -59,8 +66,8 @@ export default {
 }
 .component {
     font-size: 16px;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
 .category {
