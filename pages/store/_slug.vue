@@ -23,7 +23,7 @@
                         <div>
                            <button class="flex gap-1 bookmark-btn">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4.16797 17.5V4.16667C4.16797 3.70833 4.3313 3.31611 4.65797 2.99C4.98464 2.66389 5.37686 2.50056 5.83464 2.5H14.168C14.6263 2.5 15.0188 2.66333 15.3455 2.99C15.6721 3.31667 15.8352 3.70889 15.8346 4.16667V17.5L10.0013 15L4.16797 17.5ZM5.83464 14.9583L10.0013 13.1667L14.168 14.9583V4.16667H5.83464V14.9583Z" fill="white"/>
+                                    <path d="M4.16797 17.5V4.16667C4.16797 3.70833 4.3313 3.31611 4.65797 2.99C4.98464 2.66389 5.37686 2.50056 5.83464 2.5H14.168C14.6263 2.5 15.0188 2.66333 15.3455 2.99C15.6721 3.31667 15.8352 3.70889 15.8346 4.16667V17.5L10.0013 15L4.16797 17.5ZM5.83464 14.9583L10.0013 13.1667L14.168 14.9583V4.16667H5.83464V14.9583Z" fill="black"/>
                                     </svg>
                                 <span>
                                     Bookmark Store
@@ -602,7 +602,7 @@ export default {
 
 .navbar {
     box-shadow: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
-        background-color: lightgrey;
+        background-color:white;
     color: black !important;
 
    // position: sticky;
@@ -700,9 +700,8 @@ export default {
     //padding: 8px 16px;
     font-weight: 600;
     padding: 8px 8px;
-    border: 1px solid #E53945;
-    color: white !important;
-    background-color: $primary;
+    color: $primary !important;
+    background-color: transparent;
 }
 
 .pay-button {
