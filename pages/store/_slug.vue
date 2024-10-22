@@ -299,6 +299,7 @@ import ShopCartModal from '../../components/modals/ShopCartModal.vue';
 import SimpleListShopItem from '../../components/shop/SimpleListShopItem.vue';
 import {mapGetters} from 'vuex';
 import ShopCategoryNavigation from '../../components/navigations/ShopCategoryNavigation.vue';
+import mixpanel from 'mixpanel-browser';
 
 export default {
     data() {
@@ -324,6 +325,9 @@ export default {
 
             expanded_categories: [],
         };
+    },
+    mounted() {
+        
     },
     methods: {
 
@@ -468,6 +472,8 @@ export default {
             if (!value) {
                 // set the current_category to the first category
                 this.current_category = Object.keys(this.categoryProductMapping)[0]
+                this.mixpanel = mixpanel.init('1f580add8d0558ccae5fc19ca5997dab', { debug: false, track_pageview: false });
+                mixpanel.track("Store Viewed", this.business.name)
             }
         },
         search_term(value) {

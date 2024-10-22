@@ -1,5 +1,33 @@
 <template>
     <div>
+        <BaseModal v-if="show_detail_modal" @close="show_detail_modal = false">
+           <template #body>
+                <div class="image" style="position: relative;" v-if="item.thumbnail">
+                    <div @click="show_detail_modal = false" style="position: absolute; top: 16px; right: 16px;">
+                        <svg width="30" height="30" viewBox="0 0 20 20" fill="black" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 1.25C5.125 1.25 1.25 5.125 1.25 10C1.25 14.875 5.125 18.75 10 18.75C14.875 18.75 18.75 14.875 18.75 10C18.75 5.125 14.875 1.25 10 1.25ZM13.375 14.375L10 11L6.625 14.375L5.625 13.375L9 10L5.625 6.625L6.625 5.625L10 9L13.375 5.625L14.375 6.625L11 10L14.375 13.375L13.375 14.375Z" fill="white"/>
+                            </svg>
+                            
+                    </div>
+                    <img style="" :src="item.thumbnail">
+                </div>
+
+                <div class="item-detail padding-16">
+                    <div>
+                        <p class="bold">{{item.name}}</p>
+                        {{ item.name }}
+                    </div>
+                    <div>
+                       {{ item.currency || "NGN" | currencySymbol }} {{ item.unitprice }}
+                    </div>
+                    <div>
+                        {{ item.description }}
+                    </div>
+                    <a style="color: #1E88E5" :href="'https://www.google.com/search?q=' + item.name + ' images'">View on Google</a>
+                </div>
+
+           </template>
+        </BaseModal>
         <BaseModal v-if="zoom_image" @close="zoom_image = false">
             <template #header>
                 <div class="padding-16 space-between flex-center-y flex">
@@ -19,7 +47,7 @@
                 </div>
             </template>
         </BaseModal>
-        <div class="item" @click="expanded = !expanded" :style="{'borderBottom' : expanded? 'none !important' : '#E0E0E0'}">
+        <div class="item" @click="showDetails" :style="{'borderBottom' : expanded? 'none !important' : '#E0E0E0'}">
 
             <div class="item__container">
 
@@ -94,6 +122,7 @@ export default {
         return {
             zoom_image:false,
             expanded: false,
+            show_detail_modal: false,
         }
     },
     watch: {
@@ -102,6 +131,9 @@ export default {
         }
     },
     methods: {
+        showDetails() {
+            this.show_detail_modal = true;
+        },
     getPriceRanges(itemPrice) {
             let lowerRange, upperRange, interval;
 

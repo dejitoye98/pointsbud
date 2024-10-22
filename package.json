@@ -27,7 +27,7 @@
         "google-auth-library": "^8.7.0",
         "js-cookie": "^3.0.1",
         "lightvue": "^0.5.1",
-        "mixpanel-browser": "^2.47.0",
+        "mixpanel-browser": "^2.55.1",
         "moment": "^2.29.3",
         "nuxt": "^2.15.8",
         "qrcode": "^1.5.1",
