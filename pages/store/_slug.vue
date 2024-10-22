@@ -89,7 +89,7 @@
 
                     <div style="position: sticky; top: 0; left: 0; background: white;">
 
-                        <ShopCategoryNavigation @changeCategory="changeCategory" :current_category="current_category" :categories="filteredCategories"></ShopCategoryNavigation>
+                        <ShopCategoryNavigation v-if="current_tab === 'store' " @changeCategory="changeCategory" :current_category="current_category" :categories="filteredCategories"></ShopCategoryNavigation>
                     </div>
                     
     
