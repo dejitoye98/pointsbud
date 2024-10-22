@@ -375,11 +375,10 @@ export default {
     methods: {
         flattenCartIntoMessage() {
             let text = ''
-            text += `New Order Request \n
-            I'd like to buy the following: \n`
+            text += `New Order Request \nI'd like to buy the following:\n`
             
             for (let item of this.cart) {
-                text += `${item.name} x ${item.quantity}\n`
+                text += `\n${item.name} x ${item.quantity}\n`
             }
 
             return text
