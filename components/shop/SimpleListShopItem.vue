@@ -88,7 +88,7 @@
                     <div v-if="!isInCart" >
                         <button class="quantity-choose" @click.stop="addToCart">+</button>
                     </div>
-                    <div v-else class="flex gap-2">
+                    <div v-else class="flex gap-2" @click.stop>
                         <button class="quantity-choose" @click.stop="decreaseQuantity">-</button>
                         <input type="text" class="quantity-input" :value="isInCart.quantity" @change="setQuantity">
                         <button class="quantity-choose" @click.stop="increaseQuantity">+</button>

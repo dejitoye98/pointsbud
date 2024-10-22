@@ -229,6 +229,45 @@
                         </div>
 
                     </template>
+
+                    <template v-else-if="current_tab === 'cart'">
+                        <div class="padding-16">
+                            <h2>Your Cart</h2>
+                            
+                            <template v-if="cart.length === 0">
+
+                                <div >
+                                    <p style="font-weight: 400;">You haven't selected any times. Please go back to the store</p>
+                                </div>
+                            </template>
+                            <template v-else>
+
+                                <div class="flex space-between" style="margin-bottom: 24px;">
+                                    <h3>Confirm your Items</h3>
+                                    <p style="font-weight: 600">Total: {{"NGN" | currencySymbol}} {{cartTotal}}</p>
+
+                                </div>
+                            
+                                <div>
+    
+                                    <CartItem :key="item.id || index" v-for="(item, index) in cart" :item="item"></CartItem>
+                                </div>
+
+                                <div>
+                                    <button class="big-btn full-width" @click="checkoutOnWhatsapp">Checkout on Whatsapp</button>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <template v-else-if="current_tab === 'whatsapp'">
+                        <div class="whatsapp-light-background">
+                            <p style="color: black;">You'll be taken to WhatsApp to contact this business</p>
+                        </div>
+                        <div class="padding-16-x">
+                            <button class="big-btn full-width" @click="goToBusinessWhatsapp"> Contact on WhatsApp</button>
+                        </div>
+                    </template>
                     
     
                 </div>
@@ -269,7 +308,11 @@
                     <div class="navigation-item__container"  :style="{'borderTop': current_tab === 'cart' ? '3px solid #E53945' : '' }">
                         <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M14.1654 15.0003C13.2404 15.0003 12.4987 15.742 12.4987 16.667C12.4987 17.109 12.6743 17.5329 12.9869 17.8455C13.2994 18.1581 13.7233 18.3337 14.1654 18.3337C14.6074 18.3337 15.0313 18.1581 15.3439 17.8455C15.6564 17.5329 15.832 17.109 15.832 16.667C15.832 16.225 15.6564 15.801 15.3439 15.4885C15.0313 15.1759 14.6074 15.0003 14.1654 15.0003ZM0.832031 1.66699V3.33366H2.4987L5.4987 9.65866L4.36536 11.7003C4.24036 11.9337 4.16536 12.2087 4.16536 12.5003C4.16536 12.9424 4.34096 13.3663 4.65352 13.6788C4.96608 13.9914 5.39 14.167 5.83203 14.167H15.832V12.5003H6.18203C6.12678 12.5003 6.07379 12.4784 6.03472 12.4393C5.99565 12.4002 5.9737 12.3472 5.9737 12.292C5.9737 12.2503 5.98203 12.217 5.9987 12.192L6.7487 10.8337H12.957C13.582 10.8337 14.132 10.4837 14.4154 9.97533L17.3987 4.58366C17.457 4.45033 17.4987 4.30866 17.4987 4.16699C17.4987 3.94598 17.4109 3.73402 17.2546 3.57774C17.0983 3.42146 16.8864 3.33366 16.6654 3.33366H4.34036L3.55703 1.66699M5.83203 15.0003C4.90703 15.0003 4.16536 15.742 4.16536 16.667C4.16536 17.109 4.34096 17.5329 4.65352 17.8455C4.96608 18.1581 5.39 18.3337 5.83203 18.3337C6.27406 18.3337 6.69798 18.1581 7.01054 17.8455C7.3231 17.5329 7.4987 17.109 7.4987 16.667C7.4987 16.225 7.3231 15.801 7.01054 15.4885C6.69798 15.1759 6.27406 15.0003 5.83203 15.0003Z" :fill="current_tab === 'cart' ? '#E53945' : 'black'"/>
-                            </svg>
+                        </svg>
+                        
+                        <div class="tag counter">
+                            {{ cart.length }}
+                        </div>
                             
                     </div>
                         
@@ -330,7 +373,21 @@ export default {
         
     },
     methods: {
+        flattenCartIntoMessage() {
+            let text = ''
+            text += `New Order Request \n
+            I'd like to buy the following: \n`
+            
+            for (let item of this.cart) {
+                text += `${item.name} x ${item.quantity}\n`
+            }
 
+            return text
+        },
+        checkoutOnWhatsapp() {
+            let message  = this.flattenCartIntoMessage();
+            window.open(`whatsapp://send?text=${message}&phone=${this.business.contact_phone}`, '__blank')
+        },
         changeCategory(category_name) {
             const category_element = document.getElementById(category_name);
             category_element?.scrollIntoView({behavior: 'smooth'})
@@ -395,6 +452,21 @@ export default {
     },
     computed: {
         ...mapGetters("shop", ['cart']),
+        taxes() {
+            return 0
+        },
+        discount() {
+            return 0
+        },
+        cartTotal() {
+            let sum = 0;
+            
+            for (let item of this.cart) {
+                sum += (item.unitprice * item.quantity);
+            }
+
+            return (sum + this.taxes) - this.discount
+        },
         filteredCategories() {
             let array = [] 
            
@@ -495,6 +567,30 @@ export default {
     font-size: 14px;
 }
 
+.whatsapp-light-background {
+    background-color: white;
+    border: 1px solid lightgrey;
+    color: grey !important;
+    border-radius: 10px !important;
+    padding: 16px;
+    margin: 16px;
+
+    p {
+        color: black !important;
+    }
+}
+
+.checkout-whatsapp-btn {
+    margin-top: 20px;
+    @include largebutton;
+    width: 100%;
+    padding: 24px 16px  !important;
+}
+h2 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
 
 .list {
     //background-color: whitesmoke;
@@ -592,7 +688,7 @@ export default {
 .logo {
 
      p {
-        font-size: 15px ;
+        font-size: 13px ;
         font-family: "Inter", sans-serif !important;
         font-weight: 600;
         color: black !important;
@@ -670,7 +766,6 @@ export default {
     font-weight: 400;
     //padding: 8px 0px 8px 16px;
     
-    border-bottom: 1px solid $border-grey;
 
 }
 
@@ -753,6 +848,7 @@ export default {
 
         &__container {
             padding: 16px;
+            position: relative;
 
             width: 50%;
             margin: auto;
@@ -770,6 +866,21 @@ export default {
     padding: 16px;
     
 
+}
+
+.counter {
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    font-size: 14px;
+    background-color: $primary;
+    position: absolute;
+    right: 0;
+    top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
 }
 
 .floating-cart {
