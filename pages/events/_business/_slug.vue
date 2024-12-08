@@ -298,6 +298,8 @@ export default {
         makePayment() {
             let payload = {...this.payload}
             payload.event_id = this.event.id
+            payload.business_id = this.event.business.id;
+            payload.date = this.event.date;
             FlutterwaveCheckout({
                     public_key: this.$config.FLW_PUBLIC_KEY || "FLWPUBK_TEST-ad1d316f90548fca239af66bd32bd954-X",
                     tx_ref: `pointsbudreservations_${Date.now()}`,
