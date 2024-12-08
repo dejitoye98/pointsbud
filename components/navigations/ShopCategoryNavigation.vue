@@ -69,6 +69,7 @@ export default {
     border-top: 1px solid lightgrey;
     border-bottom: 1px solid lightgrey;
     font-weight: 600;
+    height: 300;
 }
 
 .category {
