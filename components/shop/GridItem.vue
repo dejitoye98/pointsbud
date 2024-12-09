@@ -20,12 +20,12 @@
             </div>
         </div>
 
-        <div class="padding-16-x flex space-between" style="margin: 5px 0;">
+        <div class="padding-8-x flex space-between" style="margin: 5px 0;">
             <p class="name">{{product.name}}</p>
             <p class="price">{{'NGN' | currencySymbol }}{{product.unitprice | money}}</p>
         </div>
 
-        <div class="padding-16-x">
+        <div class="padding-8-x">
             <TruncatedText @click.stop color="grey" fontSize="12" limit="50" :text="product.description">
                 
             </TruncatedText>

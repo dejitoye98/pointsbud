@@ -65,11 +65,13 @@ export default {
     font-family: Poppins !important;
 }
 .component {
-    font-size: 16px;
+    font-size: 13px;
     border-top: 1px solid lightgrey;
     border-bottom: 1px solid lightgrey;
+    background-color: white;
     font-weight: 600;
-    padding: 10px 0;
+    padding: 8px 0;
+    z-index: 1000;
    
 }
 

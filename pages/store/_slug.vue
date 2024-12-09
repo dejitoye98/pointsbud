@@ -26,7 +26,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+            </div>
 
                 <div class="tabs" :style="{'backgroundColor': styling?.primary_color? hexToRgba(styling.primary_color, 0.3) : '' }">
                     <div class="tabs__container">
@@ -88,7 +88,7 @@
                     </div>
 
 
-                    <div style="position: sticky; top: 0; left: 0; background: white;">
+                    <div style="position: sticky; top: 0; left: 0; background: white; z-index: 1">
 
                         <ShopCategoryNavigation v-if="current_tab === 'shop' " @changeCategory="changeCategory" :current_category="current_category" :categories="filteredCategories"></ShopCategoryNavigation>
                     </div>
@@ -834,6 +834,7 @@ h2 {
         p {
 
             font-weight: 500 !important;
+            font-size: 11px;
         }
     }
 

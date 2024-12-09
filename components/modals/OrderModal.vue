@@ -1,10 +1,19 @@
 <template>
     <BaseModal v-if="item" @close="$emit('close')">
         <template #header>
-            <div style="height: 300px">
+            <div style="height: 300px; position: relative">
 
                 <img :src="item.thumbnail">
-            </div>
+                
+                <div style="position: absolute; top: 16px; right: 16px; background: black; padding: 16px; border-radius: 50%;">
+                    <svg @click="$emit('close')" style="cursor: pointer;" width="16" height="16" viewBox="0 0 8 8" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1L7 7" stroke="white" stroke-width="0.5" stroke-linecap="round" />
+                    <path d="M7 1L1 7" stroke="white" stroke-width="0.5" stroke-linecap="round" />
+                    </svg>           
+
+                </div>
+         </div>
 
         </template>
         <template #body>
@@ -53,8 +62,11 @@
 
                 <div class="cta">
 
-                    <button class="big-btn full-width" @click="addToCart">
+                    <button class="big-btn full-width" @click="addToCart" v-if="!isInCart">
                         Add to Cart
+                    </button>
+                    <button style="background-color: red;" class="big-btn full-width" @click="removeFromCart" v-else>
+                        Remove From Cart
                     </button>
                 </div>
 
@@ -91,12 +103,20 @@ export default {
         },
     },
     methods: {
+        removeFromCart() {
+            this.$store.dispatch('shop/removeFromCart', this.item.id)
+        },
         handleInput($evt) {
             const value = $evt.target.value;
             this.$store.dispatch('shop/setItemQuantity', {id: this.item.id, quantity: value})
 
         },
         increase() {
+            if (!this.isInCart) {
+                this.$store.dispatch('shop/addToCart', {...this.item, quantity: 1, ...this.order})
+                return
+            }
+            
             this.$store.dispatch('shop/increaseItemQuantity', this.item.id)
 
         },
