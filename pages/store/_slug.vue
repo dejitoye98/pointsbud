@@ -1,12 +1,13 @@
 <template>
     <div class="page">
-        <ShopCartModal @close="show_cart_modal = false" v-if="show_cart_modal && this.cart.length">
+        <!--<ShopCartModal @close="show_cart_modal = false" v-if="show_cart_modal && this.cart.length">
 
-        </ShopCartModal>
+        </ShopCartModal>-->
 
-    <OrderModal @close="focused_product = null" :item="focused_product"></OrderModal>
+        <OrderModal @close="focused_product = null" :item="focused_product"></OrderModal>
 
-    
+        <CartModal  @close="show_cart_modal = false"  v-if="show_cart_modal && this.cart.length" :business="business"></CartModal>
+        
         <div class="page__container">
             <div class="sidebar">
 
@@ -280,7 +281,7 @@
     
                 </div>
 
-                <div class="bottom-sticky">
+                <div class="bottom-sticky" v-if="false">
                     <div class="floating-cart" v-if="cart?.length" @click="show_cart_modal = !show_cart_modal">
 
                         <svg width="20" height="20" viewBox="0 0 20 20" :fill="current_tab == 'store' ? '#E53945' : 'black' " xmlns="http://www.w3.org/2000/svg">
@@ -292,7 +293,8 @@
                     </div>
                 </div>
 
-                <div class="bottom-nav" :style="{'backgroundColor': styling ? styling.primary_color: 'whitesmoke'}">
+
+                <div class="bottom-nav" v-if="false" :style="{'backgroundColor': styling ? styling.primary_color: 'whitesmoke'}">
                     <div class="navigation-item" @click="current_tab='store'">
 
                         <div class="navigation-item__container" >
@@ -335,6 +337,10 @@
                    </div>
                     
                 </div>
+
+                <button v-if="cart.length > 0" @click="show_cart_modal = true" class="cart-sticky" :style="{'backgroundColor': styling ? styling.primary_color: 'whitesmoke'}">
+                    Continue to Cart ({{ cart.length }} items)
+                </button>
             </div>
 
             <div>
@@ -633,6 +639,7 @@ h2 {
 .list {
     //background-color: whitesmoke;
     background-color: white;
+    padding: 16px;
    //padding: 24px;
  //   margin: 60px 0;
     //padding: 80px 0;
@@ -819,6 +826,8 @@ h2 {
     }
     &__item {
         padding: 10px 16px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
 
         p {
 
@@ -859,6 +868,25 @@ h2 {
     //border: 1px solid #ccc;
 }
 
+.cart-sticky {
+    width: 95%;
+    position: fixed;
+    bottom: 0;
+    left: 2.5%;
+    margin-bottom: 16px;
+    border-radius: 999px;
+    font-weight: 600;
+
+    display: block;
+    //height: 60px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    font-size: 15px;
+    padding: 16px;
+    justify-content: center;
+
+
+
+}
 .bottom-nav {
     display: grid;
     flex-direction: column;

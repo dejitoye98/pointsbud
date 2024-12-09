@@ -1,7 +1,10 @@
 <template>
     <BaseModal v-if="item" @close="$emit('close')">
         <template #header>
-            <img :src="item.thumbnail">
+            <div style="height: 300px">
+
+                <img :src="item.thumbnail">
+            </div>
 
         </template>
         <template #body>
@@ -39,12 +42,12 @@
 
 
                 <div class="quantity">
-                    <button>
+                    <button @click="decrease">
                         -
                     </button>
-                    <input v-model="order.quantity">
+                    <input :value="isInCart?.quantity" @input="handleInput">
 
-                    <button>+</button>
+                    <button @click="increase">+</button>
                 </div>
 
 
@@ -78,12 +81,29 @@ export default {
     },
     computed: {
         ...mapGetters('shop', ['cart']),
+        isInCart() {
+            return this.cart.find(item => item.id === this.item.id)
+
+        },
 
         productAdditions() {
             return this.item && this.item.meta && JSON.parse(this.item.meta).additions || null;
         },
     },
     methods: {
+        handleInput($evt) {
+            const value = $evt.target.value;
+            this.$store.dispatch('shop/setItemQuantity', {id: this.item.id, quantity: value})
+
+        },
+        increase() {
+            this.$store.dispatch('shop/increaseItemQuantity', this.item.id)
+
+        },
+        decrease() {
+            this.$store.dispatch('shop/decreaseItemQuantity', this.item.id)
+
+        },
         verifyAdditions() {
             if (this.productAdditions) {
                     // compare order additions to the additions and see what's required;
@@ -213,6 +233,7 @@ export default {
 <style lang="scss" scoped>
 img {
     object-fit: cover;
+    height: 100%;
 }
 h2, .price {
     font-weight: 600;

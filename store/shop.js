@@ -1,7 +1,9 @@
 export const state = () => ({
     business_is_open: false,
     menu: {},
-    products:[],    
+    products:[],   
+    
+    prefs: [],
 
     cart: [],
     focused_product: null,
@@ -9,7 +11,6 @@ export const state = () => ({
     show_order_modal: false,
     search_term: '',
     deliveryRegions: null,
-    prefs: '',
     business: null,
     customer_notifications: [],
     show_customer_notifications: false,

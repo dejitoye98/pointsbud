@@ -1,23 +1,32 @@
 <template>
     <div class="item" v-if="item">
-        <div class="flex gap-2">
-            <div class="thumbnail">
-                <img :src="item?.thumbnail">
+        <div class="flex space-between" style="display: flex; flex: 2; justify-content: space-between;">
+
+            <div class="flex gap-2"> 
+                <div class="thumbnail">
+                    <img :src="item?.thumbnail">
+                </div>
+
+                <div>
+
+                    <div>
+                        <p> {{ item?.name }} x {{item?.quantity}}</p>
+                    </div>
+                    <div class="quantity-choose">
+                        <button @click="decreaseQuantity">
+                            -
+                        </button>
+                        <input :value="item?.quantity" @input="setQuantity">
+                        <button @click="increaseQuantity">
+                            +
+                        </button>
+                    </div>
+
+                </div>
+                
             </div>
-            <div>
-                <p> {{ item?.name }} x {{item?.quantity}}</p>
-            </div>
-            
-        </div>
-        <div>
-            <div class="quantity-choose">
-                <button @click="decreaseQuantity">
-                    -
-                </button>
-                <input :value="item?.quantity" @input="setQuantity">
-                <button @click="increaseQuantity">
-                    +
-                </button>
+            <div style="flex: 1 !important;">
+                <p style="text-align: right;" class="bold">{{item.currency || "NGN" | currencySymbol}}{{itemSubtotal | money}}</p>
             </div>
         </div>
     </div>
@@ -28,6 +37,7 @@ import {mapGetters} from 'vuex'
 
 export default {
     props: ['item'],
+
     data() {
         return {
             
@@ -37,7 +47,10 @@ export default {
         ...mapGetters('shop', ['cart']),
         isInCart(){
             return this.cart.find(i => i.id === this.item.id)
-        }
+        },
+        itemSubtotal() {
+            return this.item.unitprice * this.isInCart.quantity
+        },
     },
     methods: {
         increaseQuantity() {
@@ -67,11 +80,16 @@ export default {
 <style lang="scss" scoped>
 
 .item {
-    padding: 16px;
-    border-bottom: 3px solid whitesmoke;
+    padding: 8px;
+    border-bottom: 1px solid whitesmoke;
     display: flex;
     justify-content: space-between;
     gap: 8px;
+}
+
+.bold {
+    font-weight: 600;
+    font-size: 16px;
 }
 
 .thumbnail {

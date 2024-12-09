@@ -4,6 +4,10 @@ export default {
     publicRuntimeConfig: {
         API_BASE: process.env.API_BASE,
         SOCKET_BASE: process.env.SOCKET_BASE,
+        FLW_PUBLIC_KEY: process.env.FLW_PUBLIC_KEY,
+        PAYMENT_GATEWAY: process.env.PAYMENT_GATEWAY,
+        PAYSTACK_PUBLIC_KEY: process.env.PAYSTACK_PUBLIC_KEY,
+        DINE_ORDER_SERVICE_URL: process.env.DINE_ORDER_SERVICE_URL
     },
 
 

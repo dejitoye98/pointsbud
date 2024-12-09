@@ -20,13 +20,13 @@
             </div>
         </div>
 
-        <div class="padding-8-y flex space-between" style="margin: 5px 0;">
+        <div class="padding-16-x flex space-between" style="margin: 5px 0;">
             <p class="name">{{product.name}}</p>
             <p class="price">{{'NGN' | currencySymbol }}{{product.unitprice | money}}</p>
         </div>
 
-        <div>
-            <TruncatedText color="grey" fontSize="12" limit="50" :text="product.description">
+        <div class="padding-16-x">
+            <TruncatedText @click.stop color="grey" fontSize="12" limit="50" :text="product.description">
                 
             </TruncatedText>
            
@@ -58,7 +58,7 @@ export default {
     },
     watch: {
         quantity(value) {
-            this.$store.dispatch('shop/setItemQuantity', value)
+            this.$store.dispatch('shop/setItemQuantity', {id: this.product.id, quantity: value})
         }
     },
     methods: {
@@ -95,6 +95,7 @@ export default {
     background-color: white;
     overflow: hidden;
     padding: 16px;
+    z-index: 0;
 }
 
 .quantity {
