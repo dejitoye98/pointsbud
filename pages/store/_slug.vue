@@ -819,10 +819,12 @@ h2 {
 
 .tabs {
     background-color: whitesmoke;
+    overflow: hidden;
 
     &__container {
         display: flex;
         gap: 16px;
+        overflow:hidden;
     }
     &__item {
         padding: 10px 16px;
