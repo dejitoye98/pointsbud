@@ -127,10 +127,12 @@ export const actions = {
     },
     addToCart({ dispatch, commit, state }, payload) {
         let cart = JSON.parse(JSON.stringify(state.cart))
-        if (cart) {
+        if (!cart.find(c=> payload.id === c.id)) {
             cart.push(payload)
+
+            commit('setCart', cart)
         }
-        commit('setCart', cart)
+        
         
     },
     removeFromCart({dispatch, commit, state}, product_id) {

@@ -4,6 +4,8 @@
 
         </ShopCartModal>
 
+    <OrderModal @close="focused_product = null" :item="focused_product"></OrderModal>
+
     
         <div class="page__container">
             <div class="sidebar">
@@ -12,28 +14,24 @@
             </div>
 
             <div class="main" v-if="business">
-                <div 
-                class="navbar" 
-                :style="{ backgroundColor: styling?.primary_color || 'white' }">
-                    <div class="navbar__container gap-1 space-between flex-center-y">
-
-                        <div style="width: 50%;" class="logo flex gap-1 flex-center-x flex-center-y">
-                            <HalfLogo color="black"></HalfLogo>
-                            <p class="single-line-ellipsis" style="color:black">{{business.name}}</p>
+                <div class="header" :style="{'backgroundColor': styling?.primary_color? hexToRgba(styling.primary_color, 0.3) : '' }">
+                    <div class="header__container">
+                        <div class="logo">
+                            <div class="logo__container">
+                                
+                                <img :src="business.logo">
+                                <h1>{{business.name}}</h1>
+                                
+                            </div>
                         </div>
+                    </div>
+                </div>
 
-                        <div>
-                           <button class="flex gap-1 bookmark-btn">
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4.16797 17.5V4.16667C4.16797 3.70833 4.3313 3.31611 4.65797 2.99C4.98464 2.66389 5.37686 2.50056 5.83464 2.5H14.168C14.6263 2.5 15.0188 2.66333 15.3455 2.99C15.6721 3.31667 15.8352 3.70889 15.8346 4.16667V17.5L10.0013 15L4.16797 17.5ZM5.83464 14.9583L10.0013 13.1667L14.168 14.9583V4.16667H5.83464V14.9583Z" fill="black"/>
-                                    </svg>
-                                <span>
-                                    Bookmark Store
-                                </span>                                
-                            </button>
+                <div class="tabs" :style="{'backgroundColor': styling?.primary_color? hexToRgba(styling.primary_color, 0.3) : '' }">
+                    <div class="tabs__container">
+                        <div class="tabs__item" :class="[current_tab === tab.toLowerCase()?  'selected_tab': '']" @click="selectTab(tab)" v-for="(tab, index) in tabs" :key="index">
+                            <p>{{tab}}</p>
                         </div>
-
-                        
                     </div>
                 </div>
 
@@ -91,12 +89,12 @@
 
                     <div style="position: sticky; top: 0; left: 0; background: white;">
 
-                        <ShopCategoryNavigation v-if="current_tab === 'store' " @changeCategory="changeCategory" :current_category="current_category" :categories="filteredCategories"></ShopCategoryNavigation>
+                        <ShopCategoryNavigation v-if="current_tab === 'shop' " @changeCategory="changeCategory" :current_category="current_category" :categories="filteredCategories"></ShopCategoryNavigation>
                     </div>
                     
     
 
-                    <template v-if="current_tab === 'store'">
+                    <template v-if="current_tab === 'shop'">
 
                             <div class="search" v-if="false">
                                 <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -163,7 +161,7 @@
                                                     <path d="M13.3333 10L8.33325 5L7.15825 6.175L10.9749 10L7.15825 13.825L8.33325 15L13.3333 10Z" fill="#636363"/>
                                                     </svg>
                                                     
-                                                <p>{{item.name}}</p>
+                                                <p>{{item?.name}}</p>
                                                 <p class="single-line-ellipsis">{{item.description}}</p>
                                             </div>
                 
@@ -182,7 +180,7 @@
                                     
                                     <div style="display: grid; grid-template-columns: 48% 48%; gap: 16px" v-else>
                                         
-                                        <GridItem  :product="item" v-for="(item, index) in categoryProductMapping[category]" :key="index"></GridItem>
+                                        <GridItem :styling="styling" @onSelect="chooseProduct(item)"  :product="item" v-for="(item, index) in categoryProductMapping[category]" :key="index"></GridItem>
 
 
                                     </div>
@@ -354,14 +352,19 @@ import {mapGetters} from 'vuex';
 import ShopCategoryNavigation from '../../components/navigations/ShopCategoryNavigation.vue';
 import mixpanel from 'mixpanel-browser';
 import GridItem from '../../components/shop/GridItem.vue';
+import OrderModal from '../../components/modals/OrderModal.vue';
 
 export default {
     data() {
         return {
 
+            tabs: ["Shop", "Deals", "Announcements", "Purchase History"],
+
+            focused_product: null,
+
             current_category: "",
             loading_data: true,
-            current_tab: 'store',
+            current_tab: 'shop',
 
             search_mode: false,
             search_timeout: null,
@@ -384,6 +387,25 @@ export default {
         
     },
     methods: {
+        chooseProduct(product) {
+            this.focused_product = product
+        },
+        hexToRgba(hex, opacity) {
+        // Remove the "#" from the hex string if it exists
+            hex = hex.replace('#', '');
+
+            // Parse the hex values into RGB components
+            const r = parseInt(hex.substring(0, 2), 16); // Red
+            const g = parseInt(hex.substring(2, 4), 16); // Green
+            const b = parseInt(hex.substring(4, 6), 16); // Blue
+
+            // Return the RGBA string with the opacity value
+            return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+        },
+        selectTab(tab) {
+            this.current_tab = tab.toLowerCase()
+        },
+
         flattenCartIntoMessage() {
             let text = ''
             text += `New Order Request \nI'd like to buy the following:\n`
@@ -572,7 +594,7 @@ export default {
             }
         }
     },
-    components: { SimpleListShopItem, ShopCartModal, ShopCategoryNavigation, GridItem }
+    components: { SimpleListShopItem, ShopCartModal, ShopCategoryNavigation, GridItem, OrderModal }
 }
 </script>
 
@@ -611,6 +633,7 @@ h2 {
 .list {
     //background-color: whitesmoke;
     background-color: white;
+   //padding: 24px;
  //   margin: 60px 0;
     //padding: 80px 0;
 }
@@ -619,7 +642,7 @@ h2 {
    
     //    border-radius: 10px;
     padding: 5px 0px;
-    border-bottom: 1px solid lightgrey;
+    //border-bottom: 1px solid lightgrey;
     //border-bottom: 0;
     background-color: white;
 }
@@ -687,8 +710,8 @@ h2 {
 }
 
 .category-name {
-    font-family: Inter, 'san-serif' !important;
-    font-size: 16px;
+    font-family: Poppins !important;
+    font-size: 20px;
    // border-bottom: 1px solid $border-grey;
 
     //font-style: italic;
@@ -745,7 +768,7 @@ h2 {
 }
 
 .section {
-    padding: 16px;
+    //padding: 16px 24px;
     margin-bottom: 10px;
 }
 
@@ -786,24 +809,28 @@ h2 {
 
 }
 
-.tabs {
-    //margin-top: 60px;
-    display: flex;
-    gap: 8px;
-    padding: 16px;
 
-    .tab {
+.tabs {
+    background-color: whitesmoke;
+
+    &__container {
         display: flex;
-        gap: 2;
-        justify-content: center;
-        border-radius: 100px;
-        padding: 8px 16px;
-        white-space: nowrap;       /* Prevents text from wrapping to the next line */
-        text-overflow: ellipsis;   /* Adds an ellipsis ("...") to represent the clipped text */
-        width: 100%;     
-        font-size: 13px; 
-        color: black;
+        gap: 16px;
     }
+    &__item {
+        padding: 10px 16px;
+
+        p {
+
+            font-weight: 500 !important;
+        }
+    }
+
+  
+}
+
+.selected_tab {
+    border-bottom: 5px solid black;
 }
 
 .bookmark-btn {
@@ -885,6 +912,13 @@ h2 {
 
 }
 
+.header {
+    background-color: whitesmoke;
+    &__container {
+        padding: 16px;
+    }
+}
+
 .counter {
     width: 20px;
     height: 20px;
@@ -935,6 +969,23 @@ h2 {
     button {
        
         
+    }
+}
+
+.logo {
+    display: flex;
+    &__container {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+    h1 {
+        font-weight: 600;
+    }
+    img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
     }
 }
 </style>

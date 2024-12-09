@@ -41,7 +41,7 @@ export default {
     data(){
         return {
             show_modal: false,
-            local_category: ''
+            local_category: '',
         }
     },
     created() {
@@ -69,7 +69,8 @@ export default {
     border-top: 1px solid lightgrey;
     border-bottom: 1px solid lightgrey;
     font-weight: 600;
-    height: 300;
+    padding: 10px 0;
+   
 }
 
 .category {
