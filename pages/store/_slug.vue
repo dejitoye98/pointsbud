@@ -69,6 +69,12 @@
                     <div class="tabs__container">
                         <div class="tabs__item" :class="[current_tab === tab.toLowerCase()?  'selected_tab': '']" @click="selectTab(tab)" v-for="(tab, index) in tabs" :key="index">
                             <p>{{tab}}</p>
+
+                            <template v-if="tab.toLowerCase() === 'deals' && deals?.length > 0">
+                                <div class="badge">
+                                    {{ deals?.length }}
+                                </div>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -252,6 +258,20 @@
 
                     </template>
 
+                    <template v-else-if="current_tab === 'deals'">
+                        <div class="list">
+
+                            <div style="display: grid; grid-template-columns: 48% 48%; gap: 16px">
+                                        
+                                <GridItem :styling="styling" @onSelect="chooseProduct(item)"  :product="item" v-for="(item, index) in deals" :key="index"></GridItem>
+
+
+                            </div>
+                            
+                        </div>
+                    </template>
+
+                    <!--- 
                     <template v-else-if="current_tab === 'search'">
                         <div class="search">
                           
@@ -313,7 +333,7 @@
                         <div class="padding-16-x">
                             <button class="big-btn full-width" @click="goToBusinessWhatsapp"> Contact on WhatsApp</button>
                         </div>
-                    </template>
+                    </template>-->
                     
     
                 </div>
@@ -547,6 +567,10 @@ export default {
     },
     computed: {
         ...mapGetters("shop", ['cart']),
+
+        deals() {
+            return this.products.filter(item => item.is_deal)
+        },
 
         showBookmarkButton() {
             if (!this.auth_customer || !this.auth_customer?.id || this.customer_businesses.length === 0 || 
@@ -903,6 +927,15 @@ h2 {
 
 }
 
+.badge {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+}
+
 
 .tabs {
     background-color: whitesmoke;
@@ -917,11 +950,16 @@ h2 {
         padding: 10px 16px;
         white-space: nowrap;
         text-overflow: ellipsis;
+        display:flex;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         p {
 
+            text-align: center;
             font-weight: 500 !important;
-            font-size: 11px;
+            font-size: 13px;
         }
     }
 

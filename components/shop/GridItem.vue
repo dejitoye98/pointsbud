@@ -35,7 +35,20 @@
 
         <div class="padding-8-x flex space-between" style="margin: 5px 0;">
             <p class="name">{{product.name}}</p>
-            <p class="price">{{'NGN' | currencySymbol }}{{product.unitprice | money}}</p>
+
+            <template class="" v-if="!isDeal">
+
+                <p class="price">{{'NGN' | currencySymbol }}{{product.unitprice | money}}</p>
+
+            </template>
+            <template v-else>
+                <div>
+
+                    <p class="price golden-price">{{'NGN' | currencySymbol }}{{product.unitprice | money}}</p>
+                    <p class="price strikethrough">{{"NGN" | currencySymbol}} {{product.original_price | money}}</p>
+                </div>
+
+            </template>
         </div>
 
         <div class="padding-8-x">
@@ -64,6 +77,9 @@ export default {
     },
     computed: {
         ...mapGetters('shop', ['cart']),
+        isDeal() {
+            return this.product.is_deal
+        },
         iconColor() {
             if (this.styling) {
                 return this.styling.text_on_primary 
@@ -164,5 +180,18 @@ export default {
 
 .price {
     font-weight: 500;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.golden-price {
+    background-color: gold;
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-weight: 700;
+}
+
+.strikethrough {
+    text-decoration: line-through;
 }
 </style>
