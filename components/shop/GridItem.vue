@@ -52,7 +52,7 @@
         </div>
 
         <div class="padding-8-x">
-            <TruncatedText @click.stop color="grey" fontSize="12" limit="50" :text="product.description">
+            <TruncatedText @click.stop color="grey" fontSize="11" limit="50" :text="product.description">
                 
             </TruncatedText>
            
