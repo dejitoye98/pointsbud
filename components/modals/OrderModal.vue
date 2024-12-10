@@ -70,6 +70,13 @@
                     </button>
                 </div>
 
+                <div class="">
+
+                    <button @click="$emit('close')" style="background-color: white; color: black" class="big-btn full-width" v-if="!isInCart">
+                       Close
+                    </button>
+                </div>
+
             </div>
         </template>
     </BaseModal>

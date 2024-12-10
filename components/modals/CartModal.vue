@@ -1,8 +1,14 @@
 <template>
     <BaseModal @close="$emit('close')">
         <template #header>
-            <div class="padding-16">
+            <div class="padding-16 space-between flex-center-y">
                 <p>Cart</p>
+
+                <svg @click="$emit('close')" style="cursor: pointer;" width="16" height="16" viewBox="0 0 8 8" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L7 7" stroke="black" stroke-width="0.5" stroke-linecap="round" />
+                <path d="M7 1L1 7" stroke="black" stroke-width="0.5" stroke-linecap="round" />
+                </svg>     
             </div>
         </template>
 
@@ -544,7 +550,7 @@ export default {
                 
             });
             const payload = {
-                token: this.$cookies.get("loyal-token"),
+                token: this.$cookies.get("usertoken"),
                 r_uid: Date.now(),
                 delivery_type: this.delivery_type,
                 delivery_meta: this.delivery_meta,
@@ -759,7 +765,7 @@ export default {
 
                 if (resp.data.data.token) {
                     // authenticate customer
-                    this.$cookies.set('loyal-token', resp.data.data.token);
+                    this.$cookies.set('usertoken', resp.data.data.token);
                     
                 }
             }).catch(e=> {

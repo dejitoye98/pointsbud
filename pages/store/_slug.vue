@@ -9,7 +9,26 @@
         <CartModal  @close="show_cart_modal = false"  v-if="show_cart_modal && this.cart.length" :business="business"></CartModal>
         
         <div class="page__container">
-            <div class="sidebar">
+            <div class="sidebar" v-if="show_sidebar" @click="show_sidebar=false">
+                <div class="sidebar__container" @click.stop>
+                    <div class="sidebar__header">
+                        <p>Anon</p>
+                        <p>{{auth_customer.phone}}</p>
+                    </div>
+
+                    <div class="sidebar__body">
+                        <div class="section-tite">
+                            <p class="subscription-text">Subscriptions</p>
+                        </div>
+                        <div class="sidebar__business" @click="$router.push('/store/' + business.slug)" v-for="(business, index) in customer_businesses">
+                            <img :src="business.logo">
+                            <p>
+
+                                {{ business.name }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
                 
             </div>
@@ -23,6 +42,17 @@
                                 <img :src="business.logo">
                                 <h1>{{business.name}}</h1>
                                 
+                            </div>
+                        </div>
+
+                        <div>
+                            <button class="bookmark-btn" @click="followBusiness">Bookmark</button>
+                        </div>
+
+                        <div class="" @click="show_sidebar = true" v-if="auth_customer && auth_customer.id">
+                            <div class="account" style="border-radius: 50%; height: 40px; width: 40px;">
+                                <img src="https://pointsbud-images.s3.amazonaws.com/c794267fc81e77a48e608d36e3f0f3f1" alt="">
+
                             </div>
                         </div>
                     </div>
@@ -364,6 +394,8 @@ export default {
     data() {
         return {
 
+
+            show_sidebar: false,
             tabs: ["Shop", "Deals", "Announcements", "Purchase History"],
 
             focused_product: null,
@@ -387,12 +419,30 @@ export default {
             show_cart_modal: false,
 
             expanded_categories: [],
+
+            customer_businesses: [],
+
+            auth_customer: null
         };
     },
     mounted() {
         
     },
     methods: {
+        followBusiness() {
+            this.$api.post('/customers/follow-business', {
+                business_id: this.business.id
+            })
+        },
+        getCustomerSelf() {
+            if (this.$cookies.get('usertoken')) {
+                this.$api.get('/customers/self?includes=business_customers').then(resp=> {
+                    this.auth_customer = resp.data.data
+                    let business_customers = resp.data.data.business_customer;
+                    this.customer_businesses = business_customers.map(b=> b.business);
+                })
+            }
+        },
         chooseProduct(product) {
             this.focused_product = product
         },
@@ -590,6 +640,8 @@ export default {
                 this.current_category = Object.keys(this.categoryProductMapping)[0]
                 this.mixpanel = mixpanel.init('1f580add8d0558ccae5fc19ca5997dab', { debug: false, track_pageview: false });
                 mixpanel.track("Store Viewed", this.business.name)
+
+                this.getCustomerSelf()
             }
         },
         search_term(value) {
@@ -607,9 +659,15 @@ export default {
 <style lang="scss" scoped>
 
 * {
-    font-family: "Inter", sans-serif;
+    font-family: "Inter", sans-serif !important;
     font-size: 14px;
 }
+
+.subscription-text {
+    font-family: Poppins, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+  }
 
 .whatsapp-light-background {
     background-color: white;
@@ -714,6 +772,12 @@ h2 {
 
 .header {
     border-bottom: 1px $border-grey solid;
+
+    &__container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 }
 
 .category-name {
@@ -731,6 +795,12 @@ h2 {
     //background-color: #FFCDD2 !important;
     background-color: $primary !important;
     color: white;
+}
+
+.account {
+    width: 30px !important;
+    height: 30px !important;
+    background-image: url('https://www.google.com/url?sa=i&url=https%3A%2F%2Fimebehavioralhealth.com%2Fabout%2Fuser-icon-placeholder-1%2F&psig=AOvVaw0cqPByL1l_MMBcpLN_JY00&ust=1733877005633000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCKCfha75m4oDFQAAAAAdAAAAABAE');
 }
 .logo {
 
@@ -850,9 +920,10 @@ h2 {
     border-radius: 10px;
     //padding: 8px 16px;
     font-weight: 600;
-    padding: 8px 8px;
+    padding: 8px 16px;
     //color: $primary !important;
-    background-color: transparent;
+    background-color: black;
+    color: white;
 }
 
 .pay-button {
@@ -871,6 +942,70 @@ h2 {
     //border: 1px solid #ccc;
 }
 
+
+.sidebar {
+    
+    background-color: 100%;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.355);
+    z-index: 20;
+    display: flex;
+    justify-content: flex-end;
+    padding: 50px 0;
+
+    &__container {
+        
+        width: 50%;
+        background-color: white;
+        height: 100%;
+        color: black;
+        position: absolute;
+        top: 0;
+        padding: 16px;
+    }
+
+    &__header {
+        p {
+            &:first-of-type {
+                font-size: 15px;
+                color: grey;
+            }
+            &:last-of-type {
+                font-size: 12px;
+            }
+        }
+    }
+
+    &__body {
+        padding: 16px 0;
+        margin-top: 10px;
+        border-top: 1px solid lightgrey;
+    }
+    &__business {
+        display: flex;
+        gap: 8px;
+        border-radius: 50%;
+        height: 30px;
+        width: 30px;
+        align-items: center;
+        padding: 10px 0;
+        margin: 10px 0;
+        border-bottom: 1px solid lightgrey !important;
+
+        img {
+            border-radius: 50%;
+            height: 30px;
+            width: 30px;
+        }
+
+        p {
+            white-space: nowrap;
+            font-size: 13px;
+        }
+    }
+}
 .cart-sticky {
     width: 95%;
     position: fixed;

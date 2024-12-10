@@ -10,7 +10,7 @@
                 <div>
 
                     <div>
-                        <p> {{ item?.name }} x {{item?.quantity}}</p>
+                        <p style="font-size: 12px;"> {{ item?.name }} x {{item?.quantity}}</p>
                     </div>
                     <div class="quantity-choose">
                         <button @click="decreaseQuantity">
@@ -26,7 +26,7 @@
                 
             </div>
             <div style="flex: 1 !important;">
-                <p style="text-align: right;" class="bold">{{item.currency || "NGN" | currencySymbol}}{{itemSubtotal | money}}</p>
+                <p style="text-align: right; font-size: 12px;" class="bold">{{item.currency || "NGN" | currencySymbol}}{{itemSubtotal | money}}</p>
             </div>
         </div>
     </div>
