@@ -12,7 +12,7 @@
                 </button>
 
                 <template v-else>
-                    <div style="display: flex; width: 100%; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;" :style="{'backgroundColor': styling?.primary_color ? styling.primary_color : 'black', 'color' :styling?.text_on_primary ? styling?.text_on_primary : 'white'}">
+                    <div style="display: flex; width: 100%; box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;" :style="{'backgroundColor': styling?.primary_color ? styling.primary_color : 'black', }">
 
                         <button class="flex flex-center-x flex-center-y" @click="decrease">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
