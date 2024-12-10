@@ -23,8 +23,7 @@ export default {
                 name: "viewport",
                 content: "width=device-width, initial-scale=1",
             },
-            { hid: "description", name: "description", content: "Invest Beyond Boundaries: Your Share in Real Estate Prosperity with 6-13% Historical Returns" },
-            { hid: "og:image", name: "og:image", content: "/assetblend_icon.png" },
+            { hid: "description", name: "description", content: "Buying and selling made easier" },
             { name: "format-detection", content: "telephone=no" },
             //{ name: "google-signin-client_id", content: "638411293504-minstvm8qj8vmftvuaacnea143ghnpj7.apps.googleusercontent.com" }
         ],
