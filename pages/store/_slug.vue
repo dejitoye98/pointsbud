@@ -45,7 +45,7 @@
                             </div>
                         </div>
 
-                        <div class="flex-center-y flex gap-16">
+                        <div v-if="showBookmarkButton" class="flex-center-y flex gap-16">
                             <button @click="followBusiness" class="flex gap-2 flex-center-x"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M10.5 20C10.5 20.3978 10.658 20.7794 10.9393 21.0607C11.2206 21.342 11.6022 21.5 12 21.5C12.3978 21.5 12.7794 21.342 13.0607 21.0607C13.342 20.7794 13.5 20.3978 13.5 20V13.5H20C20.3978 13.5 20.7794 13.342 21.0607 13.0607C21.342 12.7794 21.5 12.3978 21.5 12C21.5 11.6022 21.342 11.2206 21.0607 10.9393C20.7794 10.658 20.3978 10.5 20 10.5H13.5V4C13.5 3.60218 13.342 3.22064 13.0607 2.93934C12.7794 2.65804 12.3978 2.5 12 2.5C11.6022 2.5 11.2206 2.65804 10.9393 2.93934C10.658 3.22064 10.5 3.60218 10.5 4V10.5H4C3.60218 10.5 3.22064 10.658 2.93934 10.9393C2.65804 11.2206 2.5 11.6022 2.5 12C2.5 12.3978 2.65804 12.7794 2.93934 13.0607C3.22064 13.342 3.60218 13.5 4 13.5H10.5V20Z" fill="black"/>
                                 </svg>
@@ -375,7 +375,7 @@
                     
                 </div>
 
-                <button v-if="cart.length > 0" @click="show_cart_modal = true" class="cart-sticky" :style="{'backgroundColor': styling ? styling.primary_color: 'whitesmoke'}">
+                <button v-if="cart.length > 0" @click="show_cart_modal = true" class="cart-sticky" :style="{'backgroundColor': styling ? styling.primary_color: 'whitesmoke', color: styling? styling.text_on_primary : ''}">
                     Continue to Cart ({{ cart.length }} items)
                 </button>
             </div>
@@ -547,6 +547,16 @@ export default {
     },
     computed: {
         ...mapGetters("shop", ['cart']),
+
+        showBookmarkButton() {
+            if (!this.auth_customer || !this.auth_customer?.id || this.customer_businesses.length === 0 || 
+            
+            !this.customer_businesses.find(business=>business.id === this.business.id)) {
+                return true
+            }
+
+            return false
+        },
 
         styling() {
             //alert(this.business.styling)
@@ -970,10 +980,12 @@ h2 {
         color: black;
         position: absolute;
         top: 0;
-        padding: 16px;
+        //padding: 16px;
     }
 
     &__header {
+        padding: 16px;
+        background-color: whitesmoke;
         p {
             &:first-of-type {
                 font-size: 15px;
@@ -986,20 +998,16 @@ h2 {
     }
 
     &__body {
-        padding: 16px 0;
-        margin-top: 10px;
+        padding: 16px;
         border-top: 1px solid lightgrey;
     }
     &__business {
         display: flex;
         gap: 8px;
-        border-radius: 50%;
-        height: 30px;
-        width: 30px;
+        
         align-items: center;
-        padding: 10px 0;
-        margin: 10px 0;
-        border-bottom: 1px solid lightgrey !important;
+        padding: 8px 0;
+        border-bottom: 1px solid whitesmoke !important;
 
         img {
             border-radius: 50%;
@@ -1009,7 +1017,8 @@ h2 {
 
         p {
             white-space: nowrap;
-            font-size: 13px;
+            font-size: 12px;
+            font-weight: 500;
         }
     }
 }
