@@ -3,6 +3,8 @@
         <!--<ShopCartModal @close="show_cart_modal = false" v-if="show_cart_modal && this.cart.length">
 
         </ShopCartModal>-->
+    
+        <AuthModal v-if="show_auth_modal"></AuthModal>
 
         <OrderModal @close="focused_product = null" :item="focused_product"></OrderModal>
 
@@ -46,10 +48,10 @@
                         </div>
 
                         <div v-if="showBookmarkButton" class="flex-center-y flex gap-16">
-                            <button @click="followBusiness" class="flex gap-2 flex-center-x flex-center-y"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <button @click="triggerBookmark" style="border: 1px solid black; border-radius: 10px; padding: 8px" class="flex gap-2 flex-center-x flex-center-y"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M10.5 20C10.5 20.3978 10.658 20.7794 10.9393 21.0607C11.2206 21.342 11.6022 21.5 12 21.5C12.3978 21.5 12.7794 21.342 13.0607 21.0607C13.342 20.7794 13.5 20.3978 13.5 20V13.5H20C20.3978 13.5 20.7794 13.342 21.0607 13.0607C21.342 12.7794 21.5 12.3978 21.5 12C21.5 11.6022 21.342 11.2206 21.0607 10.9393C20.7794 10.658 20.3978 10.5 20 10.5H13.5V4C13.5 3.60218 13.342 3.22064 13.0607 2.93934C12.7794 2.65804 12.3978 2.5 12 2.5C11.6022 2.5 11.2206 2.65804 10.9393 2.93934C10.658 3.22064 10.5 3.60218 10.5 4V10.5H4C3.60218 10.5 3.22064 10.658 2.93934 10.9393C2.65804 11.2206 2.5 11.6022 2.5 12C2.5 12.3978 2.65804 12.7794 2.93934 13.0607C3.22064 13.342 3.60218 13.5 4 13.5H10.5V20Z" fill="black"/>
                                 </svg>
-                                <p>Bookmark</p>
+                                <p style="font-weight: 800">Bookmark</p>
                             </button>
                             
                         </div>
@@ -422,6 +424,9 @@ export default {
         return {
 
 
+            show_auth_modal: false,
+
+
             show_sidebar: false,
             tabs: ["Shop", "Deals", "Announcements", "Purchase History"],
 
@@ -449,13 +454,21 @@ export default {
 
             customer_businesses: [],
 
-            auth_customer: null
+            auth_customer: null,
         };
     },
     mounted() {
         
     },
     methods: {
+        triggerBookmark() {
+            if (this.auth_customer && this.auth_customer.id) {
+                this.followBusiness()
+            }
+            else {
+                this.show_auth_modal = true;
+            }
+        },
         followBusiness() {
             this.$api.post('/customers/follow-business', {
                 business_id: this.business.id
@@ -563,7 +576,8 @@ export default {
         this.business = business;
         this.products = products;
         this.categories = categories;
-        this.loading_data = false
+        this.loading_data = false;
+        this.show_auth_modal = false;
     },
     computed: {
         ...mapGetters("shop", ['cart']),
