@@ -175,7 +175,9 @@
                             <textarea v-model="payload.note"></textarea>
                         </div>
                         <div class="item flex-center-x space-between">
-                            <button class="big-btn" @click="makePayment">Make Payment {{'NGN' | currencySymbol}} {{event.deposit_amount | money}}</button>
+                            <!-- 
+                            <button class="big-btn" @click="makePayment">Make Payment {{'NGN' | currencySymbol}} {{event.deposit_amount | money}}</button>-->
+                            <button class="big-btn" :disabled="making_payment" @click="makePayment">Book Spot</button>
                         </div>
                     </div>
                 </template>
@@ -266,6 +268,7 @@ export default {
     },
     data() {
         return {
+            making_payment: false,
             checking: false,
             event: {
 
@@ -296,10 +299,13 @@ export default {
     },
     methods: {
         makePayment() {
+            this.making_payment = true;
             let payload = {...this.payload}
             payload.event_id = this.event.id
             payload.business_id = this.event.business.id;
             payload.date = this.event.date;
+
+            /*
             FlutterwaveCheckout({
                     public_key: this.$config.FLW_PUBLIC_KEY || "FLWPUBK_TEST-ad1d316f90548fca239af66bd32bd954-X",
                     tx_ref: `pointsbudreservations_${Date.now()}`,
@@ -335,7 +341,7 @@ export default {
      
                             //payload.guests = t
                             
-                            this.$api.post("/reservations", payload).then(resp => {
+                            this.$api.post("/reservations?without_payment=1", payload).then(resp => {
                                 //this.socketClient.emit("order-paid", { ...payload, business_slug: this.$route.params.slug, ...resp.data.data });
                                // alert("Your reservation has been created thank you");
                                  this.step === 5
@@ -344,7 +350,17 @@ export default {
                        // window.open(`/receipts/${checkout_url}`, "self")
                         //this.$router.push(`/receipts/${checkout_url}`);
                     }
-                });
+                });*/
+     
+                //payload.guests = t
+                
+                this.$api.post("/reservations?without_payment=1", payload).then(resp => {
+                    //this.socketClient.emit("order-paid", { ...payload, business_slug: this.$route.params.slug, ...resp.data.data });
+                    // alert("Your reservation has been created thank you");
+                        this.step === 5
+                    }).finally(()=> {
+                        this.making_payment = false;
+                    })
         },
         objectToQueryString(obj) {
             const keyValuePairs = [];
