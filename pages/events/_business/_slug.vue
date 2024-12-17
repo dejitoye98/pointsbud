@@ -568,6 +568,7 @@ label {
         min-height: 300px;
         background-color: whitesmoke;
        // border-bottom: 1px solid grey;
+       background-size: contain;
         &__container {
             padding: 16px;
         }
