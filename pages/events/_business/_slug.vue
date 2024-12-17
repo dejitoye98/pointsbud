@@ -558,6 +558,7 @@ label {
     max-width: 80%;
     margin: auto;
     position: relative;
+    padding-bottom: 120px;
 
     @include media("<=t") {
         width: 100%;
@@ -568,7 +569,7 @@ label {
         min-height: 300px;
         background-color: whitesmoke;
        // border-bottom: 1px solid grey;
-       background-size: contain;
+       background-size: cover;
         &__container {
             padding: 16px;
         }
