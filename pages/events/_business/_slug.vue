@@ -246,7 +246,7 @@
 
 
                 <div class="bottom">
-                    <button @click="triggerBook">Book a Table</button>
+                    <button @click="triggerBook">Book a Spot</button>
                 </div>
             </div>
         </div>
