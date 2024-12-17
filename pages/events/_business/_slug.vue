@@ -357,7 +357,7 @@ export default {
                 this.$api.post("/reservations?without_payment=1", payload).then(resp => {
                     //this.socketClient.emit("order-paid", { ...payload, business_slug: this.$route.params.slug, ...resp.data.data });
                     // alert("Your reservation has been created thank you");
-                        this.step === 5
+                        this.step = 5
                     }).finally(()=> {
                         this.making_payment = false;
                     })
