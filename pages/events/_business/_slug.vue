@@ -45,14 +45,21 @@
                                     <label for="">How much time do you intend to spend? <span class="required">*</span></label>
                                     <div>
         
-                                        <input for="" type="range" v-model="payload.duration" inputmode="numeric">
+                                        <input style="width: 100%" for="" type="range" v-model="payload.duration" inputmode="numeric">
                                         <label>{{payload.duration }}  {{payload.duration === 1 ? ' hour' : ' hours'}}</label>
                                     </div>
                                 </div>
+
+
+                                <div class="error" v-if="error">
+                                    <p>{{error}}</p>
+                                </div>
+                                
         
                                 <div class="ctas">
                                     <button @click="checkAvailableSpots">Check Availability</button>
                                 </div>
+
                             </div>
                         </div>
                     </template>
@@ -270,6 +277,7 @@ export default {
         return {
             making_payment: false,
             checking: false,
+            error: '',
             event: {
 
             },
@@ -389,13 +397,18 @@ export default {
         },
         checkAvailableSpots() {
             this.checking = true;
+            this.error = ""
             let payload = {...this.payload};
             payload.date = moment(this.event.date).format("YYYY-MM-DD").toString()
             payload.business_id = this.event.business_id || 1;       
             payload.duration = this.payload.duration * 60     
             let query = this.objectToQueryString(payload)
             this.$api.get('/reservations/available-spaces?' + query).then(resp=> {
-                const {matches_requested, spaces, available} = resp.data.data;
+                const {matches_requested, spaces, available, reason} = resp.data.data;
+
+                if (available === false && reason) {
+                    this.error = reason
+                }
                 
                 if (matches_requested && spaces) {
 
@@ -404,7 +417,7 @@ export default {
                     this.step = 2
                 }
             }).catch(e=> {
-
+                this.error = e?.response?.data?.data
             }).finally(()=> {
                 this.checking = false;
             })
@@ -684,6 +697,18 @@ h2 {
     font-weight: 500;
 }
 
+.error {
+    margin-top: 20px;
+    background-color: red;
+    padding: 16px;
+
+    p {
+        color: white;
+        text-align: center;
+        font-size: 13px;
+        
+    }
+}
 
 .ctas {
     margin-top: 30px;

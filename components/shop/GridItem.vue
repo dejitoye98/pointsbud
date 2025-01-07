@@ -1,5 +1,5 @@
 <template>
-    <div class="item" :class="[isInCart? 'in-cart': '']" @click="$emit('onSelect', product)">
+    <div class="item" :class="[isInCart? 'in-cart': '']" @click="onSelect">
         <div class="thumbnail">
             <img :src="product.thumbnail || 'https://hunanchinesefoodwhitby.com/img/placeholders/comfort_food_placeholder.png'">
         
@@ -33,6 +33,10 @@
             </div>
         </div>
 
+        <div class="out-of-stock-tag" style="position: absolute; padding:16px" v-if="product.availability !== 'available'">
+            <p>Out of stock</p>
+        </div>
+
         <div class="padding-8-x flex space-between" style="margin: 5px 0;">
             <p class="name">{{product.name}}</p>
 
@@ -59,7 +63,7 @@
         </div>
 
         <div style="justify-content: flex-end; padding:6px 0px" v-if="false">
-            <button @click="$emit('onSelect', product)" style="width: 100%;font-size: 16px; background-color: white; color: black; border: 1px solid black; font-weight:500; border-radius: 20px; padding: 8px 16px">Select</button>
+            <button @click="onSelect" style="width: 100%;font-size: 16px; background-color: white; color: black; border: 1px solid black; font-weight:500; border-radius: 20px; padding: 8px 16px">Select</button>
         </div>
     </div>
 </template>
@@ -92,12 +96,20 @@ export default {
 
         }
     },
+
+    created() {
+        //alert(this.product.availability)
+    },
     watch: {
         quantity(value) {
             this.$store.dispatch('shop/setItemQuantity', {id: this.product.id, quantity: value})
         }
     },
     methods: {
+        onSelect() {
+            if (this.product.availability === 'available')
+                this.$emit('onSelect', this.product)
+        },
         handleQuantity($evt) {
            let value = $evt?.target?.value;
            this.$store.dispatch('shop/setItemQuantity', value)
@@ -169,6 +181,13 @@ export default {
         overflow: hidden;
 
     }
+}
+
+
+.out-of-stock-tag {
+    background-color: red;
+    color: white;
+    text-align: center;
 }
 
 .name {
