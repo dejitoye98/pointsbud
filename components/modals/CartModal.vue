@@ -18,7 +18,7 @@
 
                 <template v-if="step === 1">
                     <div>
-                        <p>Money will be stored in your PointsBud Wallet until your items are delivered</p>
+                        <p>Payment will be stored in your PointsBud Wallet until your items are delivered. If not, you'll be refunded</p>
                         <div class="form-input">
                             <label for="">Your Phone</label>
                             <vue-tel-input v-model="confirm.customer_phone"></vue-tel-input>
