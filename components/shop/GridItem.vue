@@ -37,26 +37,29 @@
             <p>Out of stock</p>
         </div>
 
-        <div class="padding-8-x flex space-between" style="margin: 5px 0;">
+        <div class="" style="margin: 5px 0; padding: 0px 8px">
             <p class="name">{{product.name}}</p>
 
             <template class="" v-if="!isDeal">
+                <div class="product-price">
 
-                <p class="price">{{'NGN' | currencySymbol }}{{product.unitprice | money}}</p>
+                    <p class="price">{{'NGN' | currencySymbol }}{{product.unitprice | money}}</p>
+                </div>
+
 
             </template>
             <template v-else>
-                <div>
+                <div class="product-price">
 
                     <p class="price golden-price">{{'NGN' | currencySymbol }}{{product.unitprice | money}}</p>
-                    <p class="price strikethrough">{{"NGN" | currencySymbol}} {{product.original_price | money}}</p>
+                    <p class="price strikethrough" v-if="product.original_price">{{"NGN" | currencySymbol}} {{product.original_price | money}}</p>
                 </div>
 
             </template>
         </div>
 
         <div class="padding-8-x">
-            <TruncatedText @click.stop color="grey" fontSize="11" limit="50" :text="product.description">
+            <TruncatedText @click.stop color="#777" fontSize="14" limit="50" :text="product.description">
                 
             </TruncatedText>
            
@@ -141,9 +144,12 @@ export default {
     width: 100%;
     flex-direction: column;
     background-color: white;
-    overflow: hidden;
+    //overflow: hidden;
     padding: 16px;
     z-index: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   // overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .quantity {
@@ -158,6 +164,11 @@ export default {
         height: 30px;
         width: 30px;
         text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
         
     }
@@ -170,7 +181,7 @@ export default {
 .thumbnail {
     height: 150px;
     border-radius: 10px;
-    overflow: hidden;
+    //overflow: hidden;
     position: relative;
 
     img {
@@ -178,7 +189,7 @@ export default {
         width: 100%;
         object-fit: cover;
         border-radius: 10px;
-        overflow: hidden;
+       // overflow: hidden;
 
     }
 }
@@ -194,6 +205,10 @@ export default {
     font-weight: 600;
     font-size: 13px;
     line-height: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
 }
 
 
@@ -202,6 +217,13 @@ export default {
     white-space: nowrap;
     text-align: right;
 }
+
+.product-price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
 
 .golden-price {
     background-color: gold;

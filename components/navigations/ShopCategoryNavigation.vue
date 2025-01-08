@@ -1,5 +1,5 @@
 <template>
-    <div class="component">
+    <div class="component" :style="{'background': `linear-gradient(135deg, ${styling?.primary_color || 'whitesmoke'}, #fff)`}">
         <BaseModal v-if="show_modal" @close="show_modal= fals">
             <template #header>
                 <div class="padding-16 modal-header">
@@ -72,10 +72,13 @@ export default {
     font-weight: 600;
     padding: 8px 0;
     z-index: 1000;
+
+
    
 }
 
 .category {
+    
     &__container{
         padding: 16px;
     }
