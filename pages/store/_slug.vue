@@ -809,6 +809,11 @@ h2 {
         width: 500px;
         max-width: 500px;
         margin: auto;
+
+        @include media("<=t") {
+            width: 100%;
+            max-width: 100%;
+        }
     }
 }
 
