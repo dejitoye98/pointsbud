@@ -431,16 +431,17 @@ export default {
     
                 if(resolved_fee.type === 'flat') {
                     resolved_app_fee = resolved_fee.value;
+                    alert(resolved_app_fee)
                 }
                 else {
                   resolved_app_fee = parseFloat((resolved_fee.value/100) * this.cartTotal);
                 }
 
-                if ((this.cartTotal + resolved_app_fee + paystack_pricing + this.deliveryFee.price + this.totalTaxes) > 2500) {
-                    return resolved_app_fee + paystack_pricing + 100;
+                if ((this.cartTotal + resolved_app_fee + this.deliveryFee.price + this.totalTaxes) > 2500) {
+                    return resolved_app_fee  + 100;
                 }
                 else {
-                    return (resolved_app_fee + paystack_pricing)
+                    return (resolved_app_fee)
                 }
                 return 0
             }catch(e) {

@@ -708,11 +708,11 @@ export default {
         loading_data(value) {
             if (!value) {
                 // set the current_category to the first category
-                this.current_category = Object.keys(this.categoryProductMapping)[0]
                 this.mixpanel = mixpanel.init('1f580add8d0558ccae5fc19ca5997dab', { debug: false, track_pageview: false });
                 mixpanel.track("Store Viewed", this.business.name)
-
+                
                 this.getCustomerSelf()
+                this.current_category = Object.keys(this.categoryProductMapping)[0]
             }
         },
         search_term(value) {
@@ -806,6 +806,9 @@ h2 {
     &__container {
         //padding: 100px 0px;
         padding-bottom: 120px;
+        width: 500px;
+        max-width: 500px;
+        margin: auto;
     }
 }
 
