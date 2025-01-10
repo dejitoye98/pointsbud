@@ -74,7 +74,7 @@
 
                 <div class="header">Select & Pay</div>
     
-                <div class="traysection" v-for="(row, row_index) in gridData">
+                <div class="traysection" :class="['tray-' + row_index + 1]" v-for="(row, row_index) in gridData">
                     <div class="product" :class="[isInCart(product.id) ? 'in-cart' : '']"  v-if="rowHasProduct(row_index) && columnHasProduct(index)"  v-for="(product, index) in gridData[row_index]" :key="index">
                         <div class="product__image">
                             <img  :src="getProduct(product.id)?.thumbnail">
@@ -289,6 +289,14 @@ export default {
             this.products = response.data.data.business.products;
             this.business = response.data.data.business;
             this.fetching_products = false
+            
+
+            const {id} = this.$route.params.id;
+            
+            let el = document.getElementsByClassName('tray-'+id);
+            if (el && el[0]) {
+                el[0].scrollIntoView({behavior: 'smooth'})
+            }
             //alert(this.products)
             //alert(this.products)
            //alert(JSON.stringify(this.products))
@@ -400,6 +408,8 @@ export default {
 .page {
     &__container {
         padding-top: 80px;
+        max-width: 100vw;
+        overflow: scroll;
     }
 }
 
