@@ -53,16 +53,16 @@
                             <div class="cart-item__container flex space-between" style="width: 100%;">
                                 
                                      <p>{{item.name}} x {{item.quantity}}</p>
-                                     <p>{{'NGN'| currencySymbol}}{{item.quantity * item.unitprice}}</p>
+                                     <p>{{'NGN'| currencySymbol}}{{item.quantity * item.unitprice | money}}</p>
                             </div>
                         </div>
                         <div class="total-item flex space-between">
                             <p>Delivery Packs x {{deliveryPacks.quantity}}</p>
-                            <p>{{"NGN" | currencySymbol}} {{deliveryPacks.total}}</p>
+                            <p>{{"NGN" | currencySymbol}} {{deliveryPacks.total | money}}</p>
                         </div>
                         <div style="margin-top: 30px;" class="total-item space-between">
                             <p>Calculated Total</p>
-                            <p>{{"NGN" | currencySymbol}} {{total}}</p>
+                            <p>{{"NGN" | currencySymbol}} {{total | money}}</p>
                         </div>
 
                         <div class="flex flex-col flex-center-x flex-center-y">
