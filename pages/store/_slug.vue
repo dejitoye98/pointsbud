@@ -810,6 +810,8 @@ h2 {
         max-width: 500px;
         margin: auto;
 
+        background: #F5F5F5;
+
         @include media("<=t") {
             width: 100%;
             max-width: 100%;

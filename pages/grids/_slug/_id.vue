@@ -9,7 +9,7 @@
                         <p>Confirm Items</p>
                     </div>
                     <div class="powered-tag">
-                        Powered by PointsBud x Flutterwave
+                        Payment Powered by PointsBud x Flutterwave
                     </div>
                 </div>
             </template>
@@ -49,20 +49,25 @@
                 </template>
                 <template v-else-if="cart_step ===2">
                     <div class="padding-16" style="margin-top: 30px;">
-                        <div class="cart-item" v-for="(item, index) in cart" :key="index">
-                            <div class="cart-item__container flex space-between full-width">
+                        <div class="cart-item flex space-between" v-for="(item, index) in cart" :key="index">
+                            <div class="cart-item__container flex space-between" style="width: 100%;">
                                 
                                      <p>{{item.name}} x {{item.quantity}}</p>
                                      <p>{{'NGN'| currencySymbol}}{{item.quantity * item.unitprice}}</p>
                             </div>
                         </div>
-                        <div class="total-item space-between">
+                        <div class="total-item flex space-between">
                             <p>Delivery Packs x {{deliveryPacks.quantity}}</p>
                             <p>{{"NGN" | currencySymbol}} {{deliveryPacks.total}}</p>
                         </div>
-                        <div class="total-item space-between">
-                            <p>Total</p>
+                        <div style="margin-top: 30px;" class="total-item space-between">
+                            <p>Calculated Total</p>
                             <p>{{"NGN" | currencySymbol}} {{total}}</p>
+                        </div>
+
+                        <div class="flex flex-col flex-center-x flex-center-y">
+                            <button disabled class="big-btn">Pay</button>
+                            <span style="color: grey; font-size: 13px">(Payments coming soon)</span>
                         </div>
                     </div>
                 </template>
@@ -93,6 +98,7 @@
                             <div class="quantity-box">
     
                                 <template v-if="!isInCart(product.id)">
+                                    <div class="flex full-width" style="width: 100%; justify-content: flex-end">
     
                                     <button class="quantity-btn" @click="addToCart(product.id)"> 
                                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -100,12 +106,15 @@
                                         </svg>
                                             
                                     </button> 
+                                </div>
+
                                 </template>
     
                                 <template v-else>
-                                    
-    
-    
+
+
+                                   
+
                                         <button class="quantity-btn" @click="decreaseQuantity(product.id)"> 
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M6 13C5.71667 13 5.47934 12.904 5.288 12.712C5.09667 12.52 5.00067 12.2827 5 12C4.99934 11.7173 5.09534 11.48 5.288 11.288C5.48067 11.096 5.718 11 6 11H18C18.2833 11 18.521 11.096 18.713 11.288C18.905 11.48 19.0007 11.7173 19 12C18.9993 12.2827 18.9033 12.5203 18.712 12.713C18.5207 12.9057 18.2833 13.0013 18 13H6Z" fill="white"/>
@@ -113,6 +122,9 @@
                                                 
                                                 
                                         </button> 
+                                    
+    
+    
                                         <input style="width: 60px; text-align:center" :value="JSON.stringify(isInCart(product.id)?.quantity)" @input="setItemQuantity">
                                         <button class="quantity-btn" @click="increaseQuantity(product.id)"> 
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -126,8 +138,8 @@
                         </div>
                     </div>
                     
-                    <button class="big-btn full-width" style="position: fixed; bottom: 70px" @click="show_cart_modal = true">
-                        <span class="text-center">Skip the Queue. Pay NOW ({{ cart.length }})</span>
+                    <button class="big-btn full-width" style="position: fixed; bottom: 70px" @click="showCartModal" v-if="cart.length">
+                        <span class="text-center">Skip the Queue. Pay Now ({{ cart.length }})</span>
                     </button>
                 </div>
             </template>
@@ -157,6 +169,8 @@
 import { getDatabase, ref, set, get, update, push, serverTimestamp, increment, runTransaction, onValue } from 'firebase/database'
 import { initializeApp } from 'firebase/app'
 import crypto from "crypto"
+import mixpanel from 'mixpanel-browser';
+
 
 export default {
     data() {
@@ -179,13 +193,22 @@ export default {
     created() {
         
         
+        this.mixpanel = mixpanel.init('1f580add8d0558ccae5fc19ca5997dab', { debug: false, track_pageview: false });
+        mixpanel.track("Grid Page Viewed")
+        
         this.getProducts()
 
         //set ruid 
         this.r_uid = this.generateUniqueCode(5)
+
+           
     },
     
     methods: {
+        showCartModal() {
+            this.show_cart_modal = true;
+            mixpanel.track("Grid - CLicked on View Cart")
+        },
         setItemQuantity($evt){
             let value = $evt.target.value;
             alert(value)
@@ -400,8 +423,6 @@ export default {
 .quantity-btn {
     padding: 8px;
     border-radius: 100%;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    border: 1px solid whitesmoke;
     background-color: black !important;
 }
 
@@ -449,6 +470,8 @@ export default {
 .traysection {
     display: flex;
     flex-wrap: nowrap;
+    gap: 8px;
+    margin-bottom: 8px;
   //  overflow: auto;
     width: 100vw;
    // scrollbar-width: none;
@@ -467,9 +490,7 @@ export default {
     border-radius: 8px;
     background-color: white;
     margin: 0 2px;
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    //box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-  //  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    box-shadow: rgba(14, 63, 126, 0.06) 0px 0px 0px 1px, rgba(42, 51, 70, 0.03) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 2px 2px -1px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.03) 0px 5px 5px -2.5px, rgba(42, 51, 70, 0.03) 0px 10px 10px -5px, rgba(42, 51, 70, 0.03) 0px 24px 24px -8px;  //  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     &__container {
 
     }
