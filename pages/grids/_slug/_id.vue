@@ -82,7 +82,7 @@
                 <div class="traysection" :class="['tray-' + row_index + 1]" v-for="(row, row_index) in gridData">
                     <div class="product" :class="[isInCart(product.id) ? 'in-cart' : '']"  v-if="rowHasProduct(row_index) && columnHasProduct(index)"  v-for="(product, index) in gridData[row_index]" :key="index">
                         <div class="product__image">
-                            <img  :src="getProduct(product.id)?.thumbnail">
+                            <img  :src="getProduct(product.id)?.thumbnail || 'https://hunanchinesefoodwhitby.com/img/placeholders/comfort_food_placeholder.png'">
                         </div>
     
                         <div class="product__details">
@@ -388,6 +388,7 @@ export default {
 <style lang="scss" scoped>
 
 * {
+    font-family: "Nunito", serif !important;
     &:deep(.modal__header) {
         border-bottom: 1px solid lightgrey;
     }
@@ -495,6 +496,10 @@ export default {
 
     }
 
+    &__name {
+        font-weight: 700;
+    }
+
     &__image {
         //border: 1px solid grey;
         img {
@@ -510,7 +515,7 @@ export default {
     &__details {
         padding: 8px;
         &__name {
-            font-weight: 400;
+            font-weight: 600;
             text-align: center;
         }
 
