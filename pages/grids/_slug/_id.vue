@@ -410,9 +410,13 @@ export default {
         padding-top: 80px;
         max-width: 100vw;
         overflow: scroll;
+        max-height: 100vh;
+        padding-bottom: 120px;
     }
 }
-
+.full-width {
+    width: 90% !important;
+}
 .header {
    padding: 16px;
    font-size: 18px;
