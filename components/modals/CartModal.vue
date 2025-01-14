@@ -491,6 +491,119 @@ export default {
         },
     },
     methods: {
+        makePayment(checkout_session_id, checkout_url) {
+            try {
+
+                FlutterwaveCheckout({
+                    public_key: this.$config.FLW_PUBLIC_KEY || "FLWPUBK_TEST-ad1d316f90548fca239af66bd32bd954-X",
+                    tx_ref: `pointsbudtx_${Date.now()}`,
+                    amount: this.grandTotal,
+                    currency: this.currency,
+                    payment_options: "card, banktransfer, ussd",
+                    //redirect_url: "https://ae83-102-89-45-99.ngrok.io/api/v1/transactions/verify-flw",
+                    meta: {
+                        //customer_id: this.userDetails.business ? this.userDetails.business.id : this.userDetails.id,
+                        //is_business: this.userDetails.business ? 1 : 0
+                        type: 'order-paid'
+                    },
+                    narration: "Wallet Funding",
+                    customer: {
+                        email: this.customer && this.customer.email || this.business?.contact_email || "anon@gmail.com",
+                        // phone_number: this.userDetails.contact_phone_number,
+                        name: this.customer && this.customer.name || "Anon-Customer",
+                    },
+                    customizations: {
+                        title: "Afflee PointsBud",
+                        logo: "https://www.logolynx.com/images/logolynx/22/2239ca38f5505fbfce7e55bbc0604386.jpeg",
+                    },
+                    callback: async (data) => {
+                        //this.$store.commit('dashboard/setActionFundWallet', false);
+                        this.cart_step = 5;
+                        //this.payment_status = data.status;
+                       // alert(data.status)
+                       
+                        
+                       let payload = { type: "order-paid", checkout_session_id, ...data, business_slug: this.$route.params.slug, business_id: this.business.id };
+                            this.$api.post("/transactions/new-verify-flw", payload).then(resp => {
+                               //this.socketClient.emit("order-paid", { ...payload, business_slug: this.$route.params.slug, ...resp.data.data });
+                               //this.registerFirebaseOrder()
+
+
+                           });
+                           let message = this.createOrderMessage()
+
+                          // alert("You'll be redirected to WhatsApp to share your receipt with the business")
+                   //alert(message)
+   
+                           let encoded = encodeURIComponent(message)
+                           const link = `whatsapp://send?text=${encoded}&phone=${this.business.contact_phone}`;
+                           window.open(link, '_self')
+
+
+                       
+                       // window.open(`/receipts/${checkout_url}`, "self")
+                        //this.$router.push(`/receipts/${checkout_url}`);
+                    }
+                });
+            }catch(e) {
+                alert(JSON.stringify(e))
+            }
+        },
+        createOrderMessage(url) {
+            try {
+
+                let message = "*New Order*\n\nItems:";
+                 for (let item of this.cart) {
+                     message+= `\n*${item.name} x ${item.quantity}*`
+                     if (item.additions && item.additions.length)  {
+                         message+= `\nAdditions: ${item.additions.map(a=>a.value).join(',')}`
+                        
+                     }
+                     if (item.delivery_pack) {
+                        
+                         message += `\nPack: ${item.delivery_pack.name}`
+                     }
+                     if (item.customer_comment) {
+                        
+                        message += `\nComment: ${item.customer_comment}`
+                       
+                    }
+     
+                     
+                 }
+     
+                 message += '\n\n ----------'
+
+                 message += `\nDelivery Details\n`
+                 if (this.delivery_type === 'delivery') {
+     
+                     message+=`\nRegion:${this.delivery_meta.destination_region}\nDelivery Address: ${this.delivery_meta.destination_address}`
+                 }
+                 if (this.delivery_type === 'pickup') {
+     
+                     message+=`\nPickup Date:  ${this.delivery_meta.pickup_date}\nPickup Time: ${this.delivery_meta.pickup_time.hh + ":" + this.delivery_meta.pickup_time.mm + " " +  this.delivery_meta.pickup_time.A }`
+                 }
+                 if (this.delivery_meta.note) {
+     
+                        message+=`\nNote:  ${this.delivery_meta.note}\n`
+                    }
+
+                 message += `\n\n ----------`
+                 message += `\n\nSubtotal: ${this.cartTotal}`
+                 message += `\nDeliveryFee: ${this.dynamicDeliveryFee ? this.dynamic_delivery_fee :  this.deliveryFee?.price }`
+                 message += `\n ----------\n`
+                 
+                 message += `\nPayment Details: https://www.pointsbud.com/receipts/${this.checkout_url}`
+                 message += `\n\nTo Accept Order: https://www.pointsbud.com/admin/checkout/${this.checkout_url}/accept`
+                    message += `\n\nTo Reject Order: https://www.pointsbud.com/admin/checkout/${this.checkout_url}/reject`
+     
+                 return message;
+            }catch(e) {
+                alert(e)
+            }
+
+
+        },
         paywithPaystack(checkout_session_id, checkout_url) {
             let handler = PaystackPop.setup({
                     key: this.$config.PAYSTACK_PUBLIC_KEY, // Replace with your public key
@@ -570,7 +683,8 @@ export default {
 
 
                 const {id, url} = await this.createCheckoutSession(payload)
-                this.paywithPaystack(id, url)
+                //this.paywithPaystack(id, url)
+                this.makePayment(id, url)
 
                // if (!this.walletBalanceSufficient) {
 
