@@ -118,6 +118,9 @@ export default {
            this.$store.dispatch('shop/setItemQuantity', value)
         },
         addToCart() {
+            if (this.product.availability !== 'available') {
+                return;
+            }
             if (!this.product.meta) {
                 this.$store.dispatch('shop/addToCart', {...this.product, quantity: 1})
             }
