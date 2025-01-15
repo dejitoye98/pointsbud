@@ -695,7 +695,17 @@ export default {
                 for (let c of this.categories) {
                     const category_products = this.products
                         .filter(p => p.category_id === c.id)
-                        .sort((a, b) => a.name.localeCompare(b.name));
+                        .sort((a, b) => {
+                            // Sort by availability first
+                            if (a.availability === 'available' && b.availability === 'out-of-stock') {
+                                return -1; // `a` comes before `b`
+                            }
+                            if (a.availability === 'out-of-stock' && b.availability === 'available') {
+                                return 1; // `b` comes before `a`
+                            }
+                            // If availabilsity is the same, sort by name
+                            return a.name.localeCompare(b.name);
+                        });
                     if (category_products.length) {
                         mapping[c.name] = category_products;
                     }
