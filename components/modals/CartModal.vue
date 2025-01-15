@@ -498,7 +498,7 @@ export default {
                     public_key: this.$config.FLW_PUBLIC_KEY || "FLWPUBK_TEST-ad1d316f90548fca239af66bd32bd954-X",
                     tx_ref: `pointsbudtx_${Date.now()}`,
                     amount: this.grandTotal,
-                    currency: this.currency,
+                    currency: "NGN",
                     payment_options: "card, banktransfer, ussd",
                     //redirect_url: "https://ae83-102-89-45-99.ngrok.io/api/v1/transactions/verify-flw",
                     meta: {
