@@ -138,24 +138,26 @@ export default {
 
 <style lang="scss" scoped>
 * {
-    font-family: "Inter", sans-serif;
+    font-family: "Nunito", serif;
 }
 .item {
     width: 100%;
     flex-direction: column;
+    position: relative;
     background-color: white;
     //overflow: hidden;
     padding: 16px;
     z-index: 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
    // overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .quantity {
     position: absolute;
-    right: 0;
-    bottom: 0;
+    right: 16px;
+    bottom: 16px;
     input {
         width: 50px;
         text-align: center;
@@ -169,6 +171,7 @@ export default {
         cursor: pointer;
         transition: background-color 0.3s ease;
         box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        border-radius: 20px;
 
         
     }
@@ -182,7 +185,7 @@ export default {
     height: 150px;
     border-radius: 10px;
     //overflow: hidden;
-    position: relative;
+    //position: relative;
 
     img {
         height: 100%;

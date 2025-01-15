@@ -153,12 +153,14 @@
 
                         <ShopCategoryNavigation :styling="styling" v-if="current_tab === 'shop' " @changeCategory="changeCategory" :current_category="current_category" :categories="filteredCategories"></ShopCategoryNavigation>
                     </div>
+
+                   
                     
     
 
                     <template v-if="current_tab === 'shop'">
 
-                            <div class="search" v-if="false">
+                            <div class="search">
                                 <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M16.2375 16.7948L11.0192 11.5765C10.6025 11.9315 10.1233 12.2062 9.58167 12.4006C9.04001 12.5951 8.49556 12.6923 7.94834 12.6923C6.6139 12.6923 5.48445 12.2303 4.56001 11.3065C3.63556 10.3826 3.17334 9.2534 3.17334 7.91896C3.17334 6.58452 3.63501 5.45479 4.55834 4.52979C5.48167 3.60479 6.61056 3.14174 7.94501 3.14063C9.27945 3.13952 10.4095 3.60174 11.335 4.52729C12.2606 5.45285 12.7233 6.58257 12.7233 7.91646C12.7233 8.49535 12.6208 9.05563 12.4158 9.59729C12.2108 10.139 11.9414 10.6023 11.6075 10.9873L16.8258 16.2048L16.2375 16.7948ZM7.94917 11.8581C9.05473 11.8581 9.98806 11.4776 10.7492 10.7165C11.5103 9.95535 11.8908 9.02174 11.8908 7.91563C11.8908 6.80952 11.5103 5.87618 10.7492 5.11563C9.98806 4.35507 9.05473 3.97452 7.94917 3.97396C6.84362 3.9734 5.91001 4.35396 5.14834 5.11563C4.38667 5.87729 4.00612 6.81063 4.00667 7.91563C4.00723 9.02063 4.38778 9.95396 5.14834 10.7156C5.9089 11.4773 6.84223 11.8578 7.94834 11.8573" fill="black"/>
                                 </svg>
@@ -167,7 +169,7 @@
             
                             </div>
                             
-                            <div class="list" v-if="!search_mode"> 
+                            <div class="list" v-if="!search_term"> 
                             
                                 
                                 <div class="section" v-for="(category, index) in Object.keys(categoryProductMapping)" :id="category">
@@ -262,7 +264,7 @@
             
                             <div class="list" v-else>
                                 <div class="section">
-                                    <SimpleListShopItem :item="product" v-for="(product, index) in searchedProducts" :key="index"></SimpleListShopItem>
+                                    <GridItem :product="product" v-for="(product, index) in searchedProducts" :key="index"></GridItem>
             
                                     <template v-if="searching_db">
                                         <div class="flex-col flex-center-x flex-center-y">
@@ -659,8 +661,8 @@ export default {
             if (this.search_term) {
 
                 const products = this.products.filter(p=> {
-                    return p.name.toLowerCase().indexOf(this.search_term.toLowerCase()) > -1 
-                    || p.description?.toLowerCase().indexOf(this.search_term.toLowerCase()) > -1 
+                    return p.name?.toLowerCase().indexOf(this.search_term?.toLowerCase()) > -1 
+                    || p.description?.toLowerCase().indexOf(this.search_term?.toLowerCase()) > -1 
                     //|| p.cateo.toLowerCase().indexOf(this.search_term.toLowerCase()) > -1 
                 })
 
@@ -881,6 +883,7 @@ h2 {
     font-weight: 600;
     text-align: center;
     line-height: 32px;
+    margin-top: 40px;
 }
 
 .active-tab {
@@ -948,9 +951,10 @@ h2 {
    // border-bottom: 1px solid grey;
    //   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
    border-bottom: 1px solid lightgrey;
+   display: flex;
     .icon {
         position: absolute;
-        top: 0px;
+        top: 25px;
         left: 25px ;
 
     }

@@ -228,7 +228,7 @@
                             <button  @click="step--" style="background-color: white; color: black" class="big-btn full-width">
                                 Back
                             </button>
-                            <button class="big-btn full-width" @click="triggerPay">
+                            <button class="big-btn full-width" :disabled="creating_session" @click="triggerPay">
                                 Pay
                             </button>
                         </div>
