@@ -29,6 +29,7 @@
                     <p class="description">{{item.description}}</p>
                 </div>
 
+                
                 <div class="additions" v-if="productAdditions">
 
                     <div class="additions__container"  v-for="(addition, index) in productAdditions" :key="index"> 
@@ -57,6 +58,12 @@
                     <input :value="isInCart?.quantity" @input="handleInput">
 
                     <button @click="increase">+</button>
+                </div>
+
+                <div class="comment form-input">
+                    <label>Your comment (describe how you want it)</label>
+                    <textarea v-model="order.customer_comment"></textarea>
+                    
                 </div>
 
 
@@ -261,6 +268,10 @@ export default {
 img {
     object-fit: cover;
     height: 100%;
+}
+
+.form-input {
+    @include greyforminput;
 }
 h2, .price {
     font-weight: 600;

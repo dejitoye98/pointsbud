@@ -16,7 +16,7 @@
         <template #body>
             <div class="padding-16">
 
-                <template v-if="step === 1">
+                <template v-if="step === 2">
                     <div>
                         <p>Payment will be stored in your PointsBud Wallet until your items are delivered. If not, you'll be refunded</p>
                         <div class="form-input">
@@ -39,8 +39,11 @@
                         </div>
 
                        
-                        <div style="display: flex; justify-content: center;">
+                        <div style="display: flex; flex-direction: column; justify-content: center; width: 100%;">
                             <button  class="big-btn" style="margin: auto !important" :disabled="!enableNextStep2 || fetching_wallet || validating_wallet || creating_wallet" @click="nextStep">Proceed</button>
+                            <button class="big-btn" style="background-color: white; color: black !important" @click="step--">
+                                Go Back
+                            </button>
                         </div>
 
                     </div>
@@ -48,11 +51,11 @@
                 </template>
 
 
-                <template v-else-if="step === 2">
+                <template v-else-if="step === 1">
                     <CartItem v-for="(item, index) in cart" :item="item"></CartItem>
 
                     <button class="big-btn full-width" @click="step++">
-                        Continue
+                        Continue With Items
                     </button>
                 </template>
 
@@ -749,7 +752,7 @@ export default {
             return result
         },
         nextStep() {
-            if (this.step === 1) {
+            if (this.step === 2) {
                 if (this.fetched_wallet && !this.customer_wallet) {
                         this.createWallet()
                 }
@@ -866,7 +869,7 @@ export default {
             }).then(resp=> {
                 this.customer_wallet = resp.data.data.wallet;
                 this.customer_id = resp.data.data.customer_id;
-                this.step = 2;
+                this.step = 3;
 
 
                 /*if (!this.cartuid) {
