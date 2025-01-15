@@ -80,7 +80,7 @@
                             </div>
 
                             <div class="form-input">
-                                <label> Delivery Note </label>
+                                <label> Delivery Note (optional)</label>
                                 <textarea v-model="delivery_meta.note"></textarea>
                             </div>
 
@@ -109,6 +109,11 @@
                                 <vue-timepicker v-model="delivery_meta.pickup_time" format="hh:mm A"></vue-timepicker>     
                             </div>
 
+
+                            <div class="form-input">
+                                <label>Pickup Note (optional)</label>
+                                <textarea v-model="delivery_meta.note"></textarea>
+                            </div>
                             
 
 
