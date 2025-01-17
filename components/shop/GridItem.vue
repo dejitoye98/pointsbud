@@ -1,6 +1,9 @@
 <template>
-    <div class="item" :class="[isInCart? 'in-cart': '']" @click="onSelect">
+    <div class="item"  :class="[isInCart? 'in-cart': '', product.availability === 'available' ? 'available': 'out-of-stock']" @click="onSelect">
         <div class="thumbnail">
+            <div class="overlay" v-if="product.availability === 'out-of-stock'">
+
+            </div>
             <img :src="product.thumbnail || 'https://hunanchinesefoodwhitby.com/img/placeholders/comfort_food_placeholder.png'">
         
             <div class="quantity" @click.stop>
@@ -39,6 +42,14 @@
 
         <div class="" style="margin: 5px 0; padding: 0px 8px">
             <p class="name">{{product.name}}</p>
+        
+            <div class="quantity-available" v-if="product.availability === 'available'">
+                <div class="available-indicator" :class="product.quantity_available > 3 ? '' : 'available-indicator--few'">
+                    
+                </div>
+                <p :class="product.quantity_available > 3 ? 'many-available' : 'few-left'">{{product.quantity_availablen > 3 ? "Plenty available": "Few left"}}</p>
+                
+            </div>
 
             <template class="" v-if="!isDeal">
                 <div class="product-price">
@@ -189,6 +200,7 @@ export default {
     border-radius: 10px;
     //overflow: hidden;
     //position: relative;
+    position: relative;
 
     img {
         height: 100%;
@@ -241,4 +253,49 @@ export default {
 .strikethrough {
     text-decoration: line-through;
 }
+
+.quantity-available {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.available-indicator {
+    height: 10px;
+    width: 10px;
+    background-color: teal;
+    display: flex;
+    border-radius: 999px;
+
+    &--few {
+        background-color: red;;
+    }
+    
+}
+
+
+
+.overlay {
+    
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.437);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.many-available {
+    color: teal !important;
+}
+
+
+.out-of-stock {
+    background-color:rgba(0, 0, 0, 0.395);;
+}
+
+
+.few-left {
+    color: red !important;
+}
+
 </style>
