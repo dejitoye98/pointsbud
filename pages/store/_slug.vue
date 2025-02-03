@@ -968,7 +968,7 @@ $transition-base: 0.3s ease;
 
 /* Category Pane */
 .category-pane {
-  padding: 5px 0;
+  padding: 16px;
   background-color: $white;
   display: flex;
   justify-content: space-between;
@@ -980,7 +980,7 @@ $transition-base: 0.3s ease;
     font-weight: 600;
     text-align: center;
     line-height: 32px;
-    margin-top: 40px;
+   // margin-top: 40px;
   }
 }
 
