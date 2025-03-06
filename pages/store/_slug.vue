@@ -1395,7 +1395,7 @@ $info: #2196F3;
   box-shadow: $shadow-button;
   cursor: pointer;
   transition: all 0.3s;
-  z-index: 100;
+  z-index: 2;
   
   &:hover {
     transform: translateX(-50%) translateY(-3px);
