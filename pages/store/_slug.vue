@@ -3,8 +3,10 @@
         <!--<ShopCartModal @close="show_cart_modal = false" v-if="show_cart_modal && this.cart.length">
 
         </ShopCartModal>-->
+
+        <ChooseModeModal v-if="choose_mode" @close="choose_mode = false" @onChoose="changeMode"></ChooseModeModal>
     
-        <LiveMenuModal :business="business" v-if="show_live_menu_modal" @close="show_live_menu_modal = false">
+        <LiveMenuModal  :business="business" v-if="show_live_menu_modal && false" @close="show_live_menu_modal = false">
                 
         </LiveMenuModal>
         <AuthModal v-if="show_auth_modal"></AuthModal>
@@ -47,16 +49,14 @@
                         <div class="header__container">
                             <div class="logo">
                                 <div class="logo__container">
-                                    
                                     <img :src="business.logo">
                                     <h1>{{business.name}}</h1>
-                                    
                                 </div>
                             </div>
-    
+                    
+                            
                             <div v-if="showBookmarkButton" class="flex-center-y flex gap-16">
-    
-                                <button @click="triggerBookmark"  class="bookmark-btn">
+                                <button @click="triggerBookmark" class="bookmark-btn">
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
                                       fill="none"
@@ -74,27 +74,26 @@
                                       />
                                     </svg>
                                     Bookmark
-                                  </button>
-                                
-                                
+                                </button>
                             </div>
-    
-    
-    
+                    
                             <div class="" @click="show_sidebar = true" v-if="auth_customer && auth_customer.id">
                                 <div class="account" style="border-radius: 50%; height: 40px; width: 40px;">
                                     <img src="https://pointsbud-images.s3.amazonaws.com/c794267fc81e77a48e608d36e3f0f3f1" alt="">
-    
                                 </div>
                             </div>
                         </div>
-                </div>
+                    </div>
     
                     <div class="tabs">
-                        <div class="tabs__container">
-                            <div class="tabs__item" :class="[current_tab === tab.toLowerCase()?  'selected_tab': '']" :style="{borderBottom: current_tab === tab.toLowerCase() ? '4px solid ' +  (styling?.primary_color || 'black') : '' }" @click="selectTab(tab)" v-for="(tab, index) in tabs" :key="index">
+                        <div class="tabscontainer">
+                            <div class="tabsitem" 
+                                 :class="[current_tab === tab.toLowerCase() ? 'selected_tab' : '']" 
+                                 :style="{borderBottom: current_tab === tab.toLowerCase() ? '4px solid ' + (styling?.primary_color || 'black') : '' }" 
+                                 @click="selectTab(tab)" 
+                                 v-for="(tab, index) in tabs" 
+                                 :key="index">
                                 <p>{{tab}}</p>
-    
                                 <template v-if="tab.toLowerCase() === 'deals' && deals?.length > 0">
                                     <div class="badge">
                                         {{ deals?.length }}
@@ -156,7 +155,7 @@
                         </div>
     
     
-                        <div style="position: sticky; top: 0; left: 0; background: white; z-index: 1">
+                        <div style="position: sticky; top: 0; left: 0; background: white; z-index: 10">
     
                             <ShopCategoryNavigation :styling="styling" v-if="current_tab === 'shop' " @changeCategory="changeCategory" :current_category="current_category" :categories="filteredCategories"></ShopCategoryNavigation>
                         </div>
@@ -293,6 +292,11 @@
                                     <GridItem :styling="styling" @onSelect="chooseProduct(item)"  :product="item" v-for="(item, index) in deals" :key="index"></GridItem>
     
     
+                                </div>
+
+                                
+                                <div class="grid">
+                                    
                                 </div>
                                 
                             </div>
@@ -454,10 +458,13 @@ import ShopCategoryNavigation from '../../components/navigations/ShopCategoryNav
 import mixpanel from 'mixpanel-browser';
 import GridItem from '../../components/shop/GridItem.vue';
 import OrderModal from '../../components/modals/OrderModal.vue';
+import ChooseModeModal from '../../components/modals/ChooseModeModal.vue';
 
 export default {
     data() {
         return {
+            current_mode: '',
+            choose_mode: true,
             show_live_menu_modal: false,
 
             show_auth_modal: false,
@@ -497,6 +504,9 @@ export default {
         
     },
     methods: {
+        changeMode(value) {
+            this.current_mode = value;
+        },
         triggerBookmark() {
             if (this.auth_customer && this.auth_customer.id) {
                 this.followBusiness()
@@ -770,7 +780,7 @@ export default {
             }
         }
     },
-    components: { SimpleListShopItem, ShopCartModal, ShopCategoryNavigation, GridItem, OrderModal }
+    components: { SimpleListShopItem, ShopCartModal, ShopCategoryNavigation, GridItem, OrderModal, ChooseModeModal }
 }
 </script>
 
@@ -806,62 +816,194 @@ $transition-base: 0.3s ease;
   }
 }
 
-/* Tabs */
+// Premium Tabs Styling
 .tabs {
-  background-color: $light-gray;
-  overflow: hidden;
-  padding: 8px;
-  border-radius: $border-radius-base;
-  box-shadow: 0 2px 8px $shadow-light;
-
-  &__container {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  }
-  &__item {
     position: relative;
-    cursor: pointer;
-    padding: 12px 20px;
-    white-space: nowrap;
-    transition: color $transition-base, border-bottom $transition-base, transform $transition-base;
-    font-weight: 500;
-    color: #555;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    p {
-      margin: 0;
-      font-size: 16px;
+    width: 100%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 1));
+   //ius: 12px 12px 0 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+    padding: 0 4px;
+    z-index: 10;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: rgba(0, 0, 0, 0.06);
     }
-
-    &:hover {
-      color: $secondary;
-      transform: translateY(-2px);
+    
+    .tabscontainer {
+      display: flex;
+      overflow-x: auto;
+      -ms-overflow-style: none; // IE and Edge
+      scrollbar-width: none; // Firefox
+      gap: 8px;
+      padding: 8px 12px;
+      
+      &::-webkit-scrollbar {
+        display: none; // Chrome, Safari, Opera
+      }
+      
+      // Shadow indicators for scrollable content
+      &::before, &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 30px;
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      &::before {
+        left: 0;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0.9), transparent);
+      }
+      
+      &::after {
+        right: 0;
+        background: linear-gradient(to left, rgba(255, 255, 255, 0.9), transparent);
+      }
+      
+      &:not(.no-scroll-left)::before,
+      &:not(.no-scroll-right)::after {
+        opacity: 1;
+      }
+    }
+    
+    .tabsitem {
+      position: relative;
+      flex: 1;
+      min-width: fit-content;
+      padding: 12px 18px;
+      cursor: pointer;
+      //border-radius: 10px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+      
+      p {
+        margin: 0;
+        font-weight: 500;
+        font-size: 15px;
+        color: rgba(0, 0, 0, 0.65);
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+      
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.03);
+        
+        p {
+          color: rgba(0, 0, 0, 0.85);
+        }
+      }
+      
+      &.selected_tab {
+        p {
+          font-weight: 600;
+          color: #000;
+        }
+        
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -3px;
+          left: 50%;
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background-color: inherit;
+          transform: translateX(-50%);
+          animation: dot-expand 0.3s forwards cubic-bezier(0.3, 1.5, 0.7, 1);
+        }
+      }
+      
+      // Badge
+      .badge {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 12px;
+        background-color: #FF5252;
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 18px;
+        text-align: center;
+        padding: 0 5px;
+        box-shadow: 0 2px 5px rgba(255, 82, 82, 0.3);
+        transform: scale(1);
+        animation: badge-pulse 2s infinite;
+      }
     }
   }
-}
-
-.selected_tab {
-  color: var(--primary-color, $primary);
-  font-weight: bold;
-  border-bottom: 5px solid var(--primary-color, $primary);
-}
-
-/* Badge */
-.badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background-color: #ff5252;
-  color: $white;
-  border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 12px;
-  font-weight: bold;
-  box-shadow: 0 2px 4px $shadow-medium;
-}
+  
+  // Animations
+  @keyframes dot-expand {
+    0% {
+      width: 4px;
+    }
+    100% {
+      width: 65%;
+      height: 3px;
+      border-radius: 2px;
+    }
+  }
+  
+  @keyframes badge-pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  // Media queries for responsiveness
+  @media (max-width: 768px) {
+    .tabs {
+      border-radius: 8px 8px 0 0;
+      
+      .tabscontainer {
+        padding: 6px 8px;
+      }
+      
+      .tabsitem {
+        padding: 10px 14px;
+        
+        p {
+          font-size: 14px;
+        }
+        
+        .badge {
+          min-width: 16px;
+          height: 16px;
+          font-size: 10px;
+          line-height: 16px;
+        }
+      }
+    }
+  }
+  
+  // Apply smooth scrolling on touch devices
+  @media (pointer: coarse) {
+    .tabscontainer {
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 12px; // Extra padding for better touch scrolling
+    }
+  }
 
 /* Header */
 .header {
@@ -973,6 +1115,8 @@ $transition-base: 0.3s ease;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 10px 0px;
+  margin-top: 30px;
 
   .category-name {
     font-family: 'Poppins', sans-serif;
@@ -1008,7 +1152,7 @@ $transition-base: 0.3s ease;
   height: 100%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.355);
-  z-index: 20;
+  z-index: 1;
   display: flex;
   justify-content: flex-end;
   padding: 50px 0;
@@ -1177,6 +1321,99 @@ $transition-base: 0.3s ease;
   justify-content: space-between;
   font-size: 20px;
   font-weight: 500;
+}
+
+
+/* Header and existing styles remain unchanged */
+.header__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Mode Indicator Styles */
+.mode-indicator {
+    display: flex;
+    align-items: center;
+}
+
+.mode-indicator__badge {
+    position: relative;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 8px 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.mode-indicator__badge:hover .mode-selector {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.mode-label {
+    font-weight: 600;
+    color: #4a5568;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding: 2px 6px;
+}
+
+.mode-label::before {
+    content: "MODE";
+    display: block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #718096;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.mode-selector {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    pointer-events: none;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mode-selector button {
+    background: transparent;
+    border: none;
+    padding: 6px 12px;
+    text-align: left;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: $primary 0.2s ease;
+    font-size: 0.9rem;
+    color: #4a5568;
+}
+
+.mode-selector button:hover {
+    background: #f7fafc;
+}
+
+.mode-selector button.active {
+    background: #ebf4ff;
+    color: #3182ce;
+    font-weight: 600;
 }
 
 </style>

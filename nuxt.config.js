@@ -145,7 +145,10 @@ export default {
         ["cookie-universal-nuxt", { alias: "cookies" }],
     ],
     toast: {
-        position: 'top-center',
+        position: 'top-right',
+        duration: 3000, // 3 seconds before auto-closing
+        keepOnHover: true,
+        theme: 'bubble', 
         register: [ // Register custom toasts
             {
                 name: 'my-error',
