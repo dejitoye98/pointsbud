@@ -39,7 +39,7 @@
                         </div>
 
                        
-                        <div style="display: flex; flex-direction: column; justify-content: center; width: 100%;">
+                        <div style="align-items: center;display: flex;gap: 8px;padding: 16px;justify-content: center;width: 100%;flex-direction: column;">
                             <button  class="big-btn" style="margin: auto !important" :disabled="!enableNextStep2 || fetching_wallet || validating_wallet || creating_wallet" @click="nextStep">Proceed</button>
                             <button class="big-btn" style="background-color: white; color: black !important" @click="step--">
                                 Go Back
@@ -68,7 +68,7 @@
                     </div>
                     <div>
                         <template v-if="delivery_type === 'delivery'">
-                            <div class="form-input">
+                            <div class="form-input" v-if="deliveryRegions.length">
                                 <label for="">Delivery Area</label>
                                 <select v-model="delivery_meta.destination_region">
                                     <option :value="region.place" v-for="(region, index) in deliveryRegions" :key="index"> {{region.place}} - {{region.currency | currencySymbol}}{{region.price | money}}</option>
@@ -87,7 +87,7 @@
 
                             <div class=" gap-16 grid grid-cols-2">
 
-                                <button  @click="step--" style="background-color: white; color: black" class="big-btn full-width">
+                                <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
                                     Back
                                 </button>
                                 <button class="big-btn full-width" @click="nextStep">
@@ -119,7 +119,7 @@
 
                             <div class=" gap-16 grid grid-cols-2">
 
-                                <button  @click="step--" style="background-color: white; color: black" class="big-btn full-width">
+                                <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
                                     Back
                                 </button>
                                 <button class="big-btn full-width" @click="nextStep">
@@ -191,7 +191,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="form-input">
+                            <div>
                                 <div>
                                     Pickup Time
                                 </div>
@@ -262,7 +262,7 @@ export default {
         VueTimepicker,
         'date-picker': myDatepicker,
     },
-    props: ['business'],
+    props: ['business', 'mode'],
     data() {
         return {
 
@@ -312,6 +312,10 @@ export default {
         if (this.customer_wallet && Object.keys(this.customer_wallet).length > 1) {
             this.step = 2;
         }
+
+        if (this.mode) {
+            this.delivery_type = this.mode;
+        }
     },
     watch: {
         customerPhone(value) {
@@ -329,7 +333,7 @@ export default {
         },
         datePickerValue(value) {
              this.delivery_meta.pickup_date = value;
-             alert(value)
+            // alert(value)
         },
 
     },
@@ -499,6 +503,45 @@ export default {
         },
     },
     methods: {
+        makePaymentBudpay(checkout_session_id, checkout_url) {
+            BudPayCheckout({
+                    key: this.$config.BUDPAY_PUBLIC_KEY || 'pk_test_ts9gpurgsis82hlhoaezoayijt06m4vhn4jrk2', // Replace with your public key
+                    email: this.customer?.email || 'anon@gmail.com',
+                    amount: this.grandTotal.toFixed(2),
+                    first_name: this.customer?.name || 'anon',
+                    last_name: this.customer?.name || 'anon',
+                    currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
+                    reference: '' + Math.floor((Math.random() * 100000000000) + 1) + new Date().getSeconds() + new Date().getMilliseconds(), // generates a pseudo-unique reference. Please replace with a reference you generated. or remove the line entirely so our API will generate one for you
+                    callback: (response) => {
+                    //this happens after the payment is completed successfully
+                        var reference = response.reference;
+                        let data = response
+                        //alert('Payment complete! Reference: ' + reference + ', Status: ' + response.status);
+                        this.step = 5;
+                       
+                        
+                       let payload = { type: "order-paid", checkout_session_id, ...data, business_slug: this.$route.params.slug, business_id: this.business.id };
+                            this.$api.post("/transactions/verify-budpay", payload).then(resp => {
+                               //this.registerFirebaseOrder()
+
+
+                           });
+                           let message = this.createOrderMessage()
+
+                          
+   
+                           let encoded = encodeURIComponent(message)
+                           const link = `whatsapp://send?text=${encoded}&phone=${this.business.contact_phone}`;
+                           window.open(link, '_self')
+                    },
+                    onClose: function (response) {
+                        console.log(response);
+                        alert('Transaction was not completed, window closed.');
+                        },
+                       
+                });
+
+        },
         makePayment(checkout_session_id, checkout_url) {
             try {
 
@@ -692,7 +735,7 @@ export default {
 
                 const {id, url} = await this.createCheckoutSession(payload)
                 //this.paywithPaystack(id, url)
-                this.makePayment(id, url)
+                this.makePaymentBudpay(id, url)
 
                // if (!this.walletBalanceSufficient) {
 
@@ -768,7 +811,7 @@ export default {
             if (this.step ===3) {
                 if (this.delivery_type === 'delivery')  {
                     if (!this.delivery_meta.destination_address) return false;
-                    if (!this.delivery_meta.destination_region) return false;
+                    if (!this.delivery_meta.destination_region && this.deliveryRegions.length) return false;
                 }
 
                 this.step = 4
@@ -817,6 +860,9 @@ export default {
                             const longitude = placeResult.geometry.location.lng();
 
                             this.delivery_meta.destination_bounds = { lat: latitude, long: longitude }
+
+                            this.delivery_meta.destination_latitude = latitude;
+                            this.delivery_meta.destination_longitude = longitude
 
                             console.log(`Longitude: ${longitude}`);
                         } else {
@@ -912,137 +958,421 @@ export default {
 }
 </script>
 
-
 <style lang="scss" scoped>
+// Using your existing color variables
+$primary: #E53945;
+$deepprimary: #A02730;
+$secondary: #f79939;
+$secondarylight: #f798398b;
+$secondaryaccent: #5ac091;
+$lightaccent: $primary;
+$darkaccent: #dd6b6b36;
+$border-grey: #E0E0E0;
+$faint: #686868;
+$charcoal: #36454F;
+$input_background: #F3F3F3;
+$dashboard-background-color: rgb(255, 255, 255);
+
 * {
-    font-family: "Inter", sans-serif !important;
+  font-family: "Inter", sans-serif !important;
+  box-sizing: border-box;
 
+// Custom styles for third-party components
+&:deep(.vue-tel-input) {
+    border: none !important;
+    background-color: $input_background;
+    border-radius: 10px;
+    height: 52px;
+    
+    .vti__input {
+      background-color: transparent;
+      height: 52px;
+      font-size: 15px;
+      border: none !important;
+      
+      &:focus {
+        outline: none;
+      }
+    }
+    
+    .vti__dropdown {
+      background-color: transparent;
+      border-right: 1px solid rgba(104, 104, 104, 0.2);
+      padding-right: 8px;
+    }
+    
+    &:focus-within {
+      border: 1px solid $primary !important;
+      box-shadow: 0 0 0 3px rgba(229, 57, 69, 0.1);
+    }
+  }
   
-
-    &:deep(.vue-tel-input:focus-within) {
-        border: 0; box-shadow: none;
+  &:deep(.time-picker) {
+    width: 100% !important;
+    
+    input {
+      height: 52px !important;
+      background-color: $input_background;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      width: 100%;
+      font-size: 15px;
+      padding: 0 16px;
+      
+      &:focus {
+        border-color: $primary;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(229, 57, 69, 0.1);
+      }
     }
-
-    &:deep(.vue-tel-input) {
-        border: none !important;
-        background-color: $input_background;
-        border-radius: 10px;
-
-        &:focus {
-            outline: none;
-        }
-        &:active {
-            outline: none;
-        }
-    }
-    &:deep(.cov-date-body) {
-        background-color: $primary !important;
-
-    }
-
-    &:deep(.active) {
-        background-color: $primary !important;
-    }
-
-    &:deep(.time-picker) {
-        width: 100% !important;
-        input {
-            height: 50px !important;
-        }
-    }
-    &:deep(.vue-tel-input:focus-within) {
-        border: 0; box-shadow: none;
-    }
-
-    &:deep(.vue-tel-input) {
-        border: none !important;
-        background-color: $input_background;
-        border-radius: 10px;
-
-        &:focus {
-            outline: none;
-        }
-        &:active {
-            outline: none;
-        }
-    }
-    &:deep(.cov-date-body) {
-        background-color: $primary !important;
-
-    }
-
-    &:deep(.active) {
-        background-color: $primary !important;
-    }
-
-    &:deep(.time-picker) {
-        width: 100% !important;
-        input {
-            height: 50px !important;
-        }
-    }
-    &:deep(.vti__input) {
-        border: none !important;
-    }
+  }
+  
+  &:deep(.cov-datepicker) {
+    width: 100%;
+  }
+  
+  &:deep(.cov-date-body) {
+    background-color: $primary !important;
+  }
+  
+  &:deep(.active) {
+    background-color: $primary !important;
+  }
 }
 
-
-.section-title {
-    background-color: lightgrey;
-    padding: 16px;
-    text-align: center;
-    font-weight: 600;
+// Global Styles
+.padding-16 {
+  padding: 16px;
 }
 
-
-.total {
-    border-top: 1px solid whitesmoke;
-    padding: 16px 0;
-    margin: 16px 0;
-
-    &-item {
-        display: flex;
-        justify-content: space-between;
-        padding: 8px 0;
-    }
+.padding-16-y {
+  padding: 16px 0;
 }
 
-.tabs  {
-    display: grid;
-    grid-template-columns: 45% 45%;
-    background-color: whitesmoke;
-    border-radius: 999px;
-    justify-content: center;
-    padding: 16px;
-    gap: 8px;
+.space-between {
+  justify-content: space-between;
+}
 
-    .tab {
-        background-color: white;
-        border-radius: 999px;
-        padding: 8px 16px;
+.flex-center-y {
+  display: flex;
+  align-items: center;
+}
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.gap-16 {
+  gap: 16px;
+}
+
+.grid {
+  display: grid;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.full-width {
+  width: 100%;
 }
 
 .no-wrap {
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-.form-input {
-    @include greyforminput;
-    margin: 20px 0;
-    label {
-        font-size: 12px;
-        font-weight: 800;
+
+// Header styling
+:deep(.modal-header) {
+  padding: 20px;
+  border-bottom: 1px solid $border-grey;
+  
+  p {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: $charcoal;
+  }
+
+  svg {
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: rotate(90deg);
     }
+  }
+}
+
+// Form input styling
+.form-input {
+  margin: 24px 0;
+  
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: $charcoal;
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+  }
+
+  .required {
+    color: $primary;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background-color: $input_background;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba(229, 57, 69, 0.1);
+    }
+  }
+
+  textarea {
+    padding: 16px;
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  .number-input {
+    letter-spacing: 1.5px;
+    font-weight: 500;
+  }
+}
+
+// Button styling
+.big-btn {
+  height: 52px;
+  padding: 0 24px;
+  border-radius: 10px;
+  background-color: $primary;
+  color: white !important;
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 8px 0;
+  box-shadow: 0 4px 12px rgba(229, 57, 69, 0.2);
+
+  &:hover {
+    background-color: $deepprimary;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(229, 57, 69, 0.25);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+// Tabs styling
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: $input_background;
+  border-radius: 999px;
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 16px;
+
+  .tab {
+    border-radius: 999px;
+    padding: 12px;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    background-color: $dashboard-background-color;
+    color: $faint;
+
+    &:hover {
+      color: $charcoal;
+    }
+  }
+
+  .selected-tab {
+    background-color: $primary !important;
+    color: white !important;
+    box-shadow: 0 4px 8px rgba(229, 57, 69, 0.2);
+  }
+}
+
+// Section titles
+.section-title {
+  background-color: $input_background;
+  border-left: 3px solid $primary;
+  padding: 14px 16px;
+  font-weight: 600;
+  font-size: 15px;
+  margin: 24px 0 16px;
+  border-radius: 0 8px 8px 0;
+  color: $charcoal;
+}
+
+// Cart items styling
+.cart-item {
+  display: flex;
+  padding: 16px;
+  margin: 16px 0;
+  border-radius: 12px;
+  background-color: $input_background;
+  position: relative;
+  
+  &__content {
+    flex: 1;
+  }
+  
+  &__name {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 4px;
+    color: $charcoal;
+  }
+  
+  &__price {
+    font-weight: 700;
+    color: $primary;
+    margin-top: 6px;
+  }
+  
+  &__quantity {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    
+    button {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background-color: white;
+      color: $charcoal;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+      
+      &:hover {
+        background-color: $primary;
+        color: white;
+      }
+    }
+    
+    span {
+      margin: 0 12px;
+      font-weight: 500;
+    }
+  }
+}
+
+// Total section
+.total {
+  border-top: 1px solid $border-grey;
+  padding: 20px 0;
+  margin: 20px 0;
+
+  &-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 14px;
+    color: $faint;
+    
+    &:last-child {
+      margin-top: 12px;
+      padding-top: 14px;
+      border-top: 1px dashed $border-grey;
+      
+      b {
+        font-size: 18px !important;
+        color: $primary;
+      }
+    }
+  }
 }
 
 
-.selected-tab {
-    background-color: #DD6B6B !important;
-    color: white !important;
+// Loading state
+.fetching-wallet {
+  background-color: $input_background;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 14px;
+  color: $faint;
+  padding: 12px 16px !important;
+  margin-top: 16px;
+  
+  &::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(104, 104, 104, 0.2);
+    border-top-color: $primary;
+    border-radius: 50%;
+    margin-right: 12px;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Responsive styles
+@media (max-width: 640px) {
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-title {
+    font-size: 14px;
+    padding: 12px;
+  }
+  
+  .big-btn {
+    height: 48px;
+    font-size: 14px;
+  }
+  
+  .form-input label {
+    font-size: 12px;
+  }
+}
+
+// Fix for Google Places autocomplete dropdown
+.pac-container {
+  z-index: 100000000000000 !important;
 }
 </style>

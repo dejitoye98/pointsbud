@@ -7,7 +7,10 @@ export default {
         FLW_PUBLIC_KEY: process.env.FLW_PUBLIC_KEY,
         PAYMENT_GATEWAY: process.env.PAYMENT_GATEWAY,
         PAYSTACK_PUBLIC_KEY: process.env.PAYSTACK_PUBLIC_KEY,
-        DINE_ORDER_SERVICE_URL: process.env.DINE_ORDER_SERVICE_URL
+        DINE_ORDER_SERVICE_URL: process.env.DINE_ORDER_SERVICE_URL,
+        BUDPAY_PUBLIC_KEY: process.env.BUDPAY_PUBLIC_KEY,
+
+
     },
 
 
@@ -71,6 +74,9 @@ export default {
         ],
         script: [
             {
+                src: "https://inlinepay.budpay.com/budpay-inline-custom.js",
+            },
+            {
                 src: "https://unpkg.com/vue-tel-input",
             },
             {
@@ -80,7 +86,7 @@ export default {
                 src: 'https://accounts.google.com/gsi/client',
             },
             {
-                src: "https://maps.googleapis.com/maps/api/js?key=AIzaSyDLZ4NFeub25kppPsgPItK0RWKdZ-Ecy8c&libraries=places"
+                src: "https://maps.googleapis.com/maps/api/js?key=AIzaSyBS9ZG7dyw6-hHcnp1GhfR47zh7vCz6OHY&libraries=places"
             },
 
             {

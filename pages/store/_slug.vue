@@ -13,7 +13,7 @@
 
         <OrderModal @close="focused_product = null" :item="focused_product"></OrderModal>
 
-        <CartModal  @close="show_cart_modal = false"  v-if="show_cart_modal && this.cart.length" :business="business"></CartModal>
+        <CartModal :mode="current_mode"  @close="show_cart_modal = false"  v-if="show_cart_modal && this.cart.length" :business="business"></CartModal>
         
 
         <template v-if="!loading_data">
