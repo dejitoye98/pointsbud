@@ -52,6 +52,7 @@
 
 
                 <template v-else-if="step === 1">
+
                     <CartItem v-for="(item, index) in cart" :item="item"></CartItem>
 
                     <button class="big-btn full-width" @click="step++">
@@ -68,6 +69,18 @@
                     </div>
                     <div>
                         <template v-if="delivery_type === 'delivery'">
+                            <div class="form-input">
+                                <label for="">Delivery Time</label>
+                                <select v-model="delivery_meta.delivery_time">
+                                    <option value="instantly">ASAP</option>
+                                    <option value="scheduled">Scheduled</option>
+                                </select>
+                            </div>
+
+                            <div class="form-input" v-if="delivery_meta.delivery_time === 'scheduled'">
+                                <label>Scheduled Time</label>
+                                <vue-timepicker format="hh:mm A" v-model="delivery_meta.scheduled_delivery_time"></vue-timepicker>
+                            </div>
                             <div class="form-input" v-if="deliveryRegions.length">
                                 <label for="">Delivery Area</label>
                                 <select v-model="delivery_meta.destination_region">
@@ -77,6 +90,56 @@
                             <div class="form-input">
                                 <label>Your Delivery Address </label>
                                 <input id="address" v-model="delivery_meta.destination_address">
+                            </div>
+
+
+                            <div class="delivery-options" v-if="deliveryFee.price || dynamic_delivery_fee">
+                                <h4>Delivery Options</h4>
+                                
+                                <div class="delivery-option premium" :class="{}" @click="selectDeliveryOption('premium')">
+                                    <div class="option-header">
+                                        <input type="radio" name="delivery-speed" id="premium-delivery" v-model="delivery_meta.delivery_speed" value="premium">
+                                        <label for="premium-delivery">Premium Instant </label>
+                                        <span class="price"> {{deliveryFee.currency | currencySymbol}}{{deliveryFee.price || dynamic_delivery_fee | money}}</span>
+                                    </div>
+                                    <p class="description">Get your order delivered as soon as possible</p>
+                                </div>
+                                
+                                <div class="delivery-option scheduled" :class="{}" @click="selectDeliveryOption('scheduled')" v-if="false">
+                                    <div class="option-header">
+                                        <input type="radio" name="delivery-speed" id="scheduled-delivery" v-model="delivery_meta.delivery_speed" value="scheduled">
+                                        <label for="scheduled-delivery">Scheduled Delivery <span class="discount-tag">Save up to 50%</span></label>
+                                        <span class="price">{{deliveryFee.currency | currencySymbol}}{{getDiscountedDeliveryFee | money}}</span>
+                                    </div>
+                                    <p class="description">Select a time slot and stand a chance to save 50%</p>
+                                    
+                                    <div class="time-slots" v-if="delivery_meta.delivery_speed === 'scheduled'">
+                                        <div class="slot-day">
+                                            <h5>Today</h5>
+                                            <div class="slot-times">
+                                                <button class="slot-time" 
+                                                    v-for="slot in todayTimeSlots" 
+                                                    :key="slot"
+                                                    :class="{ selected: delivery_meta.selected_slot === slot }"
+                                                    @click="selectTimeSlot(slot)">
+                                                    {{slot.time}} ({{ slot.discount }}% off delivery)
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="slot-day">
+                                            <h5>Tomorrow</h5>
+                                            <div class="slot-times">
+                                                <button class="slot-time" 
+                                                    v-for="slot in tomorrowTimeSlots" 
+                                                    :key="slot"
+                                                    :class="{ selected: delivery_meta.selected_slot === slot }"
+                                                    @click="selectTimeSlot(slot)">
+                                                    {{slot.time}} ({{ slot.discount }}% off delivery)
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="form-input">
@@ -90,7 +153,7 @@
                                 <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
                                     Back
                                 </button>
-                                <button class="big-btn full-width" @click="nextStep">
+                                <button class="big-btn full-width" :disabled="!canProceedFromDelivery" @click="nextStep">
                                     Continue
                                 </button>
                             </div>
@@ -135,7 +198,7 @@
                 <template v-else-if="step ===4">
                     <div>
                         <div class="section-title">Items</div>
-                        <div class="flex space-between gap-2" style="margin: 16px 0;" v-for="(item, index) in cart" :key="index">
+                        <div class="flex space-between gap-2 total-item" style="margin: 16px 0;" v-for="(item, index) in cart" :key="index">
                             <div>
                                 {{ item.name }} x  {{ item.quantity }}
                             </div>
@@ -148,7 +211,7 @@
 
                         <template v-if="delivery_type === 'delivery'">
 
-                            <div class="padding-16-y">
+                            <div class="padding-16-y total-item">
                                 <div>
                                     Delivery Region
                                 </div>
@@ -158,7 +221,7 @@
                                 </div>
                             </div>
 
-                            <div  class="padding-16-y">
+                            <div  class="padding-16-y total-item">
                                 <div>
                                     Delivery Address
                                 </div>
@@ -167,19 +230,10 @@
                                     {{ delivery_meta.destination_address }}
                                 </div>
                             </div>
-                            <div  class="flex gap-16 space-between">
-                                <div>
-                                    Delivery Fee
-                                </div>
-    
-                                <div v-if="deliveryFee.price">
-                                   {{ "NGN" | currencySymbol }} {{ deliveryFee.price | money }}
-                                </div>
-                                <div v-else-if="deliveryFee.currency"></div>
-                            </div>
+                            
                         </template>
                         <template v-else>
-                            <div class="padding-16-y form-input">
+                            <div class="padding-16-y form-input total-item">
                                 <div>
                                     Pickup Date
                                 </div>
@@ -203,6 +257,9 @@
                             
                         </template>
 
+
+
+
                         <div class="total">
                             <div class="total-item">
                                 <p>Subtotal</p>
@@ -214,7 +271,7 @@
                             </div>
                             <div class="total-item">
                                 <p>Delivery Fee</p>
-                                <p>{{deliveryFee.currency | currencySymbol}} {{deliveryFee.price | money}}</p>
+                                <p>{{deliveryFee.currency || "NGN" | currencySymbol}} {{deliveryFee.price || dynamic_delivery_fee | money}}</p>
                             </div>
                             <div class="total-item">
                                 <p>
@@ -231,9 +288,11 @@
                             </div>
                         </div>
 
+
+
                         <div class=" gap-16 grid grid-cols-2">
 
-                            <button  @click="step--" style="background-color: white; color: black" class="big-btn full-width">
+                            <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
                                 Back
                             </button>
                             <button class="big-btn full-width" :disabled="creating_session" @click="triggerPay">
@@ -257,14 +316,45 @@ import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
 import myDatepicker from 'vue-datepicker';
 
 import moment from 'moment'
+import PriceComparisonBadge from '../PriceComparisonBadge.vue';
+
+function debounce(func, wait = 500) {
+  let timeout;
+  return function(...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+
 export default {
     components: {
-        VueTimepicker,
-        'date-picker': myDatepicker,
-    },
+    VueTimepicker,
+    'date-picker': myDatepicker,
+    PriceComparisonBadge
+},
     props: ['business', 'mode'],
     data() {
         return {
+
+            loading_dynamic_delivery_fee: false,
+            dynamic_delivery_fee: 0,
+
+            custom_date_picker: {
+            time: moment().format('YYYY-MM-DD').toString()
+        },
+        todayTimeSlots: [
+            { time: '2:30PM', deliveries: 10, discount: 5 },
+            { time: '3:00PM', deliveries: 6, discount: 15 },
+            { time: '4:00PM', deliveries: 3, discount: 30 }
+        ],
+        tomorrowTimeSlots: [
+            { time: '9:00 AM - 11:00 AM', deliveries: 2, discount: 50 },
+            { time: '11:00 AM - 1:00 PM', deliveries: 4, discount: 25 },
+            { time: '1:00 PM - 3:00 PM', deliveries: 7, discount: 15 },
+            { time: '3:00 PM - 5:00 PM', deliveries: 9, discount: 10 },
+            { time: '5:00 PM - 7:00 PM', deliveries: 5, discount: 20 }
+        ],
+
 
             customer_id: null,
             checkout_url: null,
@@ -295,6 +385,16 @@ export default {
             },
             delivery_meta: {
 
+                delivery_speed: 'premium',
+                delivery_time: "Instantly",
+                selected_slot: null,
+                time_selection_method: 'preset',
+                custom_time: {
+                    hh: '12',
+                    mm: '00',
+                    A: 'PM'
+                },
+                selected_discount: 0
             },
             date_picker_option: {
                 type: 'day',
@@ -306,6 +406,7 @@ export default {
             date_picker_date: {
                 time: moment().format('YYYY-MM-DD').toString()
             },
+            
         }
     },
     mounted() {
@@ -336,16 +437,58 @@ export default {
             // alert(value)
         },
 
+        'delivery_meta.destination_address': debounce(function(value) {
+            this.loadDynamicDeliveryFee();
+        }, 1000) // 500ms delay
+
     },
     computed: {
         ...mapGetters('shop', ['cart']),
+        canProceedFromDelivery() {
+            // if delivery step 
+
+            if (!this.delivery_meta.destination_address) return false;
+            if (!this.delivery_meta.destination_region && this.deliveryRegions.length) return false;
+            if (!this.deliveryFee.price && !this.dynamic_delivery_fee) return false
+
+            return true;
+        },
+        dynamicDeliveryFee() {
+
+            // dynamic dlelivery fee should be  = 1 if there are no delivery regiions
+            if (!this.deliveryRegions.length) return true;
+            return false;
+            const pref = this.getPreference('menu_settings');
+            const value = pref && pref.value && JSON.parse(pref.value);
+            if (value) return value.dynamic_delivery_fee
+            return false
+        },
         datePickerValue() {
             return this.date_picker_date.time;
         },
 
+        getDiscountedDeliveryFee() {
+        if (this.deliveryFee && this.deliveryFee.price) {
+            // Apply the appropriate discount based on selection
+            let discountPercent = 0;
+            
+            if (this.delivery_meta.delivery_speed === 'scheduled') {
+                if (this.delivery_meta.time_selection_method === 'custom') {
+                    discountPercent = 10; // Fixed 10% discount for custom times
+                } else if (this.delivery_meta.selected_discount > 0) {
+                    discountPercent = this.delivery_meta.selected_discount;
+                } else {
+                    discountPercent = 20; // Default discount if nothing selected yet
+                }
+            }
+            
+            return this.deliveryFee.price * (1 - (discountPercent / 100));
+        }
+        return 0;
+    },
         grandTotal() {
             return parseFloat(this.cartTotal) +
-             parseFloat(this.deliveryFee.price || 0) + 
+             parseFloat(this.deliveryFee.price || this.dynamic_delivery_fee || 0) + 
              parseFloat(this.appFee) +
              parseFloat(this.totalTaxes)
 
@@ -443,22 +586,22 @@ export default {
     
                 if(resolved_fee.type === 'flat') {
                     resolved_app_fee = resolved_fee.value;
-                    alert(resolved_app_fee)
+                    //alert(resolved_app_fee)
                 }
                 else {
                   resolved_app_fee = parseFloat((resolved_fee.value/100) * this.cartTotal);
                 }
 
                 if ((this.cartTotal + resolved_app_fee + this.deliveryFee.price + this.totalTaxes) > 2500) {
-                    return resolved_app_fee  + 100;
+                    return parseFloat(resolved_app_fee  + 100).toFixed(2);
                 }
                 else {
-                    return (resolved_app_fee)
+                    return parseFloat(resolved_app_fee).toFixed(2)
                 }
                 return 0
             }catch(e) {
-                alert(e)
-                return parseFloat((5/100) * this.cartTotal)
+               // alert(e)
+                return parseFloat((5/100) * this.cartTotal).toFixed(2)
             }
         },
         deliveryFee() {
@@ -503,6 +646,67 @@ export default {
         },
     },
     methods: {
+
+        async loadDynamicDeliveryFee(){
+            this.loading_dynamic_delivery_fee = true
+            return await this.$api.post('/checkout-session/menu/pricing', {
+                address1: this.business.address,
+                address2: this.delivery_meta.destination_address
+            }).then(resp=> {
+                if (resp.data.data) {
+
+                    this.dynamic_delivery_fee = parseFloat(resp.data.data).toFixed(0)
+                }
+                //alert(this.dynamic_delivery_fee)
+                return resp.data.data;
+            }).catch(err=> {
+                throw new Error(err)
+            }).finally(()=>{
+                this.loading_dynamic_delivery_fee = false
+            })
+       },
+        
+    
+        selectTimeSlot(slotTime, discount) {
+            this.$set(this.delivery_meta, 'selected_slot', slotTime)
+            this.$set(this.delivery_meta, 'selected_discount', discount)
+           
+        },
+        
+        updateCustomDate(date) {
+            //this.custom_date_picker.time = date;
+            this.$set(this.custom_date_picker, 'time', date)
+            this.updateCustomTimeSlot();
+        },
+        
+        updateCustomTimeSlot() {
+            if (this.delivery_meta.custom_time && this.custom_date_picker) {
+                const formattedDate = moment(this.custom_date_picker.time).format('MMM D');
+                const formattedTime = `${this.delivery_meta.custom_time.hh}:${this.delivery_meta.custom_time.mm} ${this.delivery_meta.custom_time.A}`;
+                
+
+                this.$set(this.delivery_meta, 'selected_slot', `${formattedDate}, ${formattedTime}`)
+                this.$set(this.delivery_meta, 'selected_discount', 10)
+                //this.delivery_meta.selected_slot = `${formattedDate}, ${formattedTime}`;
+                //this.delivery_meta.selected_discount = 10; // Fixed 10% discount for custom time
+            }
+        },
+        selectDeliveryOption(type) {
+
+            this.$set(this.delivery_meta, 'delivery_speed' , type)
+            this.delivery_meta.delivery_speed = type;
+            // Reset selected slot if changing from scheduled to premium
+            if (type === 'premium') {
+                //this.delivery_meta.selected_slot = null;
+                this.$set(this.delivery_meta, 'selected_slot' , null)
+                this.$set(this.delivery_meta, 'selected_discount' , 0)
+
+
+            }
+        },
+        selectTimeSlot(slot) {
+            this.delivery_meta.selected_slot = slot;
+        },
         makePaymentBudpay(checkout_session_id, checkout_url) {
             BudPayCheckout({
                     key: this.$config.BUDPAY_PUBLIC_KEY || 'pk_test_ts9gpurgsis82hlhoaezoayijt06m4vhn4jrk2', // Replace with your public key
@@ -812,6 +1016,8 @@ export default {
                 if (this.delivery_type === 'delivery')  {
                     if (!this.delivery_meta.destination_address) return false;
                     if (!this.delivery_meta.destination_region && this.deliveryRegions.length) return false;
+
+                    if (!this.deliveryFee.price && !this.dynamic_delivery_fee) return false
                 }
 
                 this.step = 4
@@ -1374,5 +1580,127 @@ $dashboard-background-color: rgb(255, 255, 255);
 // Fix for Google Places autocomplete dropdown
 .pac-container {
   z-index: 100000000000000 !important;
+}
+
+// Delivery options styling
+.delivery-options {
+    margin: 24px 0;
+    
+    h4 {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: $charcoal;
+    }
+}
+
+.delivery-option {
+    border: 1px solid $border-grey;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        border-color: $primary;
+    }
+    
+    &.active {
+        border-color: $primary;
+        background-color: rgba(229, 57, 69, 0.05);
+    }
+    
+    .option-header {
+        display: flex;
+        align-items: center;
+        //justify-content: space-between;
+        margin-bottom: 8px;
+        
+        label {
+            margin: 0 0 0 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .price {
+            font-weight: 700;
+            color: $primary;
+        }
+    }
+    
+    .description {
+        font-size: 13px;
+        color: $faint;
+        margin-left: 24px;
+    }
+    
+    .discount-tag {
+        background-color: #5ac091;
+        color: white;
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-left: 8px;
+    }
+}
+
+.time-slots {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed $border-grey;
+    
+    .slot-day {
+        margin-bottom: 16px;
+        
+        h5 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: $charcoal;
+        }
+    }
+    
+    .slot-times {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .slot-time {
+        padding: 8px 12px;
+        border-radius: 8px;
+        background-color: $input_background;
+        border: 1px solid transparent;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+            border-color: $primary;
+        }
+        
+        &.selected {
+            background-color: $primary;
+            color: white;
+            border-color: $primary;
+            font-weight: 600;
+        }
+    }
+}
+
+// Update summary section to show delivery option information
+// Add this to your total section
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 14px;
+    
+    .discount {
+        color: #5ac091;
+    }
 }
 </style>
