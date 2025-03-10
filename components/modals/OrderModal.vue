@@ -139,6 +139,8 @@
   
   <script>
   import { mapGetters } from 'vuex'
+  import mixpanel from 'mixpanel-browser';
+
   
   export default {
     props: ['item'],
@@ -178,7 +180,20 @@
         return basePrice + additionsPrice;
       }
     },
+    mounted() {
+      this.mixpanel = mixpanel.init('1f580add8d0558ccae5fc19ca5997dab', { debug: false, track_pageview: false });
+      mixpanel.track("Shop Order Model Opened", {
+        product:this.item.name 
+      })
+    },
     methods: {
+      generateUniqueCode(length = 6) {
+          const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+          const codeLength = 4;
+          const randomBytes = crypto.randomBytes(length);
+          const code = [...randomBytes].map(byte => characters[byte % characters.length]).join('');
+          return code;
+      },
       removeFromCart() {
         this.$store.dispatch('shop/removeFromCart', this.item.id);
         this.$emit('close');
@@ -274,6 +289,7 @@
           variations: this.order.variations,
           question_answers: this.order.question_answers,
           availability: this.item.availability,
+          item_key: ge
         };
         
         if (this.order.delivery_pack && Object.keys(this.order.delivery_pack).length > 0) {

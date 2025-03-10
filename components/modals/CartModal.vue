@@ -439,7 +439,13 @@ export default {
 
         'delivery_meta.destination_address': debounce(function(value) {
             this.loadDynamicDeliveryFee();
-        }, 1000) // 500ms delay
+        }, 1000), // 500ms delay
+
+        'delivery_meta.scheduled_delivery_time': function(value) {
+            //alert(JSON.stringify(value))
+
+            this.$set(this.delivery_meta, 'scheduled_delivery_time', `${moment().toISOString()} ${value.hh}:${value.mm} ${value.A}`)
+        }
 
     },
     computed: {

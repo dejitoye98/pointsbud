@@ -759,7 +759,9 @@ export default {
             if (!value) {
                 // set the current_category to the first category
                 this.mixpanel = mixpanel.init('1f580add8d0558ccae5fc19ca5997dab', { debug: false, track_pageview: false });
-                mixpanel.track("Store Viewed", this.business.name)
+                mixpanel.track("Store Viewed ", {
+                  business: this.business?.name
+                })
                 
                 this.getCustomerSelf()
                 this.current_category = Object.keys(this.categoryProductMapping)[0]
