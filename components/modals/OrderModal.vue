@@ -275,6 +275,8 @@
         for (let v of this.order.variations) {
           variations_quantity += v.quantity;
         }
+
+        let item_key = this.generateUniqueCode(6);
         
         const item = {
           unitprice: this.item.unitprice,
@@ -289,7 +291,8 @@
           variations: this.order.variations,
           question_answers: this.order.question_answers,
           availability: this.item.availability,
-          item_key: ge
+          item_key: item_key,
+          item_uid: item_key,
         };
         
         if (this.order.delivery_pack && Object.keys(this.order.delivery_pack).length > 0) {
@@ -297,6 +300,9 @@
         }
         
         this.$store.dispatch('shop/addToCart', item);
+        mixpanel.track("Added to cart", {
+          product: this.item?.name
+        })
         
         // Show success toast
         this.$toast.success(`${item.name} added to cart`);
