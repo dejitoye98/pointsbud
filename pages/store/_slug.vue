@@ -250,14 +250,20 @@
                                         
                                         <div style="display: grid; grid-template-columns: 48% 48%; gap: 16px" v-else>
                                             
-                                            <GridItem :styling="styling" @onSelect="chooseProduct(item)"  :product="item" v-for="(item, index) in categoryProductMapping[category]" :key="index"></GridItem>
+                                            <GridItem 
+                                              :styling="styling" 
+                                              @onSelect="chooseProduct(item)"  
+                                              :product="item" 
+                                              v-for="(item, index) in categoryProductMapping[category]" 
+                                              :key="index">
+                                            </GridItem>
     
     
                                         </div>
                 
-                                        <div v-if="categoryProductMapping[category][0].remaining_products" class="padding-16 see-more">
+                                        <div v-if="categoryProductMapping[category][0]?.remaining_products" class="padding-16 see-more">
                                             <p class="text-center">
-                                                See {{ categoryProductMapping[category][0].remaining_products }} more products
+                                                See {{ categoryProductMapping[category][0]?.remaining_products }} more products
                                             </p>
                                         </div>
                 
@@ -725,34 +731,47 @@ export default {
             }
             return final
         },
-        categoryProductMapping() {
-            const mapping = {
+              // First, get ordered categories
+          orderedCategories() {
+              if (!this.categories) return [];
+              
+              // Sort categories by priority
+              return [...this.categories].sort((a, b) => {
+                  const priorityA = a.priority !== undefined ? a.priority : 999;
+                  const priorityB = b.priority !== undefined ? b.priority : 999;
+                  return priorityA - priorityB;
+              });
+          },
 
-            }
-            if (this.categories) {
-
-    
-                for (let c of this.categories) {
-                    const category_products = this.products
-                        .filter(p => p.category_id === c.id)
-                        .sort((a, b) => {
-                            // Sort by availability first
-                            if (a.availability === 'available' && b.availability === 'out-of-stock') {
-                                return -1; // `a` comes before `b`
-                            }
-                            if (a.availability === 'out-of-stock' && b.availability === 'available') {
-                                return 1; // `b` comes before `a`
-                            }
-                            // If availabilsity is the same, sort by name
-                            return a.name.localeCompare(b.name);
-                        });
-                    if (category_products.length) {
-                        mapping[c.name] = category_products;
-                    }
-                }
-            }
-            return mapping;
-        }
+          // Then use ordered categories in your mapping
+          categoryProductMapping() {
+              const mapping = {};
+              
+              if (this.orderedCategories.length) {
+                  for (let c of this.orderedCategories) {
+                      const category_products = this.products
+                          .filter(p => p.category_id === c.id)
+                          .sort((a, b) => {
+                              // Sort by priority first (lower number means higher priority)
+                              if ((a.priority || 999) < (b.priority || 999)) {
+                                  return -1; // `a` comes before `b`
+                              }
+                              if ((a.priority || 999) > (b.priority || 999)) {
+                                  return 1; // `b` comes before `a`
+                              }
+                              
+                              // If priority is the same, sort by name
+                              return a.name.localeCompare(b.name);
+                          });
+                          
+                      if (category_products.length) {
+                          mapping[c.name] = category_products;
+                      }
+                  }
+              }
+              
+              return mapping;
+          }
     },
     watch: {
         loading_data(value) {

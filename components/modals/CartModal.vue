@@ -301,6 +301,39 @@
                         </div>
                     </div>
                 </template>
+
+                <template v-else-if="step === 5">
+                    <div class="payment-success">
+                        <div class="success-icon">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18457 2.99721 7.13633 4.39828 5.49707C5.79935 3.85782 7.69279 2.71538 9.79619 2.24015C11.8996 1.76491 14.1003 1.98234 16.07 2.86" stroke="#5ac091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M22 4L12 14.01L9 11.01" stroke="#5ac091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h2 class="success-title">Payment Successful!</h2>
+                        <p class="success-message">Your order has been placed successfully. The merchant will process it shortly.</p>
+                        
+                        <div class="order-details">
+                            <div class="order-number">
+                                <span>Order Number:</span>
+                                <strong>#{{ checkout_url }}</strong>
+                            </div>
+                            <div class="order-time">
+                                <span>Order Time:</span>
+                                <strong>{{ new Date().toLocaleString() }}</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="success-actions">
+                            <button class="big-btn full-width" @click="viewOrderDetails">
+                                View Order Details
+                            </button>
+                            <button class="big-btn full-width outline" @click="$emit('close')">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </template>
             </div>
         </template>
     
@@ -652,6 +685,10 @@ export default {
         },
     },
     methods: {
+
+        viewOrderDetails() {
+            this.$router.push('/track-order/' + this.checkout_url);
+        },
 
         async loadDynamicDeliveryFee(){
             this.loading_dynamic_delivery_fee = true
@@ -1709,4 +1746,113 @@ $dashboard-background-color: rgb(255, 255, 255);
         color: #5ac091;
     }
 }
+
+
+.payment-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 24px 16px;
+    
+    .success-icon {
+      background-color: rgba(90, 192, 145, 0.1);
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      animation: scale-in 0.5s ease forwards;
+    }
+    
+    .success-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #5ac091;
+      margin-bottom: 16px;
+      animation: fade-in 0.5s ease 0.3s both;
+    }
+    
+    .success-message {
+      font-size: 15px;
+      color: $faint;
+      margin-bottom: 32px;
+      max-width: 340px;
+      line-height: 1.5;
+      animation: fade-in 0.5s ease 0.4s both;
+    }
+    
+    .order-details {
+      background-color: $input_background;
+      border-radius: 12px;
+      padding: 16px;
+      width: 100%;
+      margin-bottom: 32px;
+      animation: fade-in 0.5s ease 0.5s both;
+      
+      .order-number, .order-time {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        
+        span {
+          color: $faint;
+          font-size: 14px;
+        }
+        
+        strong {
+          font-weight: 600;
+          color: $charcoal;
+        }
+      }
+      
+      .order-number {
+        border-bottom: 1px dashed $border-grey;
+        padding-bottom: 12px;
+        margin-bottom: 4px;
+      }
+    }
+    
+    .success-actions {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      animation: fade-in 0.5s ease 0.6s both;
+      
+      .big-btn.outline {
+        background-color: transparent;
+        color: $primary !important;
+        border: 1px solid $primary;
+        
+        &:hover {
+          background-color: rgba(229, 57, 69, 0.05);
+        }
+      }
+    }
+  }
+  
+  @keyframes scale-in {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>

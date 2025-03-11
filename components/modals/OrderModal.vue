@@ -181,10 +181,13 @@
       }
     },
     mounted() {
-      this.mixpanel = mixpanel.init('1f580add8d0558ccae5fc19ca5997dab', { debug: false, track_pageview: false });
-      mixpanel.track("Shop Order Model Opened", {
-        product:this.item.name 
-      })
+      if (this.item) {
+
+        this.mixpanel = mixpanel.init('1f580add8d0558ccae5fc19ca5997dab', { debug: false, track_pageview: false });
+        mixpanel.track("Shop Order Model Opened", {
+          product:this.item?.name 
+        })
+      }
     },
     methods: {
       generateUniqueCode(length = 6) {
