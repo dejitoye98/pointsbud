@@ -510,6 +510,45 @@ export default {
         
     },
     methods: {
+      addToRecentlyVisited() {
+          try {
+            // Get existing recently visited items
+            let recentlyVisited = [];
+            const storedData = window.localStorage.getItem('recently_visited');
+            
+            if (storedData) {
+              recentlyVisited = JSON.parse(storedData);
+            }
+            
+            // Check if the current business already exists in the array
+            const currentSlug = this.business?.slug;
+
+            //alert(JSON.stringify(this.business))
+
+          // alert(currentSlug)
+            
+            if (!currentSlug) {
+              return; // Exit if no business slug is available
+            }
+            
+            // Remove the current business if it already exists in the array
+            recentlyVisited = recentlyVisited.filter(slug => slug !== currentSlug);
+            
+            // Add the current business to the beginning of the array (most recent)
+            recentlyVisited.unshift(currentSlug);
+            
+            // Limit the array to a maximum number of entries (e.g., 10)
+            const maxEntries = 10;
+            if (recentlyVisited.length > maxEntries) {
+              recentlyVisited = recentlyVisited.slice(0, maxEntries);
+            }
+            
+            // Save back to localStorage
+            window.localStorage.setItem('recently_visited', JSON.stringify(recentlyVisited));
+          } catch(e) {
+            console.log(e);
+          }
+        },
         changeMode(value) {
             this.current_mode = value;
         },
@@ -786,6 +825,8 @@ export default {
                 this.current_category = Object.keys(this.categoryProductMapping)[0]
 
 
+                //this.addToRecentlyVisited();
+
                 // setTi
 
                 setTimeout(()=> {
@@ -799,6 +840,11 @@ export default {
                 this.searched_products = []
 
             }
+        },
+        business(value) {
+          if (value) {
+            this.addToRecentlyVisited()
+          }
         }
     },
     components: { SimpleListShopItem, ShopCartModal, ShopCategoryNavigation, GridItem, OrderModal, ChooseModeModal }

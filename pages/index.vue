@@ -43,7 +43,7 @@
             <NuxtLink to="/recent" class="see-all">See All</NuxtLink>
           </div>
   
-          <div v-if="recentlyVisited.length === 0" class="empty-state">
+          <div v-if="recently_visited.length === 0" class="empty-state">
             <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -53,35 +53,35 @@
   
           <div v-else class="business-cards">
             <div 
-              v-for="(business, index) in recentlyVisited" 
+              v-for="(business, index) in recently_visited" 
               :key="'recent-' + index" 
               class="business-card"
-              @click="goToBusiness(business.id)"
+              @click="goToBusiness(business.slug)"
             >
               <div style="position: relative;">
-                <img :src="business.image" :alt="business.name" class="card-image">
-                <span class="recently-viewed-tag">{{ business.lastVisited }}</span>
+                <img :src="business.logo" :alt="business.name" class="card-image">
+                <span class="recently-viewed-tag">{{  }}</span>
               </div>
               <div class="card-content">
-                <span class="card-category">{{ business.category }}</span>
+                <span class="card-category">{{ business.business_type || "business" }}</span>
                 <h3 class="card-title">{{ business.name }}</h3>
                 <div class="card-info">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  {{ business.location }}
+                  {{ business.address || '-' }}
                 </div>
                 <div class="card-info">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <polyline points="12 6 12 12 16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  {{ business.hours }}
+                  {{ business.hours || '-'}}
                 </div>
                 <div class="card-rating">
-                  <div class="stars">{{ getStarsDisplay(business.rating) }}</div>
-                  <span class="rating-count">({{ business.ratingCount }})</span>
+                  <div class="stars">{{ 5 ||'-' }}</div>
+                  <span class="rating-count">({{ 26}})</span>
                 </div>
               </div>
             </div>
@@ -90,7 +90,7 @@
       </section>
   
       <!-- Popular in Your Area Section -->
-      <section class="businesses-section">
+      <section class="businesses-section" v-if="false">
         <div class="container">
           <div class="section-header">
             <h2 class="section-title">Popular in Your Area</h2>
@@ -133,7 +133,7 @@
       </section>
   
       <!-- Food Categories Section -->
-      <section class="businesses-section">
+      <section class="businesses-section" v-if="false">
         <div class="container">
           <div class="section-header">
             <h2 class="section-title">Food Categories</h2>
@@ -165,6 +165,7 @@
     name: 'ShopHomePage',
     mounted() {
         this.getUserLocation()
+        this.getRecentlyVisitedBusinesses();
     },
     
     data() {
@@ -182,6 +183,7 @@
             message: ''
         },
         searchQuery: '',
+        recently_visited: [],
         recentlyVisited: [
           {
             id: 'cozy-kitchen',
@@ -304,8 +306,39 @@
         ]
       }
     },
+
+    computed: {
+      recentlyVisitedBusinessIds() {
+        try {
+            let recently_visited = [];
+            let temp = window.localStorage.getItem('recently_visited');
+
+            if (temp) {
+              recently_visited = JSON.parse(temp)
+            }
+
+
+          //alert(JSON.stringify(recently_visited))
+
+           return recently_visited
+
+
+          }catch(e) {
+           // alert(e)
+            console.log(e)
+          }
+        }
+    },
     
     methods: {
+      getRecentlyVisitedBusinesses() {
+        if (this.recentlyVisitedBusinessIds?.length) {
+          //alert(this.recentlyVisitedBusinessIds)
+          this.$api.get('/search/businesses?slugs=' + this.recentlyVisitedBusinessIds.join(',') ).then(resp=> {
+            this.recently_visited = resp.data.data.list
+          })
+        }
+      },
       searchBusinesses() {
         if (this.searchQuery.trim()) {
           // In a real app, this would navigate to search results
