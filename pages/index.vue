@@ -102,7 +102,7 @@
               v-for="(business, index) in popularBusinesses" 
               :key="'popular-' + index" 
               class="business-card"
-              @click="goToBusiness(business.id)"
+              @click="goToBusiness(business.slug)"
             >
               <img :src="business.image" :alt="business.name" class="card-image">
               <div class="card-content">
@@ -348,7 +348,7 @@
       },
       
       goToBusiness(id) {
-        this.$router.push(`/business/${id}`)
+        this.$router.push(`/store/${id}`)
       },
       
       goToCategory(slug) {

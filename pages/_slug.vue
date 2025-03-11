@@ -1,6 +1,6 @@
 <template>
 
-    <div class="page">
+    <div class="page" v-if="false">
         <div class="page__container">
 
             <div class="navbar">
