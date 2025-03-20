@@ -141,9 +141,17 @@
   import { mapGetters } from 'vuex'
   import mixpanel from 'mixpanel-browser';
   import crypto from 'crypto'
+
+
   
   export default {
     props: ['item'],
+    created() {
+        if (this.item) {
+            //alert(this.item.deal_id)
+            this.order.deal_id = this.item.deal_id;
+        }
+    },
     data() {
       return {
         order: {
@@ -152,14 +160,16 @@
           variations: [],
           customer_comment: "",
           delivery_pack: {},
+          deal_id: null,
         },
+        
         hasMultipleImages: true, // Set to true if the item has multiple images
       }
     },
     computed: {
-      ...mapGetters('shop', ['cart']),
+      ...mapGetters('preorder', ['cart']),
       isInCart() {
-        return this.cart.find(item => item.id === this.item.id)
+        return this.cart?.find(item => item.id === this.item.id)
       },
       productAdditions() {
         return this.item && this.item.meta && JSON.parse(this.item.meta).additions || null;
@@ -184,7 +194,7 @@
       if (this.item) {
 
         this.mixpanel = mixpanel.init('1f580add8d0558ccae5fc19ca5997dab', { debug: false, track_pageview: false });
-        mixpanel.track("Shop Order Model Opened", {
+        mixpanel.track("Preorder Model Opened", {
           product:this.item?.name 
         })
       }
@@ -198,14 +208,14 @@
           return code;
       },
       removeFromCart() {
-        this.$store.dispatch('shop/removeFromCart', this.item.id);
+        this.$store.dispatch('preorder/removeFromCart', this.item.id);
         this.$emit('close');
       },
       handleInput($evt) {
         const value = parseInt($evt.target.value) || 1;
         
         if (this.isInCart) {
-          this.$store.dispatch('shop/setItemQuantity', {id: this.item.id, quantity: value})
+          this.$store.dispatch('preorder/setItemQuantity', {id: this.item.id, quantity: value})
         } else {
           this.order.quantity = value;
         }
@@ -216,7 +226,7 @@
           return;
         }
         
-        this.$store.dispatch('shop/increaseItemQuantity', this.item.id)
+        this.$store.dispatch('preorder/increaseItemQuantity', this.item.id)
       },
       decrease() {
         if (!this.isInCart) {
@@ -226,7 +236,7 @@
           return;
         }
         
-        this.$store.dispatch('shop/decreaseItemQuantity', this.item.id)
+        this.$store.dispatch('preorder/decreaseItemQuantity', this.item.id)
       },
       isOptionSelected(addition, option) {
         const found = this.order.additions.find(a => a.addition === addition && a.value === option);
@@ -296,13 +306,19 @@
           availability: this.item.availability,
           item_key: item_key,
           item_uid: item_key,
+          deal_id: this.item.deal_id
         };
         
         if (this.order.delivery_pack && Object.keys(this.order.delivery_pack).length > 0) {
           item.delivery_pack = this.order.delivery_pack;
         }
         
-        this.$store.dispatch('shop/addToCart', item);
+        this.$store.dispatch('preorder/addToCart', item);
+
+
+        
+
+        //alert(JSON.stringify(this.cart))
         mixpanel.track("Added to cart", {
           product: this.item?.name
         })
