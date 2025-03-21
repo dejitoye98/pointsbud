@@ -15,6 +15,7 @@
 
         <CartModal :mode="current_mode"  @close="show_cart_modal = false"  v-if="show_cart_modal && this.cart.length" :business="business"></CartModal>
         
+        <PromotionsModal @close="show_promotion_modal = false"  v-if="show_promotion_modal" :mixpanel="mixpanel" :device_id="device_id" :promotion="promotion"></PromotionsModal>
 
         <template v-if="!loading_data">
 
@@ -469,6 +470,9 @@ import ChooseModeModal from '../../components/modals/ChooseModeModal.vue';
 export default {
     data() {
         return {
+            show_promotion_modal: false,
+            device_id: null,
+
             current_mode: '',
             choose_mode: true,
             show_live_menu_modal: false,
@@ -504,12 +508,78 @@ export default {
             customer_businesses: [],
 
             auth_customer: null,
+
+            promotions: [],
+            promotion: null,
+            device_id: null,
         };
     },
     mounted() {
         
     },
     methods: {
+      registerBusinessScan() {
+            const vm = this;
+            function getDeviceId() {
+                let device_id = window.localStorage.getItem("_deviceid"); 
+                if (!device_id)  {
+                    device_id = vm.generateUniqueCode(8); 
+                    window.localStorage.setItem("_deviceid", device_id)
+
+                }
+                return device_id
+                
+            }
+
+            const device_id = getDeviceId();
+            
+            this.$api.post('/qr/register-scan', {
+                business_id: this.business?.id,
+                device_id
+
+            }).then(resp=> {
+
+            })
+        },
+      getPromotions() {
+            this.$api.get('/promotions?retrieve_all=true&business_id='+this.business?.id).then(resp=> {
+                this.promotions = resp.data.data;
+                this.promotion = this.promotions[0]
+               // this.promotion = resp.data.data
+
+                if (this.promotion) {
+                    //alert(JSON.stringify(this.promotion))
+                    // preload the image 
+                    const img = new Image();
+                    img.src = this.promotion?.thumbnail;
+                    //alert(img.src)
+
+
+                    img.onload = () => {
+                      
+                        //lert('loaded')
+                        setTimeout(() => {
+
+                            if (this.promotion) {
+
+                               
+                              //  alert(img)
+                                this.show_promotion_modal = true;
+                                // create an image
+                            }
+
+
+                        }, 5000)
+                    }
+                    
+
+                }
+          
+               
+            }).catch(e => {
+              alert(e)
+            })
+        },
       addToRecentlyVisited() {
           try {
             // Get existing recently visited items
@@ -832,6 +902,10 @@ export default {
                 setTimeout(()=> {
                     this.show_live_menu_modal = true
                 }, 2000)
+
+
+                this.registerBusinessScan()
+                this.getPromotions()
             }
         },
         search_term(value) {
