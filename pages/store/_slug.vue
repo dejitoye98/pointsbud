@@ -4,7 +4,7 @@
 
         </ShopCartModal>-->
 
-        <ChooseModeModal v-if="choose_mode" @close="choose_mode = false" @onChoose="changeMode"></ChooseModeModal>
+        <ChooseModeModal v-if="choose_mode && !table_identifier" @close="choose_mode = false" @onChoose="changeMode"></ChooseModeModal>
     
         <LiveMenuModal  :business="business" v-if="show_live_menu_modal && false" @close="show_live_menu_modal = false">
                 
@@ -292,20 +292,13 @@
                         </template>
     
                         <template v-else-if="current_tab === 'deals'">
-                            <div class="list">
-    
-                                <div style="display: grid; grid-template-columns: 48% 48%; gap: 16px">
-                                            
-                                    <GridItem :styling="styling" @onSelect="chooseProduct(item)"  :product="item" v-for="(item, index) in deals" :key="index"></GridItem>
-    
-    
-                                </div>
+                            <DealsSection></DealsSection>
+                        </template>
 
-                                
-                                <div class="grid">
-                                    
-                                </div>
-                                
+
+                        <template v-else-if="current_tab.toLowerCase() === 'announcements'">
+                            <div>
+                                <p class="text-center padding-16">No announcements yet</p>
                             </div>
                         </template>
     
@@ -466,10 +459,12 @@ import mixpanel from 'mixpanel-browser';
 import GridItem from '../../components/shop/GridItem.vue';
 import OrderModal from '../../components/modals/OrderModal.vue';
 import ChooseModeModal from '../../components/modals/ChooseModeModal.vue';
+import DealsSection from '../../components/shop/DealsSection.vue';
 
 export default {
     data() {
         return {
+            table_identifier: null,
             show_promotion_modal: false,
             device_id: null,
 
@@ -516,6 +511,12 @@ export default {
     },
     mounted() {
         
+    },
+
+    created() {
+      if (this.$route.query.t) {
+        this.table_identifier = this.$route.query.t
+      }
     },
     methods: {
       registerBusinessScan() {
@@ -921,7 +922,7 @@ export default {
           }
         }
     },
-    components: { SimpleListShopItem, ShopCartModal, ShopCategoryNavigation, GridItem, OrderModal, ChooseModeModal }
+    components: { SimpleListShopItem, ShopCartModal, ShopCategoryNavigation, GridItem, OrderModal, ChooseModeModal, DealsSection }
 }
 </script>
 

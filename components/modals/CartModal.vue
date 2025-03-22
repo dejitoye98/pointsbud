@@ -368,6 +368,7 @@ export default {
     props: ['business', 'mode'],
     data() {
         return {
+            table_identifier: null,
 
             loading_dynamic_delivery_fee: false,
             dynamic_delivery_fee: 0,
@@ -441,6 +442,12 @@ export default {
             },
             
         }
+    },
+
+    created() {
+        if (this.$route.query.t) {
+        this.table_identifier = this.$route.query.t
+      }
     },
     mounted() {
         if (this.customer_wallet && Object.keys(this.customer_wallet).length > 1) {
@@ -964,7 +971,7 @@ export default {
             const payload = {
                 token: this.$cookies.get("usertoken"),
                 r_uid: Date.now(),
-                delivery_type: this.delivery_type,
+                delivery_type: this.table_identifier || this.delivery_type,
                 delivery_meta: this.delivery_meta,
                 delivery_fee: this.deliveryFee && this.deliveryFee.price,
                 business_slug: this.$route.params.slug,

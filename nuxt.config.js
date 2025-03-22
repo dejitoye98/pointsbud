@@ -9,10 +9,7 @@ export default {
         PAYSTACK_PUBLIC_KEY: process.env.PAYSTACK_PUBLIC_KEY,
         DINE_ORDER_SERVICE_URL: process.env.DINE_ORDER_SERVICE_URL,
         BUDPAY_PUBLIC_KEY: process.env.BUDPAY_PUBLIC_KEY,
-
-
     },
-
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
@@ -40,12 +37,10 @@ export default {
                 href: "https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&display=swap",
                 rel: "stylesheet",
             },
-
             {
                 href: "https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap",
                 rel: "stylesheet",
             },
-           
             {
                 href: "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap",
                 rel: "stylesheet",
@@ -54,7 +49,6 @@ export default {
                 href: "https://fonts.googleapis.com/css2?family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap",
                 rel: "stylesheet",
             },
-           
             {
                 href: "https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap",
                 rel: "stylesheet",
@@ -88,7 +82,6 @@ export default {
             {
                 src: "https://maps.googleapis.com/maps/api/js?key=AIzaSyBS9ZG7dyw6-hHcnp1GhfR47zh7vCz6OHY&libraries=places"
             },
-
             {
                 src: 'https://js.paystack.co/v1/inline.js',
             },
@@ -99,18 +92,11 @@ export default {
                 src: "https://checkout.payaza.africa/js/v1/bundle.js",
                 defer: true
             },
-           
-    
-    
-            
-
-
         ],
     },
 
     // Global CSS: https://go.nuxtjs.dev/config-css
     css: ["~assets/scss/colors.scss", "~styles/css/main.css"],
-
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [{ 
@@ -120,9 +106,8 @@ export default {
         "@/plugins/input.js",
         "@/plugins/currency.js",
         "@/plugins/vue-tel-input"
-        
-
     ],
+    
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: [
         {
@@ -130,7 +115,6 @@ export default {
             pathPrefix: false,
             extensions: ["vue"],
         },
-        
     ],
 
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
@@ -149,7 +133,61 @@ export default {
         "@nuxtjs/axios",
         "@nuxtjs/style-resources",
         ["cookie-universal-nuxt", { alias: "cookies" }],
+        '@nuxtjs/pwa', // Add the PWA module here
     ],
+    
+    // PWA module configuration
+    pwa: {
+        manifest: {
+            name: 'PointsBud',
+            short_name: 'PointsBud',
+            description: 'Buying and selling made easier',
+            lang: 'en',
+            theme_color: '#ffffff', // You can change this to match your brand
+            background_color: '#ffffff', // You can change this to match your brand
+            display: 'standalone',
+            orientation: 'portrait',
+            start_url: '/?standalone=true',
+            icons: [
+                {
+                    src: '/icon.png', // Make sure you have this file in your static directory
+                    sizes: '512x512',
+                    type: 'image/png',
+                    purpose: 'any maskable'
+                }
+            ]
+        },
+        meta: {
+            name: 'PointsBud',
+            author: 'PointsBud Team',
+            description: 'Buying and selling made easier',
+            theme_color: '#ffffff', // You can change this to match your brand
+            lang: 'en',
+            ogSiteName: 'PointsBud',
+            ogTitle: 'PointsBud',
+            ogDescription: 'Buying and selling made easier',
+            nativeUI: true
+        },
+        workbox: {
+            // Workbox options
+            // See https://pwa.nuxtjs.org/workbox for more info
+            runtimeCaching: [
+                {
+                    urlPattern: 'https://fonts.googleapis.com/.*',
+                    handler: 'cacheFirst',
+                    method: 'GET',
+                    strategyOptions: { cacheableResponse: { statuses: [0, 200] } }
+                },
+                {
+                    urlPattern: 'https://fonts.gstatic.com/.*',
+                    handler: 'cacheFirst',
+                    method: 'GET',
+                    strategyOptions: { cacheableResponse: { statuses: [0, 200] } }
+                }
+            ]
+        }
+    },
+    
     toast: {
         position: 'top-right',
         duration: 3000, // 3 seconds before auto-closing
@@ -176,6 +214,4 @@ export default {
             poll: 1000,
         },
     },
-
-
 };
