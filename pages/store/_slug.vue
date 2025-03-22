@@ -74,7 +74,7 @@
                                         d="M17.25 3H6.75A2.25 2.25 0 004.5 5.25v15.12a.75.75 0 001.123.654l6.377-3.586 6.377 3.586a.75.75 0 001.123-.654V5.25A2.25 2.25 0 0017.25 3z"
                                       />
                                     </svg>
-                                    Bookmark
+                                    Bookmark Us
                                 </button>
                             </div>
                     
@@ -103,6 +103,9 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <BookmarkBadgeBanner :business="business"></BookmarkBadgeBanner>
     
                     <div v-if="false" class="header flex space-between padding-16 flex-center-y">
                         <div class="header__purchases">Purchases: 0</div>
