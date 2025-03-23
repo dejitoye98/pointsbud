@@ -631,6 +631,7 @@ export default {
             this.current_mode = value;
         },
         triggerBookmark() {
+            mixpanel?.track("Clicked Bookmark Store", {business: this.business?.name})
             if (this.auth_customer && this.auth_customer.id) {
                 this.followBusiness()
             }
