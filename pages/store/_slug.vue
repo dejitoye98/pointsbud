@@ -252,9 +252,10 @@
                                             
                                         </div>
                                         
-                                        <div style="display: grid; grid-template-columns: 48% 48%; gap: 16px" v-else>
-                                            
+                                        <div :style="table_identifier ? { display: 'flex', flexDirection: 'column', gap: '16px' } : { display: 'grid', gridTemplateColumns: '48% 48%', gap: '16px' }" v-else>
+                                          
                                             <GridItem 
+                                              :is_list_item="table_identifier"
                                               :styling="styling" 
                                               @onSelect="chooseProduct(item)"  
                                               :product="item" 
@@ -280,7 +281,10 @@
                 
                                 <div class="list" v-else>
                                     <div class="section">
-                                        <GridItem :product="product" v-for="(product, index) in searchedProducts" :key="index"></GridItem>
+                                        <GridItem 
+                                          :is_list_item="table_identifier"
+
+                                          :product="product" v-for="(product, index) in searchedProducts" :key="index"></GridItem>
                 
                                         <template v-if="searching_db">
                                             <div class="flex-col flex-center-x flex-center-y">
