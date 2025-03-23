@@ -2,7 +2,7 @@
   <div class="track-order-container">
     <div class="order-header">
       <h1>Track Your Order</h1>
-      <p class="order-id">Order #{{ session?.pending_sale?.serial_no || order.r_uid }}</p>
+      <p class="order-id">Order #{{ session?.pending_sale?.serial_no || order.r_uid || "13897"}}</p>
       <p class="order-date">Placed on {{ formatDate(session?.createdAt) }}</p>
     </div>
 
@@ -57,15 +57,19 @@
         <h3>Order Summary</h3>
         <div class="summary-row">
           <span>Subtotal:</span>
-          <span>{{}}</span>
+          <span>{{"NGN" | currencySymbol}}{{subTotal | money}}</span>
+        </div>
+        <div class="summary-row">
+          <span>Service Fee:</span>
+          <span>{{"NGN" | currencySymbol}} {{appFee | money}}</span>
         </div>
         <div class="summary-row" v-if="session.pending_sale.shipping_fee">
           <span>Shipping:</span>
-          <span>{{ formatPrice(session.pending_sale.shipping_fee) }}</span>
+          <span> {{"NGN" | currencySymbol}}{{ session.pending_sale.shipping_fee | money }}</span>
         </div>
         <div class="summary-row" v-if="session.pending_sale.tax">
           <span>Tax:</span>
-          <span>{{ session.pending_sale.taxes || 0 | money }}</span>
+          <span>{{"NGN" | currencySymbol}}{{ session.pending_sale.taxes || 0 | money }}</span>
         </div>
         <div class="summary-row" v-if="session.pending_sale.discount">
           <span>Discount:</span>
@@ -73,7 +77,7 @@
         </div>
         <div class="summary-row total">
           <span>Total:</span>
-          <span>{{"NGN" | currencySymbol}}{{ grandTotal }}</span>
+          <span>{{"NGN" | currencySymbol}}{{ grandTotal | money }}</span>
         </div>
       </div>
     </div>
@@ -104,6 +108,7 @@
 
 <script>
 import moment from 'moment';
+import { urlToHttpOptions } from 'url';
 export default {
   data() {
     return {
@@ -162,7 +167,7 @@ export default {
   },
 
   computed: {
-    grandTotal() {
+    subTotal() {
       if (this.session?.pending_sale?.orders) {
         let sum = 0;
         for (let order of this.session?.pending_sale?.orders) {
@@ -172,6 +177,15 @@ export default {
         }
         return sum
       }
+      return 0
+    },
+    grandTotal() {
+      return this.subTotal + this.appFee + this.deliveryFee
+    },
+    appFee() {
+      return this.session?.pending_sale?.app_fee || 0
+    },
+    deliveryFee() {
       return 0
     },
     deliveryMeta() {
