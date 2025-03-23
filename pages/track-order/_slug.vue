@@ -6,7 +6,7 @@
       <p class="order-date">Placed on {{ formatDate(session?.createdAt) }}</p>
     </div>
 
-    <div class="order-status-cards">
+    <div class="order-status-cards" v-if="false">
       <!-- Delivery Status Card -->
       <div class="status-card">
         <div class="status-icon" :class="getDeliveryStatusClass()">
