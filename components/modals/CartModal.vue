@@ -55,7 +55,7 @@
 
                     <CartItem v-for="(item, index) in cart" :item="item"></CartItem>
 
-                    <button class="big-btn full-width" @click="step++">
+                    <button class="big-btn full-width" @click="step++" v-if="!table_identifier">
                         Continue With Items
                     </button>
                 </template>
