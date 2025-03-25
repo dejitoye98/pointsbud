@@ -55,8 +55,12 @@
 
                     <CartItem v-for="(item, index) in cart" :item="item"></CartItem>
 
-                    <button class="big-btn full-width" @click="step++" v-if="!table_identifier">
+                    <button class="big-btn full-width" @click="step++" v-if="business.qr_ordering_mode === 'order-and-pay' ">
                         Continue With Items
+                    </button>
+
+                    <button class="big-btn full-width" :disabled="creating_session" v-else-if="business.qr_ordering_mode === 'order-only'" @click="step = 6">
+                        Place Order with Attendant
                     </button>
                 </template>
 
@@ -334,7 +338,28 @@
                         </div>
                     </div>
                 </template>
+
+                <template v-else-if="step===6"> 
+                    <p>Please enter your first name</p>
+                    <div class="form-input">
+                        <label for="">First Name <span class="required">*</span> </label>
+                        <input v-model="payload.customer_name">
+                    </div>
+                    <div class="form-input">
+                        <label for="">Phone Number</label>
+                        <vue-tel-input v-model="payload.customer_phone"></vue-tel-input>
+                        <span style="font-size: 11px !important">To track your order</span>
+                    </div>
+
+                    <button class="btn big-btn full-width" :disabled="!payload.customer_name" @click="placeUnpaidOrder">Place Order</button>
+                </template>
+
+
+                <template v-else-if="step === 7">
+                    <p>Your order has been placed with an attend </p>
+                </template>
             </div>
+
         </template>
     
 
@@ -347,6 +372,12 @@
 import {mapGetters} from 'vuex'
 import VueTimepicker from 'vue2-timepicker/src/vue-timepicker.vue'
 import myDatepicker from 'vue-datepicker';
+import crypto from 'crypto'
+import { initializeApp } from 'firebase/app';
+
+
+import { getDatabase, ref, set, get, update, push, serverTimestamp, increment, runTransaction, onValue } from 'firebase/database'
+
 
 import moment from 'moment'
 import PriceComparisonBadge from '../PriceComparisonBadge.vue';
@@ -368,6 +399,7 @@ export default {
     props: ['business', 'mode'],
     data() {
         return {
+            db: null,
             table_identifier: null,
 
             loading_dynamic_delivery_fee: false,
@@ -445,8 +477,10 @@ export default {
     },
 
     created() {
+        this.setupFirebase()
+
         if (this.$route.query.t) {
-        this.table_identifier = this.$route.query.t
+        this.table_identifier = 'table_' +  this.$route.query.t
       }
     },
     mounted() {
@@ -692,7 +726,97 @@ export default {
         },
     },
     methods: {
+        setupFirebase() {
+            const firebaseConfig = {
+                apiKey: "AIzaSyBdh2ygNy-eIL0OtJwlA4LGAfHpcXMmWB8",
+                authDomain: "pointsbudapp.firebaseapp.com",
+                databaseURL: "https://pointsbudapp-default-rtdb.firebaseio.com",
+                projectId: "pointsbudapp",
+                storageBucket: "pointsbudapp.appspot.com",
+                messagingSenderId: "76264286716",
+                appId: "1:76264286716:web:b1caa1165fae6fb0a4aa79",
+                measurementId: "G-PM3C3PV904"
+            };
 
+            const firebaseApp = initializeApp(firebaseConfig);
+            this.db = getDatabase();
+            // alert(this.db)
+
+        },
+
+        async placeUnpaidOrder() {
+            const orders = [];
+            let r_uid =  this.generateUniqueCode();
+
+            this.cart.forEach(async item => {
+                let item_key = this.generateUniqueCode(5);
+                
+                const obj = {
+                    name: item.name,
+                    product_id: item.id,
+                    unitprice: item.unitprice,
+                    item_key,
+                    r_uid,
+                    item_uid: item_key, 
+                    space: this.table_identifier || this.mode  || 'delivery', 
+                    timestamp: serverTimestamp(),
+                    //points_earned: this.loyalty_program && item.points_to_earn || 0,
+                    //points_used: this.loyalty_program && this.products_using_points.includes(item.id) ? (item.quantity * item.points_to_deduct) : 0,
+                    currency: item.currency || "NGN",
+                    quantity: item.quantity,
+                    total_amount: (item.quantity * item.unitprice),
+                    customer_comment: item.customer_comment || "",
+                    delivery_pack: item.delivery_pack || '',
+                    //variations: item.variations,
+                    question_answers: item.question_answers || ""
+                };
+                orders.push(obj);
+
+                
+                
+            });
+
+            let payload = {
+                delivery_type: this.table_identifier || this.mode || 'delivery',
+                delivery_fee:   0,
+                business_slug: this.$route.params.slug,
+                business_id: this.business.id,
+                items: orders,
+                taxes: this.taxes,
+                origin: 'qr-call-waiter',
+               // vat: parseFloat(this.vat || 0),
+                //appFee: this.appFee,
+                // checkout_session: ref,
+                customer_phone: this.payload.customer_phone,
+                customer_name: this.payload.customer_name,
+                send_alert: true,
+                
+            }
+
+            await this.createCheckoutSession(payload)
+            this.step = 7;
+
+            const orders_ref = ref(this.db, `business_orders/${this.business.id}/${this.table_identifier}/orders`)
+            let new_order_ref = push(orders_ref);
+
+            await set(new_order_ref, {
+                r_uid,
+                status: 'pending',
+                timestamp: serverTimestamp(),
+                customer_name: this.payload.customer_name || '',
+                customer_phone: this.payload.customer_phone || '',
+                taxes: this.totalTaxes || 0,
+                ...orders
+            })
+        },
+
+
+        generateUniqueCode(length = 6) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const randomBytes = crypto.randomBytes(length);
+            const code = [...randomBytes].map(byte => characters[byte % characters.length]).join('');
+            return code;
+        },
         viewOrderDetails() {
             this.$router.push('/track-order/' + this.checkout_url);
         },
@@ -949,10 +1073,13 @@ export default {
             const orders = [];
 
             this.cart.forEach(async item => {
+                let item_key = await this.generateUniqueCode(5)
                 const obj = {
                     name: item.name,
                     product_id: item.id,
                     unitprice: item.unitprice,
+                    item_key, 
+                    item_uid: item_key,
                     //points_earned: this.loyalty_program && item.points_to_earn || 0,
                     //points_used: this.loyalty_program && this.products_using_points.includes(item.id) ? (item.quantity * item.points_to_deduct) : 0,
                     currency: item.currency,
@@ -1444,6 +1571,7 @@ $dashboard-background-color: rgb(255, 255, 255);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
+    background-color: grey;
   }
 }
 
