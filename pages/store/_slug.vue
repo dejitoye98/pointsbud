@@ -1157,8 +1157,8 @@ $info: #2196F3;
 .header {
   background-color: $background-white;
   box-shadow: $shadow-soft;
-  position: sticky;
-  top: 0;
+  //position: sticky;
+  //top: 0;
   z-index: 50;
   
   &__container {
@@ -1269,8 +1269,8 @@ $info: #2196F3;
 
 // Tabs
 .tabs {
-  position: sticky;
-  top: 68px;
+  //position: sticky;
+  //top: 68px;
   z-index: 40;
   background-color: $background-white;
   border-bottom: 1px solid $border-light;
