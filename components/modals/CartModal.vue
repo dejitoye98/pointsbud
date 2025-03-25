@@ -356,7 +356,7 @@
 
 
                 <template v-else-if="step === 7">
-                    <p>Your order has been placed with an attend </p>
+                    <p>Your order has been placed with an attendant</p>
                 </template>
             </div>
 
