@@ -76,7 +76,7 @@
                             <div class="form-input">
                                 <label for="">Delivery Time</label>
                                 <select v-model="delivery_meta.delivery_time">
-                                    <option value="instantly">ASAP</option>
+                                    <option value="instantly" selected default>ASAP</option>
                                     <option value="scheduled">Scheduled</option>
                                 </select>
                             </div>
@@ -452,7 +452,7 @@ export default {
             delivery_meta: {
 
                 delivery_speed: 'premium',
-                delivery_time: "Instantly",
+                delivery_time: "instantly",
                 selected_slot: null,
                 time_selection_method: 'preset',
                 custom_time: {
@@ -1070,68 +1070,67 @@ export default {
                 handler.openIframe();
         },
         async triggerPay() {
-            const orders = [];
 
-            this.cart.forEach(async item => {
-                let item_key = await this.generateUniqueCode(5)
-                const obj = {
-                    name: item.name,
-                    product_id: item.id,
-                    unitprice: item.unitprice,
-                    item_key, 
-                    item_uid: item_key,
-                    //points_earned: this.loyalty_program && item.points_to_earn || 0,
-                    //points_used: this.loyalty_program && this.products_using_points.includes(item.id) ? (item.quantity * item.points_to_deduct) : 0,
-                    currency: item.currency,
-                    quantity: item.quantity,
-                    total_amount: (item.quantity * item.unitprice),
-                    customer_comment: item.customer_comment,
-                    delivery_pack: item.delivery_pack,
-                    //variations: item.variations,
-                    question_answers: item.question_answers
-                };
-                orders.push(obj);
-
+            try {
                 
-                
-            });
-            const payload = {
-                token: this.$cookies.get("usertoken"),
-                r_uid: Date.now(),
-                delivery_type: this.table_identifier || this.delivery_type,
-                delivery_meta: this.delivery_meta,
-                delivery_fee: this.deliveryFee && this.deliveryFee.price,
-                business_slug: this.$route.params.slug,
-                business_id: this.business.id,
-                items: orders,
-                taxes: this.taxes,
-               // vat: parseFloat(this.vat || 0),
-                appFee: this.appFee,
-                // checkout_session: ref,
-                customer_phone: this.customerPhone,
-                send_alert: false,
-                pending_sale_id: window.localStorage.getItem("last_order") && JSON.parse(window.localStorage.getItem("last_order")).id
+                const orders = [];
+    
+                this.cart.forEach(async item => {
+                    let item_key = this.generateUniqueCode(5)
+                    const obj = {
+                        name: item.name,
+                        product_id: item.id,
+                        unitprice: item.unitprice,
+                        item_key, 
+                        item_uid: item_key,
+                        //points_earned: this.loyalty_program && item.points_to_earn || 0,
+                        //points_used: this.loyalty_program && this.products_using_points.includes(item.id) ? (item.quantity * item.points_to_deduct) : 0,
+                        currency: item.currency,
+                        quantity: item.quantity,
+                        total_amount: (item.quantity * item.unitprice),
+                        customer_comment: item.customer_comment,
+                        delivery_pack: item.delivery_pack,
+                        //variations: item.variations,
+                       // question_answers: item.question_answers
+                    };
+                    orders.push(obj);
+    
+                    
+                    
+                });
+                //alert(JSON.stringify(orders))
+                const payload = {
+                    token: this.$cookies.get("usertoken"),
+                    r_uid: Date.now(),
+                    delivery_type: this.table_identifier || this.delivery_type,
+                    delivery_meta: this.delivery_meta,
+                    delivery_fee: this.deliveryFee && this.deliveryFee.price,
+                    business_slug: this.$route.params.slug,
+                    business_id: this.business.id,
+                    items: orders,
+                    taxes: this.taxes,
+                   // vat: parseFloat(this.vat || 0),
+                    appFee: this.appFee,
+                    // checkout_session: ref,
+                    customer_phone: this.customerPhone,
+                    send_alert: false,
+                    pending_sale_id: window.localStorage.getItem("last_order") && JSON.parse(window.localStorage.getItem("last_order")).id
+                }
+    
+    
+    
+    
+    
+                    const {id, url} = await this.createCheckoutSession(payload)
+                    //this.paywithPaystack(id, url)
+                    this.makePaymentBudpay(id, url)
+            }
+            catch (e) {
+                alert(e)
+                console.log(e)
             }
 
-
-                const {id, url} = await this.createCheckoutSession(payload)
-                //this.paywithPaystack(id, url)
-                this.makePaymentBudpay(id, url)
-
-               // if (!this.walletBalanceSufficient) {
-
-                    //this.makePayment(id, url)
-               // }
-              
-                //this.points_earned += obj.points_earned;
-
-
-                /*let message = this.createOrderMessage(url)
-                //alert(message)
-
-                let encoded = encodeURIComponent(message)
-                const link = `whatsapp://send?text=${encoded}&phone=9039884463`;
-                window.open(link, '_self')*/
+               
 
         },
         async createCheckoutSession(payload) {
