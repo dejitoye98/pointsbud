@@ -29,7 +29,7 @@
             </p>
             
             <div class="cta-button">
-              <button>Join the Waitlist</button>
+              <a href="#waitlist">Join the Waitlist</a>
             </div>
           </div>
           
@@ -169,6 +169,34 @@
           </div>
         </div>
       </div>
+
+      <div class="waitlist-form" id="waitlist" v-if="!signed_up">
+        <div class="form-fields">
+          <input 
+            type="text" 
+            v-model="payload.business" 
+            placeholder="Business Name" 
+            :disabled="signing_up"
+          />
+          <input 
+            type="email" 
+            v-model="payload.email" 
+            placeholder="Email Address" 
+            :disabled="signing_up"
+          />
+        </div>
+        <div class="cta-button">
+          <button @click="signup()" :disabled="signing_up">
+            <span v-if="!signing_up">Join the Waitlist</span>
+            <span v-else>Please wait...</span>
+          </button>
+        </div>
+      </div>
+      <div class="success-message" v-else>
+        <div class="success-icon">✓</div>
+        <h3>Thanks for joining!</h3>
+        <p>We'll be in touch when Chefpoint is ready!.</p>
+      </div>
   
       <!-- Features Section -->
       <div class="features-section">
@@ -226,6 +254,40 @@
           { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap' }
         ]
       }
+        
+    },
+
+    data() {
+        return {
+            payload: {
+            business: '',
+            email: ''
+        },
+        signing_up: false,
+        signed_up: false
+        }
+    },
+    
+    methods: {
+        signup() {
+            if (!this.payload.business || !this.payload.email) {
+            alert('Please fill in both business name and email');
+            return;
+            }
+            
+            this.signing_up = true;
+            this.$api.post('/waitlist/demo', {...this.payload})
+            .then(resp => {
+                this.signed_up = true;
+            })
+            .catch(err => {
+                alert('There was an error. Please try again.');
+                console.error(err);
+            })
+            .finally(() => {
+                this.signing_up = false;
+            });
+        }
     }
   }
   </script>
@@ -330,24 +392,7 @@
       margin-bottom: 32px;
     }
   
-    .cta-button {
-      button {
-        background-color: $primary-color;
-        color: white;
-        font-size: 18px;
-        font-weight: 600;
-        padding: 16px 32px;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-  
-        &:hover {
-          background-color: darken($primary-color, 10%);
-          transform: translateY(-2px);
-        }
-      }
-    }
+
   
     .hero-image {
       flex: 1;
@@ -736,4 +781,98 @@
       }
     }
 }
+.waitlist-form {
+    margin-bottom: 24px;
+    width: 50%;
+    margin: auto;
+    padding: 24px;
+    height: 400px;
+    border-radius: 2px solid grey !important;
+
+    @include media("<=t") {
+        max-width: 80%;
+        width: 80%;
+    }
+    
+    .form-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+      
+      input {
+        padding: 14px 20px;
+        border: 2px solid rgba(0,0,0,0.1);
+        border-radius: 8px;
+        font-size: 16px;
+        font-family: $font-family;
+        transition: all 0.2s ease;
+        width: 100%;
+        
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+        }
+        
+        &:disabled {
+          background-color: #f5f5f5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+  
+  .success-message {
+    background-color: #e8f5e9;
+    padding: 24px;
+    border-radius: 12px;
+    text-align: center;
+    
+    .success-icon {
+      width: 50px;
+      height: 50px;
+      background-color: #4caf50;
+      color: white;
+      font-size: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    
+    h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      color: #4caf50;
+    }
+  }
+
+  .cta-button {
+    button, a {
+      background-color: $primary-color;
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+  
+      &:hover:not(:disabled) {
+        background-color: darken($primary-color, 10%);
+        transform: translateY(-2px);
+      }
+      
+      &:disabled {
+        background-color: #ddd;
+        cursor: not-allowed;
+      }
+    }
+  }
   </style>
