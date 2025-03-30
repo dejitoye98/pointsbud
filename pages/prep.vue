@@ -1,5 +1,6 @@
 
 <!-- pages/index.vue -->
+<!-- pages/index.vue (template part) -->
 <template>
     <div class="landing-page">
       <!-- Hero Section -->
@@ -11,21 +12,26 @@
                 <path d="M12 2C8.96 2 6.5 4.46 6.5 7.5V9.04C4.98 9.28 3.5 10.51 3.5 12.25C3.5 14.07 5.07 15.5 7 15.5H17C18.93 15.5 20.5 14.07 20.5 12.25C20.5 10.51 19.02 9.28 17.5 9.04V7.5C17.5 4.46 15.04 2 12 2ZM15.5 7.5V9H8.5V7.5C8.5 5.57 10.07 4 12 4C13.93 4 15.5 5.57 15.5 7.5ZM7 17.5V19.5H9V22H15V19.5H17V17.5H7Z" />
               </svg>
               <div class="flex gap-2 flex-center-x flex-center-y">
-
-                  <h2 class="logo-text">
-                    Chefpoint
+                <h2 class="logo-text">
+                  Chefpoint
                 </h2>
-                  <span style="color: #E53945">by PointsBud</span>
+                <span style="color: #E53945">by PointsBud</span>
               </div>
             </div>
             
+            <div v-if="chefName" class="personal-invite">
+              <span class="for-chef">For {{ chefName }}</span>
+            </div>
+            
             <h1 class="main-heading">
-                Steady Revenue with Meal Subscriptions.
+              <span v-if="chefName">{{ chefName }}, Build</span>
+              <span v-else>Build</span> Steady Revenue with Meal Subscriptions.
             </h1>
             
             <p class="sub-heading">
-                You’re not just a chef — you’re a business owner.
-                Let us help you turn one-time clients into loyal, paying subscribers.
+              <span v-if="chefName">You're not just a talented chef, {{ chefName }} — you're a business owner.</span>
+              <span v-else>You're not just a chef — you're a business owner.</span>
+              Let us help you turn one-time clients into loyal, paying subscribers.
             </p>
             
             <div class="cta-button">
@@ -34,9 +40,7 @@
           </div>
           
           <div class="hero-image">
-              <img height="400" width="400" src="https://pointsbud-images.s3.amazonaws.com/a4a63b43e35973e95dff969f0029557d">
-            
-           
+            <img height="400" width="400" src="https://pointsbud-images.s3.amazonaws.com/a4a63b43e35973e95dff969f0029557d">
           </div>
         </div>
       </div>
@@ -44,14 +48,16 @@
       <!-- Plans Section -->
       <div class="plans-section">
         <div class="container">
-          <h2 class="section-heading">Example Subscription Plans</h2>
+          <h2 class="section-heading">
+            <span v-if="chefName">{{ chefName }}, Explore These Example Subscription Plans</span>
+            <span v-else>Example Subscription Plans</span>
+          </h2>
           
           <div class="plans-container">
             <!-- Plan 1 -->
             <div class="plan-card">
               <div class="plan-image plan-image-1">
                 <img src="https://pointsbud-images.s3.amazonaws.com/b83c6f67ba8024e9226bab1ff44e9adb" alt="">
-
               </div>
               <div class="plan-details">
                 <h3>Weekly Meal Prep</h3>
@@ -86,13 +92,15 @@
           </div>
         </div>
       </div>
-
-
+  
       <div class="how-it-works-section">
         <div class="container">
           <div class="section-icon">🧩</div>
           <h2 class="section-heading">How It Works</h2>
-          <p class="section-tagline">Turn your culinary creativity into predictable income — in just a few simple steps.</p>
+          <p class="section-tagline">
+            <span v-if="chefName">{{ chefName }}, turn your culinary creativity into predictable income — in just a few simple steps.</span>
+            <span v-else>Turn your culinary creativity into predictable income — in just a few simple steps.</span>
+          </p>
           
           <div class="steps-container">
             <!-- Step 1 -->
@@ -169,8 +177,9 @@
           </div>
         </div>
       </div>
-
+  
       <div class="waitlist-form" id="waitlist" v-if="!signed_up">
+        <p v-if="chefName" class="personalized-invite">{{ chefName }}, ready to take your culinary business to the next level?</p>
         <div class="form-fields">
           <input 
             type="text" 
@@ -194,8 +203,8 @@
       </div>
       <div class="success-message" v-else>
         <div class="success-icon">✓</div>
-        <h3>Thanks for joining!</h3>
-        <p>We'll be in touch when Chefpoint is ready!.</p>
+        <h3><span v-if="chefName">Thanks {{ chefName }}!</span><span v-else>Thanks for joining!</span></h3>
+        <p>We'll be in touch when Chefpoint is ready!</p>
       </div>
   
       <!-- Features Section -->
@@ -241,62 +250,88 @@
       </div>
     </div>
   </template>
-  
   <script>
-  export default {
-    head() {
-      return {
-        title: 'CulinarySub - Subscription Management for Culinary Experts',
-        meta: [
-          { hid: 'description', name: 'description', content: 'A SaaS platform that enables restaurants and personal chefs to easily create custom meal subscriptions.' }
-        ],
-        link: [
-          { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap' }
-        ]
-      }
-        
-    },
+// pages/index.vue (script part)
+export default {
+  head() {
+    return {
+      title: `${this.chefName} Invitation`,
+      meta: [
+        { hid: 'description', name: 'description', content: 'A SaaS platform that enables restaurants and personal chefs to easily create custom meal subscriptions.' }
+      ],
+      link: [
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap' }
+      ]
+    }
+  },
 
-    data() {
-        return {
-            payload: {
-            business: '',
-            email: ''
-        },
-        signing_up: false,
-        signed_up: false
+  data() {
+    return {
+      payload: {
+        business: '',
+        email: ''
+      },
+      signing_up: false,
+      signed_up: false,
+      chefName: null
+    }
+  },
+  
+  mounted() {
+    // Get the chef name from the URL query parameter
+    if (process.client) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const nameParam = urlParams.get('n');
+      
+      if (nameParam) {
+        // Decode and format the name properly
+        this.chefName = decodeURIComponent(nameParam)
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+          
+        // Pre-populate business name field if chef name exists
+        if (this.chefName) {
+          this.payload.business = ``;
         }
-    },
-    
-    methods: {
-        signup() {
-            if (!this.payload.business || !this.payload.email) {
-            alert('Please fill in both business name and email');
-            return;
-            }
-            
-            this.signing_up = true;
-            this.$api.post('/waitlist/demo', {...this.payload})
-            .then(resp => {
-                this.signed_up = true;
-            })
-            .catch(err => {
-                alert('There was an error. Please try again.');
-                console.error(err);
-            })
-            .finally(() => {
-                this.signing_up = false;
-            });
-        }
+      }
+    }
+  },
+  
+  methods: {
+    signup() {
+      if (!this.payload.business || !this.payload.email) {
+        alert('Please fill in both business name and email');
+        return;
+      }
+      
+      this.signing_up = true;
+      this.$api.post('/waitlist/demo', {
+        ...this.payload,
+        referralName: this.chefName || null // Track if they came from a personalized link
+      })
+      .then(resp => {
+        this.signed_up = true;
+      })
+      .catch(err => {
+        alert('There was an error. Please try again.');
+        console.error(err);
+      })
+      .finally(() => {
+        this.signing_up = false;
+      });
     }
   }
+}
   </script>
   
+  /* pages/index.vue (style part) */
   <style scoped lang="scss">
   $primary-color: #FF8A65;
   $secondary-color: #333;
   $light-grey: #f5f5f5;
   $dark-grey: #666;
+  $accent-color: #E53945;
   $box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   $border-radius: 12px;
   $font-family: 'Poppins', sans-serif;
@@ -307,15 +342,15 @@
     box-sizing: border-box;
   }
   
-
-  h2 , h1{
+  
+  h2, h1 {
     font-family: Poppins !important;
-
+  
     span {
-        font-family: Poppins !important;
-
+      font-family: Poppins !important;
     }
   }
+  
   body {
     font-family: $font-family;
     -webkit-font-smoothing: antialiased;
@@ -379,6 +414,21 @@
       }
     }
   
+    .personal-invite {
+      background-color: rgba($accent-color, 0.1);
+      color: $accent-color;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 20px;
+      border: 2px solid $accent-color;
+      
+      .for-chef {
+        font-weight: 700;
+      }
+    }
+  
     .main-heading {
       font-size: 42px;
       font-weight: 800;
@@ -392,133 +442,14 @@
       margin-bottom: 32px;
     }
   
-
-  
     .hero-image {
       flex: 1;
       position: relative;
       min-height: 480px;
   
-      .phone-mockup {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 280px;
-        height: 560px;
-        background-color: #333;
-        border-radius: 36px;
-        padding: 12px;
+      img {
+        border-radius: 20px;
         box-shadow: $box-shadow;
-        z-index: 3;
-  
-        &:before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 120px;
-          height: 24px;
-          background-color: #222;
-          border-radius: 0 0 16px 16px;
-        }
-      }
-  
-      .subscription-card {
-        background-color: white;
-        border-radius: 24px;
-        padding: 20px;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-  
-        .subscription-images {
-          display: flex;
-          margin-bottom: 20px;
-          height: 200px;
-          gap: 10px;
-          
-          .sub-image {
-            border-radius: 12px;
-            overflow: hidden;
-            background-size: cover;
-            background-position: center;
-            flex: 1;
-            
-            &.sub-image-1 {
-              background-color: #f8e9e2;
-            }
-            
-            &.sub-image-2 {
-              background-color: #e2f8e9;
-            }
-          }
-        }
-  
-        h3 {
-          font-size: 22px;
-          font-weight: 700;
-          margin-bottom: 8px;
-        }
-  
-        .price {
-          font-size: 18px;
-          color: #666;
-          margin-bottom: 16px;
-  
-          span {
-            color: $primary-color;
-            font-size: 28px;
-            font-weight: 700;
-          }
-        }
-  
-        .features {
-          list-style-type: none;
-          padding: 0;
-  
-          li {
-            position: relative;
-            padding-left: 24px;
-            margin-bottom: 12px;
-            font-size: 16px;
-  
-            &:before {
-              content: "•";
-              color: $primary-color;
-              position: absolute;
-              left: 0;
-              font-weight: bold;
-            }
-          }
-        }
-      }
-  
-      .food-image {
-        width: 200px;
-        height: 200px;
-        border-radius: 100px;
-        background-size: cover;
-        background-position: center;
-        position: absolute;
-        box-shadow: $box-shadow;
-  
-        &.food-image-1 {
-          background-color: #f8d9b9;
-          top: 10%;
-          right: 15%;
-          z-index: 1;
-        }
-  
-        &.food-image-2 {
-          background-color: #d9e5f8;
-          bottom: 10%;
-          right: 25%;
-          z-index: 1;
-        }
       }
     }
   }
@@ -551,11 +482,11 @@
         height: 180px;
         background-size: cover;
         background-position: center;
-
+  
         img {
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
         }
   
         &.plan-image-1 {
@@ -645,55 +576,8 @@
     }
   }
   
-  // Responsive styles
-  @media (max-width: 992px) {
-    .hero-section {
-      .container {
-        flex-direction: column;
-      }
-  
-      .hero-content {
-        max-width: 100%;
-        text-align: center;
-        margin-bottom: 60px;
-      }
-  
-      .logo-container {
-        justify-content: center;
-      }
-  
-      .hero-image {
-        width: 100%;
-      }
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .hero-section {
-      padding: 60px 0;
-  
-      .main-heading {
-        font-size: 32px;
-      }
-  
-      .hero-image {
-        display: none;
-      }
-    }
-  
-    .plans-section,
-    .features-section {
-      padding: 60px 0;
-    }
-  
-    .section-heading {
-      font-size: 28px;
-      margin-bottom: 40px;
-    }
-  }
-
-// How It Works Section
-.how-it-works-section {
+  // How It Works Section
+  .how-it-works-section {
     padding: 100px 0;
     background-color: white;
   
@@ -714,15 +598,10 @@
   
     .steps-container {
       display: grid;
-     grid-template-columns: 30% 30% 30%;
-      gap: 10px;
-      width: 80%;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      width: 90%;
       margin: 0 auto;
-
-      @include media("<=t" ) {
-        display: flex;
-        flex-direction: column;
-      }
     }
   
     .step-card {
@@ -780,20 +659,24 @@
         }
       }
     }
-}
-.waitlist-form {
-    margin-bottom: 24px;
+  }
+  
+  .waitlist-form {
     width: 50%;
-    margin: auto;
-    padding: 24px;
-    height: 400px;
-    border-radius: 2px solid grey !important;
-
-    @include media("<=t") {
-        max-width: 80%;
-        width: 80%;
-    }
+    margin: 0 auto;
+    padding: 60px 30px;
+    background-color: white;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    text-align: center;
     
+    .personalized-invite {
+      font-size: 20px;
+      font-weight: 600;
+      color: $accent-color;
+      margin-bottom: 20px;
+    }
+  
     .form-fields {
       display: flex;
       flex-direction: column;
@@ -824,8 +707,10 @@
   
   .success-message {
     background-color: #e8f5e9;
-    padding: 24px;
-    border-radius: 12px;
+    width: 50%;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: $border-radius;
     text-align: center;
     
     .success-icon {
@@ -842,15 +727,16 @@
     }
     
     h3 {
-      font-size: 20px;
+      font-size: 24px;
       margin-bottom: 8px;
     }
     
     p {
       color: #4caf50;
+      font-size: 18px;
     }
   }
-
+  
   .cta-button {
     button, a {
       background-color: $primary-color;
@@ -862,7 +748,8 @@
       border-radius: 50px;
       cursor: pointer;
       transition: all 0.3s ease;
-      width: 100%;
+      display: inline-block;
+      text-decoration: none;
   
       &:hover:not(:disabled) {
         background-color: darken($primary-color, 10%);
@@ -873,6 +760,65 @@
         background-color: #ddd;
         cursor: not-allowed;
       }
+    }
+  }
+  
+  // Responsive styles
+  @media (max-width: 992px) {
+    .hero-section {
+      .container {
+        flex-direction: column;
+      }
+  
+      .hero-content {
+        max-width: 100%;
+        text-align: center;
+        margin-bottom: 60px;
+      }
+  
+      .logo-container {
+        justify-content: center;
+      }
+  
+      .hero-image {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+    }
+    
+    .waitlist-form, .success-message {
+      width: 80%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .hero-section {
+      padding: 60px 0;
+  
+      .main-heading {
+        font-size: 32px;
+      }
+    }
+  
+    .plans-section,
+    .features-section,
+    .how-it-works-section {
+      padding: 60px 0;
+    }
+  
+    .section-heading {
+      font-size: 28px;
+      margin-bottom: 40px;
+    }
+    
+    .steps-container {
+      grid-template-columns: 1fr !important;
+    }
+    
+    .waitlist-form, .success-message {
+      width: 95%;
+      padding: 30px 20px;
     }
   }
   </style>
