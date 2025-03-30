@@ -4,21 +4,28 @@
     <div class="landing-page">
       <!-- Hero Section -->
       <div class="hero-section">
-        <div class="container">
+        <div class="container flex gap-40">
           <div class="hero-content">
             <div class="logo-container">
               <svg class="chef-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#FF8A65">
                 <path d="M12 2C8.96 2 6.5 4.46 6.5 7.5V9.04C4.98 9.28 3.5 10.51 3.5 12.25C3.5 14.07 5.07 15.5 7 15.5H17C18.93 15.5 20.5 14.07 20.5 12.25C20.5 10.51 19.02 9.28 17.5 9.04V7.5C17.5 4.46 15.04 2 12 2ZM15.5 7.5V9H8.5V7.5C8.5 5.57 10.07 4 12 4C13.93 4 15.5 5.57 15.5 7.5ZM7 17.5V19.5H9V22H15V19.5H17V17.5H7Z" />
               </svg>
-              <h2 class="logo-text">CulinarySub</h2>
+              <div class="flex gap-2 flex-center-x flex-center-y">
+
+                  <h2 class="logo-text">
+                    Chefpoint
+                </h2>
+                  <span style="color: #E53945">by PointsBud</span>
+              </div>
             </div>
             
             <h1 class="main-heading">
-              Simplify Subscription Management for Culinary Experts
+                Steady Revenue with Meal Subscriptions.
             </h1>
             
             <p class="sub-heading">
-              A SaaS platform that enables restaurants and personal chefs to easily create custom meal subscriptions.
+                You’re not just a chef — you’re a business owner.
+                Let us help you turn one-time clients into loyal, paying subscribers.
             </p>
             
             <div class="cta-button">
@@ -27,24 +34,9 @@
           </div>
           
           <div class="hero-image">
-            <div class="phone-mockup">
-              <div class="subscription-card">
-                <div class="subscription-images">
-                  <div class="sub-image sub-image-1"></div>
-                  <div class="sub-image sub-image-2"></div>
-                </div>
-                <h3>Dinner Party Subscription</h3>
-                <div class="price"><span>$69</span> / month</div>
-                <ul class="features">
-                  <li>Monthly themed dinner for six</li>
-                  <li>Four sources</li>
-                  <li>Wine pairings</li>
-                </ul>
-              </div>
-            </div>
+              <img height="400" width="400" src="https://pointsbud-images.s3.amazonaws.com/a4a63b43e35973e95dff969f0029557d">
             
-            <div class="food-image food-image-1"></div>
-            <div class="food-image food-image-2"></div>
+           
           </div>
         </div>
       </div>
@@ -57,7 +49,10 @@
           <div class="plans-container">
             <!-- Plan 1 -->
             <div class="plan-card">
-              <div class="plan-image plan-image-1"></div>
+              <div class="plan-image plan-image-1">
+                <img src="https://pointsbud-images.s3.amazonaws.com/b83c6f67ba8024e9226bab1ff44e9adb" alt="">
+
+              </div>
               <div class="plan-details">
                 <h3>Weekly Meal Prep</h3>
                 <p>Five personalized meals delivered each week</p>
@@ -67,7 +62,9 @@
             
             <!-- Plan 2 -->
             <div class="plan-card">
-              <div class="plan-image plan-image-2"></div>
+              <div class="plan-image plan-image-2">
+                <img src="https://pointsbud-images.s3.amazonaws.com/39dc17b59d5beb13f493b8c10e4584f3" alt="">
+              </div>
               <div class="plan-details">
                 <h3>Plant-Based</h3>
                 <p>Nutritionally-balanced vegan dishes</p>
@@ -77,12 +74,97 @@
             
             <!-- Plan 3 -->
             <div class="plan-card">
-              <div class="plan-image plan-image-3"></div>
+              <div class="plan-image plan-image-3">
+                <img src="https://pointsbud-images.s3.amazonaws.com/804adf94a24ce1c1c9fa0fbd5fe1175c" alt="">
+              </div>
               <div class="plan-details">
                 <h3>Family Dinners</h3>
                 <p>Fresh, home-style dinners for families</p>
                 <div class="plan-price"><span>$250</span> / month</div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="how-it-works-section">
+        <div class="container">
+          <div class="section-icon">🧩</div>
+          <h2 class="section-heading">How It Works</h2>
+          <p class="section-tagline">Turn your culinary creativity into predictable income — in just a few simple steps.</p>
+          
+          <div class="steps-container">
+            <!-- Step 1 -->
+            <div class="step-card">
+              <div class="step-header">
+                <div class="step-icon">🥘</div>
+                <h3 class="step-number">1. Design Your Subscription</h3>
+              </div>
+              <p class="step-description">
+                Create custom meal plans, dinner experiences, or health-focused menus. Offer weekly, bi-weekly, or monthly options — with full control over pricing, delivery, and personalization.
+              </p>
+              <div class="examples-block">
+                <h4>Examples:</h4>
+                <ul>
+                  <li>5-meal weekly prep for busy families</li>
+                  <li>Monthly private dinner with wine pairings</li>
+                  <li>Gut health subscription with seasonal adjustments</li>
+                </ul>
+              </div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="step-card">
+              <div class="step-header">
+                <div class="step-icon">🎨</div>
+                <h3 class="step-number">2. Customize Your Brand</h3>
+              </div>
+              <p class="step-description">
+                Make it <em>yours</em>. Upload your logo, add brand colors, write your bio, and set your availability. Your clients get a polished, personalized portal that feels like an extension of you.
+              </p>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="step-card">
+              <div class="step-header">
+                <div class="step-icon">💳</div>
+                <h3 class="step-number">3. Launch & Start Earning</h3>
+              </div>
+              <p class="step-description">
+                Clients can browse your offerings, subscribe, and pay — all in one place. We handle billing, reminders, and renewals — you just focus on the food.
+              </p>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="step-card">
+              <div class="step-header">
+                <div class="step-icon">📲</div>
+                <h3 class="step-number">4. Manage with Ease</h3>
+              </div>
+              <p class="step-description">
+                Use your dashboard to:
+              </p>
+              <ul class="dashboard-features">
+                <li>View upcoming orders</li>
+                <li>Adjust menus and availability</li>
+                <li>Track revenue, retention, and meal popularity</li>
+                <li>Communicate with clients</li>
+              </ul>
+              <p class="step-description">
+                Everything's automated. No more chasing invoices or juggling spreadsheets.
+              </p>
+            </div>
+            
+            <!-- Step 5 -->
+            <div class="step-card">
+              <div class="step-header">
+                <div class="step-icon">🔁</div>
+                <h3 class="step-number">5. Delight & Retain</h3>
+              </div>
+              <p class="step-description">
+                Deliver incredible meals. Get feedback. Refine your offerings. Grow a loyal base of subscribers who never want to cook again.
+              </p>
             </div>
           </div>
         </div>
@@ -163,6 +245,15 @@
     box-sizing: border-box;
   }
   
+
+  h2 , h1{
+    font-family: Poppins !important;
+
+    span {
+        font-family: Poppins !important;
+
+    }
+  }
   body {
     font-family: $font-family;
     -webkit-font-smoothing: antialiased;
@@ -415,6 +506,12 @@
         height: 180px;
         background-size: cover;
         background-position: center;
+
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
   
         &.plan-image-1 {
           background-color: #f1f1f1;
@@ -549,4 +646,94 @@
       margin-bottom: 40px;
     }
   }
+
+// How It Works Section
+.how-it-works-section {
+    padding: 100px 0;
+    background-color: white;
+  
+    .section-icon {
+      font-size: 40px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+  
+    .section-tagline {
+      text-align: center;
+      font-size: 20px;
+      max-width: 700px;
+      margin: 0 auto 60px;
+      color: $dark-grey;
+      font-weight: 500;
+    }
+  
+    .steps-container {
+      display: grid;
+     grid-template-columns: 30% 30% 30%;
+      gap: 10px;
+      width: 80%;
+      margin: 0 auto;
+
+      @include media("<=t" ) {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  
+    .step-card {
+      padding: 30px;
+      background-color: #fff;
+      border-radius: $border-radius;
+      box-shadow: $box-shadow;
+      transition: transform 0.3s ease;
+  
+      &:hover {
+        transform: translateY(-5px);
+      }
+  
+      .step-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+  
+      .step-icon {
+        font-size: 32px;
+        margin-right: 16px;
+      }
+  
+      .step-number {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0;
+      }
+  
+      .step-description {
+        font-size: 16px;
+        color: $dark-grey;
+        line-height: 1.6;
+        margin-bottom: 16px;
+      }
+  
+      .examples-block {
+        background-color: rgba($primary-color, 0.1);
+        padding: 16px;
+        border-radius: 8px;
+        margin-top: 16px;
+  
+        h4 {
+          font-weight: 600;
+          margin-bottom: 8px;
+        }
+  
+        ul {
+          padding-left: 20px;
+          
+          li {
+            margin-bottom: 8px;
+          }
+        }
+      }
+    }
+}
   </style>

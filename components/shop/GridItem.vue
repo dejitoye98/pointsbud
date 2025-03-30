@@ -34,8 +34,9 @@
     <div class="item-image-container">
       <div class="item-image-wrapper">
         <img
-          :src="product.thumbnail || 'https://hunanchinesefoodwhitby.com/img/placeholders/comfort_food_placeholder.png'"
+          :src="thumbnailSrc"
           class="item-image"
+          @error="handleImageError"
         />
         
         <!-- Out of stock overlay -->
@@ -130,7 +131,9 @@ export default {
   data() {
     return {
       quantity: 1,
-      isHovered: false
+      isHovered: false,
+      imageFailed: false,
+      placeholderImage: "https://pointsbud-images.s3.amazonaws.com/e3ac1c8359bd2aaa82c8135f89ab5d1e"
     };
   },
   computed: {
@@ -161,6 +164,13 @@ export default {
         backgroundColor: this.primaryColor,
         color: this.textOnPrimary,
       };
+    },
+    thumbnailSrc() {
+      // If the image previously failed or thumbnail is missing, use placeholder
+      if (this.imageFailed || !this.product.thumbnail) {
+        return this.placeholderImage;
+      }
+      return this.product.thumbnail;
     }
   },
   watch: {
@@ -169,6 +179,10 @@ export default {
         id: this.product.id,
         quantity: value
       });
+    },
+    // Reset image failure state when product changes
+    product() {
+      this.imageFailed = false;
     }
   },
   methods: {
@@ -198,6 +212,10 @@ export default {
     },
     increase() {
       this.$store.dispatch("shop/increaseItemQuantity", this.product.id);
+    },
+    handleImageError() {
+      // Set flag to use placeholder image
+      this.imageFailed = true;
     }
   },
   components: { TruncatedText }

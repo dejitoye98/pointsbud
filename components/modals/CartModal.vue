@@ -1341,652 +1341,767 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// Using your existing color variables
-$primary: #E53945;
-$deepprimary: #A02730;
-$secondary: #f79939;
-$secondarylight: #f798398b;
-$secondaryaccent: #5ac091;
-$lightaccent: $primary;
-$darkaccent: #dd6b6b36;
-$border-grey: #E0E0E0;
-$faint: #686868;
-$charcoal: #36454F;
-$input_background: #F3F3F3;
-$dashboard-background-color: rgb(255, 255, 255);
+// Enhanced Cart Modal Styling
+// Modern color palette
+$primary: #FF6B6B;
+$primary-dark: #FF5252;
+$secondary: #4ECDC4;
+$accent: #7A69F5;
+$success: #45CB85;
+$warning: #FFD166;
+$danger: #F25F5C;
+$text-dark: #2D3748;
+$text-medium: #4A5568;
+$text-light: #718096;
+$border-color: #E2E8F0;
+$background-white: #FFFFFF;
+$background-light: #F7FAFC;
+$background-lighter: #EDF2F7;
+$shadow-soft: rgba(0, 0, 0, 0.05);
+$shadow-medium: rgba(0, 0, 0, 0.08);
+$shadow-hard: rgba(0, 0, 0, 0.12);
 
-* {
-  font-family: "Inter", sans-serif !important;
-  box-sizing: border-box;
-
-// Custom styles for third-party components
-&:deep(.vue-tel-input) {
-    border: none !important;
-    background-color: $input_background;
-    border-radius: 10px;
-    height: 52px;
-    
-    .vti__input {
-      background-color: transparent;
-      height: 52px;
-      font-size: 15px;
-      border: none !important;
-      
-      &:focus {
-        outline: none;
-      }
-    }
-    
-    .vti__dropdown {
-      background-color: transparent;
-      border-right: 1px solid rgba(104, 104, 104, 0.2);
-      padding-right: 8px;
-    }
-    
-    &:focus-within {
-      border: 1px solid $primary !important;
-      box-shadow: 0 0 0 3px rgba(229, 57, 69, 0.1);
-    }
+// Improved base styling
+.cart-modal {
+  &:deep(.modal-container) {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: translateY(0);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: 95%;
+    width: 520px;
+    max-height: 90vh;
   }
   
-  &:deep(.time-picker) {
-    width: 100% !important;
-    
-    input {
-      height: 52px !important;
-      background-color: $input_background;
-      border: 1px solid transparent;
-      border-radius: 10px;
-      width: 100%;
-      font-size: 15px;
-      padding: 0 16px;
-      
-      &:focus {
-        border-color: $primary;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(229, 57, 69, 0.1);
-      }
-    }
-  }
-  
-  &:deep(.cov-datepicker) {
-    width: 100%;
-  }
-  
-  &:deep(.cov-date-body) {
-    background-color: $primary !important;
-  }
-  
-  &:deep(.active) {
-    background-color: $primary !important;
-  }
-}
-
-// Global Styles
-.padding-16 {
-  padding: 16px;
-}
-
-.padding-16-y {
-  padding: 16px 0;
-}
-
-.space-between {
-  justify-content: space-between;
-}
-
-.flex-center-y {
-  display: flex;
-  align-items: center;
-}
-
-.flex {
-  display: flex;
-}
-
-.flex-col {
-  display: flex;
-  flex-direction: column;
-}
-
-.gap-2 {
-  gap: 8px;
-}
-
-.gap-16 {
-  gap: 16px;
-}
-
-.grid {
-  display: grid;
-}
-
-.grid-cols-2 {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.full-width {
-  width: 100%;
-}
-
-.no-wrap {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-// Header styling
-:deep(.modal-header) {
-  padding: 20px;
-  border-bottom: 1px solid $border-grey;
-  
-  p {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0;
-    color: $charcoal;
-  }
-
-  svg {
-    transition: transform 0.2s ease;
-
-    &:hover {
-      transform: rotate(90deg);
-    }
-  }
-}
-
-// Form input styling
-.form-input {
-  margin: 24px 0;
-  
-  label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: $charcoal;
-    margin-bottom: 8px;
-    letter-spacing: 0.3px;
-  }
-
-  .required {
-    color: $primary;
-  }
-
-  input, select, textarea {
-    width: 100%;
-    height: 52px;
-    padding: 0 16px;
-    background-color: $input_background;
-    border: 1px solid transparent;
-    border-radius: 10px;
-    font-size: 15px;
-    transition: all 0.2s ease;
-
-    &:focus {
-      outline: none;
-      border-color: $primary;
-      box-shadow: 0 0 0 3px rgba(229, 57, 69, 0.1);
-    }
-  }
-
-  textarea {
-    padding: 16px;
-    min-height: 100px;
-    resize: vertical;
-  }
-
-  .number-input {
-    letter-spacing: 1.5px;
-    font-weight: 500;
-  }
-}
-
-// Button styling
-.big-btn {
-  height: 52px;
-  padding: 0 24px;
-  border-radius: 10px;
-  background-color: $primary;
-  color: white !important;
-  font-weight: 600;
-  font-size: 15px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 8px 0;
-  box-shadow: 0 4px 12px rgba(229, 57, 69, 0.2);
-
-  &:hover {
-    background-color: $deepprimary;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(229, 57, 69, 0.25);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-    background-color: grey;
-  }
-}
-
-// Tabs styling
-.tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  background-color: $input_background;
-  border-radius: 999px;
-  padding: 4px;
-  gap: 4px;
-  margin-bottom: 16px;
-
-  .tab {
-    border-radius: 999px;
-    padding: 12px;
-    font-weight: 500;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 14px;
-    background-color: $dashboard-background-color;
-    color: $faint;
-
-    &:hover {
-      color: $charcoal;
-    }
-  }
-
-  .selected-tab {
-    background-color: $primary !important;
-    color: white !important;
-    box-shadow: 0 4px 8px rgba(229, 57, 69, 0.2);
-  }
-}
-
-// Section titles
-.section-title {
-  background-color: $input_background;
-  border-left: 3px solid $primary;
-  padding: 14px 16px;
-  font-weight: 600;
-  font-size: 15px;
-  margin: 24px 0 16px;
-  border-radius: 0 8px 8px 0;
-  color: $charcoal;
-}
-
-// Cart items styling
-.cart-item {
-  display: flex;
-  padding: 16px;
-  margin: 16px 0;
-  border-radius: 12px;
-  background-color: $input_background;
-  position: relative;
-  
-  &__content {
-    flex: 1;
-  }
-  
-  &__name {
-    font-weight: 600;
-    font-size: 15px;
-    margin-bottom: 4px;
-    color: $charcoal;
-  }
-  
-  &__price {
-    font-weight: 700;
-    color: $primary;
-    margin-top: 6px;
-  }
-  
-  &__quantity {
+  &:deep(.modal-header) {
+    border-bottom: 1px solid $border-color;
+    padding: 20px 24px;
     display: flex;
     align-items: center;
-    margin-top: 10px;
+    justify-content: space-between;
     
-    button {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: none;
-      background-color: white;
-      color: $charcoal;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: $text-dark;
+      margin: 0;
       
-      &:hover {
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 10px;
+        height: 22px;
         background-color: $primary;
-        color: white;
+        border-radius: 2px;
+        margin-right: 12px;
+        vertical-align: middle;
       }
     }
     
-    span {
-      margin: 0 12px;
-      font-weight: 500;
-    }
-  }
-}
-
-// Total section
-.total {
-  border-top: 1px solid $border-grey;
-  padding: 20px 0;
-  margin: 20px 0;
-
-  &-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    font-size: 14px;
-    color: $faint;
-    
-    &:last-child {
-      margin-top: 12px;
-      padding-top: 14px;
-      border-top: 1px dashed $border-grey;
-      
-      b {
-        font-size: 18px !important;
-        color: $primary;
-      }
-    }
-  }
-}
-
-
-// Loading state
-.fetching-wallet {
-  background-color: $input_background;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: 14px;
-  color: $faint;
-  padding: 12px 16px !important;
-  margin-top: 16px;
-  
-  &::before {
-    content: '';
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(104, 104, 104, 0.2);
-    border-top-color: $primary;
-    border-radius: 50%;
-    margin-right: 12px;
-    animation: spin 1s linear infinite;
-  }
-
-  p {
-    margin: 0;
-  }
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-// Responsive styles
-@media (max-width: 640px) {
-  .grid-cols-2 {
-    grid-template-columns: 1fr;
-  }
-  
-  .section-title {
-    font-size: 14px;
-    padding: 12px;
-  }
-  
-  .big-btn {
-    height: 48px;
-    font-size: 14px;
-  }
-  
-  .form-input label {
-    font-size: 12px;
-  }
-}
-
-// Fix for Google Places autocomplete dropdown
-.pac-container {
-  z-index: 100000000000000 !important;
-}
-
-// Delivery options styling
-.delivery-options {
-    margin: 24px 0;
-    
-    h4 {
-        font-size: 15px;
-        font-weight: 600;
-        margin-bottom: 12px;
-        color: $charcoal;
-    }
-}
-
-.delivery-option {
-    border: 1px solid $border-grey;
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    
-    &:hover {
-        border-color: $primary;
-    }
-    
-    &.active {
-        border-color: $primary;
-        background-color: rgba(229, 57, 69, 0.05);
-    }
-    
-    .option-header {
-        display: flex;
-        align-items: center;
-        //justify-content: space-between;
-        margin-bottom: 8px;
-        
-        label {
-            margin: 0 0 0 8px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        
-        .price {
-            font-weight: 700;
-            color: $primary;
-        }
-    }
-    
-    .description {
-        font-size: 13px;
-        color: $faint;
-        margin-left: 24px;
-    }
-    
-    .discount-tag {
-        background-color: #5ac091;
-        color: white;
-        border-radius: 4px;
-        padding: 2px 6px;
-        font-size: 11px;
-        font-weight: 600;
-        margin-left: 8px;
-    }
-}
-
-.time-slots {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px dashed $border-grey;
-    
-    .slot-day {
-        margin-bottom: 16px;
-        
-        h5 {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: $charcoal;
-        }
-    }
-    
-    .slot-times {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    
-    .slot-time {
-        padding: 8px 12px;
-        border-radius: 8px;
-        background-color: $input_background;
-        border: 1px solid transparent;
-        font-size: 12px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        
-        &:hover {
-            border-color: $primary;
-        }
-        
-        &.selected {
-            background-color: $primary;
-            color: white;
-            border-color: $primary;
-            font-weight: 600;
-        }
-    }
-}
-
-// Update summary section to show delivery option information
-// Add this to your total section
-.summary-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    font-size: 14px;
-    
-    .discount {
-        color: #5ac091;
-    }
-}
-
-
-.payment-success {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 24px 16px;
-    
-    .success-icon {
-      background-color: rgba(90, 192, 145, 0.1);
+    .close-button {
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      width: 100px;
-      height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 24px;
-      animation: scale-in 0.5s ease forwards;
-    }
-    
-    .success-title {
-      font-size: 24px;
-      font-weight: 700;
-      color: #5ac091;
-      margin-bottom: 16px;
-      animation: fade-in 0.5s ease 0.3s both;
-    }
-    
-    .success-message {
-      font-size: 15px;
-      color: $faint;
-      margin-bottom: 32px;
-      max-width: 340px;
-      line-height: 1.5;
-      animation: fade-in 0.5s ease 0.4s both;
-    }
-    
-    .order-details {
-      background-color: $input_background;
-      border-radius: 12px;
-      padding: 16px;
-      width: 100%;
-      margin-bottom: 32px;
-      animation: fade-in 0.5s ease 0.5s both;
+      background-color: $background-lighter;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
       
-      .order-number, .order-time {
-        display: flex;
-        justify-content: space-between;
-        padding: 8px 0;
-        
-        span {
-          color: $faint;
-          font-size: 14px;
-        }
-        
-        strong {
-          font-weight: 600;
-          color: $charcoal;
-        }
-      }
-      
-      .order-number {
-        border-bottom: 1px dashed $border-grey;
-        padding-bottom: 12px;
-        margin-bottom: 4px;
+      &:hover {
+        background-color: $border-color;
+        transform: rotate(90deg);
       }
     }
+  }
+  
+  &:deep(.modal-body) {
+    padding: 0;
+    overflow-y: auto;
     
-    .success-actions {
-      width: 100%;
+    .cart-content {
+      padding: 24px;
+    }
+  }
+}
+
+// Enhanced multi-step progress
+.step-progress {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  margin-bottom: 32px;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background-color: $border-color;
+    transform: translateY(-50%);
+    z-index: 0;
+  }
+  
+  .step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+    
+    &-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: $background-lighter;
+      color: $text-medium;
       display: flex;
-      flex-direction: column;
-      gap: 12px;
-      animation: fade-in 0.5s ease 0.6s both;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+      border: 2px solid $border-color;
+    }
+    
+    &-label {
+      font-size: 12px;
+      color: $text-medium;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    
+    &.active {
+      .step-number {
+        background-color: $primary;
+        color: white;
+        border-color: $primary;
+        box-shadow: 0 0 0 5px rgba($primary, 0.2);
+      }
       
-      .big-btn.outline {
-        background-color: transparent;
-        color: $primary !important;
-        border: 1px solid $primary;
+      .step-label {
+        color: $primary;
+        font-weight: 600;
+      }
+    }
+    
+    &.completed {
+      .step-number {
+        background-color: $success;
+        color: white;
+        border-color: $success;
+        
+        &::after {
+          content: '✓';
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+// Enhanced cart items
+.cart-item {
+  background-color: $background-light;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s ease;
+  border-left: 4px solid $primary;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px $shadow-medium;
+  }
+  
+  &-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    object-fit: cover;
+    background-color: $background-lighter;
+  }
+  
+  &-details {
+    flex: 1;
+  }
+  
+  &-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: $text-dark;
+    margin: 0 0 4px;
+  }
+  
+  &-options {
+    font-size: 13px;
+    color: $text-medium;
+    margin: 0 0 8px;
+  }
+  
+  &-price {
+    font-weight: 700;
+    color: $primary;
+    font-size: 15px;
+  }
+  
+  &-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      background-color: $background-white;
+      border-radius: 50px;
+      overflow: hidden;
+      border: 1px solid $border-color;
+      height: 36px;
+      
+      button {
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: $text-medium;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         
         &:hover {
-          background-color: rgba(229, 57, 69, 0.05);
+          background-color: $background-lighter;
+          color: $primary;
         }
+        
+        &:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+        }
+      }
+      
+      .quantity {
+        width: 32px;
+        text-align: center;
+        font-weight: 600;
+        color: $text-dark;
+      }
+    }
+    
+    .remove-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background-color: rgba($danger, 0.1);
+      color: $danger;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background-color: $danger;
+        color: white;
+      }
+    }
+  }
+}
+
+// Improved form inputs
+.form-group {
+  margin-bottom: 24px;
+  
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: $text-dark;
+    margin-bottom: 8px;
+    
+    .required {
+      color: $danger;
+      margin-left: 4px;
+    }
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 16px;
+    font-size: 15px;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    background-color: $background-light;
+    transition: all 0.3s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: $primary;
+      box-shadow: 0 0 0 4px rgba($primary, 0.1);
+    }
+  }
+  
+  textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  &.has-icon {
+    position: relative;
+    
+    input {
+      padding-left: 48px;
+    }
+    
+    .icon {
+      position: absolute;
+      top: 50%;
+      left: 16px;
+      transform: translateY(-50%);
+      color: $text-light;
+    }
+  }
+}
+
+// Enhanced delivery options
+.delivery-options {
+  margin-bottom: 24px;
+  
+  .delivery-option {
+    border: 2px solid $border-color;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      border-color: rgba($primary, 0.5);
+    }
+    
+    &.active {
+      border-color: $primary;
+      background-color: rgba($primary, 0.05);
+      
+      .option-radio {
+        border-color: $primary;
+        
+        &::after {
+          transform: scale(1);
+        }
+      }
+    }
+    
+    .option-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      
+      .option-radio {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2px solid $text-light;
+        margin-right: 12px;
+        position: relative;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%) scale(0);
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background-color: $primary;
+          transition: transform 0.2s ease;
+        }
+      }
+      
+      .option-label {
+        font-weight: 600;
+        font-size: 16px;
+        color: $text-dark;
+        flex: 1;
+      }
+      
+      .option-price {
+        font-weight: 700;
+        color: $primary;
+        font-size: 16px;
+      }
+    }
+    
+    .option-description {
+      padding-left: 34px;
+      font-size: 14px;
+      color: $text-medium;
+      line-height: 1.5;
+    }
+    
+    .discount-badge {
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      background-color: $success;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 50px;
+      box-shadow: 0 4px 8px rgba($success, 0.25);
+    }
+  }
+}
+
+// Enhanced summary section
+.order-summary {
+  background-color: $background-light;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  
+  .summary-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    
+    .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: rgba($accent, 0.1);
+      color: $accent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+    }
+    
+    h4 {
+      font-size: 18px;
+      font-weight: 700;
+      color: $text-dark;
+      margin: 0;
+    }
+  }
+  
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    
+    .label {
+      font-size: 14px;
+      color: $text-medium;
+    }
+    
+    .value {
+      font-size: 14px;
+      font-weight: 600;
+      color: $text-dark;
+    }
+    
+    &.discount {
+      color: $success;
+      .value {
+        color: $success;
       }
     }
   }
   
-  @keyframes scale-in {
-    0% {
-      transform: scale(0.5);
-      opacity: 0;
+  .summary-total {
+    border-top: 1px dashed $border-color;
+    margin-top: 16px;
+    padding-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    
+    .label {
+      font-size: 18px;
+      font-weight: 700;
+      color: $text-dark;
     }
-    100% {
-      transform: scale(1);
-      opacity: 1;
+    
+    .value {
+      font-size: 22px;
+      font-weight: 800;
+      color: $primary;
+    }
+  }
+}
+
+// Enhanced action buttons
+.action-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+  
+  .btn {
+    flex: 1;
+    height: 56px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    
+    &-primary {
+      background-color: $primary;
+      color: white;
+      box-shadow: 0 8px 16px rgba($primary, 0.3);
+      
+      &:hover {
+        background-color: $primary-dark;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 20px rgba($primary, 0.4);
+      }
+      
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 8px rgba($primary, 0.25);
+      }
+      
+      &:disabled {
+        background-color: $text-light;
+        transform: none;
+        box-shadow: none;
+        cursor: not-allowed;
+      }
+    }
+    
+    &-secondary {
+      background-color: $background-white;
+      color: $text-dark;
+      border: 2px solid $border-color;
+      
+      &:hover {
+        background-color: $background-lighter;
+        border-color: $text-medium;
+      }
+      
+      &:active {
+        background-color: $border-color;
+      }
+    }
+    
+    &-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Payment success animation
+.payment-success {
+  text-align: center;
+  padding: 40px 24px;
+  
+  .success-icon {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: rgba($success, 0.1);
+    margin: 0 auto 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s infinite;
+    
+    svg {
+      width: 60px;
+      height: 60px;
+      color: $success;
+      animation: scale-in 0.5s ease-out;
     }
   }
   
-  @keyframes fade-in {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
+  .success-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: $text-dark;
+    margin-bottom: 16px;
+    animation: fade-in 0.5s ease-out 0.2s both;
+  }
+  
+  .success-message {
+    font-size: 16px;
+    color: $text-medium;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    animation: fade-in 0.5s ease-out 0.4s both;
+  }
+  
+  .order-details {
+    background-color: $background-light;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 32px;
+    animation: fade-in 0.5s ease-out 0.6s both;
+    
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid $border-color;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      .label {
+        font-size: 14px;
+        color: $text-medium;
+      }
+      
+      .value {
+        font-size: 14px;
+        font-weight: 600;
+        color: $text-dark;
+      }
     }
   }
+  
+  .success-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: fade-in 0.5s ease-out 0.8s both;
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba($success, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba($success, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba($success, 0);
+  }
+}
+
+@keyframes scale-in {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Tab selector
+.tab-selector {
+  display: flex;
+  background-color: $background-light;
+  border-radius: 16px;
+  padding: 6px;
+  margin-bottom: 24px;
+  
+  .tab {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: $text-medium;
+    
+    &.active {
+      background-color: $primary;
+      color: white;
+      box-shadow: 0 4px 8px rgba($primary, 0.2);
+    }
+    
+    &:hover:not(.active) {
+      color: $text-dark;
+      background-color: $background-lighter;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 640px) {
+  .cart-modal {
+    &:deep(.modal-container) {
+      max-width: 100%;
+      width: 100%;
+      border-radius: 20px 20px 0 0;
+      max-height: 80vh;
+      position: fixed;
+      bottom: 0;
+      top: auto;
+    }
+    
+    &:deep(.modal-header) {
+      padding: 16px 20px;
+      
+      h3 {
+        font-size: 18px;
+      }
+    }
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    
+    .btn {
+      width: 100%;
+    }
+  }
+  
+  .step-progress {
+    .step-label {
+      display: none;
+    }
+  }
+  
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    
+    &-controls {
+      width: 100%;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+  }
+}
 </style>

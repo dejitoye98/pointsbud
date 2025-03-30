@@ -102,13 +102,21 @@
                         </div>
                     </div>
 
+ 
+
+
+                     
+                    <div v-if="false">
+                         <div class="slider" v-if="false">
+                            <PopularComboItem v-for="(combo, index) in popularCombos" :key="index"  :combo="combo"></PopularComboItem>
+                         </div>
+                    </div>
 
 
 
-                    <!-- 
-                    <PopularCombos></PopularCombos>
+                    
 
-                    -->
+                  
 
     
                     <div v-if="false" class="header flex space-between padding-16 flex-center-y">
@@ -185,6 +193,9 @@
                                 
                                 <div class="list" v-if="!search_term"> 
                                 
+
+                                  <PopularCombos v-if="false"></PopularCombos>
+
                                     
                                     <div class="section" v-for="(category, index) in Object.keys(categoryProductMapping)" :id="category">
                                         <div class="category-pane flex space-between">
@@ -231,6 +242,7 @@
                                             </template>
                                             
                                         </div>
+
                                         <div class="flex-col" v-if="business.business_type !== 'restaurant'">
                 
                                             <SimpleListShopItem v-if="business.business_type !== 'restaurant'" :parent_expanded="expanded_categories.includes(category)" :item="item" v-for="(item, index) in categoryProductMapping[category]" :key="index">
@@ -255,6 +267,8 @@
                                             </SimpleListShopItem>
                                             
                                         </div>
+
+                                        
                                         
                                         <div :style="{display: 'grid', gridTemplateColumns: '48% 48%', gap: '16px' }" v-else>
                                           
@@ -470,6 +484,7 @@ import GridItem from '../../components/shop/GridItem.vue';
 import OrderModal from '../../components/modals/OrderModal.vue';
 import ChooseModeModal from '../../components/modals/ChooseModeModal.vue';
 import DealsSection from '../../components/shop/DealsSection.vue';
+import PopularComboItem from '../../components/shop/PopularComboItem.vue';
 
 export default {
     data() {
@@ -754,6 +769,51 @@ export default {
     },
     computed: {
         ...mapGetters("shop", ['cart']),
+        popularCombos() {
+          return  [
+            {
+              id: "combo-1",
+              name: "Family Feast Combo",
+              thumbnail: "https://example.com/images/family-feast.jpg",
+              availability: "available",
+              is_featured: true,
+              is_top_rated: true,
+              order_count: 352,
+              unitprice: 5999,
+              items_total_price: 7500,
+              popularity_score: 95,
+              items: [
+                { name: "Large Jollof Rice", quantity: 1 },
+                { name: "Grilled Chicken", quantity: 2 },
+                { name: "Beef Suya", quantity: 1 },
+                { name: "Fresh Salad", quantity: 1 },
+                { name: "Soft Drinks", quantity: 3 }
+              ],
+              quantity_available: 10,
+              description: "Perfect family meal for 4-5 people. Enjoy our signature jollof rice with perfectly grilled chicken and beef suya."
+            },
+            {
+              id: "combo-2",
+              name: "Date Night Special",
+              thumbnail: "https://example.com/images/date-night.jpg",
+              availability: "available",
+              is_featured: false,
+              is_top_rated: true,
+              order_count: 189,
+              unitprice: 4299,
+              items_total_price: 5100,
+              popularity_score: 88,
+              items: [
+                { name: "Fried Rice", quantity: 2 },
+                { name: "Grilled Tilapia", quantity: 2 },
+                { name: "Plantain Chips", quantity: 1 },
+                { name: "Chapman Drink", quantity: 2 }
+              ],
+              quantity_available: 5,
+              description: "The perfect romantic dinner for two. Comes with our tasty fried rice, premium grilled tilapia and refreshing Chapman."
+            },
+          ]
+        },
 
         selectedTabStyle() {
             let style = {

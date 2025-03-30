@@ -11,7 +11,7 @@ export default () => {
             if (url) {
                 if (url.indexOf('cloudinary') > -1) {
                     let split = url.split('upload');
-                    return CLOUDFRONT_URL + "199a65b881171e53c570a458c3265f8e";
+                    return CLOUDFRONT_URL + "d0e7145ea9ded25b1afaf5d51c9cec4d";
                 }
                 if (url.indexOf('amazonaws.com') > -1) {
                     return CLOUDFRONT_URL + url.split('amazonaws.com/')[1];
@@ -21,9 +21,9 @@ export default () => {
             else {
                 
 
-                return CLOUDFRONT_URL + "199a65b881171e53c570a458c3265f8e";
+                return CLOUDFRONT_URL + "d0e7145ea9ded25b1afaf5d51c9cec4d";
             }
-            return CLOUDFRONT_URL + "199a65b881171e53c570a458c3265f8e";
+            return CLOUDFRONT_URL + "d0e7145ea9ded25b1afaf5d51c9cec4d";
 
             return url
 
@@ -34,7 +34,7 @@ export default () => {
         if (url) {
             if (url.indexOf('cloudinary') > -1) {
                 let split = url.split('upload');
-                return CLOUDFRONT_URL + "ea0da1510f76a83b983391fe9e2ceec8";
+                return CLOUDFRONT_URL + "d0e7145ea9ded25b1afaf5d51c9cec4d";
             }
             if (url.indexOf('amazonaws.com') > -1) {
                 return CLOUDFRONT_URL + url.split('amazonaws.com/')[1];
@@ -44,9 +44,9 @@ export default () => {
         }
         else {
             
-            return CLOUDFRONT_URL + "ea0da1510f76a83b983391fe9e2ceec8";
+            return CLOUDFRONT_URL + "d0e7145ea9ded25b1afaf5d51c9cec4d";
         }
-        return CLOUDFRONT_URL + "ea0da1510f76a83b983391fe9e2ceec8";
+        return CLOUDFRONT_URL + "d0e7145ea9ded25b1afaf5d51c9cec4d";
 
         return url
     });
