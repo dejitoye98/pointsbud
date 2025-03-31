@@ -24,13 +24,11 @@
             </div>
             
             <h1 class="main-heading">
-              <span v-if="chefName">{{ chefName }}, Build</span>
-              <span v-else>Build</span> Steady Revenue with Meal Subscriptions.
+              <span>Build</span> Steady Revenue with Meal Subscriptions.
             </h1>
             
             <p class="sub-heading">
-              <span v-if="chefName">You're not just a talented chef, {{ chefName }} — you're a business owner.</span>
-              <span v-else>You're not just a chef — you're a business owner.</span>
+              <span>You're not just a chef — you're a business owner.</span>
               Let us help you turn one-time clients into loyal, paying subscribers.
             </p>
             
@@ -49,8 +47,7 @@
       <div class="plans-section">
         <div class="container">
           <h2 class="section-heading">
-            <span v-if="chefName">{{ chefName }}, Explore These Example Subscription Plans</span>
-            <span v-else>Example Subscription Plans</span>
+            <span>Example Subscription Plans</span>
           </h2>
           
           <div class="plans-container">
@@ -98,8 +95,7 @@
           <div class="section-icon">🧩</div>
           <h2 class="section-heading">How It Works</h2>
           <p class="section-tagline">
-            <span v-if="chefName">{{ chefName }}, turn your culinary creativity into predictable income — in just a few simple steps.</span>
-            <span v-else>Turn your culinary creativity into predictable income — in just a few simple steps.</span>
+            <span>Turn your culinary creativity into predictable income — in just a few simple steps.</span>
           </p>
           
           <div class="steps-container">
@@ -179,7 +175,7 @@
       </div>
   
       <div class="waitlist-form" id="waitlist" v-if="!signed_up">
-        <p v-if="chefName" class="personalized-invite">{{ chefName }}, ready to take your culinary business to the next level?</p>
+        <p v-if="chefName" class="personalized-invite">Ready to take your culinary business to the next level?</p>
         <div class="form-fields">
           <input 
             type="text" 

@@ -1361,6 +1361,11 @@ $shadow-soft: rgba(0, 0, 0, 0.05);
 $shadow-medium: rgba(0, 0, 0, 0.08);
 $shadow-hard: rgba(0, 0, 0, 0.12);
 
+
+.form-input {
+    @include greyforminput;
+}
+
 // Improved base styling
 .cart-modal {
   &:deep(.modal-container) {
