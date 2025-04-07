@@ -475,6 +475,8 @@
 
 
 <script>
+import crypto from 'crypto'
+
 import ShopCartModal from '../../components/modals/ShopCartModal.vue';
 import SimpleListShopItem from '../../components/shop/SimpleListShopItem.vue';
 import {mapGetters} from 'vuex';
@@ -544,6 +546,12 @@ export default {
       }
     },
     methods: {
+      generateUniqueCode(length = 6) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const randomBytes = crypto.randomBytes(length);
+            const code = [...randomBytes].map(byte => characters[byte % characters.length]).join('');
+            return code;
+        },
       registerBusinessScan() {
             const vm = this;
             function getDeviceId() {

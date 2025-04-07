@@ -30,7 +30,7 @@
       <!-- Horizontal Category Scroller -->
       <div class="category-scroll">
         <div 
-          v-for="(category, index) in categories" 
+          v-for="(category, index) in orderedCategories" 
           :key="index"
           class="category-pill"
           :class="{ active: local_category === category.name }"
@@ -213,6 +213,16 @@ export default {
     }
   },
   computed: {
+    orderedCategories() {
+          if (!this.categories) return [];
+          
+          // Sort categories by priority
+          return [...this.categories].sort((a, b) => {
+              const priorityA = a.priority !== undefined ? a.priority : 999;
+              const priorityB = b.priority !== undefined ? b.priority : 999;
+              return priorityA - priorityB;
+          });
+      },
     filteredCategories() {
       if (!this.searchTerm) return this.categories;
       
