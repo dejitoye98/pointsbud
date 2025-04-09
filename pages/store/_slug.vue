@@ -44,7 +44,12 @@
                 </div>
     
                 <div class="main" v-if="business">
-                    <div class="header">
+
+
+                  <ShopLandingPage @navigate="changeSegment" :styling="styling" :business="business" :segments="computedBusinessSegments"></ShopLandingPage>
+
+                    
+                    <div class="header" id="menu-start">
                         <div class="header__container">
                             <div class="logo">
                                 <div class="logo__container">
@@ -55,7 +60,7 @@
                     
                             
                             <div v-if="showBookmarkButton" class="flex-center-y flex gap-16">
-                                <button @click="triggerBookmark" class="bookmark-btn">
+                                <button @click="triggerBookmark" class="bookmark-btn" :style="{'background-color' : styling?.primary_color || ''}">
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
                                       fill="none"
@@ -173,7 +178,7 @@
     
                         <div style="position: sticky; top: 0; left: 0; background: white; z-index: 10">
     
-                            <ShopCategoryNavigation :styling="styling" v-if="current_tab === 'shop' " @changeCategory="changeCategory" :current_category="current_category" :categories="filteredCategories"></ShopCategoryNavigation>
+                            <ShopCategoryNavigation  @changeSegment="changeSegment" :next_segment="nextMenu" :styling="styling" v-if="current_tab === 'shop' " @changeCategory="changeCategory" :current_category="current_category" :categories="filteredCategories"></ShopCategoryNavigation>
                         </div>
     
                        
@@ -182,7 +187,7 @@
     
                         <template v-if="current_tab === 'shop'">
     
-                                <div class="search">
+                                <div class="search" :style="{'margin-top': computedBusinessSegments?.length > 0 ? '20px' : 0}">
                                     <svg class="icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M16.2375 16.7948L11.0192 11.5765C10.6025 11.9315 10.1233 12.2062 9.58167 12.4006C9.04001 12.5951 8.49556 12.6923 7.94834 12.6923C6.6139 12.6923 5.48445 12.2303 4.56001 11.3065C3.63556 10.3826 3.17334 9.2534 3.17334 7.91896C3.17334 6.58452 3.63501 5.45479 4.55834 4.52979C5.48167 3.60479 6.61056 3.14174 7.94501 3.14063C9.27945 3.13952 10.4095 3.60174 11.335 4.52729C12.2606 5.45285 12.7233 6.58257 12.7233 7.91646C12.7233 8.49535 12.6208 9.05563 12.4158 9.59729C12.2108 10.139 11.9414 10.6023 11.6075 10.9873L16.8258 16.2048L16.2375 16.7948ZM7.94917 11.8581C9.05473 11.8581 9.98806 11.4776 10.7492 10.7165C11.5103 9.95535 11.8908 9.02174 11.8908 7.91563C11.8908 6.80952 11.5103 5.87618 10.7492 5.11563C9.98806 4.35507 9.05473 3.97452 7.94917 3.97396C6.84362 3.9734 5.91001 4.35396 5.14834 5.11563C4.38667 5.87729 4.00612 6.81063 4.00667 7.91563C4.00723 9.02063 4.38778 9.95396 5.14834 10.7156C5.9089 11.4773 6.84223 11.8578 7.94834 11.8573" fill="black"/>
                                     </svg>
@@ -491,6 +496,8 @@ import PopularComboItem from '../../components/shop/PopularComboItem.vue';
 export default {
     data() {
         return {
+
+            current_segment: '',
             table_identifier: null,
             show_promotion_modal: false,
             device_id: null,
@@ -546,6 +553,51 @@ export default {
       }
     },
     methods: {
+      changeSegment(value) {
+            let current_segment = ""; // required
+            let element_to_scroll_to = "menu-start";
+        
+            if (value) {
+                current_segment = value.toLowerCase()
+            }
+            this.current_segment = current_segment;
+
+
+            // get the first category of that segment
+            let first_category = null;
+
+            if (this.current_segment) {
+                const categories = this.filteredCategories
+                if(this.recommendedItems && this.recommendedItems.length) {
+                    this.element_to_scroll_to = "recommended"
+                }
+
+                else if (categories.length) {
+                    first_category = categories[0]?.id
+                }
+            }
+            else{ 
+                if(this.recommendedItems && this.recommendedItems.length) {
+                    this.element_to_scroll_to = "recommended"
+                }
+                else {
+
+                    first_category = this.categories[0]?.id
+                }
+            }
+
+            if (first_category) {
+                this.changeCategory(first_category)
+            }
+
+            setTimeout(()=> {
+
+               const element = document.getElementById(element_to_scroll_to);
+               if (element) element.scrollIntoView({behavior: 'smooth'})
+            }, 200)
+
+
+        },
       generateUniqueCode(length = 6) {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             const randomBytes = crypto.randomBytes(length);
@@ -777,6 +829,74 @@ export default {
     },
     computed: {
         ...mapGetters("shop", ['cart']),
+        recommendedItems() {
+          return []
+        },
+        shouldShowLandingPage() {
+          if (this.computedBusinessSegments.length > 1) return true;
+          return false;
+        },
+        switchableMenu(){
+            for(let segment of this.computedBusinessSegments) {
+                if (this.current_segment !== segment && segment) {
+                    return segment
+                }
+                
+            }
+        },
+
+        nextMenu() {
+            const segments_length = this.computedBusinessSegments.length;
+            let current_segment_index = 0;
+
+
+            for (let i = 0; i < this.computedBusinessSegments.length; i++) {
+                let segment = this.computedBusinessSegments[i].toLowerCase();
+                if (segment === this.current_segment.toLowerCase()) {
+
+                    current_segment_index = i;
+                    break;
+                }
+
+            }
+
+
+           
+
+            let next_segment_index = 0;
+            if (current_segment_index !== segments_length - 1) {
+                next_segment_index = current_segment_index + 1
+            }
+
+            
+            return this.computedBusinessSegments[next_segment_index];
+
+        
+
+        },
+        computedBusinessSegments() {
+            let array = [];
+            const final_array = [];
+
+            if (this.categories) {
+
+                let set = new Set(this.categories.map(cat=> cat.business_segment));
+                array = Array.from(set);
+    
+    
+                if (array.length) {
+                
+                    for (let business_segment of array) {
+                        if (business_segment) {
+
+                            final_array.push(business_segment);
+                        }
+                    }
+                }
+            }
+
+            return final_array
+        },
         popularCombos() {
           return  [
             {
@@ -886,6 +1006,10 @@ export default {
                 a.name.localeCompare(b.name)
             });
 
+            if (this.current_segment != "") {
+                return array.filter(cat=> cat.business_segment?.toLowerCase() === this.current_segment.toLowerCase())
+            }
+
             return array
         },
 
@@ -923,13 +1047,25 @@ export default {
               // First, get ordered categories
           orderedCategories() {
               if (!this.categories) return [];
+
+              let categories = this.categories;
+              
+
+              if (this.current_segment) {
+                categories = categories.filter(c=> c.business_segment?.toLowerCase() == this.current_segment?.toLowerCase())
+              }
+
+              
+
+                return [...categories].sort((a, b) => {
+                    const priorityA = a.priority !== undefined ? a.priority : 999;
+                    const priorityB = b.priority !== undefined ? b.priority : 999;
+                    return priorityA - priorityB;
+                });
+            
+              
               
               // Sort categories by priority
-              return [...this.categories].sort((a, b) => {
-                  const priorityA = a.priority !== undefined ? a.priority : 999;
-                  const priorityB = b.priority !== undefined ? b.priority : 999;
-                  return priorityA - priorityB;
-              });
           },
 
           // Then use ordered categories in your mapping
@@ -1721,7 +1857,7 @@ $info: #2196F3;
   }
   
   &.active-tab {
-    background-color: $primary;
+   // background-color: $primary;
     color: white;
   }
 }

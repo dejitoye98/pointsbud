@@ -133,7 +133,7 @@ export default {
       quantity: 1,
       isHovered: false,
       imageFailed: false,
-      placeholderImage: "https://pointsbud-images.s3.amazonaws.com/e3ac1c8359bd2aaa82c8135f89ab5d1e"
+      placeholderImage: "https://pointsbud-images.s3.amazonaws.com/efb3d8a06626aa61b27adf99273b8eb4"
     };
   },
   computed: {

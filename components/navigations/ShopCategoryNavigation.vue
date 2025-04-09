@@ -45,6 +45,34 @@
       </div>
     </div>
 
+    <!-- Enhanced Next Menu Button -->
+    <div class="next-menu-container">
+      <button 
+        class="next-menu-button" 
+        @click="navigateToNextSegment"
+        :style="{
+          backgroundColor: styling?.primary_color || '#333333',
+          color: styling?.text_on_primary || '#FFFFFF'
+        }"
+      >
+        <div class="button-content">
+          <span class="menu-name">{{ next_segment }}</span>
+          <span class="arrow-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"></path>
+              <path d="M12 5l7 7-7 7"></path>
+            </svg>
+          </span>
+        </div>
+        <div class="wave-animation">
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+        </div>
+      </button>
+    </div>
+
     <!-- Categories Modal -->
     <div class="category-modal" v-if="show_modal">
       <div class="modal-backdrop" @click="show_modal = false"></div>
@@ -80,7 +108,6 @@
               :style="categoryCardStyle(category.name)"
             >
               <div class="category-icon" v-if="getCategoryIcon(category.name)">
-                <component :is="getCategoryIcon(category.name)" />
               </div>
               <span class="category-name">{{ category.name }}</span>
               <span class="item-count">{{ getCategoryItemCount(category) }} items</span>
@@ -94,14 +121,15 @@
 
 <script>
 export default {
-  props: ['categories', 'current_category', 'styling', 'products'],
+  props: ['categories', 'current_category', 'styling', 'products', 'next_segment'],
   data() {
     return {
       show_modal: false,
       local_category: '',
       searchTerm: '',
+      isAnimating: false,
       categoryIcons: {
-        // Common food category icons as Vue components
+        // Icon definitions (same as before)
         'Appetizers': {
           render(h) {
             return h('svg', {
@@ -187,7 +215,6 @@ export default {
             ]);
           }
         },
-        // Default icon for categories without a specific icon
         'default': {
           render(h) {
             return h('svg', {
@@ -214,15 +241,15 @@ export default {
   },
   computed: {
     orderedCategories() {
-          if (!this.categories) return [];
-          
-          // Sort categories by priority
-          return [...this.categories].sort((a, b) => {
-              const priorityA = a.priority !== undefined ? a.priority : 999;
-              const priorityB = b.priority !== undefined ? b.priority : 999;
-              return priorityA - priorityB;
-          });
-      },
+      if (!this.categories) return [];
+      
+      // Sort categories by priority
+      return [...this.categories].sort((a, b) => {
+        const priorityA = a.priority !== undefined ? a.priority : 999;
+        const priorityB = b.priority !== undefined ? b.priority : 999;
+        return priorityA - priorityB;
+      });
+    },
     filteredCategories() {
       if (!this.searchTerm) return this.categories;
       
@@ -275,6 +302,26 @@ export default {
         backgroundColor: isActive ? `${this.primaryColor}10` : 'white',
         borderColor: isActive ? this.primaryColor : '#EEEEEE'
       };
+    },
+    navigateToNextSegment() {
+      if (this.isAnimating) return;
+      
+      this.isAnimating = true;
+      
+      // Add active class for animation
+      const button = document.querySelector('.next-menu-button');
+      button.classList.add('active');
+      
+      // Wait for animation to complete, then navigate
+      setTimeout(() => {
+        this.$emit('changeSegment', this.next_segment);
+        
+        // Reset animation state after a delay
+        setTimeout(() => {
+          button.classList.remove('active');
+          this.isAnimating = false;
+        }, 300);
+      }, 800);
     }
   }
 }
@@ -408,7 +455,124 @@ $border-color: #EEEEEE;
   }
 }
 
-// Categories Modal
+// Enhanced Next Menu Button
+.next-menu-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  bottom: 0;
+  padding: 12px 0;
+  z-index: 90;
+  pointer-events: none;
+}
+
+.next-menu-button {
+  padding: 0;
+  width: 70%;
+  max-width: 320px;
+  height: 52px;
+  border: none;
+  border-radius: 100px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: auto;
+  
+  &:hover {
+    transform: translateY(-4px) scale(1.02);
+    
+    .arrow-icon {
+      transform: translateX(3px);
+    }
+  }
+  
+  &:active {
+    transform: translateY(2px) scale(0.98);
+  }
+  
+  &.active {
+    .wave-animation {
+      opacity: 1;
+    }
+    
+    .wave {
+      animation-play-state: running;
+    }
+    
+    .button-content {
+      animation: textPulse 0.8s ease;
+    }
+  }
+  
+  .button-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .menu-name {
+    position: relative;
+    
+    &:after {
+      content: 'menu';
+      margin-left: 5px;
+      opacity: 0.8;
+    }
+  }
+  
+  .arrow-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .wave-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    overflow: hidden;
+  }
+  
+  .wave {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    transform-origin: center center;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 40%;
+    animation: waveAnimation 2s linear infinite;
+    animation-play-state: paused;
+    
+    &:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+    
+    &:nth-child(3) {
+      animation-delay: 1s;
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+// Categories Modal (same as before)
 .category-modal {
   position: fixed;
   top: 0;
@@ -598,6 +762,23 @@ $border-color: #EEEEEE;
   }
 }
 
+@keyframes waveAnimation {
+  0% {
+    transform: rotate(0) scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(360deg) scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes textPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
 // Media Queries
 @media (max-width: 768px) {
   .categories-grid {
@@ -625,6 +806,10 @@ $border-color: #EEEEEE;
     max-width: none;
     max-height: none;
     border-radius: 0;
+  }
+  
+  .next-menu-button {
+    width: 85%;
   }
 }
 </style>
