@@ -46,7 +46,7 @@
                 <div class="main" v-if="business">
 
 
-                  <ShopLandingPage @navigate="changeSegment" :styling="styling" :business="business" :segments="computedBusinessSegments"></ShopLandingPage>
+                  <ShopLandingPage v-if="computedBusinessSegments.length > 1" @navigate="changeSegment" :styling="styling" :business="business" :segments="computedBusinessSegments"></ShopLandingPage>
 
                     
                     <div class="header" id="menu-start">
