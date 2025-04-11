@@ -996,14 +996,14 @@ export default {
                 for (let c of this.categories) {
                     const category_products = this.products
                         .filter(p => p.category_id === c.id)
-                        .sort((a, b) => a.name.localeCompare(b.name));
+                        .sort((a, b) => a.name?.localeCompare(b.name));
                     if (category_products.length) {
                         array.push(c)
                     }
                 }
             }
             array.sort((a, b)=> {
-                a.name.localeCompare(b.name)
+                a.name?.localeCompare(b.name)
             });
 
             if (this.current_segment != "") {
@@ -1086,7 +1086,7 @@ export default {
                               }
                               
                               // If priority is the same, sort by name
-                              return a.name.localeCompare(b.name);
+                              return a.name?.localeCompare(b.name);
                           });
                           
                       if (category_products.length) {
