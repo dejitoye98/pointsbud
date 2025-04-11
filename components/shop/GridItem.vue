@@ -112,7 +112,7 @@
         <TruncatedText
           @click.stop
           color="#666"
-          fontSize="14"
+          fontSize="12"
           limit="60"
           :text="product.description"
         ></TruncatedText>
