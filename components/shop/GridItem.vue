@@ -30,6 +30,15 @@
       </div>
     </div>
 
+    <div class="ai-badge" v-if="product.thumbnail_ai_generated">
+      <span class="ai-badge-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+        </svg>
+      </span>
+      <span>AI Generated</span>
+    </div>
+
     <!-- Item Image -->
     <div class="item-image-container">
       <div class="item-image-wrapper">
@@ -583,6 +592,52 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
   
   .price-container .current-price {
     font-size: 15px;
+  }
+}
+.ai-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 600;
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.8), rgba(75, 0, 130, 0.8));
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 
+              inset 0 1px 1px rgba(255, 255, 255, 0.4), 
+              inset 0 -1px 1px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  
+  .ai-badge-icon {
+    margin-right: 4px;
+    display: flex;
+    align-items: center;
+  }
+  
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+// Media query update for AI badge
+@media (max-width: 768px) {
+  .ai-badge {
+    font-size: 10px;
+    padding: 4px 8px;
   }
 }
 </style>

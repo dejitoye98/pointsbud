@@ -18,7 +18,7 @@
               @click="selectOption('delivery')"
             >
               <div class="option-icon delivery-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M19.5 9L18 3H6L4.5 9M19.5 9H4.5M19.5 9L21 15H3L4.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M7 18C7 19.1046 6.10457 20 5 20C3.89543 20 3 19.1046 3 18" stroke="currentColor" stroke-width="1.5"/>
                   <path d="M21 18C21 19.1046 20.1046 20 19 20C17.8954 20 17 19.1046 17 18" stroke="currentColor" stroke-width="1.5"/>
@@ -27,8 +27,10 @@
                   <path d="M9 6V3M9 12V9M9 9H15M9 9L12 12M15 9V6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              <h4 class="option-title">Delivery</h4>
-              <p class="option-description">We'll bring it to your doorstep</p>
+              <div class="option-content">
+                <h4 class="option-title">Delivery</h4>
+                <p class="option-description">We'll bring it to your doorstep</p>
+              </div>
             </div>
   
             <div 
@@ -280,4 +282,123 @@
       display: none;
     }
   }
+
+
+  /* Replace your current .options-container, .option-card, and related styles with these */
+.options-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.option-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #E0E0E0;
+  background-color: white;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border-color: #E53945;
+  }
+  
+  &.selected {
+    border-color: #E53945;
+    background-color: rgba(229, 57, 69, 0.04);
+    box-shadow: 0 2px 6px rgba(229, 57, 69, 0.1);
+    
+    .option-icon {
+      color: #E53945;
+      background-color: rgba(229, 57, 69, 0.1);
+    }
+    
+    .option-title {
+      color: #E53945;
+    }
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 16px 16px 0;
+      border-color: transparent #E53945 transparent transparent;
+    }
+  }
+}
+
+.option-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 40px;
+  height: 40px;
+  background-color: #F3F3F3;
+  border-radius: 50%;
+  margin-right: 12px;
+  transition: all 0.2s ease;
+  color: #36454F;
+  
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.option-content {
+  flex: 1;
+}
+
+.option-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+.option-description {
+  font-size: 12px;
+  color: #686868;
+  margin: 0;
+}
+
+/* Update the modal header styles */
+.modal-header {
+  padding: 16px 16px 0;
+  
+  .modal-title {
+    font-size: 18px;
+    margin: 0 0 4px;
+  }
+  
+  .modal-subtitle {
+    font-size: 13px;
+  }
+}
+
+/* Update the modal body styles */
+.modal-body {
+  padding: 16px;
+}
+
+/* Update the action button */
+.continue-button {
+  font-size: 14px;
+  padding: 12px 24px;
+  min-width: 150px;
+  border-radius: 6px;
+}
   </style>
