@@ -36,7 +36,7 @@
           <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
         </svg>
       </span>
-      <span>AI Generated</span>
+      <span>AI</span>
     </div>
 
     <!-- Item Image -->
