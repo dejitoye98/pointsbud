@@ -9,7 +9,7 @@
         <LiveMenuModal  :business="business" v-if="show_live_menu_modal && false" @close="show_live_menu_modal = false">
                 
         </LiveMenuModal>
-        <AuthModal v-if="show_auth_modal"></AuthModal>
+        <AuthModal :business="business" @close="show_auth_modal = false" v-if="show_auth_modal"></AuthModal>
 
         <OrderModal @close="focused_product = null" :item="focused_product"></OrderModal>
 
