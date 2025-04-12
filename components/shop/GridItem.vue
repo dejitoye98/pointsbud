@@ -136,7 +136,7 @@ import TruncatedText from "../text/TruncatedText.vue";
 import { mapGetters } from "vuex";
 
 export default {
-  props: ["product", "styling"],
+  props: ["product", "styling", "category"],
   data() {
     return {
       quantity: 1,
@@ -177,9 +177,9 @@ export default {
     thumbnailSrc() {
       // If the image previously failed or thumbnail is missing, use placeholder
       if (this.imageFailed || !this.product.thumbnail) {
-        return this.placeholderImage;
+        return this.resolveImagePlaceHolder(this.category) || this.placeholderImage;
       }
-      return this.product.thumbnail;
+      return this.product.thumbnail ||  this.resolveImagePlaceHolder(this.category) ;
     }
   },
   watch: {
@@ -195,6 +195,50 @@ export default {
     }
   },
   methods: {
+
+    resolveImagePlaceHolder(category) {
+      const placeholder_mapping = {
+        "barbecue-skewer": require('@/assets/placeholders/barbecue-skewer.png'),
+        "beer-mug": require('@/assets/placeholders/beer-mug.png'),
+        "burger-icon": require('@/assets/placeholders/burger.png'),
+        "burger": require('@/assets/placeholders/burger.png'),
+        "breakfast": require('@/assets/placeholders/breakfast.png'),
+        "cake-slice": require('@/assets/placeholders/cake.png'),
+        "cake": require('@/assets/placeholders/cake.png'),
+        "champagne-flute": require('@/assets/placeholders/champagne-flute.png'),
+        "condiment-bowl": require('@/assets/placeholders/condiment-bowl.png'),
+        "dinner-plate": require('@/assets/placeholders/dinner-plate.png'),
+        "fancy-glass": require('@/assets/placeholders/fancy-glass.png'),
+        "grilled-meat": require('@/assets/placeholders/protein.png'),
+        "protein": require('@/assets/placeholders/protein.png'),
+        "hookah-pipe": require('@/assets/placeholders/hookah.png'),
+        "juice-glass": require('@/assets/placeholders/juice-glass.png'),
+        "salad": require('@/assets/placeholders/salad.png'),
+        "salads": require('@/assets/placeholders/salad.png'),
+        "vegan": require('@/assets/placeholders/salad.png'),
+        "salad-bowl": require('@/assets/placeholders/salad.png'),
+        "milkshake-glass": require('@/assets/placeholders/milkshake-glass.png'),
+        "swallow": require('@/assets/placeholders/swallow.png'),
+        "rice-bowl": require('@/assets/placeholders/rice-bowl.png'),
+        "sandwich-halves": require('@/assets/placeholders/sandwich.png'),
+        "sandwich": require('@/assets/placeholders/sandwich.png'),
+        "small-plate": require('@/assets/placeholders/small-plate.png'),
+        "small-platter": require('@/assets/placeholders/small-platter.png'),
+        "soda-glass": require('@/assets/placeholders/soda-glass.png'),
+        "spaghetti-bowl": require('@/assets/placeholders/spaghetti-bowl.png'),
+        "spirit-shot": require('@/assets/placeholders/spirit-shot.png'),
+        "soup-bowl": require('@/assets/placeholders/soup-bowl.png'),
+        "serving-tray": require('@/assets/placeholders/serving-tray.png'),
+        "wine-glass": require('@/assets/placeholders/fancy-glass.png'),
+        "fancy-glass": require('@/assets/placeholders/fancy-glass.png')
+      };
+
+      if (placeholder_mapping[this.category?.icon]) {
+        return placeholder_mapping[this.category?.icon] || this.placeholderImage
+      }
+
+      return this.placeholderImage
+    },
     onSelect() {
       if (this.product.availability === "available")
         this.$emit("onSelect", this.product);
@@ -227,7 +271,8 @@ export default {
       this.imageFailed = true;
     }
   },
-  components: { TruncatedText }
+  components: { TruncatedText },
+  
 };
 </script>
 

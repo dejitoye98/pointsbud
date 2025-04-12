@@ -74,7 +74,7 @@
                     
                             
                             <div v-if="showBookmarkButton" class="flex-center-y flex gap-16">
-                                <button @click="triggerBookmark" class="bookmark-btn" :style="{'background-color' : styling?.primary_color || '', 'color' : styling?.primary_color || 'white'}">
+                                <button @click="triggerBookmark" class="bookmark-btn" :style="{'background-color' : styling?.primary_color || '', 'color' : styling?.text_on_primary || 'white'}">
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
                                       fill="none"
@@ -295,6 +295,7 @@
                                               :styling="styling" 
                                               @onSelect="chooseProduct(item)"  
                                               :product="item" 
+                                              :category="getCategory(item)"
                                               v-for="(item, index) in categoryProductMapping[category]" 
                                               :key="index">
                                             </GridItem>
@@ -319,6 +320,7 @@
                                     <div class="section">
                                         <GridItem 
                                           :is_list_item="table_identifier"
+                                          :category="getCategory(product)"
 
                                           :product="product" v-for="(product, index) in searchedProducts" :key="index"></GridItem>
                 
@@ -582,6 +584,9 @@ export default {
       }
     },
     methods: {
+      getCategory(product) {
+          return this.categories.find(a => a.id === product.category_id)
+        },
       initializeFirebase() {
           const firebaseConfig = {
               apiKey: "AIzaSyBdh2ygNy-eIL0OtJwlA4LGAfHpcXMmWB8",
@@ -1154,6 +1159,7 @@ export default {
 
             return array
         },
+
 
         searchedProducts() {
             let final = []
