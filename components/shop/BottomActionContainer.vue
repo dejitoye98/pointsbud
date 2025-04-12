@@ -4,13 +4,18 @@
       <div v-if="isVisible" class="bottom-container flex flex-center-x flex-center-y gap-10">
         <div class="action-buttons">
           <FloatingCartButton 
+            @onClicked="$emit('showCartModal')"
+            :count="cart.length"
+            message="Go to cart"
+            total="1000"
+            :show_total="true"
             :styling="styling"
-            :count="cartCount" 
             :total="cartTotal"
             @view-cart="$emit('view-cart')"
           ></FloatingCartButton>
           
           <FloatingRecommendationButton 
+            v-if="false"
             :styling="styling"
             :message="recommendationMessage" 
             :count="recommendationCount"
@@ -25,12 +30,15 @@
   <script>
   import FloatingCartButton from './../modals/FloatingCartButton.vue';
   import FloatingRecommendationButton from './../modals/FloatingRecommendationButton.vue';
-  
+  import {mapGetters} from 'vuex';
   export default {
     name: 'BottomActionContainer',
     components: {
       FloatingCartButton,
       FloatingRecommendationButton
+    },
+    computed: {
+        ...mapGetters('shop', ['cart'])
     },
     props: {
         styling: {

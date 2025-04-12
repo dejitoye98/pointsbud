@@ -15,7 +15,7 @@
 
         <OrderModal @close="focused_product = null" :item="focused_product" :styling="styling"></OrderModal>
 
-        <CartModal :last_checkout_session_id="lastCheckoutSessionId" :mode="current_mode"  @close="show_cart_modal = false"  v-if="show_cart_modal && this.cart.length" :business="business"></CartModal>
+        <CartModal :styling="styling" :last_checkout_session_id="lastCheckoutSessionId" :mode="current_mode"  @close="show_cart_modal = false"  v-if="show_cart_modal && this.cart.length" :business="business"></CartModal>
         
         <PromotionsModal @close="show_promotion_modal = false"  v-if="show_promotion_modal" :mixpanel="mixpanel" :device_id="device_id" :promotion="promotion"></PromotionsModal>
 
@@ -49,7 +49,7 @@
 
                 <div class="btm flex flex-center-x flex-center-y gap-10" style="position: fixed; bottom: 0; right: 0; width: 100%; z-index: 10;">
 
-                  <BottomActionContainer :styling="styling" :show="cart.length > 0"></BottomActionContainer>
+                  <BottomActionContainer @showCartModal="show_cart_modal = true" :styling="styling" :show="cart.length > 0"></BottomActionContainer>
 
 
                 </div>

@@ -1,7 +1,7 @@
 <!-- components/FloatingCartButton.vue -->
 <template>
     <transition name="fade-scale">
-      <div v-if="isVisible" class="floating-cart">
+      <button @click="$emit('onClicked')" v-if="isVisible" class="floating-cart">
         <div class="cart-count">{{ count }}</div>
         <button class="cart-button" :style="{backgroundColor: styling?.primary_color || 'black', color: styling?.text_on_primary || 'white'}" @click="viewCart">
           <div class="cart-icon">
@@ -18,11 +18,13 @@
           {{ message }}
           <div v-if="showTotal" class="total">Total: {{ formatCurrency(total) }}</div>
         </div>
-      </div>
+      </button>
     </transition>
   </template>
   
   <script>
+import { emit } from 'process';
+
   export default {
     name: 'FloatingCartButton',
     props: {
