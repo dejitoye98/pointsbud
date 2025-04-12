@@ -1914,16 +1914,6 @@ $info: #2196F3;
   margin-bottom: 20px;
 }
 
-// Loading State
-.flex-center-x.flex-center-y {
-  padding: 30px 0;
-  
-  span {
-    margin-top: 12px;
-    color: $text-medium;
-    font-size: 14px;
-  }
-}
 
 // Quantity Button
 .quantity-choose {
