@@ -108,7 +108,7 @@
       <h3 class="item-name">{{ product.name }}</h3>
       
       <!-- Item description -->
-      <p class="item-description">
+      <p class="item-description" @click.stop>
         <TruncatedText
           @click.stop
           color="#666"
