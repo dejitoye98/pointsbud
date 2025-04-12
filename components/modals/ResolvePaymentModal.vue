@@ -1,5 +1,5 @@
 <template>
-    <BaseModal @close="$emit('close')">
+    <BaseModal>
       <template #header>
         <div class="cart-header">
           <h2 class="cart-title">Your Cart</h2>
@@ -47,6 +47,7 @@
           
           <!-- Action Buttons -->
           <div class="cart-actions" v-if="cart.length > 0">
+            
             <button class="secondary-btn" @click="addMoreItems">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
@@ -60,6 +61,15 @@
               <span v-if="!loading">Pay Now</span>
               <span v-else class="loader"></span>
             </button>
+
+            <button class="danger-btn" @click="cancelOrder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                Cancel Order
+              </button>
+              
           </div>
           
           <button v-else class="primary-btn" @click="addMoreItems">
@@ -71,10 +81,16 @@
   </template>
   
   <script>
+  import { initializeApp } from 'firebase/app';
+
+
+import { getDatabase, ref, set, get, update, push, serverTimestamp, increment, runTransaction, onValue } from 'firebase/database'
+
   export default {
-    props: ['order'],
+    props: ['order', 'db', 'business', 'checkout_session_id'],
     data() {
       return {
+       // db: null,
         loading: false,
         // Dummy cart data
         cartItems: [
@@ -143,16 +159,87 @@
         
         // Simulating api call
         setTimeout(() => {
-          this.loading = false;
+          this.loading = f
+          alse;
         }, 1500);
       },
       addMoreItems() {
         // Close this modal and navigate to menu
-
-        this.$store.commit('shop/setCart', this.cart)
-        this.$emit('close',);
+        this.$store.commit('shop/setExistingCart', this.cart)
+        this.$emit('close');
         this.$emit('onAddMore');
-      }
+      },
+      cancelOrder() {
+        // Ask for confirmation before cancelling
+        const confirmed = window.confirm("Are you sure you want to cancel this order?");
+        
+        // Only proceed if user confirms
+        if (confirmed) {
+            this.executeCancelOrder()
+
+          // Clear the cart and emit an event to notify parent
+          this.cart = [];
+          this.$store.commit('shop/setCart', []);
+          this.$emit('onCancel');
+          this.$emit('close');
+        }
+      },
+      async executeCancelOrder() {
+        try {
+
+            if (this.order.acceptance_status === 'accepted' || !this.order.status === 'paid') {
+                alert("Can't cancel this order without the help of an assistant.")
+                return
+            }
+
+            if (!this.db) {
+                this.setupFirebase();
+                
+            }
+
+           //))
+
+           
+
+           let space = this.order.space || "table_1"
+    
+            setTimeout(async () => {
+    
+                const order_ref = ref(this.db, `business_orders/${this.business.id}/${this.order?.space}/orders/${this.checkout_session_id}`);
+               // alert(`business_orders/${this.business.id}/${this.order?.space}/orders/${this.checkout_session_id}`)
+                let snap = await get(order_ref);
+                let data = snap.val();
+                
+                if (data) {
+                    update(order_ref, {
+                        status: 'cancelled'
+                    })
+                }
+            }, 500)
+        }catch(e) {
+            alert(e)
+        }
+
+        
+      },
+      setupFirebase() {
+            const firebaseConfig = {
+                apiKey: "AIzaSyBdh2ygNy-eIL0OtJwlA4LGAfHpcXMmWB8",
+                authDomain: "pointsbudapp.firebaseapp.com",
+                databaseURL: "https://pointsbudapp-default-rtdb.firebaseio.com",
+                projectId: "pointsbudapp",
+                storageBucket: "pointsbudapp.appspot.com",
+                messagingSenderId: "76264286716",
+                appId: "1:76264286716:web:b1caa1165fae6fb0a4aa79",
+                measurementId: "G-PM3C3PV904"
+            };
+
+            const firebaseApp = initializeApp(firebaseConfig);
+            this.db = getDatabase();
+            // alert(this.db)
+
+        },
+
     }
   }
   </script>
@@ -163,6 +250,8 @@
   $primary-dark: darken($primary-color, 10%);
   $primary-light: lighten($primary-color, 35%);
   $secondary-color: #F3F2F7;
+  $danger-color: #FF4D4F;
+  $danger-dark: darken($danger-color, 10%);
   $text-color: #36454F;
   $border-color: #E0E0E0;
   $white: #FFFFFF;
@@ -346,6 +435,30 @@
     &:hover {
       background-color: darken($secondary-color, 3%);
       border-color: darken($border-color, 8%);
+    }
+  }
+  
+  // Danger button
+  .danger-btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid $danger-color;
+    background-color: rgba($danger-color, 0.1);
+    color: $danger-color;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    @include flex-center;
+    
+    svg {
+      margin-right: 8px;
+    }
+    
+    &:hover {
+      background-color: $danger-color;
+      color: $white;
     }
   }
   

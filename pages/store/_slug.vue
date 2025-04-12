@@ -5,7 +5,14 @@
         </ShopCartModal>-->
 
 
-        <ResolvePaymentModal @close="show_resolve_payment_modal = false" v-if="show_resolve_payment_modal" :order="existing_unpaid_order"></ResolvePaymentModal>
+        <ResolvePaymentModal 
+          :checkout_session_id="this.lastCheckoutSessionId"
+          :business="business"
+          :db="db"
+          @close="show_resolve_payment_modal = false" 
+          v-if="show_resolve_payment_modal" 
+          :order="existing_unpaid_order">
+        </ResolvePaymentModal>
         <ChooseModeModal v-if="choose_mode && !table_identifier" @close="choose_mode = false" @onChoose="changeMode"></ChooseModeModal>
     
         <LiveMenuModal  :business="business" v-if="show_live_menu_modal && false" @close="show_live_menu_modal = false">
@@ -15,7 +22,7 @@
 
         <OrderModal @close="focused_product = null" :item="focused_product" :styling="styling"></OrderModal>
 
-        <CartModal :styling="styling" :last_checkout_session_id="lastCheckoutSessionId" :mode="current_mode"  @close="show_cart_modal = false"  v-if="show_cart_modal && this.cart.length" :business="business"></CartModal>
+        <CartModal :existing_order="existing_unpaid_order" :styling="styling" :last_checkout_session_id="lastCheckoutSessionId" :mode="current_mode"  @close="show_cart_modal = false"  v-if="show_cart_modal && this.cart.length" :business="business"></CartModal>
         
         <PromotionsModal @close="show_promotion_modal = false"  v-if="show_promotion_modal" :mixpanel="mixpanel" :device_id="device_id" :promotion="promotion"></PromotionsModal>
 
@@ -192,7 +199,7 @@
     
                         <div style="position: sticky; top: 0; left: 0; background: white; z-index: 10">
     
-                            <ShopCategoryNavigation  @changeSegment="changeSegment" :next_segment="nextMenu" :styling="styling" v-if="current_tab === 'shop' " @changeCategory="changeCategory" :current_category="current_category" :categories="filteredCategories"></ShopCategoryNavigation>
+                            <ShopCategoryNavigation :segments="computedBusinessSegments"  @changeSegment="changeSegment" :next_segment="nextMenu" :styling="styling" v-if="current_tab === 'shop' " @changeCategory="changeCategory" :current_category="current_category" :categories="filteredCategories"></ShopCategoryNavigation>
                         </div>
     
                        
@@ -539,7 +546,7 @@ export default {
 
 
             show_sidebar: false,
-            tabs: ["Shop", "Deals", "Announcements", "Purchase History"],
+            tabs: ["Shop", "Deals", "Announcements",],
 
             focused_product: null,
 
@@ -584,6 +591,9 @@ export default {
       }
     },
     methods: {
+      resetOrderSession() {
+        window.localStorage.removeItem("lastCheckoutSessionId")
+      },
       getCategory(product) {
           return this.categories.find(a => a.id === product.category_id)
         },
@@ -622,7 +632,7 @@ export default {
           else {
             // see if checkoutSessionExists
             //alert('exists')
-            this.lastCheckoutSessionId = lastCheckoutSessionId;
+            //this.lastCheckoutSessionId = lastCheckoutSessionId;
             this.resolveLastOrder(lastCheckoutSessionId)
           
           }
@@ -650,7 +660,7 @@ export default {
 
           if (business_data) {
            // alert(JSON.stringify(business_data))
-            let order_data = business_data[table_identifier].orders && business_data[table_identifier].orders[sessionId];
+            let order_data = business_data[table_identifier]?.orders && business_data[table_identifier].orders[sessionId];
 
             if (!order_data) {
                 // scan through
@@ -661,7 +671,7 @@ export default {
                   
                     // Fixed: Added null check for business_data[space]?.orders
                     if (business_data[space]?.orders && business_data[space]?.orders[sessionId]) {
-                        order_data = business_data[space].orders[sessionId];
+                        order_data = business_data[space]?.orders[sessionId];
                         break;
                     }
                 }
@@ -676,10 +686,11 @@ export default {
                 // if it's pending, show the resolvePaymentModal
 
     
-                if (order_data.status === 'pending') {
+                if (order_data.status === 'pending' || !order_data.status) {
                     this.show_resolve_payment_modal = true;
+                    this.lastCheckoutSessionId = sessionId;
                     this.existing_unpaid_order = order_data;
-                } else if (order_data.status === 'paid') {
+                } else if (order_data.status === 'paid' || order_data.status === 'cancelled') {
                     // Added: Handle paid status case
 
                     this.lastCheckoutSessionId = null;

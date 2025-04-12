@@ -53,13 +53,22 @@
 
                 <template v-else-if="step === 1">
 
-                    <CartItem v-for="(item, index) in cart" :item="item" :styling="styling"></CartItem>
+                    <div v-if="existing_cart?.length" style="margin-bottom: 20px">
+                        <div class="tag tag--red" v-if="existing_cart?.length">Old</div>
+
+                        <CartItem v-for="(item, index) in existing_cart" :editable="false" :item="item" :styling="styling"></CartItem>
+                    </div>
+
+                    <div>
+                        <div class="tag" v-if="existing_cart?.length">New</div>
+                        <CartItem v-for="(item, index) in cart" :item="item" :styling="styling"></CartItem>
+                    </div>
 
                     <button class="big-btn full-width" @click="step++" v-if="business.qr_ordering_mode === 'order-and-pay' ">
                         Continue With Items
                     </button>
 
-                    <button class="big-btn full-width" :disabled="creating_session" v-else-if="business.qr_ordering_mode === 'order-only'" @click="step = 6">
+                    <button class="big-btn full-width" :disabled="creating_session" v-else-if="business.qr_ordering_mode === 'order-only'" @click="resolvePlaceOrderWithAttendant">
                         Place Order with Attendant
                     </button>
                 </template>
@@ -356,8 +365,79 @@
 
 
                 <template v-else-if="step === 7">
-                    <p>Your order has been placed with an attendant</p>
-                </template>
+                    <div class="order-success-container">
+                      <!-- Success Illustration -->
+                      <div class="success-illustration">
+                        <svg width="120" height="120" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="128" cy="128" r="120" fill="#F0FFF4" />
+                          <path d="M128 36C76.7878 36 36 76.7878 36 128C36 179.212 76.7878 220 128 220C179.212 220 220 179.212 220 128C220 76.7878 179.212 36 128 36Z" fill="#48BB78" fill-opacity="0.2" />
+                          <path d="M176 100L112 164L80 132" stroke="#48BB78" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </div>
+                      
+                      <!-- Robot Avatar -->
+                      <div class="robot-avatar">
+                        <svg width="80" height="80" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect width="256" height="256" rx="128" fill="#EBF8FF" />
+                          <rect x="78" y="70" width="100" height="120" rx="10" fill="#4299E1" />
+                          <rect x="98" y="90" width="60" height="40" rx="5" fill="#2B6CB0" />
+                          <circle cx="108" cy="110" r="8" fill="#FFFFFF" />
+                          <circle cx="148" cy="110" r="8" fill="#FFFFFF" />
+                          <rect x="108" y="150" width="40" height="5" rx="2.5" fill="#FFFFFF" />
+                          <rect x="68" y="100" width="10" height="30" rx="5" fill="#4299E1" />
+                          <rect x="178" y="100" width="10" height="30" rx="5" fill="#4299E1" />
+                          <circle cx="108" cy="110" r="4" fill="#2B6CB0" />
+                          <circle cx="148" cy="110" r="4" fill="#2B6CB0" />
+                          <rect x="103" y="160" width="50" height="10" rx="5" fill="#2B6CB0" />
+                          <rect x="108" y="50" width="40" height="20" rx="5" fill="#4299E1" />
+                          <rect x="118" y="40" width="20" height="10" rx="5" fill="#4299E1" />
+                        </svg>
+                      </div>
+                      
+                      <h2 class="success-title">Order Placed Successfully!</h2>
+                      <p class="success-message">Your order has been received and is being processed. An attendant will assist you shortly.</p>
+                      
+                      <div class="order-details">
+                        <div class="order-info">
+                          <span class="info-label">Order ID:</span>
+                          <span class="info-value">{{ checkout_url || '' }}</span>
+                        </div>
+                        <div class="order-info">
+                          <span class="info-label">Time:</span>
+                          <span class="info-value">{{ new Date().toLocaleTimeString() }}</span>
+                        </div>
+                      </div>
+                      
+                      <!-- Track Order Button -->
+                      <div class="action-buttons">
+                        <button class="track-order-button" @click="trackOrder">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                          </svg>
+                          Track Order
+                        </button>
+                        <button class="close-button" @click="$emit('close')">
+                          Close
+                        </button>
+                      </div>
+                      
+                      <!-- Delivery Animation -->
+                      <div class="delivery-animation">
+                        <div class="road">
+                          <div class="divider"></div>
+                        </div>
+                        <div class="delivery-vehicle">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="1" y="3" width="15" height="13"></rect>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
             </div>
 
         </template>
@@ -396,7 +476,7 @@ export default {
     'date-picker': myDatepicker,
     PriceComparisonBadge
 },
-    props: ['business', 'mode', 'last_checkout_session_id', 'styling'],
+    props: ['business', 'mode', 'last_checkout_session_id', 'styling', 'existing_order'],
     data() {
         return {
             db: null,
@@ -523,7 +603,7 @@ export default {
 
     },
     computed: {
-        ...mapGetters('shop', ['cart']),
+        ...mapGetters('shop', ['cart', 'existing_cart']),
         canProceedFromDelivery() {
             // if delivery step 
 
@@ -726,6 +806,19 @@ export default {
         },
     },
     methods: {
+        resolvePlaceOrderWithAttendant() {
+            if (this.existing_order) {
+                // no need to go to the part that asks for number
+
+                this.placeUnpaidOrder()
+            }
+            else {
+                this.step = 6;
+            }
+        },
+        trackOrder() {
+            // this should take you to whatsapp
+        },
         setupFirebase() {
             const firebaseConfig = {
                 apiKey: "AIzaSyBdh2ygNy-eIL0OtJwlA4LGAfHpcXMmWB8",
@@ -746,7 +839,7 @@ export default {
 
         async placeUnpaidOrder() {
             const orders = [];
-            let r_uid =  this.generateUniqueCode();
+            let r_uid =  this.generateUniqueCode(7);
             let id, url = null;
 
             this.cart.forEach(async item => {
@@ -757,6 +850,7 @@ export default {
                     product_id: item.id,
                     unitprice: item.unitprice,
                     item_key,
+                    item_uid: item_key,
                     r_uid,
                     item_uid: item_key, 
                     space: this.table_identifier || this.mode  || 'delivery', 
@@ -784,12 +878,15 @@ export default {
                     items: orders,
                     taxes: this.taxes,
                     origin: 'qr-call-waiter',
+                    space: this.table_identifier || this.mode  || 'delivery', 
+
                 // vat: parseFloat(this.vat || 0),
                     //appFee: this.appFee,
                     // checkout_session: ref,
                     customer_phone: this.payload.customer_phone,
                     customer_name: this.payload.customer_name,
                     send_alert: true,
+                    r_uid
                     
                 }
 
@@ -814,19 +911,26 @@ export default {
 
 
                 // update the checkoutsession
+                this.updateCheckoutSession().then(resp=> {
+                    
+                    
+                                    let order_ref = ref(this.db, `business_orders/${this.business.id}/${this.existing_order?.space || this.table_identifier}/orders/${this.last_checkout_session_id}`)
+                                    let added_ref = push(order_ref);
+                                    
+                    
+                                    update(added_ref, ...orders)
+                                    this.step = 7
+                })
                 
                 //
                 // add to
 
                 // ref
 
-                let order_ref = ref(this.db, `business_orders/${this.business.id}/${this.table_identifier}/orders/${this.last_checkout_session_id}`)
-                let added_ref = push(order_ref);
-                
-                await set(added_ref, {
 
-                }), 
-                alert("YOU're ABOUT TO CREATE SOME SHIT")
+                // update checkout session
+                
+                //alert("YOU're ABOUT TO CREATE SOME SHIT")
                 return
             }
             
@@ -846,7 +950,9 @@ export default {
                 customer_name: this.payload.customer_name || '',
                 customer_phone: this.payload.customer_phone || '',
                 taxes: this.totalTaxes || 0,
-                ...orders
+                ...orders,
+                seen: false,
+                read: false
             })
         },
 
@@ -887,6 +993,14 @@ export default {
            
         },
         
+        async updateCheckoutSession() {
+            let vm = this;
+           return await this.$api.put(`/checkout-session/${this.last_checkout_session_id}`, {
+                r_uid: this.existing_order?.r_uid,
+                new_items: this.cart,
+                space: vm.existing_order?.space || ''
+            })
+        },
         updateCustomDate(date) {
             //this.custom_date_picker.time = date;
             this.$set(this.custom_date_picker, 'time', date)
@@ -1141,7 +1255,7 @@ export default {
                 //alert(JSON.stringify(orders))
                 const payload = {
                     token: this.$cookies.get("usertoken"),
-                    r_uid: Date.now(),
+                    r_uid: this.generateUniqueCode(7),
                     delivery_type: this.table_identifier || this.delivery_type,
                     delivery_meta: this.delivery_meta,
                     delivery_fee: this.deliveryFee && this.deliveryFee.price,
@@ -1399,6 +1513,23 @@ $shadow-soft: rgba(0, 0, 0, 0.05);
 $shadow-medium: rgba(0, 0, 0, 0.08);
 $shadow-hard: rgba(0, 0, 0, 0.12);
 
+
+
+.tag {
+    @include done-btn;
+
+    padding: 2px 8px;
+    text-align: center;
+    font-size: 12px;
+    border-radius: 10px;
+    width: fit-content;
+
+
+    &--red {
+        @include reject-btn;
+    }
+}
+
 /* Base Mixins */
 @mixin greyforminput {
   margin-bottom: 18px;
@@ -1529,7 +1660,7 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    background-color: desaturate($primary, 40%);
+    background-color: desaturate($primary, 40%) !important;
     transform: none;
     box-shadow: none;
   }
@@ -2108,4 +2239,263 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
 .form-input {
     @include greyforminput;
 }
+
+.order-success-container {
+    padding: 32px 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .success-illustration {
+    margin-bottom: 16px;
+    animation: bounceIn 0.8s ease;
+  }
+  
+  .robot-avatar {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    animation: floatAnimation 3s ease-in-out infinite;
+  }
+  
+  .success-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2D3748;
+    margin-bottom: 12px;
+    animation: fadeInUp 0.6s ease 0.2s both;
+  }
+  
+  .success-message {
+    font-size: 16px;
+    color: #4A5568;
+    margin-bottom: 24px;
+    max-width: 400px;
+    line-height: 1.5;
+    animation: fadeInUp 0.6s ease 0.4s both;
+  }
+  
+  .order-details {
+    background-color: #F7FAFC;
+    border-radius: 12px;
+    padding: 16px 24px;
+    margin-bottom: 32px;
+    width: 100%;
+    max-width: 320px;
+    animation: fadeInUp 0.6s ease 0.6s both;
+    
+    .order-info {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      
+      &:not(:last-child) {
+        border-bottom: 1px dashed #E2E8F0;
+      }
+      
+      .info-label {
+        font-weight: 600;
+        color: #4A5568;
+      }
+      
+      .info-value {
+        color: #2D3748;
+        font-weight: 500;
+      }
+    }
+  }
+  
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 320px;
+    animation: fadeInUp 0.6s ease 0.8s both;
+  }
+  
+  .track-order-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: $deepprimary;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(66, 153, 225, 0.3);
+    
+    &:hover {
+      background-color: $primary;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(172, 6, 0, 0.4);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+    
+    svg {
+      animation: pulse 2s infinite;
+    }
+  }
+  
+  .close-button {
+    background-color: #F7FAFC;
+    color: #4A5568;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 16px;
+    border: 1px solid #E2E8F0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: #EDF2F7;
+    }
+  }
+  
+  .delivery-animation {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    overflow: hidden;
+    
+    .road {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 20px;
+      background-color: #CBD5E0;
+      
+      .divider {
+        position: absolute;
+        top: 8px;
+        width: 100%;
+        height: 4px;
+        background: repeating-linear-gradient(
+          to right,
+          #FFFFFF,
+          #FFFFFF 10px,
+          transparent 10px,
+          transparent 20px
+        );
+        animation: moveRoad 10s linear infinite;
+      }
+    }
+    
+    .delivery-vehicle {
+      position: absolute;
+      bottom: 20px;
+      left: -32px;
+      animation: moveVehicle 15s linear infinite;
+      
+      svg {
+        color: #4A5568;
+      }
+    }
+  }
+  
+  /* Animations */
+  @keyframes bounceIn {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes floatAnimation {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  @keyframes moveRoad {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: -200px 0;
+    }
+  }
+  
+  @keyframes moveVehicle {
+    from {
+      left: -32px;
+    }
+    to {
+      left: calc(100% + 32px);
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    .order-success-container {
+      padding: 24px 16px 40px;
+    }
+    
+    .robot-avatar {
+      width: 60px;
+      height: 60px;
+      top: 15px;
+      right: 15px;
+    }
+    
+    .success-title {
+      font-size: 20px;
+    }
+    
+    .success-message {
+      font-size: 14px;
+    }
+  }
 </style>

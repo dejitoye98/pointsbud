@@ -24,7 +24,7 @@
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </div>
-        <span class="btn-text">All Categories</span>
+        <span class="btn-text">Switch Category</span>
       </div>
       
       <!-- Horizontal Category Scroller -->
@@ -38,7 +38,6 @@
           :style="categoryPillStyle(category.name)"
         >
           <span class="category-icon" v-if="getCategoryIcon(category.name)">
-            <component :is="getCategoryIcon(category.name)" />
           </span>
           <span class="category-name">{{ category.name }}</span>
         </div>
@@ -46,7 +45,7 @@
     </div>
 
     <!-- Enhanced Next Menu Button -->
-    <div class="next-menu-container">
+    <div class="next-menu-container" v-if="next_segment && segments?.length > 0">
       <button 
         class="next-menu-button" 
         @click="navigateToNextSegment"
@@ -121,7 +120,7 @@
 
 <script>
 export default {
-  props: ['categories', 'current_category', 'styling', 'products', 'next_segment'],
+  props: ['categories', 'current_category', 'styling', 'products', 'next_segment', 'segments'],
   data() {
     return {
       show_modal: false,
@@ -472,7 +471,7 @@ $border-color: #EEEEEE;
   padding: 0;
   width: 70%;
   max-width: 320px;
-  height: 52px;
+  height: 40px;
   border: none;
   border-radius: 100px;
   font-size: 16px;

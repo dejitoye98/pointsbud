@@ -6,6 +6,7 @@ export const state = () => ({
     prefs: [],
 
     cart: [],
+    exising_cart: [],
     focused_product: null,
     show_cart_modal: false,
     show_order_modal: false,
@@ -23,6 +24,9 @@ export const state = () => ({
 export const mutations = ({
     setBusiness(state, value) {
         state.business = value;
+    },
+    setExistingCart(state,value) {
+        state.existing_cart = value
     },
     setShowCustomerNotifications(state, value) {
         state.show_customer_notifications = value;
@@ -224,6 +228,8 @@ export const getters = {
 
     customer_notifications: state => state.customer_notifications,
     show_customer_notifications: state => state.show_customer_notifications,
+
+    existing_cart: state => state.existing_cart,
 
     show_fund_wallet_modal: state=> state.show_fund_wallet_modal
 }

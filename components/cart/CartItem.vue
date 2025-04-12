@@ -1,5 +1,5 @@
 <template>
-    <div class="cart-item" :class="{ 'cart-item--active': isActive }" v-if="item">
+    <div class="cart-item" :class="{ 'cart-item--active': isActive, 'cart-item--disabled': !editable }" v-if="item">
       <div class="cart-item__content">
         <div class="cart-item__media">
           <div class="cart-item__thumbnail">
@@ -22,10 +22,13 @@
           </div>
   
           <div class="cart-item__controls">
-            <div class="quantity-control">
+            <div class="quantity-control"                 v-if="editable"
+            >
               <button 
                 class="quantity-control__btn quantity-control__btn--decrease" 
                 @click="decreaseQuantity"
+                v-if="editable"
+
                 :disabled="item?.quantity <= 1"
                 :class="{ 'quantity-control__btn--disabled': item?.quantity <= 1 }"
               >
@@ -40,6 +43,8 @@
                   :value="item?.quantity" 
                   @input="setQuantity"
                   @blur="validateQuantity"
+                  v-if="editable"
+
                   class="quantity-control__input"
                   maxlength="3"
                 >
@@ -47,6 +52,7 @@
               
               <button 
                 class="quantity-control__btn quantity-control__btn--increase" 
+                v-if="editable"
                 @click="increaseQuantity"
                 :disabled="item?.quantity >= 99"
               >
@@ -58,17 +64,24 @@
           </div>
         </div>
   
-        <div class="cart-item__price">
+        <div class="cart-item__price" v-if="editable">
           <p class="cart-item__price-value">{{item.currency || "NGN" | currencySymbol}}{{itemSubtotal | money}}</p>
-          <button class="cart-item__remove" @click="removeItem" aria-label="Remove item">
+          
+          
+          <button class="cart-item__remove" @click="removeItem" aria-label="Remove item" v-if="editable">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
         </div>
+        
+        <!-- Show static price when not editable -->
+        <div class="cart-item__price" v-if="!editable">
+          <p class="cart-item__price-value">{{item.currency || "NGN" | currencySymbol}}{{itemSubtotal | money}}</p>
+        </div>
       </div>
   
-      <div class="cart-item__actions" v-if="showActions">
+      <div class="cart-item__actions" v-if="showActions && editable">
         <button class="cart-item__action cart-item__action--note" @click="toggleNote">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M8 12.5V8M8 5.5V3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -90,17 +103,22 @@
   
   export default {
     props: {
-      item: {
-        type: Object,
-        required: true
-      },
-      styling: {
-        type: Object
-      },
-      showActions: {
-        type: Boolean,
-        default: false
-      }
+        editable: {
+            type: Boolean,
+            required: false,
+            default: true
+        },
+        item: {
+            type: Object,
+            required: true
+        },
+        styling: {
+            type: Object
+        },
+        showActions: {
+            type: Boolean,
+            default: false
+        }
     },
     watch: {
     
@@ -126,7 +144,7 @@
         return this.styling?.text_on_primary || "white";
     },
     isInCart() {
-        return this.cart.find((item) => item.id === this.product.id);
+        return this.cart.find((item) => item.id === this.product.id) || this.existing_cart.find((item) => item.id === this.product.id);
     },
     primaryColor() {
         return this.styling?.primary_color || "#FF6B6B";
@@ -151,7 +169,7 @@
         };
     },
       itemSubtotal() {
-        return this.item.unitprice * this.isInCart.quantity
+        return this.item.unitprice * this.isInCart?.quantity
       },
       thumbnailSrc() {
       // If the image previously failed or thumbnail is missing, use placeholder
@@ -163,6 +181,49 @@
     },
     
     methods: {
+        resolveImagePlaceHolder(category) {
+            const placeholder_mapping = {
+                "barbecue-skewer": require('@/assets/placeholders/barbecue-skewer.png'),
+                "beer-mug": require('@/assets/placeholders/beer-mug.png'),
+                "burger-icon": require('@/assets/placeholders/burger.png'),
+                "burger": require('@/assets/placeholders/burger.png'),
+                "breakfast": require('@/assets/placeholders/breakfast.png'),
+                "cake-slice": require('@/assets/placeholders/cake.png'),
+                "cake": require('@/assets/placeholders/cake.png'),
+                "champagne-flute": require('@/assets/placeholders/champagne-flute.png'),
+                "condiment-bowl": require('@/assets/placeholders/condiment-bowl.png'),
+                "dinner-plate": require('@/assets/placeholders/dinner-plate.png'),
+                "fancy-glass": require('@/assets/placeholders/fancy-glass.png'),
+                "grilled-meat": require('@/assets/placeholders/protein.png'),
+                "protein": require('@/assets/placeholders/protein.png'),
+                "hookah-pipe": require('@/assets/placeholders/hookah.png'),
+                "juice-glass": require('@/assets/placeholders/juice-glass.png'),
+                "salad": require('@/assets/placeholders/salad.png'),
+                "salads": require('@/assets/placeholders/salad.png'),
+                "vegan": require('@/assets/placeholders/salad.png'),
+                "salad-bowl": require('@/assets/placeholders/salad.png'),
+                "milkshake-glass": require('@/assets/placeholders/milkshake-glass.png'),
+                "swallow": require('@/assets/placeholders/swallow.png'),
+                "rice-bowl": require('@/assets/placeholders/rice-bowl.png'),
+                "sandwich-halves": require('@/assets/placeholders/sandwich.png'),
+                "sandwich": require('@/assets/placeholders/sandwich.png'),
+                "small-plate": require('@/assets/placeholders/small-plate.png'),
+                "small-platter": require('@/assets/placeholders/small-platter.png'),
+                "soda-glass": require('@/assets/placeholders/soda-glass.png'),
+                "spaghetti-bowl": require('@/assets/placeholders/spaghetti-bowl.png'),
+                "spirit-shot": require('@/assets/placeholders/spirit-shot.png'),
+                "soup-bowl": require('@/assets/placeholders/soup-bowl.png'),
+                "serving-tray": require('@/assets/placeholders/serving-tray.png'),
+                "wine-glass": require('@/assets/placeholders/fancy-glass.png'),
+                "fancy-glass": require('@/assets/placeholders/fancy-glass.png')
+            };
+
+            if (placeholder_mapping[this.category?.icon]) {
+                return placeholder_mapping[this.category?.icon] || this.placeholderImage
+            }
+
+            return this.placeholderImage
+        },
       increaseQuantity() {
         if (this.isInCart.quantity < 99) {
           this.animateButton('increase');
@@ -276,6 +337,8 @@
   $background-white: #FFFFFF;
   $background-light: #F7FAFC;
   $background-lighter: #EDF2F7;
+  $disabled-background: #F1F1F4;
+  $disabled-text: #A0AEC0;
   $shadow-soft: rgba(0, 0, 0, 0.05);
   $shadow-hover: rgba(0, 0, 0, 0.08);
   $transition-fast: 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -289,7 +352,7 @@
     border-radius: 12px;
     background-color: $background-white;
     box-shadow: 0 2px 8px $shadow-soft;
-    transition: transform $transition-medium, box-shadow $transition-medium;
+    transition: transform $transition-medium, box-shadow $transition-medium, background-color $transition-medium;
     overflow: hidden;
     
     &:hover {
@@ -300,6 +363,41 @@
     &--active {
       transform: translateX(100%);
       opacity: 0;
+    }
+    
+    // Disabled state
+    &--disabled {
+      background-color: $disabled-background;
+      transform: none;
+      box-shadow: 0 2px 4px $shadow-soft;
+      
+      &:hover {
+        transform: none;
+        box-shadow: 0 2px 4px $shadow-soft;
+      }
+      
+      .cart-item__name,
+      .cart-item__price-value {
+        color: $text-medium;
+      }
+      
+      .cart-item__meta,
+      .cart-item__quantity-badge {
+        color: $disabled-text;
+      }
+      
+      .cart-item__image {
+        opacity: 0.7;
+        filter: grayscale(30%);
+        
+        &:hover {
+          transform: none;
+        }
+      }
+      
+      .cart-item__quantity-badge {
+        background-color: $text-light;
+      }
     }
     
     &__content {
@@ -328,7 +426,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform $transition-medium;
+      transition: transform $transition-medium, opacity $transition-medium, filter $transition-medium;
       
       &:hover {
         transform: scale(1.05);
@@ -352,6 +450,7 @@
       box-shadow: 0 2px 4px rgba($primary, 0.3);
       z-index: 1;
       padding: 0 4px;
+      transition: background-color $transition-medium, color $transition-medium;
     }
     
     // Details section
@@ -376,12 +475,14 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      transition: color $transition-medium;
     }
     
     &__meta {
       font-size: 13px;
       color: $text-medium;
       margin-top: 2px;
+      transition: color $transition-medium;
     }
     
     // Price section
@@ -399,6 +500,7 @@
       font-weight: 700;
       color: $text-dark;
       white-space: nowrap;
+      transition: color $transition-medium;
     }
     
     &__remove {
