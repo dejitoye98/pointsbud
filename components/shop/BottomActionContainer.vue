@@ -4,12 +4,14 @@
       <div v-if="isVisible" class="bottom-container flex flex-center-x flex-center-y gap-10">
         <div class="action-buttons">
           <FloatingCartButton 
+            :styling="styling"
             :count="cartCount" 
             :total="cartTotal"
             @view-cart="$emit('view-cart')"
           ></FloatingCartButton>
           
           <FloatingRecommendationButton 
+            :styling="styling"
             :message="recommendationMessage" 
             :count="recommendationCount"
             @view="$emit('view-recommendations')"
@@ -31,6 +33,9 @@
       FloatingRecommendationButton
     },
     props: {
+        styling: {
+            type: [Object, undefined],
+        },
         show: {
             type:Boolean,
             default: false,

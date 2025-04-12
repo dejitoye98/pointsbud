@@ -49,7 +49,7 @@
 
                 <div class="btm flex flex-center-x flex-center-y gap-10" style="position: fixed; bottom: 0; right: 0; width: 100%; z-index: 10;">
 
-                  <BottomActionContainer :show="cart.length > 0"></BottomActionContainer>
+                  <BottomActionContainer :styling="styling" :show="cart.length > 0"></BottomActionContainer>
 
 
                 </div>

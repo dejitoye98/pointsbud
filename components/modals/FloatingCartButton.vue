@@ -3,7 +3,7 @@
     <transition name="fade-scale">
       <div v-if="isVisible" class="floating-cart">
         <div class="cart-count">{{ count }}</div>
-        <button class="cart-button" @click="viewCart">
+        <button class="cart-button" :style="{backgroundColor: styling?.primary_color || 'black', color: styling?.text_on_primary || 'white'}" @click="viewCart">
           <div class="cart-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="8" cy="21" r="1"></circle>
@@ -26,6 +26,10 @@
   export default {
     name: 'FloatingCartButton',
     props: {
+        styling: {
+            type: [Object, undefined],
+        
+        },
         containerMode: {
             type: Boolean,
             default: false
@@ -115,7 +119,7 @@
   }
   
   .cart-button {
-    background: linear-gradient(135deg, #2c3e50, #1a1a2e);
+   // background: linear-gradient(135deg, #2c3e50, #1a1a2e);
     color: white;
     border: none;
     border-radius: 50%;
