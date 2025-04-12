@@ -53,7 +53,7 @@
 
                 <template v-else-if="step === 1">
 
-                    <CartItem v-for="(item, index) in cart" :item="item"></CartItem>
+                    <CartItem v-for="(item, index) in cart" :item="item" :styling="styling"></CartItem>
 
                     <button class="big-btn full-width" @click="step++" v-if="business.qr_ordering_mode === 'order-and-pay' ">
                         Continue With Items

@@ -2,13 +2,29 @@
   <BaseModal v-if="item" @close="$emit('close')" class="gourmet-modal">
     <template #header>
       <div class="modal-header">
-        <div class="food-image-container">
-          <img 
-            :src="thumbnailSrc" 
-            alt="Food item" 
-            class="food-image"
-            @error="handleImageError"
-          >
+        <div class="food-image-container" :class="{ 'expanded': isImageExpanded }">
+          <div class="image-overlay" v-if="isImageExpanded" @click="toggleImageExpand"></div>
+          
+          <div class="image-wrapper" :class="{ 'expanded': isImageExpanded }">
+            <img 
+              :src="thumbnailSrc" 
+              alt="Food item" 
+              class="food-image"
+              @error="handleImageError"
+              @click="toggleImageExpand"
+            >
+          </div>
+          
+          <!-- Zoom indicator -->
+          <div class="zoom-indicator" v-if="!isImageExpanded">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6"></path>
+              <path d="M10 14L21 3"></path>
+              <path d="M9 21H3v-6"></path>
+              <path d="M3 3l6 6"></path>
+            </svg>
+            <span>Tap to expand</span>
+          </div>
           
           <!-- Image Gallery Dots -->
           <div class="image-gallery-dots" v-if="hasMultipleImages">
@@ -17,9 +33,17 @@
             <div class="dot"></div>
           </div>
           
-          <!-- Back button -->
+          <!-- Back button (always visible) -->
           <button @click="$emit('close')" class="back-button">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+          
+          <!-- Close expanded image button -->
+          <button v-if="isImageExpanded" @click.stop="toggleImageExpand" class="close-expanded-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
@@ -34,7 +58,7 @@
     </template>
     
     <template #body>
-      <div class="modal-body">
+      <div class="modal-body" :class="{ 'hidden': isImageExpanded }">
         <!-- Item details header -->
         <div class="item-details">
           <div class="item-details-header">
@@ -160,6 +184,7 @@ export default {
       },
       hasMultipleImages: true, // Set to true if the item has multiple images
       imageFailed: false,
+      isImageExpanded: false,
       placeholderImage: "https://pointsbud-images.s3.amazonaws.com/efb3d8a06626aa61b27adf99273b8eb4"
     }
   },
@@ -201,7 +226,7 @@ export default {
     thumbnailSrc() {
       // If the image previously failed or thumbnail is missing, use placeholder
       if (this.imageFailed || !this.item.thumbnail) {
-        return this.placeholderImage;
+        return this.getPlaceholderImage();
       }
       return this.item.thumbnail;
     }
@@ -211,16 +236,265 @@ export default {
       this.mixpanel = mixpanel.init('1f580add8d0558ccae5fc19ca5997dab', { debug: false, track_pageview: false });
       mixpanel.track("Shop Order Model Opened", {
         product:this.item?.name 
-      })
+      });
+      
+      // Add escape key listener for closing expanded image view
+      document.addEventListener('keydown', this.handleKeyDown);
+      
+      // Prevent body scrolling when image is expanded
+      this.$watch('isImageExpanded', (newVal) => {
+        document.body.style.overflow = newVal ? 'hidden' : '';
+      });
     }
+  },
+  beforeDestroy() {
+    document.removeEventListener('keydown', this.handleKeyDown);
+    document.body.style.overflow = '';
   },
   methods: {
     generateUniqueCode(length = 6) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        const codeLength = 4;
         const randomBytes = crypto.randomBytes(length);
         const code = [...randomBytes].map(byte => characters[byte % characters.length]).join('');
         return code;
+    },
+    toggleImageExpand(event) {
+      // Prevent event bubbling
+      if (event) {
+        event.stopPropagation();
+      }
+      this.isImageExpanded = !this.isImageExpanded;
+      
+      // Track expanded image view
+      if (this.isImageExpanded) {
+        mixpanel.track("Food Image Expanded", {
+          product: this.item?.name
+        });
+      }
+    },
+    handleKeyDown(e) {
+      // Close expanded image view on escape key
+      if (e.key === 'Escape' && this.isImageExpanded) {
+        this.isImageExpanded = false;
+      }
+    },
+    getPlaceholderImage() {
+      // First, try to get a placeholder based on product keywords if available
+      if (this.item.tags && this.item.tags.length > 0) {
+        const keywordPlaceholder = this.getPlaceholderByKeyword(this.item.tags);
+        if (keywordPlaceholder) return keywordPlaceholder;
+      }
+      
+      // Then try by product name keywords
+      if (this.item.name) {
+        const namePlaceholder = this.getPlaceholderByProductName(this.item.name);
+        if (namePlaceholder) return namePlaceholder;
+      }
+      
+      // Then try by category if available
+      if (this.item.category) {
+        const categoryPlaceholder = this.getPlaceholderByCategory(this.item.category);
+        if (categoryPlaceholder) return categoryPlaceholder;
+      }
+      
+      // Fallback to default placeholder
+      return this.placeholderImage;
+    },
+    getPlaceholderByKeyword(tags) {
+      const keywordsMap = {
+        'burger': 'burger',
+        'hamburger': 'burger',
+        'cheeseburger': 'burger',
+        'sandwich': 'sandwich',
+        'salad': 'salad',
+        'vegetable': 'salad',
+        'vegan': 'salad',
+        'pasta': 'spaghetti-bowl',
+        'spaghetti': 'spaghetti-bowl',
+        'noodle': 'spaghetti-bowl',
+        'rice': 'rice-bowl',
+        'soup': 'soup-bowl',
+        'stew': 'soup-bowl',
+        'dessert': 'cake',
+        'cake': 'cake',
+        'pastry': 'cake',
+        'breakfast': 'breakfast',
+        'beer': 'beer-mug',
+        'wine': 'fancy-glass',
+        'cocktail': 'fancy-glass',
+        'champagne': 'champagne-flute',
+        'juice': 'juice-glass',
+        'soda': 'soda-glass',
+        'milkshake': 'milkshake-glass',
+        'steak': 'protein',
+        'meat': 'protein',
+        'chicken': 'protein',
+        'fish': 'protein',
+        'seafood': 'protein',
+        'barbecue': 'barbecue-skewer',
+        'bbq': 'barbecue-skewer',
+        'grill': 'barbecue-skewer',
+        'pizza': 'small-plate',
+        'appetizer': 'small-plate',
+        'starter': 'small-plate',
+        'platter': 'small-platter',
+        'hookah': 'hookah-pipe',
+        'shisha': 'hookah-pipe',
+        'condiment': 'condiment-bowl',
+        'sauce': 'condiment-bowl',
+        'dip': 'condiment-bowl',
+        'spirit': 'spirit-shot',
+        'shot': 'spirit-shot',
+        'vodka': 'spirit-shot',
+        'whiskey': 'spirit-shot',
+        'gin': 'spirit-shot',
+        'tequila': 'spirit-shot',
+        'rum': 'spirit-shot',
+        'swallow': 'swallow',
+        'fufu': 'swallow',
+        'amala': 'swallow',
+        'eba': 'swallow',
+        'dinner': 'dinner-plate'
+      };
+      
+      for (const tag of tags) {
+        const lowerTag = tag.toLowerCase();
+        for (const [keyword, placeholderKey] of Object.entries(keywordsMap)) {
+          if (lowerTag.includes(keyword)) {
+            return this.getPlaceholderByKey(placeholderKey);
+          }
+        }
+      }
+      
+      return null;
+    },
+    getPlaceholderByProductName(name) {
+      const lowerName = name.toLowerCase();
+      const keywordsMap = {
+        'burger': 'burger',
+        'sandwich': 'sandwich',
+        'salad': 'salad',
+        'pasta': 'spaghetti-bowl',
+        'spaghetti': 'spaghetti-bowl',
+        'noodle': 'spaghetti-bowl',
+        'rice': 'rice-bowl',
+        'jollof': 'rice-bowl',
+        'fried rice': 'rice-bowl',
+        'soup': 'soup-bowl',
+        'stew': 'soup-bowl',
+        'cake': 'cake',
+        'dessert': 'cake',
+        'pie': 'cake',
+        'breakfast': 'breakfast',
+        'beer': 'beer-mug',
+        'wine': 'fancy-glass',
+        'cocktail': 'fancy-glass',
+        'champagne': 'champagne-flute',
+        'juice': 'juice-glass',
+        'soda': 'soda-glass',
+        'coke': 'soda-glass',
+        'pepsi': 'soda-glass',
+        'sprite': 'soda-glass',
+        'fanta': 'soda-glass',
+        'milk': 'milkshake-glass',
+        'shake': 'milkshake-glass',
+        'smoothie': 'milkshake-glass',
+        'steak': 'protein',
+        'chicken': 'protein',
+        'fish': 'protein',
+        'meat': 'protein',
+        'pork': 'protein',
+        'beef': 'protein',
+        'lamb': 'protein',
+        'bbq': 'barbecue-skewer',
+        'barbecue': 'barbecue-skewer',
+        'kebab': 'barbecue-skewer',
+        'skewer': 'barbecue-skewer',
+        'suya': 'barbecue-skewer',
+        'pizza': 'small-plate',
+        'appetizer': 'small-plate',
+        'starter': 'small-plate',
+        'platter': 'small-platter',
+        'hookah': 'hookah-pipe',
+        'shisha': 'hookah-pipe',
+        'sauce': 'condiment-bowl',
+        'dip': 'condiment-bowl',
+        'whiskey': 'spirit-shot',
+        'vodka': 'spirit-shot',
+        'gin': 'spirit-shot',
+        'tequila': 'spirit-shot',
+        'rum': 'spirit-shot',
+        'shot': 'spirit-shot',
+        'amala': 'swallow',
+        'eba': 'swallow',
+        'fufu': 'swallow',
+        'semo': 'swallow',
+        'semolina': 'swallow',
+        'pounded yam': 'swallow',
+        'dinner': 'dinner-plate'
+      };
+      
+      for (const [keyword, placeholderKey] of Object.entries(keywordsMap)) {
+        if (lowerName.includes(keyword)) {
+          return this.getPlaceholderByKey(placeholderKey);
+        }
+      }
+      
+      return null;
+    },
+    getPlaceholderByCategory(category) {
+      if (!category) return null;
+      
+      // First try by icon if available
+      if (category.icon) {
+        const iconPlaceholder = this.getPlaceholderByKey(category.icon);
+        if (iconPlaceholder) return iconPlaceholder;
+      }
+      
+      // Then try by category name
+      if (category.name) {
+        return this.getPlaceholderByProductName(category.name);
+      }
+      
+      return null;
+    },
+    getPlaceholderByKey(key) {
+      const placeholderMap = {
+        "barbecue-skewer": require('@/assets/placeholders/barbecue-skewer.png'),
+        "beer-mug": require('@/assets/placeholders/beer-mug.png'),
+        "burger-icon": require('@/assets/placeholders/burger.png'),
+        "burger": require('@/assets/placeholders/burger.png'),
+        "breakfast": require('@/assets/placeholders/breakfast.png'),
+        "cake-slice": require('@/assets/placeholders/cake.png'),
+        "cake": require('@/assets/placeholders/cake.png'),
+        "champagne-flute": require('@/assets/placeholders/champagne-flute.png'),
+        "condiment-bowl": require('@/assets/placeholders/condiment-bowl.png'),
+        "dinner-plate": require('@/assets/placeholders/dinner-plate.png'),
+        "fancy-glass": require('@/assets/placeholders/fancy-glass.png'),
+        "grilled-meat": require('@/assets/placeholders/protein.png'),
+        "protein": require('@/assets/placeholders/protein.png'),
+        "hookah-pipe": require('@/assets/placeholders/hookah.png'),
+        "juice-glass": require('@/assets/placeholders/juice-glass.png'),
+        "salad": require('@/assets/placeholders/salad.png'),
+        "salads": require('@/assets/placeholders/salad.png'),
+        "vegan": require('@/assets/placeholders/salad.png'),
+        "salad-bowl": require('@/assets/placeholders/salad.png'),
+        "milkshake-glass": require('@/assets/placeholders/milkshake-glass.png'),
+        "swallow": require('@/assets/placeholders/swallow.png'),
+        "rice-bowl": require('@/assets/placeholders/rice-bowl.png'),
+        "sandwich-halves": require('@/assets/placeholders/sandwich.png'),
+        "sandwich": require('@/assets/placeholders/sandwich.png'),
+        "small-plate": require('@/assets/placeholders/small-plate.png'),
+        "small-platter": require('@/assets/placeholders/small-platter.png'),
+        "soda-glass": require('@/assets/placeholders/soda-glass.png'),
+        "spaghetti-bowl": require('@/assets/placeholders/spaghetti-bowl.png'),
+        "spirit-shot": require('@/assets/placeholders/spirit-shot.png'),
+        "soup-bowl": require('@/assets/placeholders/soup-bowl.png'),
+        "serving-tray": require('@/assets/placeholders/serving-tray.png'),
+        "wine-glass": require('@/assets/placeholders/fancy-glass.png')
+      };
+      
+      return placeholderMap[key] || null;
     },
     removeFromCart() {
       this.$store.dispatch('shop/removeFromCart', this.item.id);
@@ -444,90 +718,201 @@ $transition-slow: 0.35s ease;
     padding: 0;
     flex: 1;
     overflow-y: auto;
+    
+    &.hidden {
+      display: none;
+    }
   }
 }
 
 // Modal Header with Image
 .modal-header {
   position: relative;
-  .food-image-container {
+}
+
+// Food Image Container
+.food-image-container {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  transition: all $transition-slow;
+  z-index: 101;
+  
+  &.expanded {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .image-wrapper {
+      width: auto;
+      height: auto;
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: $radius-lg;
+      overflow: hidden;
+      box-shadow: $shadow-hard;
+      
+      .food-image {
+        object-fit: contain;
+        height: auto;
+        max-height: 90vh;
+      }
+    }
+  }
+  
+  .image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  
+  .image-wrapper {
     position: relative;
     width: 100%;
-    height: 250px;
-    overflow: hidden;
+    height: 100%;
+    z-index: 2;
+    transition: all $transition-slow;
     
-    .food-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform $transition-base;
-      
-      &:hover {
-        transform: scale(1.05);
-      }
+    &.expanded {
+      width: auto;
+      transform: scale(1);
     }
+  }
+  
+  .food-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform $transition-base;
+    cursor: pointer;
     
-    // Image gallery dots
-    .image-gallery-dots {
-      position: absolute;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 8px;
-      
-      .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.5);
-        transition: $transition-fast;
-        
-        &.active {
-          background-color: $white;
-          width: 10px;
-          height: 10px;
-        }
-      }
+    &:hover {
+      transform: scale(1.05);
     }
+  }
+  
+  // Zoom indicator
+  .zoom-indicator {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: $radius-full;
+    font-size: 12px;
+    z-index: 3;
+    pointer-events: none;
+    animation: pulse 2s infinite;
     
-    // Back button
-    .back-button {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      width: 36px;
-      height: 36px;
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+  
+  // Image gallery dots
+  .image-gallery-dots {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 3;
+    
+    .dot {
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: $white;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
+      background-color: rgba(255, 255, 255, 0.5);
       transition: $transition-fast;
-      z-index: 10;
       
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.7);
-        transform: scale(1.1);
+      &.active {
+        background-color: $white;
+        width: 10px;
+        height: 10px;
       }
     }
+  }
+  
+  // Back button
+  .back-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: $white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: $transition-fast;
+    z-index: 10;
     
-    // Badge for bestseller/special
-    .item-badge {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background-color: $primary-color;
-      color: $white;
-      padding: 6px 12px;
-      border-radius: $radius-full;
-      font-weight: 600;
-      font-size: 12px;
-      box-shadow: $shadow-soft;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.7);
+      transform: scale(1.1);
     }
+  }
+  
+  // Close expanded image button
+  .close-expanded-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: $white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: $transition-fast;
+    z-index: 10000;
+    
+    &:hover {
+      background-color: $primary-color;
+      transform: scale(1.1);
+    }
+  }
+  
+  // Badge for bestseller/special
+  .item-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: $primary-color;
+    color: $white;
+    padding: 6px 12px;
+    border-radius: $radius-full;
+    font-weight: 600;
+    font-size: 12px;
+    box-shadow: $shadow-soft;
+    z-index: 3;
   }
 }
 
@@ -891,35 +1276,27 @@ $transition-slow: 0.35s ease;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: $primary-color;
+  color: $white;
+  box-shadow: 0 6px 12px rgba($primary-color, 0.4);
   
   &:hover {
     transform: translateY(-2px);
+    background-color: darken($primary-color, 8%);
+    box-shadow: 0 8px 16px rgba($primary-color, 0.5);
   }
   
-  &.primary {
-    background-color: $primary-color;
-    color: $white;
-    box-shadow: 0 6px 12px rgba($primary-color, 0.4);
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    
-    &:hover {
-      background-color: darken($primary-color, 8%);
-      box-shadow: 0 8px 16px rgba($primary-color, 0.5);
-    }
-    
-    &:active {
-      transform: translateY(1px);
-      box-shadow: 0 4px 8px rgba($primary-color, 0.3);
-    }
-    
-    .price-tag {
-      background-color: rgba($white, 0.25);
-      padding: 8px 12px;
-      border-radius: $radius-full;
-      font-weight: 700;
-      margin-left: 8px;
-    }
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 4px 8px rgba($primary-color, 0.3);
+  }
+  
+  .price-tag {
+    background-color: rgba($white, 0.25);
+    padding: 8px 12px;
+    border-radius: $radius-full;
+    font-weight: 700;
+    margin-left: 8px;
   }
   
   &.remove {
@@ -927,6 +1304,7 @@ $transition-slow: 0.35s ease;
     color: $danger-color;
     border: 2px solid $danger-color;
     font-weight: 600;
+    box-shadow: none;
     
     &:hover {
       background-color: rgba($danger-color, 0.15);
@@ -935,6 +1313,7 @@ $transition-slow: 0.35s ease;
     
     &:active {
       transform: translateY(1px);
+      box-shadow: none;
     }
   }
 }
@@ -946,6 +1325,32 @@ $transition-slow: 0.35s ease;
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -962,9 +1367,22 @@ $transition-slow: 0.35s ease;
     }
   }
   
-  .modal-header {
-    .food-image-container {
-      height: 200px;
+  .food-image-container {
+    height: 200px;
+    
+    &.expanded {
+      padding: 0;
+      
+      .image-wrapper {
+        border-radius: 0;
+        max-width: 100vw;
+        max-height: 100vh;
+      }
+    }
+    
+    .close-expanded-button {
+      top: 15px;
+      right: 15px;
     }
   }
   
@@ -974,6 +1392,19 @@ $transition-slow: 0.35s ease;
   
   .action-button {
     padding: 14px;
+  }
+}
+
+// High-resolution display optimizations
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .food-image-container {
+    &.expanded {
+      .image-wrapper {
+        .food-image {
+          image-rendering: -webkit-optimize-contrast;
+        }
+      }
+    }
   }
 }
 </style>
