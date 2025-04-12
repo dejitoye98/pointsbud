@@ -13,7 +13,7 @@
         </LiveMenuModal>
         <AuthModal :business="business" @close="show_auth_modal = false" v-if="show_auth_modal"></AuthModal>
 
-        <OrderModal @close="focused_product = null" :item="focused_product"></OrderModal>
+        <OrderModal @close="focused_product = null" :item="focused_product" :styling="styling"></OrderModal>
 
         <CartModal :last_checkout_session_id="lastCheckoutSessionId" :mode="current_mode"  @close="show_cart_modal = false"  v-if="show_cart_modal && this.cart.length" :business="business"></CartModal>
         
@@ -74,7 +74,7 @@
                     
                             
                             <div v-if="showBookmarkButton" class="flex-center-y flex gap-16">
-                                <button @click="triggerBookmark" class="bookmark-btn" :style="{'background-color' : styling?.primary_color || ''}">
+                                <button @click="triggerBookmark" class="bookmark-btn" :style="{'background-color' : styling?.primary_color || '', 'color' : styling?.primary_color || "white"}">
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
                                       fill="none"

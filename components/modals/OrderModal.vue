@@ -99,7 +99,7 @@
                   :value="isInCart ? isInCart.quantity : order.quantity" 
                   @input="handleInput"
                   min="1">
-              <button class="quantity-btn increase" @click="increase">
+              <button class="quantity-btn increase" :style="addButtonStyles" @click="increase">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="12" y1="5" x2="12" y2="19"></line>
                   <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -128,7 +128,7 @@
             </div>
           </div>
           
-          <button class="action-button primary" @click="addToCart" v-if="!isInCart">
+          <button class="action-button" :style="addButtonStyles" @click="addToCart" v-if="!isInCart">
             <span>Add to Cart</span>
             <span class="price-tag">{{ item.currency || currencySymbol }} {{ item.unitprice | money }}</span>
           </button>
@@ -148,7 +148,7 @@ import mixpanel from 'mixpanel-browser';
 import crypto from 'crypto'
 
 export default {
-  props: ['item'],
+  props: ['item', 'styling'],
   data() {
     return {
       order: {
@@ -160,11 +160,23 @@ export default {
       },
       hasMultipleImages: true, // Set to true if the item has multiple images
       imageFailed: false,
-      placeholderImage: "https://pointsbud-images.s3.amazonaws.com/e3ac1c8359bd2aaa82c8135f89ab5d1e"
+      placeholderImage: "https://pointsbud-images.s3.amazonaws.com/efb3d8a06626aa61b27adf99273b8eb4"
     }
   },
   computed: {
     ...mapGetters('shop', ['cart']),
+    primaryColor() {
+      return this.styling?.primary_color || "#FF6B6B";
+    },
+    textOnPrimary() {
+      return this.styling?.text_on_primary || "white";
+    },
+    addButtonStyles() {
+      return {
+        backgroundColor: this.primaryColor,
+        color: this.textOnPrimary,
+      };
+    },
     isInCart() {
       return this.cart.find(item => item.id === this.item.id)
     },
@@ -553,7 +565,7 @@ $transition-slow: 0.35s ease;
 .item-price {
   font-size: 18px;
   font-weight: 700;
-  color: $primary-color;
+  color: black;
   margin: 0;
   white-space: nowrap;
 }
