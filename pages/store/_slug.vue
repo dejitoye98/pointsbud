@@ -74,7 +74,7 @@
                     
                             
                             <div v-if="showBookmarkButton" class="flex-center-y flex gap-16">
-                                <button @click="triggerBookmark" class="bookmark-btn" :style="{'background-color' : styling?.primary_color || '', 'color' : styling?.primary_color || "white"}">
+                                <button @click="triggerBookmark" class="bookmark-btn" :style="{'background-color' : styling?.primary_color || '', 'color' : styling?.primary_color || 'white'}">
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
                                       fill="none"
