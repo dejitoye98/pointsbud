@@ -4,6 +4,8 @@
 
         </ShopCartModal>-->
 
+
+        <ResolvePaymentModal @close="show_resolve_payment_modal = false" v-if="show_resolve_payment_modal" :order="existing_unpaid_order"></ResolvePaymentModal>
         <ChooseModeModal v-if="choose_mode && !table_identifier" @close="choose_mode = false" @onChoose="changeMode"></ChooseModeModal>
     
         <LiveMenuModal  :business="business" v-if="show_live_menu_modal && false" @close="show_live_menu_modal = false">
@@ -13,7 +15,7 @@
 
         <OrderModal @close="focused_product = null" :item="focused_product"></OrderModal>
 
-        <CartModal :mode="current_mode"  @close="show_cart_modal = false"  v-if="show_cart_modal && this.cart.length" :business="business"></CartModal>
+        <CartModal :last_checkout_session_id="lastCheckoutSessionId" :mode="current_mode"  @close="show_cart_modal = false"  v-if="show_cart_modal && this.cart.length" :business="business"></CartModal>
         
         <PromotionsModal @close="show_promotion_modal = false"  v-if="show_promotion_modal" :mixpanel="mixpanel" :device_id="device_id" :promotion="promotion"></PromotionsModal>
 
@@ -21,6 +23,7 @@
 
 
             <div class="page__container">
+
                 <div class="sidebar" v-if="show_sidebar" @click="show_sidebar=false">
                     <div class="sidebar__container" @click.stop>
                         <div class="sidebar__header">
@@ -42,8 +45,19 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="btm flex flex-center-x flex-center-y gap-10" style="position: fixed; bottom: 0; right: 0; width: 100%; z-index: 10;">
+
+                  <BottomActionContainer :show="cart.length > 0"></BottomActionContainer>
+
+
+                </div>
+
     
                 <div class="main" v-if="business">
+
+
 
 
                   <ShopLandingPage v-if="computedBusinessSegments.length > 1" @navigate="changeSegment" :styling="styling" :business="business" :segments="computedBusinessSegments"></ShopLandingPage>
@@ -455,7 +469,7 @@
                         
                     </div>
     
-                    <button v-if="cart.length > 0" @click="show_cart_modal = true" class="cart-sticky" :style="{'backgroundColor': styling ? styling.primary_color: 'whitesmoke', color: styling? styling.text_on_primary : ''}">
+                    <button v-if="cart.length > 0 && false" @click="show_cart_modal = true" class="cart-sticky" :style="{'backgroundColor': styling ? styling.primary_color: 'whitesmoke', color: styling? styling.text_on_primary : ''}">
                         Continue to Cart ({{ cart.length }} items)
                     </button>
                 </div>
@@ -480,7 +494,6 @@
 
 
 <script>
-import crypto from 'crypto'
 
 import ShopCartModal from '../../components/modals/ShopCartModal.vue';
 import SimpleListShopItem from '../../components/shop/SimpleListShopItem.vue';
@@ -492,11 +505,25 @@ import OrderModal from '../../components/modals/OrderModal.vue';
 import ChooseModeModal from '../../components/modals/ChooseModeModal.vue';
 import DealsSection from '../../components/shop/DealsSection.vue';
 import PopularComboItem from '../../components/shop/PopularComboItem.vue';
+import BottomActionContainer from '../../components/shop/BottomActionContainer.vue';
+import moment from 'moment';
+import FloatingRecommendationButton from "../../components/modals/FloatingRecommendationButton.vue"
+import BottomMenuBar from '../../components/modals/BottomMenuBar.vue';
+import { getDatabase, ref, set, get, update, push, serverTimestamp, increment, runTransaction, onValue } from 'firebase/database'
+import crypto from 'crypto';
+import FloatingCartButton from '../../components/modals/FloatingCartButton.vue'
+
+import { initializeApp } from 'firebase/app'
+
 
 export default {
     data() {
         return {
+          existing_unpaid_order: null,
+          lastCheckoutSessionId: null,
+          show_resolve_payment_modal: false,
 
+            db: null,
             current_segment: '',
             table_identifier: null,
             show_promotion_modal: false,
@@ -548,11 +575,126 @@ export default {
     },
 
     created() {
+     // this.resolveLastCheckoutSession()
+     this.initializeFirebase()
       if (this.$route.query.t) {
         this.table_identifier = this.$route.query.t
       }
     },
     methods: {
+      initializeFirebase() {
+          const firebaseConfig = {
+              apiKey: "AIzaSyBdh2ygNy-eIL0OtJwlA4LGAfHpcXMmWB8",
+              authDomain: "pointsbudapp.firebaseapp.com",
+              databaseURL: "https://pointsbudapp-default-rtdb.firebaseio.com",
+              projectId: "pointsbudapp",
+              storageBucket: "pointsbudapp.appspot.com",
+              messagingSenderId: "76264286716",
+              appId: "1:76264286716:web:b1caa1165fae6fb0a4aa79",
+              measurementId: "G-PM3C3PV904"
+          };
+          
+          const firebaseApp = initializeApp(firebaseConfig);
+          if (!this.db) {
+
+            this.db = getDatabase(firebaseApp);
+          }
+      },
+      
+      resolveLastCheckoutSession() {
+        
+          let lastCheckoutSessionId = window.localStorage.getItem("lastCheckoutSessionId")
+        let lastCheckoutSessionCreatedAt = window.localStorage.getItem("lastCheckoutSessionCreatedAt")
+
+        if (lastCheckoutSessionId) {
+
+          if (lastCheckoutSessionId && moment().diff(moment(lastCheckoutSessionCreatedAt), 'hours') > 6) {
+            // you can delete
+            window.localStorage.removeItem('lastCheckoutSessionId')
+            window.localStorage.removeItem('lastCheckoutSessionCreatedAt')
+            
+          }
+          else {
+            // see if checkoutSessionExists
+            //alert('exists')
+            this.lastCheckoutSessionId = lastCheckoutSessionId;
+            this.resolveLastOrder(lastCheckoutSessionId)
+          
+          }
+        }
+      },
+
+      async resolveLastOrder(sessionId) {
+        // scan through all spaces in the firebase database, starting from the one the user scanned from
+        // next, populate details of the last items,
+        // ask if they want to pay or add items
+        try {
+          
+          let table_identifier = this.$route.query.t ? `table_${this.$route.query.t}` : 'dinein';
+  
+
+  
+          // Fixed: Use this.business.id instead of undefined business variable
+          let business_ref = ref(this.db, `business_orders/${this.business.id}`);
+          let business_snapshot = await get(business_ref);
+          let business_data = business_snapshot.val();
+
+  
+
+          //alert(JSON.stringify(business_data))
+
+          if (business_data) {
+           // alert(JSON.stringify(business_data))
+            let order_data = business_data[table_identifier].orders && business_data[table_identifier].orders[sessionId];
+
+            if (!order_data) {
+                // scan through
+                let spaces = Object.keys(business_data || {});
+
+                
+                for (let space of spaces) {
+                  
+                    // Fixed: Added null check for business_data[space]?.orders
+                    if (business_data[space]?.orders && business_data[space]?.orders[sessionId]) {
+                        order_data = business_data[space].orders[sessionId];
+                        break;
+                    }
+                }
+            }
+
+
+  
+    
+            if (order_data) {
+                // check if it's paid.
+                // if it's paid, restart new
+                // if it's pending, show the resolvePaymentModal
+
+    
+                if (order_data.status === 'pending') {
+                    this.show_resolve_payment_modal = true;
+                    this.existing_unpaid_order = order_data;
+                } else if (order_data.status === 'paid') {
+                    // Added: Handle paid status case
+
+                    this.lastCheckoutSessionId = null;
+
+                    this.resetOrderSession();
+                }
+            } else {
+                // Added: Handle case when no order is found
+                console.log("No order found for session ID:", sessionId);
+            }
+          }
+        }catch(e){
+          alert("ERROR IS " + e)
+        }
+
+
+        // Fixed: Use this.business.id instead of undefined business variable
+        
+    },
+      
       changeSegment(value) {
             let current_segment = ""; // required
             let element_to_scroll_to = "menu-start";
@@ -1099,6 +1241,11 @@ export default {
           }
     },
     watch: {
+        show_resolve_payment_modal(value) {
+          if (value) {
+           // alert('pending orders')
+          }
+        },
         loading_data(value) {
             if (!value) {
                 // set the current_category to the first category
@@ -1134,10 +1281,11 @@ export default {
         business(value) {
           if (value) {
             this.addToRecentlyVisited()
+            this.resolveLastCheckoutSession()
           }
         }
     },
-    components: { SimpleListShopItem, ShopCartModal, ShopCategoryNavigation, GridItem, OrderModal, ChooseModeModal, DealsSection }
+    components: {FloatingRecommendationButton, BottomActionContainer, FloatingCartButton, SimpleListShopItem, BottomMenuBar, ShopCartModal, ShopCategoryNavigation, GridItem, OrderModal, ChooseModeModal, DealsSection }
 }
 </script>
 

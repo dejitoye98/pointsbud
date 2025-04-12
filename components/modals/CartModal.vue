@@ -396,7 +396,7 @@ export default {
     'date-picker': myDatepicker,
     PriceComparisonBadge
 },
-    props: ['business', 'mode'],
+    props: ['business', 'mode', 'last_checkout_session_id'],
     data() {
         return {
             db: null,
@@ -747,6 +747,7 @@ export default {
         async placeUnpaidOrder() {
             const orders = [];
             let r_uid =  this.generateUniqueCode();
+            let id, url = null;
 
             this.cart.forEach(async item => {
                 let item_key = this.generateUniqueCode(5);
@@ -775,31 +776,56 @@ export default {
                 
                 
             });
-
             let payload = {
-                delivery_type: this.table_identifier || this.mode || 'delivery',
-                delivery_fee:   0,
-                business_slug: this.$route.params.slug,
-                business_id: this.business.id,
-                items: orders,
-                taxes: this.taxes,
-                origin: 'qr-call-waiter',
-               // vat: parseFloat(this.vat || 0),
-                //appFee: this.appFee,
-                // checkout_session: ref,
-                customer_phone: this.payload.customer_phone,
-                customer_name: this.payload.customer_name,
-                send_alert: true,
-                
+                    delivery_type: this.table_identifier || this.mode || 'delivery',
+                    delivery_fee:   0,
+                    business_slug: this.$route.params.slug,
+                    business_id: this.business.id,
+                    items: orders,
+                    taxes: this.taxes,
+                    origin: 'qr-call-waiter',
+                // vat: parseFloat(this.vat || 0),
+                    //appFee: this.appFee,
+                    // checkout_session: ref,
+                    customer_phone: this.payload.customer_phone,
+                    customer_name: this.payload.customer_name,
+                    send_alert: true,
+                    
+                }
+
+            if (!this.last_checkout_session_id) {
+
+               
+
+                // first_create checkoutSession
+                this.creating_session = true;
+                let checkout = await this.createCheckoutSession(payload)
+                id = checkout.id
+                url = checkout.url
+
+                window.localStorage.setItem('lastCheckoutSessionId', url)
+                window.localStorage.setItem('lastCheckoutSessionCreatedAt', new Date().toISOString());
+
             }
 
-            await this.createCheckoutSession(payload)
+            else {
+
+                // add item, not create
+
+                alert("YOU're ABOUT TO CREATE SOME SHIT")
+                return
+            }
+            
+
+          
+            
+
+           
             this.step = 7;
 
-            const orders_ref = ref(this.db, `business_orders/${this.business.id}/${this.table_identifier}/orders`)
-            let new_order_ref = push(orders_ref);
+            const orders_ref = ref(this.db, `business_orders/${this.business.id}/${this.table_identifier}/orders/${url}`)
 
-            await set(new_order_ref, {
+            await set(orders_ref, {
                 r_uid,
                 status: 'pending',
                 timestamp: serverTimestamp(),
