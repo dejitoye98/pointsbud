@@ -1,10 +1,11 @@
 <!-- components/FloatingCartButton.vue -->
 <template>
     <transition name="fade-scale">
-      <button @click="$emit('onClicked')" v-if="isVisible" class="floating-cart">
+      <button  @click="$emit('onClicked')" v-if="isVisible && cart.length" class="floating-cart" @click.stop="viewCart">
         <div class="cart-count">{{ count }}</div>
         <div class="waiter-icon" :style="{ 'background-image': `url(${waiterIcon})` }"></div>
-        <button class="cart-button" :style="{backgroundColor: styling?.primary_color || 'black', color: styling?.text_on_primary || 'white'}" @click.stop="viewCart">
+        <div class="place-order-label">Place Order</div>
+        <button class="cart-button" :style="{backgroundColor: styling?.primary_color || 'black', color: styling?.text_on_primary || 'white'}">
           <div class="cart-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="8" cy="21" r="1"></circle>
@@ -24,8 +25,10 @@
 </template>
   
 <script>
+import {mapGetters} from 'vuex'
 export default {
   name: 'FloatingCartButton',
+
   props: {
     styling: {
       type: [Object, undefined],
@@ -70,7 +73,54 @@ export default {
       this.waiterIcon = '';
     }
   },
+  computed :{
+    ...mapGetters("shop", ['cart']),
+        cartTotal() {
+            let sum = 0;
+
+            for (let item of this.cart) {
+                //sum += item.unitprice * item.quantity;
+
+               /* if (item.delivery_pack) {
+                    sum += item.delivery_pack.unitprice
+                }*/
+
+
+                sum += this.getItemTotal(item)
+                
+            }
+            
+            
+            return sum
+        },
+    },
   methods: {
+    getItemTotal(item) {
+            let result = 0;
+        
+            if (item) {
+                const retrieved_item = this.cart.find(i=> i.id === item.id); 
+                if (retrieved_item) {
+                    
+                    let item_total = (retrieved_item.quantity * retrieved_item.unitprice);
+                    result += item_total;
+                    
+                    if (retrieved_item.additions) {
+                        for (let addition of retrieved_item.additions) {
+                            result += (addition.unitprice * retrieved_item.quantity )
+                        }
+                    }
+
+                    if (retrieved_item.delivery_pack?.unitprice) {
+                        result += retrieved_item.delivery_pack.unitprice
+                    }
+                }
+            }
+
+            return result
+        },
+    
+  
     viewCart(event) {
       // Prevent event propagation to avoid triggering parent click
       event.stopPropagation();
@@ -96,8 +146,8 @@ $faint: #686868;
   
 .floating-cart {
   position: relative;
-  width: 70px;
-  height: 70px;
+  width: 85px;  // Increased width to accommodate label
+  height: 90px; // Increased height to accommodate label
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -120,11 +170,29 @@ $faint: #686868;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 70px; // Reduced height to make room for the label
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   z-index: -1;
+}
+
+.place-order-label {
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: black;
+  color: $charcoal;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 4px 0;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.8);
+  letter-spacing: -0.5px;
 }
   
 .cart-count {
