@@ -1,10 +1,13 @@
 <!-- components/FloatingCartButton.vue -->
 <template>
     <transition name="fade-scale">
-      <button  @click="$emit('onClicked')" v-if="isVisible && cart.length" class="floating-cart" @click.stop="viewCart">
+      <button  @click="$emit('onClicked')"  :style="{backgroundColor: styling?.primary_color || 'black', color: styling?.text_on_primary || 'white'}" v-if="isVisible && cart.length" class="floating-cart" @click.stop="viewCart">
         <div class="cart-count">{{ count }}</div>
-        <div class="waiter-icon" :style="{ 'background-image': `url(${waiterIcon})` }"></div>
-        <div class="place-order-label">Place Order</div>
+        <div class="flex flex-center-y gap-2">
+
+            <img style="height: 30px; width: 30px;" :src="waiterIcon"></img>
+            <span>Place Order</span>
+        </div>
         <button class="cart-button" :style="{backgroundColor: styling?.primary_color || 'black', color: styling?.text_on_primary || 'white'}">
           <div class="cart-icon">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -143,19 +146,27 @@ $secondary: #f79939;
 $charcoal: #36454F;
 $border-grey: #E0E0E0;
 $faint: #686868;
+
+
+span {
+    font-size: 18px;
+    font-weight: 600;
+}
   
 .floating-cart {
   position: relative;
-  width: 85px;  // Increased width to accommodate label
-  height: 90px; // Increased height to accommodate label
+  width: fit-content;  // Increased width to accommodate label
+  height: 50px; // Increased height to accommodate label
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
   filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.25));
-  background: transparent;
+  background: $primary;
   border: none;
-  padding: 0;
+  padding: 8px 10px;
+  width: 100%;
+  border-radius: 10px;
   cursor: pointer;
     
   &:hover .tooltip {
