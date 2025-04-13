@@ -79,16 +79,16 @@
             >
           </div>
           <button class="control-btn increase" @click.stop="increase">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="plus-icon">
+              <line x1="12" y1="5" x2="12" y2="19" class="vertical-line"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
           </button>
         </div>
         
         <button v-else class="add-to-cart-btn" @click.stop="addToCart" :style="addButtonStyles">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="plus-icon">
+            <line x1="12" y1="5" x2="12" y2="19" class="vertical-line"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
         </button>
@@ -449,6 +449,21 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
       transform: scale(1.1);
       box-shadow: 0 5px 15px rgba($primary, 0.4);
     }
+    
+    // Add bouncy effect to plus icon in add button
+    .plus-icon {
+      transform-origin: center;
+      transition: transform 0.2s ease;
+      
+      .vertical-line {
+        animation: bounce 2s infinite;
+        transform-origin: center;
+      }
+    }
+    
+    &:hover .vertical-line {
+      animation-duration: 1s;
+    }
   }
   
   .quantity-control {
@@ -474,6 +489,23 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
       
       &:hover {
         background-color: rgba(255, 255, 255, 0.2);
+      }
+      
+      // Add bouncy effect to plus icon in increase button
+      &.increase {
+        .plus-icon {
+          transform-origin: center;
+          transition: transform 0.2s ease;
+        }
+        
+        .vertical-line {
+          animation: bounce 2s infinite;
+          transform-origin: center;
+        }
+        
+        &:hover .vertical-line {
+          animation-duration: 1s;
+        }
       }
     }
     
@@ -504,6 +536,19 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
         }
       }
     }
+  }
+}
+
+// Define the bounce animation
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: scaleY(1);
+  }
+  40% {
+    transform: scaleY(0.7);
+  }
+  60% {
+    transform: scaleY(1.2);
   }
 }
 
