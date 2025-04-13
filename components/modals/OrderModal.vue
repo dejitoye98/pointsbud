@@ -246,6 +246,10 @@ export default {
         document.body.style.overflow = newVal ? 'hidden' : '';
       });
     }
+
+    if (!this.isInCart) {
+      this.quantity = 1; // reset quantity 
+    }
   },
   beforeDestroy() {
     document.removeEventListener('keydown', this.handleKeyDown);

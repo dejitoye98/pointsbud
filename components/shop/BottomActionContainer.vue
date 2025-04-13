@@ -9,6 +9,7 @@
             message="Go to cart"
             total="1000"
             :show_total="true"
+            :cart_mode="cart_mode"
             :styling="styling"
             :total="cartTotal"
             @view-cart="$emit('view-cart')"
@@ -42,6 +43,9 @@
     },
     props: {
         styling: {
+            type: [Object, undefined],
+        },
+        cart_mode: {
             type: [Object, undefined],
         },
         show: {

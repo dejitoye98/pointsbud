@@ -162,12 +162,12 @@
 
 
                             <div class=" gap-16 grid grid-cols-2">
+                                <button class="big-btn full-width" :disabled="!canProceedFromDelivery" @click="nextStep">
+                                    Continue
+                                </button>
 
                                 <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
                                     Back
-                                </button>
-                                <button class="big-btn full-width" :disabled="!canProceedFromDelivery" @click="nextStep">
-                                    Continue
                                 </button>
                             </div>
 
@@ -195,11 +195,11 @@
 
                             <div class=" gap-16 grid grid-cols-2">
 
-                                <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
-                                    Back
-                                </button>
                                 <button class="big-btn full-width" @click="nextStep">
                                     Continue
+                                </button>
+                                <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
+                                    Back
                                 </button>
                             </div>
 
@@ -304,12 +304,12 @@
 
 
                         <div class=" gap-16 grid grid-cols-2">
-
-                            <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
-                                Back
-                            </button>
+                            
                             <button class="big-btn full-width" :disabled="creating_session" @click="triggerPay">
                                 Pay
+                            </button>
+                            <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
+                                Back
                             </button>
                         </div>
                     </div>
@@ -1645,6 +1645,8 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
   color: white;
   border: 2px solid transparent;
   box-shadow: 0 4px 10px rgba($primary, 0.3);
+  width: 100%;
+  margin: 0;
   
   &:hover:not(:disabled) {
     background-color: $primary-dark;
