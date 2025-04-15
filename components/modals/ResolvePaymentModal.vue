@@ -26,7 +26,7 @@
                 </div>
                 <div class="summary-line">
                   <span>Tax</span>
-                  <span>{{"NGN" | currencySymbol}}{{ tax.toFixed(2) }}</span>
+                  <span>{{"NGN" | currencySymbol}}{{ totalTaxes.toFixed(2) }}</span>
                 </div>
                 <div class="summary-line total">
                   <span>Total</span>
@@ -87,7 +87,7 @@
 import { getDatabase, ref, set, get, update, push, serverTimestamp, increment, runTransaction, onValue } from 'firebase/database'
 
   export default {
-    props: ['order', 'db', 'business', 'checkout_session_id'],
+    props: ['order', 'db', 'business', 'checkout_session_id', 'taxes'],
     data() {
       return {
        // db: null,
@@ -123,6 +123,7 @@ import { getDatabase, ref, set, get, update, push, serverTimestamp, increment, r
       }
     },
     created() {
+        //alert(this.taxes)
         if (this.order) {
             // items will be here
             let item_keys = Object.keys(this.order) 
@@ -140,28 +141,115 @@ import { getDatabase, ref, set, get, update, push, serverTimestamp, increment, r
     computed: {
       subtotal() {
         return this.cart.reduce((total, item) => {
-          return total + (item.unitprice * item.quantity);
+            if (item.unitprice) {
+
+              return total + (item.unitprice * item.quantity);
+            }
+            return 0
         }, 0);
       },
       tax() {
         // Assuming tax rate of 8%
         return 0;
       },
+      taxesBreakdown() {
+          /*
+              examples of what it returns [{
+                  tax, 
+                  value,
+                  
+              }]
+          */
+          const array = []
+          if (this.taxes && this.subtotal) {
+              let total_tax_value = 0;
+              JSON.parse(this.taxes).forEach(tax => {
+                  if (tax.type === 'percent' && tax.value) {
+
+                    
+
+                          const obj = {
+                              name: tax.name,
+                              value_total: parseFloat(tax.value / 100) * (this.subtotal).toFixed(2),
+                          }
+                          array.push(obj)
+                      
+
+
+
+
+
+
+                  }
+
+              })
+              return array;
+          }
+          array
+          return []
+
+      },
       total() {
-        return this.subtotal + this.tax;
-      }
+        return this.subtotal + this.totalTaxes || 0;
+      },
+      totalTaxes() {
+          return this.taxesBreakdown.map(t =>
+              parseFloat(t.value_total).toFixed(2)).reduce((accumulator, currentValue) => {
+                  return parseFloat(accumulator) + parseFloat(currentValue);
+              }, 0)
+        },
+
+        grandTotal() {
+          return this.total
+        }
     },
     methods: {
+
+      payWithBudpay() {
+        let vm = this;
+        BudPayCheckout({
+                key: this.$config.BUDPAY_PUBLIC_KEY || 'pk_test_ts9gpurgsis82hlhoaezoayijt06m4vhn4jrk2', // Replace with your public key
+                email: this.customer?.email || 'anon@gmail.com',
+                amount: this.grandTotal.toFixed(2),
+                first_name: this.customer?.name || 'anon',
+                last_name: this.customer?.name || 'anon',
+                currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
+                reference: '' + Math.floor((Math.random() * 100000000000) + 1) + new Date().getSeconds() + new Date().getMilliseconds(), // generates a pseudo-unique reference. Please replace with a reference you generated. or remove the line entirely so our API will generate one for you
+                callback: (response) => {
+                //this happens after the payment is completed successfully
+                    var reference = response.reference;
+                    let data = response
+                    //alert('Payment complete! Reference: ' + reference + ', Status: ' + response.status);
+                    this.step = 5;
+                    
+                    
+                    let payload = { type: "order-paid", checkout_session_id: vm.checkout_session_id, ...data, business_id: this.business.id };
+                        
+                    this.$api.post("/transactions/payment", payload).then(resp => {
+                            //this.registerFirebaseOrder()
+
+                            this.$close()
+
+                    });
+
+                      
+
+                       
+                },
+                onClose: function (response) {
+                    console.log(response);
+                    alert('Transaction was not completed, window closed.');
+                },
+                    
+            });
+      },
+      pay() {
+        
+      },
       proceedToPayment() {
         this.loading = true;
         // Emit event to parent component to handle payment
-        this.$emit('onPay', { items: this.cartItems, total: this.total });
-        
-        // Simulating api call
-        setTimeout(() => {
-          this.loading = f
-          alse;
-        }, 1500);
+        this.payWithBudpay()
       },
       addMoreItems() {
         // Close this modal and navigate to menu

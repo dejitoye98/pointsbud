@@ -1,4 +1,5 @@
 <template>
+
     <div class="page">
         <!--<ShopCartModal @close="show_cart_modal = false" v-if="show_cart_modal && this.cart.length">
 
@@ -6,11 +7,13 @@
 
 
         <ResolvePaymentModal 
-          :checkout_session_id="this.lastCheckoutSessionId"
+          @onCancel="lastCheckoutSessionId = null; existing_unpaid_order = null"
+          :checkout_session_id="lastCheckoutSessionId"
           :business="business"
           :db="db"
           @close="show_resolve_payment_modal = false" 
           v-if="show_resolve_payment_modal" 
+          :taxes="business.taxes"
           :order="existing_unpaid_order">
         </ResolvePaymentModal>
         <ChooseModeModal v-if="choose_mode && !table_identifier" @close="choose_mode = false" @onChoose="changeMode"></ChooseModeModal>
@@ -30,6 +33,8 @@
 
 
             <div class="page__container">
+
+              <div class="page__container">
 
                 <div class="sidebar" v-if="show_sidebar" @click="show_sidebar=false">
                     <div class="sidebar__container" @click.stop>
@@ -54,12 +59,11 @@
                 </div>
 
 
-                <div class="btm flex flex-center-x flex-center-y gap-10" style="position: fixed; bottom: 0; right: 0; width: 100%; z-index: 10;">
-
-                  <BottomActionContainer :cart_mode="current_mode" @showCartModal="show_cart_modal = true" :styling="styling" :show="cart.length > 0"></BottomActionContainer>
-
-
-                </div>
+                <div class="btm flex flex-center-x flex-center-y gap-10" 
+                    :class="{ 'desktop-btm': $mq === 'desktop' }"
+                    style="position: fixed; bottom: 0; right: 0; width: 100%; z-index: 10;">
+                <BottomActionContainer :cart_mode="current_mode" @showCartModal="show_cart_modal = true" :styling="styling" :show="cart.length > 0"></BottomActionContainer>
+              </div>
 
     
                 <div class="main" v-if="business">
@@ -198,6 +202,9 @@
     
     
                         <div style="position: sticky; top: 0; left: 0; background: white; z-index: 10">
+
+
+                           
     
                             <ShopCategoryNavigation :segments="computedBusinessSegments"  @changeSegment="changeSegment" :next_segment="nextMenu" :styling="styling" v-if="current_tab === 'shop' " @changeCategory="changeCategory" :current_category="current_category" :categories="filteredCategories"></ShopCategoryNavigation>
                         </div>
@@ -296,20 +303,17 @@
 
                                         
                                         
-                                        <div :style="{display: 'grid', gridTemplateColumns: '48% 48%', gap: '16px' }" v-else>
-                                          
-                                            <GridItem 
-                                              :styling="styling" 
-                                              @onSelect="chooseProduct(item)"  
-                                              :product="item" 
-                                              :category="getCategory(item)"
-                                              v-for="(item, index) in categoryProductMapping[category]" 
-                                              :key="index">
-                                            </GridItem>
-    
-    
+                                        <div class="products-grid" v-else>
+                                          <GridItem 
+                                            :styling="styling" 
+                                            @onSelect="chooseProduct(item)"  
+                                            :product="item" 
+                                            :category="getCategory(item)"
+                                            v-for="(item, index) in categoryProductMapping[category]" 
+                                            :key="index">
+                                          </GridItem>
                                         </div>
-                
+
                                         <div v-if="categoryProductMapping[category][0]?.remaining_products" class="padding-16 see-more">
                                             <p class="text-center">
                                                 See {{ categoryProductMapping[category][0]?.remaining_products }} more products
@@ -318,6 +322,8 @@
                 
                                         
                                     </div>
+
+                                    
                 
                 
                 
@@ -487,6 +493,7 @@
     
                 </div>
             </div>
+            </div>
         </template>
 
         <template v-else>
@@ -528,6 +535,8 @@ import { initializeApp } from 'firebase/app'
 export default {
     data() {
         return {
+          windowWidth: window.innerWidth,
+
           existing_unpaid_order: null,
           lastCheckoutSessionId: null,
           show_resolve_payment_modal: false,
@@ -580,7 +589,8 @@ export default {
         };
     },
     mounted() {
-        
+      window.addEventListener('resize', this.onResize);
+    this.onResize();
     },
 
     created() {
@@ -590,7 +600,14 @@ export default {
         this.table_identifier = this.$route.query.t
       }
     },
+    beforeDestroy() {
+    // Remove event listener
+      window.removeEventListener('resize', this.onResize);
+    },
     methods: {
+      onResize() {
+        this.windowWidth = window.innerWidth;
+      },
       resetOrderSession() {
         window.localStorage.removeItem("lastCheckoutSessionId")
       },
@@ -987,6 +1004,12 @@ export default {
     },
     computed: {
         ...mapGetters("shop", ['cart']),
+        $mq() {
+            if (this.windowWidth >= 1024) return 'desktop';
+            if (this.windowWidth >= 768) return 'tablet';
+            return 'mobile';
+          },
+          // O
         recommendedItems() {
           return []
         },
@@ -2059,5 +2082,253 @@ body {
   color: $text-dark;
   line-height: 1.5;
   overflow-x: hidden;
+}
+
+/* Desktop Responsive Styles */
+
+/* Base container adjustments for better desktop experience */
+.page__container {
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Main content area */
+.main {
+  width: 100%;
+  max-width: 1200px; /* Width control for very large screens */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header adjustments for desktop */
+.header__container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 32px;
+}
+
+/* Tabs container for desktop */
+.tabs .tabscontainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+/* Product grid adjustments for desktop */
+.list {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 32px;
+}
+
+/* Adjust product grid to show more items per row on desktop */
+[style*="display: grid"] {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+  gap: 24px !important;
+}
+
+/* Search bar improvements for desktop */
+.search {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 32px;
+}
+
+.search input {
+  max-width: 600px;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Category navigation for desktop */
+.category-pane {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 32px 16px;
+}
+
+/* Bottom action container positioning for desktop */
+.btm {
+  max-width: 1200px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Cart button positioning for desktop */
+.cart-sticky {
+  max-width: 600px;
+}
+
+/* Modal positioning for desktop */
+.modal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Improved sidebar for desktop */
+.sidebar__container {
+  width: 360px;
+  max-width: 30%;
+}
+
+/* Media queries for responsive adjustments */
+@media (min-width: 768px) {
+  .tabs .tabsitem {
+    padding: 16px 24px;
+  }
+  
+  .header__container {
+    padding: 20px 32px;
+  }
+  
+  .logo__container img {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .logo__container h1 {
+    font-size: 24px;
+  }
+  
+  .category-pane .category-name {
+    font-size: 22px;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* For large desktop screens */
+  .search input {
+    max-width: 800px;
+  }
+  
+  .bottom-action-container {
+    padding: 16px 32px;
+  }
+}
+
+@media (min-width: 1440px) {
+  /* For extra large desktop screens */
+  .main, 
+  .header__container, 
+  .list,
+  .tabs .tabscontainer,
+  .search,
+  .category-pane {
+    max-width: 1400px;
+  }
+}
+
+/* Ensure bottom navigation is centered on desktop */
+.bottom-nav {
+  left: 50%;
+  max-width: 600px;
+  transform: translateX(-50%);
+}
+
+/* Fix for floating buttons on desktop */
+.floating-cart {
+  right: 5%;
+  bottom: 5%;
+}
+
+/* Improve scrolling behavior for desktop */
+html, body {
+  scroll-behavior: smooth;
+}
+
+/* Improve hover states for desktop users */
+.tabsitem:hover p,
+.category-pane .primary-text:hover,
+.see-more p:hover,
+.big-btn:hover,
+.bookmark-btn:hover {
+  transition: all 0.2s ease;
+}
+
+/* Ensure modals are properly centered on desktop */
+[class*="modal"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.desktop-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+// Products grid
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+
+  @include media("<=t") {
+    grid-template-columns: 48% 48%;
+  }
+}
+
+// Desktop category navigation
+.desktop-category-nav {
+  display: none;
+  
+  @media (min-width: 1024px) {
+    display: block;
+    background-color: #fff;
+    padding: 16px 32px;
+    border-bottom: 1px solid #EEEEEE;
+    
+    &__container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+  }
+}
+
+.desktop-category-item {
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  
+  &:hover {
+    background-color: #F5F5F5;
+  }
+  
+  &.active {
+    background-color: var(--primary-color, #FF6B6B);
+    color: white;
+  }
+}
+
+// Bottom action container for desktop
+.desktop-btm {
+  max-width: 1200px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 </style>

@@ -890,7 +890,7 @@ export default {
                     
                 }
 
-            if (!this.last_checkout_session_id) {
+            if (!this.last_checkout_session_id && this.existing_order) {
 
                
 
