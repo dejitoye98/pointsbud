@@ -38,14 +38,19 @@
               :class="{ 'selected': selectedOption === 'pickup' }"
               @click="selectOption('pickup')"
             >
+            
               <div class="option-icon pickup-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M20 10C20 16 12 22 12 22C12 22 4 16 4 10C4 6.22876 7.58172 3 12 3C16.4183 3 20 6.22876 20 10Z" stroke="currentColor" stroke-width="1.5"/>
                   <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/>
                 </svg>
               </div>
-              <h4 class="option-title">Pickup</h4>
-              <p class="option-description">Ready for pickup at your convenience</p>
+
+              <div class="option-content">
+
+                <h4 class="option-title">Pickup</h4>
+                <p class="option-description">Ready for pickup at your convenience</p>
+              </div>
             </div>
   
             <div 
@@ -59,8 +64,13 @@
                   <path d="M12 12C13.1046 12 14 11.1046 14 10M8 20V7M16 20V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              <h4 class="option-title">In-store</h4>
-              <p class="option-description">You're currently in the restaurant and want to make payment</p>
+
+              <div class="option-content">
+
+
+                <h4 class="option-title">In-store</h4>
+                <p class="option-description">You're currently in the restaurant and want to make payment</p>
+              </div>
             </div>
           </div>
   
@@ -358,7 +368,9 @@
 }
 
 .option-content {
-  flex: 1;
+  //flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .option-title {
