@@ -886,11 +886,12 @@ export default {
                     customer_phone: this.payload.customer_phone,
                     customer_name: this.payload.customer_name,
                     send_alert: true,
+                    send_customer_alert: true,
                     r_uid
                     
                 }
 
-            if (!this.last_checkout_session_id && this.existing_order) {
+            if (!this.last_checkout_session_id && !this.existing_order) {
 
                
 
@@ -946,6 +947,7 @@ export default {
             await set(orders_ref, {
                 r_uid,
                 status: 'pending',
+                space: this.table_identifier || 'dinein',
                 timestamp: serverTimestamp(),
                 customer_name: this.payload.customer_name || '',
                 customer_phone: this.payload.customer_phone || '',

@@ -292,6 +292,8 @@ import { getDatabase, ref, set, get, update, push, serverTimestamp, increment, r
            let space = this.order.space || "table_1"
     
             setTimeout(async () => {
+
+          
     
                 const order_ref = ref(this.db, `business_orders/${this.business.id}/${this.order?.space}/orders/${this.checkout_session_id}`);
                // alert(`business_orders/${this.business.id}/${this.order?.space}/orders/${this.checkout_session_id}`)
