@@ -68,7 +68,7 @@
                         Continue With Items
                     </button>
 
-                    <button class="big-btn full-width" :disabled="creating_session" v-else-if="business.qr_ordering_mode === 'order-only'" @click="resolvePlaceOrderWithAttendant">
+                    <button class="big-btn full-width" :disabled="creating_session" v-else-if="business.qr_ordering_mode === 'order-only' && false" @click="resolvePlaceOrderWithAttendant">
                         Place Order with Attendant
                     </button>
                 </template>
