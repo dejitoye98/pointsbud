@@ -68,7 +68,7 @@
                         Continue With Items
                     </button>
 
-                    <button class="big-btn full-width" :disabled="creating_session" v-else-if="business.qr_ordering_mode === 'order-only' && false" @click="resolvePlaceOrderWithAttendant">
+                    <button class="big-btn full-width" :disabled="creating_session" v-else-if="business.qr_ordering_mode === 'order-only'" @click="resolvePlaceOrderWithAttendant">
                         Place Order with Attendant
                     </button>
                 </template>
@@ -305,7 +305,11 @@
 
                         <div class=" gap-16 grid grid-cols-2">
                             
-                            <button class="big-btn full-width" :disabled="creating_session" @click="triggerPay">
+                            <button class="big-btn full-width payment-button" 
+                              :disabled="creating_session" 
+                              @click="triggerPay"
+                              :class="{'loading': creating_session}"
+                              >
                                 Pay
                             </button>
                             <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
@@ -360,7 +364,7 @@
                         <span style="font-size: 11px !important">To track your order</span>
                     </div>
 
-                    <button class="btn big-btn full-width" :disabled="!payload.customer_name" @click="placeUnpaidOrder">Place Order</button>
+                    <button class="btn big-btn full-width" :disabled="!payload.customer_name || creating_session" @click="placeUnpaidOrder">Place Order</button>
                 </template>
 
 
@@ -806,6 +810,28 @@ export default {
         },
     },
     methods: {
+        setButtonLoading(buttonSelector, isLoading, loadingText = null) {
+          const button = document.querySelector(buttonSelector);
+          if (!button) return;
+          
+          if (isLoading) {
+            button.disabled = true;
+            button.classList.add('loading');
+            
+            if (loadingText) {
+              button.setAttribute('data-original-text', button.textContent);
+              button.textContent = loadingText;
+            }
+          } else {
+            button.disabled = false;
+            button.classList.remove('loading');
+            
+            if (button.hasAttribute('data-original-text')) {
+              button.textContent = button.getAttribute('data-original-text');
+              button.removeAttribute('data-original-text');
+            }
+          }
+        },
         resolvePlaceOrderWithAttendant() {
             if (this.existing_order) {
                 // no need to go to the part that asks for number
@@ -841,6 +867,10 @@ export default {
             const orders = [];
             let r_uid =  this.generateUniqueCode(7);
             let id, url = null;
+
+
+            this.setButtonLoading('.order-button', true, 'Placing Order...');
+
 
             this.cart.forEach(async item => {
                 let item_key = this.generateUniqueCode(5);
@@ -1228,7 +1258,8 @@ export default {
         async triggerPay() {
 
             try {
-                
+                this.setButtonLoading('.payment-button', true, 'Processing Payment...');
+
                 const orders = [];
     
                 this.cart.forEach(async item => {
@@ -1284,6 +1315,9 @@ export default {
             catch (e) {
                 alert(e)
                 console.log(e)
+            }finally {
+              this.setButtonLoading('.payment-button', false);
+
             }
 
                
@@ -1291,7 +1325,9 @@ export default {
         },
         async createCheckoutSession(payload) {
             this.creating_session = true
+
             if (this.business?.id) {
+              this.setButtonLoading('.order-button', false);
 
                 return await this.$api.post('/checkout-session/create/menu', payload).then(resp => {
                     const code = resp.data.data.url;
@@ -1308,6 +1344,8 @@ export default {
 
                 }).finally(()=> {
                     this.creating_session = false
+                    this.setButtonLoading('.checkout-button', false);
+
                 })
             }
         },
@@ -1649,6 +1687,8 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
   box-shadow: 0 4px 10px rgba($primary, 0.3);
   width: 100%;
   margin: 0;
+  position: relative;
+  overflow: hidden;
   
   &:hover:not(:disabled) {
     background-color: $primary-dark;
@@ -1664,9 +1704,24 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    background-color: desaturate($primary, 40%) !important;
+    background-color: #B0B0B0 !important; /* Gray background for disabled state */
     transform: none;
     box-shadow: none;
+    color: #E0E0E0; /* Light text for disabled state */
+    border: 2px solid #DADADA; /* Light border for disabled state */
+  }
+
+  /* Loading indicator for disabled buttons */
+  &:disabled::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    right: 16px;
+    border-radius: 50%;
+    border: 2px solid #E0E0E0;
+    border-top-color: #FFFFFF;
+    animation: spin 1s linear infinite;
   }
   
   &.outline {
@@ -1679,9 +1734,39 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
       background-color: rgba($primary, 0.1);
       box-shadow: none;
     }
+    
+    &:disabled {
+      border-color: #DADADA;
+      color: #B0B0B0;
+    }
   }
 }
 
+/* Loading spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Adding a loading class for buttons that are processing */
+.btn.loading, .big-btn.loading {
+  position: relative;
+  padding-right: 44px; /* Make room for the spinner */
+  
+  &::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #FFFFFF;
+    animation: spin 1s linear infinite;
+  }
+}
+
+/* Additional styling for big buttons */
 .big-btn {
   height: 56px;
   font-size: 16px;
@@ -1698,9 +1783,28 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
       border-color: $text-medium;
       box-shadow: none;
     }
+    
+    &:disabled {
+      background-color: #F5F5F5 !important;
+      color: #B0B0B0;
+      border-color: #DADADA;
+    }
   }
 }
 
+/* For buttons with text transformation during loading state */
+.btn.text-loading, .big-btn.text-loading {
+  &::before {
+    content: 'Processing...';
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+  
+  span {
+    opacity: 0;
+  }
+}
 /* Cart Components */
 .total {
   background-color: $background-light;
