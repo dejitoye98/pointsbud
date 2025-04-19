@@ -84,6 +84,7 @@ import crypto from 'crypto'
         discountPercentage: 0 // 15% discount on combos
       };
     },
+    
     computed: {
         ...mapGetters('shop', ['cart']),
       processedCombos() {
