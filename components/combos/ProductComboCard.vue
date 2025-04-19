@@ -4,7 +4,7 @@
       <div v-if="!loading_data" class="combo-products-container">
         <h2 class="section-title">Special Combos</h2>
         <div class="combo-grid">
-          <div v-for="(combo, index) in processedCombos" :key="index" class="combo-card">
+          <div v-for="(combo, index) in processedCombos" :key="index" class="combo-card" :class="[isComboInCart(combo) ? 'in-cart': '']">
             <div class="combo-image-container">
               <!-- Collage thumbnail -->
               <div class="collage-thumbnail">
@@ -53,6 +53,11 @@
   </template>
   
   <script>
+  import { map } from '@firebase/util';
+import crypto from 'crypto'
+
+  import {mapGetters} from 'vuex'
+  
   export default {
     props: {
       products: {
@@ -80,6 +85,7 @@
       };
     },
     computed: {
+        ...mapGetters('shop', ['cart']),
       processedCombos() {
         return this.combos.map(combo => {
           const comboProducts = combo.items.map(itemId => 
@@ -94,6 +100,18 @@
       }
     },
     methods: {
+        isComboInCart(combo) {
+            return this.cart.find(c => c.combo_name === combo.name) || null
+        },
+        getProduct(id) {
+            return this.products.find(p => p.id === id)
+        },
+      generateUniqueCode(length = 6) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const randomBytes = crypto.randomBytes(length);
+        const code = [...randomBytes].map(byte => characters[byte % characters.length]).join('');
+        return code;
+      },
       truncateDescription(description, maxLength) {
         if (!description) return '';
         if (description.length <= maxLength) return description;
@@ -107,12 +125,68 @@
         }, 0);
       },
       calculateComboPrice(combo) {
-        const originalPrice = this.calculateOriginalPrice(combo);
-        return originalPrice * (1 - this.discountPercentage / 100);
+        let sum = 0;
+
+        
+        // Only process the products from the selected combo
+        
+
+
+        
+
+            for (let item of combo.items) {
+
+              
+                let product = this.getProduct(item)
+              //  alert(JSON.stringify(product))
+
+                sum += (product.unitprice * 1)
+            }
+        
+
+        return sum;
+
       },
       addComboToCart(combo) {
-        // Implementation for adding the combo to cart
-        // This would depend on your cart system
+        // Create payload for the selected combo only
+        let payload = [];
+
+        
+        // Only process the products from the selected combo
+
+
+        
+
+            for (let item of combo.items) {
+
+                let item_key = this.generateUniqueCode(6);
+                let product = this.getProduct(item)
+
+
+               // alert(JSON.stringify(product))
+                let obj = {
+                  unitprice: product.unitprice,
+                  currency: product.currency,
+                  name: product.name,
+                  id: product.id,
+                  thumbnail: product.thumbnail,
+                  description: product.description,
+                  quantity: 1,
+                  customer_comment: '',
+                  item_key: item_key,
+                  item_uid: item_key,
+                  combo_name: combo.combo_name
+                };
+                
+                this.$store.dispatch('shop/addToCart', obj);
+            }
+        
+
+
+        
+        // Dispatch the cart action
+        
+        // Emit the event to notify parent component
         this.$emit('add-combo', combo);
       },
       changeItem(combo, productIndex) {
@@ -443,5 +517,9 @@
     .combo-details {
       padding: 20px;
     }
-  }
+}
+.in-cart {
+  background-color: $darkaccent;
+}
+
   </style>

@@ -14,23 +14,35 @@
 
         <!-- Product combos section -->
         
-        <product-combo-card 
-            :products="products" 
-            :loading_data="loading_data"
-            @add-combo="handleAddCombo"
-            @change-item="handleChangeItem"
-            @remove-item="handleRemoveItem"
-            @swap-item="handleSwapItem"
-        />
 
-        <!-- Regular products grid -->
-        <div v-if="products && products.length" class="products-grid">
-            <!-- Individual product cards -->
-        </div>
 
-        <!-- Authentication modal -->
-        <div v-if="show_auth_modal" class="auth-modal">
-            <!-- Auth modal content -->
+        <CartModal   @close="show_cart_modal = false"  v-if="show_cart_modal && cart.length" :business="business"></CartModal>
+
+        <div class="padding-16">
+
+            <product-combo-card 
+                :products="products" 
+                :loading_data="loading_data"
+                @add-combo="handleAddCombo"
+                @change-item="handleChangeItem"
+                @remove-item="handleRemoveItem"
+                @swap-item="handleSwapItem"
+            />
+    
+            <!-- Regular products grid -->
+            <div v-if="products && products.length" class="products-grid">
+                <!-- Individual product cards -->
+            </div>
+    
+            <!-- Authentication modal -->
+            <div v-if="show_auth_modal" class="auth-modal">
+                <!-- Auth modal content -->
+            </div>
+
+
+            <div style="position: fixed; margin-bottom: 16px; bottom: 16px; left:0; display: flex; justify-content: center; z-index: 10; width: 100%" v-if="cart.length > 0">
+                <button class="big-btn full-width" style="z-index: 10; width: 90%" @click="showCartModal">Go to Cart ({{"NGN" | currencySymbol}}{{cartTotal | money}})</button>
+            </div>
         </div>
     </div>
 </template>
@@ -38,11 +50,14 @@
 
 <script>
 import ProductComboCard from '../../../components/combos/ProductComboCard.vue';
+import {mapGetters} from "vuex"
+import CartModal from '../../../components/modals/CartModal.vue';
 
 export default {
     components: {
-        ProductComboCard
-    },
+    ProductComboCard,
+    CartModal
+},
     async fetch() {
         const response = await this.$api.get('/businesses/store-products?slug=' + 'circa-lagos');
         const { business, products } = response.data.data;
@@ -53,8 +68,31 @@ export default {
         this.loading_data = false;
         this.show_auth_modal = false;
     },
+    computed: {
+        ...mapGetters('shop', ['cart']),
+        cartTotal() {
+            let sum = 0;
+
+            for (let item of this.cart) {
+                //sum += item.unitprice * item.quantity;
+
+               /* if (item.delivery_pack) {
+                    sum += item.delivery_pack.unitprice
+                }*/
+
+
+                sum += this.getItemTotal(item)
+                
+            }
+            
+            
+            return sum
+        },
+
+    },
     data() {
         return {
+            show_cart_modal: false,
             business: null,
             products: [],
             categories: [],
@@ -63,9 +101,37 @@ export default {
         }
     },
     methods: {
+        getItemTotal(item) {
+            let result = 0;
+        
+            if (item) {
+                const retrieved_item = this.cart.find(i=> i.id === item.id); 
+                if (retrieved_item) {
+                    
+                    let item_total = (retrieved_item.quantity * retrieved_item.unitprice);
+                    result += item_total;
+                    
+                    if (retrieved_item.additions) {
+                        for (let addition of retrieved_item.additions) {
+                            result += (addition.unitprice * retrieved_item.quantity )
+                        }
+                    }
+
+                    if (retrieved_item.delivery_pack?.unitprice) {
+                        result += retrieved_item.delivery_pack.unitprice
+                    }
+                }
+            }
+
+            return result
+        },
+        showCartModal() {
+            this.show_cart_modal = true;
+        },
         handleAddCombo(combo) {
             // Handle adding combo to cart
             console.log('Adding combo to cart:', combo);
+            
             // Implement your cart logic here
         },
         handleChangeItem({ combo, productIndex }) {
