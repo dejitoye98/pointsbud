@@ -52,6 +52,7 @@
 import ProductComboCard from '../../../components/combos/ProductComboCard.vue';
 import {mapGetters} from "vuex"
 import CartModal from '../../../components/modals/CartModal.vue';
+import mixpanel from 'mixpanel-browser';
 
 export default {
     components: {
@@ -148,6 +149,16 @@ export default {
             // Show options to swap with another product
             console.log('Swap item in combo:', combo.combo_name, 'at index:', productIndex);
             // Implement logic to swap item
+        }
+    },
+
+    watch: {
+        loading_data(value) {
+            if(!value) {
+                this.mixpanel = mixpanel.init('1f580add8d0558ccae5fc19ca5997dab', { debug: false, track_pageview: false });
+
+                mixpanel.track("Combos page viewed")
+            }
         }
     }
 }
