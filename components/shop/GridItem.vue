@@ -44,6 +44,7 @@
       <div class="item-image-wrapper">
         <img
           :src="thumbnailSrc"
+          loading="lazy"
           class="item-image"
           :style="{'object-fit' : product.thumbnail && !imageFailed ? 'cover' : 'contain'}"
           @error="handleImageError"
