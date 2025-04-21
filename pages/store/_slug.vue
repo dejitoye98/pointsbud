@@ -305,6 +305,7 @@
                                         
                                         <div class="products-grid" v-else>
                                           <GridItem 
+                                            :mixpanel="mixpanel"
                                             :styling="styling" 
                                             @onSelect="chooseProduct(item)"  
                                             :product="item" 

@@ -137,8 +137,10 @@
 import TruncatedText from "../text/TruncatedText.vue";
 import { mapGetters } from "vuex";
 
+import mixpanel from 'mixpanel-browser';
+
 export default {
-  props: ["product", "styling", "category"],
+  props: ["product", "styling", "category", "mixpanel"],
   data() {
     return {
       quantity: 1,
@@ -263,9 +265,18 @@ export default {
       }
     },
     decrease() {
+      mixpanel.track("Decreased Quantity", {
+        item: this.product.name
+      })
       this.$store.dispatch("shop/decreaseItemQuantity", this.product.id);
     },
     increase() {
+
+      mixpanel.track("Increased Quantity", {
+        item: this.product.name,
+      
+      })
+
       this.$store.dispatch("shop/increaseItemQuantity", this.product.id);
     },
     handleImageError() {
