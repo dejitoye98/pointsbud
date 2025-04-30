@@ -57,7 +57,7 @@
               Add More Items
             </button>
             
-            <button class="primary-btn" @click="proceedToPayment" :disabled="loading">
+            <button class="primary-btn" v-if="false" @click="proceedToPayment" :disabled="loading">
               <span v-if="!loading">Pay Now</span>
               <span v-else class="loader"></span>
             </button>

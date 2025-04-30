@@ -101,6 +101,9 @@ export default {
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [{ 
         src: "~/plugins/api", ssr: true }, 
+        { 
+            src: "~/plugins/adminapi", ssr: true }, 
+    
         "@/plugins/getMenuImage.js",
         "@/plugins/money.js",
         "@/plugins/input.js",
