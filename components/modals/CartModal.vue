@@ -162,13 +162,13 @@
 
 
                             <div class=" gap-16 grid grid-cols-2">
+                              <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
+                                  Back
+                              </button>
                                 <button class="big-btn full-width" :disabled="!canProceedFromDelivery" @click="nextStep">
                                     Continue
                                 </button>
 
-                                <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
-                                    Back
-                                </button>
                             </div>
 
                         </template>
@@ -195,11 +195,11 @@
 
                             <div class=" gap-16 grid grid-cols-2">
 
+                              <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
+                                  Back
+                              </button>
                                 <button class="big-btn full-width" @click="nextStep">
                                     Continue
-                                </button>
-                                <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
-                                    Back
                                 </button>
                             </div>
 
@@ -305,16 +305,18 @@
 
                         <div class=" gap-16 grid grid-cols-2">
                             
-                            <button class="big-btn full-width payment-button" 
-                              :disabled="creating_session" 
-                              @click="triggerPay"
-                              :class="{'loading': creating_session}"
-                              >
-                                Pay
-                            </button>
-                            <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
-                                Back
-                            </button>
+                          <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
+                            Back
+                          </button>
+
+                          <button class="big-btn full-width payment-button" 
+                            :disabled="creating_session" 
+                            @click="triggerPay"
+                            :class="{'loading': creating_session}"
+                            >
+                              Pay
+                          </button>
+
                         </div>
                     </div>
                 </template>
