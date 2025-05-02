@@ -221,12 +221,15 @@
             query: { 
             ...this.$route.query,
               mode: this.selectedOption,
-              ...(this.selectedOption === 'delivery' && this.address ? { address: this.address } : {})
+              
             }
           });
 
           this.$emit('onChoose', this.selectedOption.toLowerCase())
           this.$emit('close')
+
+          let page = document.getElementById('page');
+          if (page) page.scrollIntoView({behavior: 'smooth'})
         }
       }
     },
