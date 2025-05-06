@@ -381,29 +381,45 @@
                         </svg>
                       </div>
                       
-                      <!-- Robot Avatar -->
-                      <div class="robot-avatar">
-                        <svg width="80" height="80" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <rect width="256" height="256" rx="128" fill="#EBF8FF" />
-                          <rect x="78" y="70" width="100" height="120" rx="10" fill="#4299E1" />
-                          <rect x="98" y="90" width="60" height="40" rx="5" fill="#2B6CB0" />
-                          <circle cx="108" cy="110" r="8" fill="#FFFFFF" />
-                          <circle cx="148" cy="110" r="8" fill="#FFFFFF" />
-                          <rect x="108" y="150" width="40" height="5" rx="2.5" fill="#FFFFFF" />
-                          <rect x="68" y="100" width="10" height="30" rx="5" fill="#4299E1" />
-                          <rect x="178" y="100" width="10" height="30" rx="5" fill="#4299E1" />
-                          <circle cx="108" cy="110" r="4" fill="#2B6CB0" />
-                          <circle cx="148" cy="110" r="4" fill="#2B6CB0" />
-                          <rect x="103" y="160" width="50" height="10" rx="5" fill="#2B6CB0" />
-                          <rect x="108" y="50" width="40" height="20" rx="5" fill="#4299E1" />
-                          <rect x="118" y="40" width="20" height="10" rx="5" fill="#4299E1" />
-                        </svg>
-                      </div>
+             
                       
                       <h2 class="success-title">Order Placed Successfully!</h2>
                       <p class="success-message">Your order has been received and is being processed. An attendant will assist you shortly.</p>
                       
-                      <div class="order-details">
+
+                      <button class="whatsapp-track-container" @click="trackOrder">
+                        <!-- Pulsating animation wrapper -->
+                        <div class="pulse-wrapper">
+                          <!-- Main WhatsApp tracking button -->
+                          <a href='https://wa.me/2349014424074?text=Track%20my%20order%20%23'  + checkout_url class="whatsapp-track-btn">
+                            <!-- WhatsApp icon -->
+                            <div class="whatsapp-icon">
+                              <svg viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                                <path fill="currentColor" d="M12 0C5.373 0 0 5.373 0 12c0 6.628 5.373 12 12 12 6.628 0 12-5.373 12-12 0-6.627-5.372-12-12-12zm.029 18.88a6.736 6.736 0 0 1-3.831-1.184l-4.128 1.08 1.11-4.05a6.789 6.789 0 0 1-1.3-3.979C3.88 6.942 7.591 3.2 12.03 3.2c2.109 0 4.09.818 5.58 2.3a7.802 7.802 0 0 1 2.308 5.578c-.001 4.365-3.531 7.801-7.889 7.801z"/>
+                              </svg>
+                            </div>
+                            
+                            <span class="track-text">TRACK ORDER LIVE</span>
+                            <span class="on-whatsapp">on WhatsApp</span>
+                            
+                            <!-- Badge for instant updates -->
+                            <div class="instant-badge">
+                              <span class="instant-text">INSTANT UPDATES</span>
+                            </div>
+                          </a>
+                        </div>
+                        
+                        <!-- Incentive message -->
+                        <div class="incentive-message">
+                          <div class="incentive-icon">🎁</div>
+                          <p>Get <strong>10% OFF</strong> your next order when you track via WhatsApp!</p>
+                        </div>
+                      </button>
+
+
+
+                      <div class="order-details" v-if="false">
                         <div class="order-info">
                           <span class="info-label">Order ID:</span>
                           <span class="info-value">{{ checkout_url || '' }}</span>
@@ -415,7 +431,7 @@
                       </div>
                       
                       <!-- Track Order Button -->
-                      <div class="action-buttons">
+                      <div class="action-buttons" v-if="false">
                         <button class="track-order-button" @click="trackOrder">
                           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10"></circle>
@@ -423,13 +439,11 @@
                           </svg>
                           Track Order
                         </button>
-                        <button class="close-button" @click="$emit('close')">
-                          Close
-                        </button>
+                       
                       </div>
                       
                       <!-- Delivery Animation -->
-                      <div class="delivery-animation">
+                      <div class="delivery-animation" v-if="false">
                         <div class="road">
                           <div class="divider"></div>
                         </div>
@@ -2607,5 +2621,157 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
     .success-message {
       font-size: 14px;
     }
+  }
+
+  .whatsapp-track-container {
+    max-width: 400px;
+    margin: 20px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* Button styling */
+  .whatsapp-track-btn {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    color: white;
+    text-decoration: none;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4), 0 0 0 4px rgba(37, 211, 102, 0.1);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    z-index: 1;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .whatsapp-track-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(37, 211, 102, 0.6), 0 0 0 6px rgba(37, 211, 102, 0.2);
+  }
+  
+  .whatsapp-track-btn:active {
+    transform: translateY(0);
+  }
+  
+  /* WhatsApp icon styling */
+  .whatsapp-icon {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px;
+    border-radius: 50%;
+    margin-right: 16px;
+    flex-shrink: 0;
+  }
+  
+  /* Button text styling */
+  .track-text {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    flex-grow: 1;
+  }
+  
+  .on-whatsapp {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-left: 5px;
+  }
+  
+  /* Instant updates badge */
+  .instant-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #FF3B30;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transform: rotate(5deg);
+    z-index: 2;
+  }
+  
+  /* Pulsating animation */
+  .pulse-wrapper {
+    position: relative;
+  }
+  
+  .pulse-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(37, 211, 102, 0.5);
+    border-radius: 12px;
+    z-index: -1;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    70% {
+      transform: scale(1.05);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
+  
+  /* Incentive message styling */
+  .incentive-message {
+    display: flex;
+    align-items: center;
+    background-color: #FFF9E6;
+    border-left: 4px solid #FFD700;
+    padding: 10px 15px;
+    margin-top: 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .incentive-icon {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+  
+  .incentive-message p {
+    margin: 0;
+  }
+  
+  .incentive-message strong {
+    color: #FF3B30;
+  }
+  
+  /* Adding a subtle animated highlight effect */
+  .whatsapp-track-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+    transform: rotate(30deg);
+    animation: shine 4s infinite;
+    z-index: -1;
+  }
+  
+  @keyframes shine {
+    0% { left: -100%; opacity: 0; }
+    10% { opacity: 0.5; }
+    20% { left: 100%; opacity: 0; }
+    100% { left: 100%; opacity: 0; }
   }
 </style>
