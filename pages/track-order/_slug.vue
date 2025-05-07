@@ -13,7 +13,7 @@
             <span>🔵 On the Way</span>
           </template>
 
-          <template v-else-if="delivery_info?.processing_status === 'processing' || delivery_info.processing_status === 'preparing'">
+          <template v-else-if="delivery_info?.processing_status === 'processing' || delivery_info?.processing_status === 'preparing'">
               <span>⚪ Processing</span>
           </template>
 
@@ -222,6 +222,7 @@ export default {
       return ((completed + (active * 0.5)) / total) * 100;
     }
   },
+  
   created() {
     this.getSession()
   },
