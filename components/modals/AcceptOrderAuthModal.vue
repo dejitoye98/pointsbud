@@ -16,8 +16,8 @@
               <input v-model="payload.email" type="text" id="email" />
             </div>
             <div class="form-input">
-              <label for="password">Password</label>
-              <input v-model="payload.password" type="password" id="password" />
+              <label for="password">4-digit pin</label>
+              <input v-model="payload.pin" type="text" id="password" />
             </div>
             
             <div class="login-modal__footer">
@@ -58,7 +58,7 @@
         loading: false,
         payload: {
           email: "",
-          password: ""
+          pin: ""
         }
       };
     },
@@ -113,7 +113,7 @@
             })
             .catch(error => {
             console.error('Error accepting order:', error);
-            const message = error?.response?.data?.message || 'Failed to accept order';
+            const message = "Can't Accept Order: " + error?.response?.data?.data || 'Failed';
             this.$toast.error(message);
             });
         }

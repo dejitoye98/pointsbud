@@ -63,7 +63,7 @@ export default {
             return 0;
         },
         appFee() {
-            return this.session?.pending_sale?.appFee || 0;
+            return this.session?.pending_sale?.app_fee || 0;
         },
         taxes() {
             return this.session?.pending_sale?.taxes || 0;

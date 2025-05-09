@@ -1119,7 +1119,7 @@ export default {
                         alert('Transaction was not completed, window closed.');
                         },
                        
-                });
+            });
 
         },
         makePayment(checkout_session_id, checkout_url) {

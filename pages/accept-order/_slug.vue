@@ -168,24 +168,24 @@
       },
       async updateOrderProcessingTime(time) {
         try {
-          await this.$adminapi.post('/sales/final-orders/accept', {
+          let response =  await this.$adminapi.post('/sales/final-orders/accept', {
             pending_sale_id: this.pending_sale.id,
             processing_time: time
-          }).catch(e=> {
-            this.$toast.error('Failed to set processing time', error?.response?.data?.data);
-
           })
-          
+
           // Show success notification and close modal
+          //if (response.data.data)
           this.$toast.success('Order Accepted and Processing time set successfully');
           this.closeModal();
           
           // Refresh data to show updated status
-          this.getCheckoutSession();
+          //this.getCheckoutSession();
           
         } catch (error) {
           console.error('Error updating processing time:', error);
-          
+
+          //alert(JSON.stringify(error))
+
           // Check if the error is due to authentication
           if (error.response && (error.response.status === 401 || error.response.status === 403)) {
             // Show login modal
