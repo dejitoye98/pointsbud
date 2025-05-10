@@ -190,7 +190,7 @@
               :src="thumbnailSrc"
               loading="lazy"
               class="item-image"
-              :style="{'object-fit' : product.thumbnail && !imageFailed ? 'cover' : 'contain'}"
+              :style="{'object-fit' : product.thumbnail && !imageFailed ? 'cover' : 'cover'}"
               @error="handleImageError"
             />
             
