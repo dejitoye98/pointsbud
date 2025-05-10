@@ -2138,7 +2138,7 @@ body {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 16px 32px;
+  padding: 16px 16px;
 }
 
 /* Adjust product grid to show more items per row on desktop */
