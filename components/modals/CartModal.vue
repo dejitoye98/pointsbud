@@ -1,470 +1,424 @@
 <template>
-    <BaseModal @close="$emit('close')">
-        <template #header>
-            <div class="padding-16 space-between flex-center-y">
-                <p>Cart</p>
+  <BaseModal @close="$emit('close')">
+      <template #header>
+          <div class="padding-16 space-between flex-center-y">
+              <p>Cart</p>
 
-                <svg @click="$emit('close')" style="cursor: pointer;" width="16" height="16" viewBox="0 0 8 8" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 1L7 7" stroke="black" stroke-width="0.5" stroke-linecap="round" />
-                <path d="M7 1L1 7" stroke="black" stroke-width="0.5" stroke-linecap="round" />
-                </svg>     
-            </div>
-        </template>
+              <svg @click="$emit('close')" style="cursor: pointer;" width="16" height="16" viewBox="0 0 8 8" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L7 7" stroke="black" stroke-width="0.5" stroke-linecap="round" />
+              <path d="M7 1L1 7" stroke="black" stroke-width="0.5" stroke-linecap="round" />
+              </svg>     
+          </div>
+      </template>
 
 
-        <template #body>
-            <div class="padding-16">
+      <template #body>
+          <div class="padding-16">
 
-                <template v-if="step === 2">
-                    <div>
-                        <p>Payment will be stored in your PointsBud Wallet until your items are delivered. If not, you'll be refunded</p>
-                        <div class="form-input">
-                            <label for="">Your Phone</label>
-                            <vue-tel-input v-model="confirm.customer_phone"></vue-tel-input>
-                            <div class="fetching-wallet"  v-if="fetching_wallet" style="width:100%; height: 20px; padding: 8px 0; margin-top: 10px; display: flex; align-items:center; color: grey;">
-                                <p style="width: 100%;">Fetching wallet...</p>
-                            </div>
-                        </div>
-                        
-                        <div class="form-input" v-if="fetched_wallet">
-                            <label for=""> 6-Digit Pin <span class="required">*</span></label>
-                            <input required  @keydown="filterInput" type="password" class="number-input" v-model="confirm.wallet_pin">
+              <template v-if="step === 2">
+                  <div>
+                      <p>Payment will be stored in your PointsBud Wallet until your items are delivered. If not, you'll be refunded</p>
+                      <div class="form-input">
+                          <label for="">Your Phone</label>
+                          <vue-tel-input v-model="confirm.customer_phone"></vue-tel-input>
+                          <div class="fetching-wallet"  v-if="fetching_wallet" style="width:100%; height: 20px; padding: 8px 0; margin-top: 10px; display: flex; align-items:center; color: grey;">
+                              <p style="width: 100%;">Fetching wallet...</p>
+                          </div>
+                      </div>
+                      
+                      <div class="form-input" v-if="fetched_wallet">
+                          <label for=""> 6-Digit Pin <span class="required">*</span></label>
+                          <input required  @keydown="filterInput" type="password" class="number-input" v-model="confirm.wallet_pin">
 
-                        </div>
-                        <div class="form-input"  v-if="fetched_wallet &&  !customer_wallet">
-                            <label for=""> Confirm Pin  <span class="required">*</span></label>
-                            <input required @keydown="filterInput" class="number-input" type="password" v-model="confirm.confirm_wallet_pin">
+                      </div>
+                      <div class="form-input"  v-if="fetched_wallet &&  !customer_wallet">
+                          <label for=""> Confirm Pin  <span class="required">*</span></label>
+                          <input required @keydown="filterInput" class="number-input" type="password" v-model="confirm.confirm_wallet_pin">
 
-                        </div>
+                      </div>
 
-                       
-                        <div style="align-items: center;display: flex;gap: 8px;padding: 16px;justify-content: center;width: 100%;flex-direction: column;">
-                            <button  class="big-btn" style="margin: auto !important" :disabled="!enableNextStep2 || fetching_wallet || validating_wallet || creating_wallet" @click="nextStep">Proceed</button>
-                            <button class="big-btn" style="background-color: white; color: black !important" @click="step--">
-                                Go Back
+                     
+                      <div style="align-items: center;display: flex;gap: 8px;padding: 16px;justify-content: center;width: 100%;flex-direction: column;">
+                          <button  class="big-btn" style="margin: auto !important" :disabled="!enableNextStep2 || fetching_wallet || validating_wallet || creating_wallet" @click="nextStep">Proceed</button>
+                          <button class="big-btn" style="background-color: white; color: black !important" @click="step--">
+                              Go Back
+                          </button>
+                      </div>
+
+                  </div>
+                  
+              </template>
+
+
+              <template v-else-if="step === 1">
+
+                  <div v-if="existing_cart?.length" style="margin-bottom: 20px">
+                      <div class="tag tag--red" v-if="existing_cart?.length">Old</div>
+
+                      <CartItem v-for="(item, index) in existing_cart" :editable="false" :item="item" :styling="styling"></CartItem>
+                  </div>
+
+                  <div>
+                      <div class="tag" v-if="existing_cart?.length">New</div>
+                      <CartItem v-for="(item, index) in cart" :item="item" :styling="styling"></CartItem>
+                  </div>
+
+                  <button class="big-btn full-width" @click="step++" v-if="business.qr_ordering_mode === 'order-and-pay' ">
+                      Continue With Items
+                  </button>
+
+                  <button class="big-btn full-width" :disabled="creating_session" v-else-if="business.qr_ordering_mode === 'order-only'" @click="resolvePlaceOrderWithAttendant">
+                      Place Order with Attendant
+                  </button>
+              </template>
+
+              <template v-else-if="step === 3">
+                  <div>
+                      <div class="tabs">
+                          <div class="tab" @click="delivery_type = 'delivery'" :class="[delivery_type === 'delivery' ? 'selected-tab' : '']">Delivery</div>
+                          <div class="tab" @click="delivery_type = 'pickup'" :class="[delivery_type === 'pickup' ? 'selected-tab' : '']">Pickup</div>
+                      </div>
+                  </div>
+                  <div>
+                      <template v-if="delivery_type === 'delivery'">
+                          <div class="form-input">
+                              <label for="">Delivery Time</label>
+                              <select v-model="delivery_meta.delivery_time">
+                                  <option value="instantly" selected default>ASAP</option>
+                                  <option value="scheduled">Scheduled</option>
+                              </select>
+                          </div>
+
+                          <div class="form-input" v-if="delivery_meta.delivery_time === 'scheduled'">
+                              <label>Scheduled Time</label>
+                              <vue-timepicker format="hh:mm A" v-model="delivery_meta.scheduled_delivery_time"></vue-timepicker>
+                          </div>
+                          <div class="form-input" v-if="deliveryRegions.length">
+                              <label for="">Delivery Area</label>
+                              <select v-model="delivery_meta.destination_region">
+                                  <option :value="region.place" v-for="(region, index) in deliveryRegions" :key="index"> {{region.place}} - {{region.currency | currencySymbol}}{{region.price | money}}</option>
+                              </select>
+                          </div>
+                          <div class="form-input">
+                              <label>Your Delivery Address </label>
+                              <input id="address" v-model="delivery_meta.destination_address">
+                          </div>
+
+
+                          <div class="delivery-options" v-if="deliveryFee.price || dynamic_delivery_fee">
+                              <h4>Delivery Options</h4>
+                              
+                              <div class="delivery-option premium" :class="{}" @click="selectDeliveryOption('premium')">
+                                  <div class="option-header">
+                                      <input type="radio" name="delivery-speed" id="premium-delivery" v-model="delivery_meta.delivery_speed" value="premium">
+                                      <label for="premium-delivery">Premium Instant </label>
+                                      <span class="price"> {{deliveryFee.currency | currencySymbol}}{{deliveryFee.price || dynamic_delivery_fee | money}}</span>
+                                  </div>
+                                  <p class="description">Get your order delivered as soon as possible</p>
+                              </div>
+                              
+                              <div class="delivery-option scheduled" :class="{}" @click="selectDeliveryOption('scheduled')" v-if="false">
+                                  <div class="option-header">
+                                      <input type="radio" name="delivery-speed" id="scheduled-delivery" v-model="delivery_meta.delivery_speed" value="scheduled">
+                                      <label for="scheduled-delivery">Scheduled Delivery <span class="discount-tag">Save up to 50%</span></label>
+                                      <span class="price">{{deliveryFee.currency | currencySymbol}}{{getDiscountedDeliveryFee | money}}</span>
+                                  </div>
+                                  <p class="description">Select a time slot and stand a chance to save 50%</p>
+                                  
+                                  <div class="time-slots" v-if="delivery_meta.delivery_speed === 'scheduled'">
+                                      <div class="slot-day">
+                                          <h5>Today</h5>
+                                          <div class="slot-times">
+                                              <button class="slot-time" 
+                                                  v-for="slot in todayTimeSlots" 
+                                                  :key="slot"
+                                                  :class="{ selected: delivery_meta.selected_slot === slot }"
+                                                  @click="selectTimeSlot(slot)">
+                                                  {{slot.time}} ({{ slot.discount }}% off delivery)
+                                              </button>
+                                          </div>
+                                      </div>
+                                      <div class="slot-day">
+                                          <h5>Tomorrow</h5>
+                                          <div class="slot-times">
+                                              <button class="slot-time" 
+                                                  v-for="slot in tomorrowTimeSlots" 
+                                                  :key="slot"
+                                                  :class="{ selected: delivery_meta.selected_slot === slot }"
+                                                  @click="selectTimeSlot(slot)">
+                                                  {{slot.time}} ({{ slot.discount }}% off delivery)
+                                              </button>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="form-input">
+                              <label> Delivery Note (optional)</label>
+                              <textarea v-model="delivery_meta.note"></textarea>
+                          </div>
+
+
+                          <div class=" gap-16 grid grid-cols-2">
+                            <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
+                                Back
                             </button>
-                        </div>
+                              <button class="big-btn full-width" :disabled="!canProceedFromDelivery" @click="nextStep">
+                                  Continue
+                              </button>
 
+                          </div>
+
+                      </template>
+
+                      <template v-else-if="delivery_type === 'pickup'">
+                          <div class="form-input flex-col">
+                              <label for="">Pickup Date</label>
+                              <date-picker :option="date_picker_option" :date="date_picker_date"></date-picker>
+
+                              
+                          </div>
+                          <div class="form-input">
+                              <label>Pickup Time </label>
+                              <vue-timepicker v-model="delivery_meta.pickup_time" format="hh:mm A"></vue-timepicker>     
+                          </div>
+
+
+                          <div class="form-input">
+                              <label>Pickup Note (optional)</label>
+                              <textarea v-model="delivery_meta.note"></textarea>
+                          </div>
+                          
+
+
+                          <div class=" gap-16 grid grid-cols-2">
+
+                            <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
+                                Back
+                            </button>
+                              <button class="big-btn full-width" @click="nextStep">
+                                  Continue
+                              </button>
+                          </div>
+
+                      </template>
+                  </div>
+              </template>
+
+
+              <template v-else-if="step ===4">
+                  <div>
+                      <div class="section-title">Items</div>
+                      <div class="flex space-between gap-2 total-item" style="margin: 16px 0;" v-for="(item, index) in cart" :key="index">
+                          <div>
+                              {{ item.name }} x  {{ item.quantity }}
+                          </div>
+
+                          <div class="no-wrap">
+                            {{ "NGN" | currencySymbol }}  {{ getItemTotal(item) }}
+                          </div>
+                      </div>
+                      <div class="section-title">Delivery Detail</div>
+
+                      <template v-if="delivery_type === 'delivery'">
+
+                          <div class="padding-16-y total-item">
+                              <div>
+                                  Delivery Region
+                              </div>
+  
+                              <div>
+                                  {{ delivery_meta.destination_region }}
+                              </div>
+                          </div>
+
+                          <div  class="padding-16-y total-item">
+                              <div>
+                                  Delivery Address
+                              </div>
+  
+                              <div>
+                                  {{ delivery_meta.destination_address }}
+                              </div>
+                          </div>
+                          
+                      </template>
+                      <template v-else>
+                          <div class="padding-16-y form-input total-item">
+                              <div>
+                                  Pickup Date
+                              </div>
+  
+                              <div>
+                                  <p>
+
+                                      {{ delivery_meta.pickup_date}}
+                                  </p>
+                              </div>
+                          </div>
+                          <div>
+                              <div>
+                                  Pickup Time
+                              </div>
+  
+                              <div>
+                                  {{ delivery_meta.pickup_time?.hh + ':' + delivery_meta.pickup_time?.mm + ' ' + delivery_meta.pickup_time.A}}
+                              </div>
+                          </div>
+                          
+                      </template>
+
+
+
+
+                      <div class="total">
+                          <div class="total-item">
+                              <p>Subtotal</p>
+                              <p>{{"NGN" | currencySymbol}} {{cartTotal | money}}</p>
+                          </div>
+                          <div class="total-item" v-if="totalTaxes">
+                              <p>Taxes</p>
+                              <p>{{totalTaxes | money}}</p>
+                          </div>
+                          <div class="total-item">
+                              <p>Delivery Fee</p>
+                              <p>{{deliveryFee.currency || "NGN" | currencySymbol}} {{deliveryFee.price || dynamic_delivery_fee | money}}</p>
+                          </div>
+                          <div class="total-item">
+                              <p>
+                                  Service Fee
+                              </p>
+
+                              <p>{{"NGN" | currencySymbol}} {{appFee | money }}</p>
+                          </div>
+
+                          <div class="total-item">
+                              <b style="font-size: 16px;" class="bold">Total</b>
+
+                              <b style="font-size: 16px;" >{{"NGN" | currencySymbol}} {{grandTotal | money}}</b>
+                          </div>
+                      </div>
+
+
+
+                      <div class=" gap-16 grid grid-cols-2">
+                          
+                        <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
+                          Back
+                        </button>
+
+                        <button class="big-btn full-width payment-button" 
+                          :disabled="creating_session" 
+                          @click="triggerPay"
+                          :class="{'loading': creating_session}"
+                          >
+                            Pay
+                        </button>
+
+                      </div>
+                  </div>
+              </template>
+
+              <template v-else-if="step === 5">
+                  <div class="payment-success">
+                      <div class="success-icon">
+                          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18457 2.99721 7.13633 4.39828 5.49707C5.79935 3.85782 7.69279 2.71538 9.79619 2.24015C11.8996 1.76491 14.1003 1.98234 16.07 2.86" stroke="#5ac091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                              <path d="M22 4L12 14.01L9 11.01" stroke="#5ac091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                      </div>
+                      <h2 class="success-title">Payment Successful!</h2>
+                      <p class="success-message">Your order has been placed successfully. The merchant will process it shortly.</p>
+                      
+                      <div class="order-details">
+                          <div class="order-number">
+                              <span>Order Number:</span>
+                              <strong>#{{ checkout_url }}</strong>
+                          </div>
+                          <div class="order-time">
+                              <span>Order Time:</span>
+                              <strong>{{ new Date().toLocaleString() }}</strong>
+                          </div>
+                      </div>
+                      
+                      <div class="success-actions">
+                          <button class="big-btn full-width" @click="viewOrderDetails">
+                              View Order Details
+                          </button>
+                          <button class="big-btn full-width outline" @click="$emit('close')">
+                              Close
+                          </button>
+                      </div>
+                  </div>
+              </template>
+
+              <template v-else-if="step===6"> 
+                  <p>Please enter your first name</p>
+                  <div class="form-input">
+                      <label for="">First Name <span class="required">*</span> </label>
+                      <input v-model="payload.customer_name">
+                  </div>
+                  <div class="form-input">
+                      <label for="">Phone Number</label>
+                      <vue-tel-input v-model="payload.customer_phone"></vue-tel-input>
+                      <span style="font-size: 11px !important">To track your order</span>
+                  </div>
+
+                  <button class="btn big-btn full-width" :disabled="!payload.customer_name || creating_session" @click="placeUnpaidOrder">Place Order</button>
+              </template>
+
+
+              <template v-else-if="step === 7">
+                  <div class="order-success-container">
+                    <!-- Success Illustration -->
+                    <div class="success-illustration">
+                      <svg width="120" height="120" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="128" cy="128" r="120" fill="#F0FFF4" />
+                        <path d="M128 36C76.7878 36 36 76.7878 36 128C36 179.212 76.7878 220 128 220C179.212 220 220 179.212 220 128C220 76.7878 179.212 36 128 36Z" fill="#48BB78" fill-opacity="0.2" />
+                        <path d="M176 100L112 164L80 132" stroke="#48BB78" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
                     </div>
                     
-                </template>
-
-
-                <template v-else-if="step === 1">
-
-                    <div v-if="existing_cart?.length" style="margin-bottom: 20px">
-                        <div class="tag tag--red" v-if="existing_cart?.length">Old</div>
-
-                        <CartItem v-for="(item, index) in existing_cart" :editable="false" :item="item" :styling="styling"></CartItem>
-                    </div>
-
-                    <div>
-                        <div class="tag" v-if="existing_cart?.length">New</div>
-                        <CartItem v-for="(item, index) in cart" :item="item" :styling="styling"></CartItem>
-                    </div>
-
-                    <button class="big-btn full-width" @click="step++" v-if="business.qr_ordering_mode === 'order-and-pay' ">
-                        Continue With Items
-                    </button>
-
-                    <button class="big-btn full-width" :disabled="creating_session" v-else-if="business.qr_ordering_mode === 'order-only'" @click="resolvePlaceOrderWithAttendant">
-                        Place Order with Attendant
-                    </button>
-                </template>
-
-                <template v-else-if="step === 3">
-                    <div>
-                        <div class="tabs">
-                            <div class="tab" @click="delivery_type = 'delivery'" :class="[delivery_type === 'delivery' ? 'selected-tab' : '']">Delivery</div>
-                            <div class="tab" @click="delivery_type = 'pickup'" :class="[delivery_type === 'pickup' ? 'selected-tab' : '']">Pickup</div>
-                        </div>
-                    </div>
-                    <div>
-                        <template v-if="delivery_type === 'delivery'">
-                            <div class="form-input">
-                                <label for="">Delivery Time</label>
-                                <select v-model="delivery_meta.delivery_time">
-                                    <option value="instantly" selected default>ASAP</option>
-                                    <option value="scheduled">Scheduled</option>
-                                </select>
-                            </div>
-
-                            <div class="form-input" v-if="delivery_meta.delivery_time === 'scheduled'">
-                                <label>Scheduled Time</label>
-                                <vue-timepicker format="hh:mm A" v-model="delivery_meta.scheduled_delivery_time"></vue-timepicker>
-                            </div>
-                            <div class="form-input" v-if="deliveryRegions.length">
-                                <label for="">Delivery Area</label>
-                                <select v-model="delivery_meta.destination_region">
-                                    <option :value="region.place" v-for="(region, index) in deliveryRegions" :key="index"> {{region.place}} - {{region.currency | currencySymbol}}{{region.price | money}}</option>
-                                </select>
-                            </div>
-                            <div class="form-input">
-                                <label>Your Delivery Address </label>
-                                <input id="address" v-model="delivery_meta.destination_address">
-                            </div>
-
-
-                            <div class="delivery-options" v-if="deliveryFee.price || dynamic_delivery_fee">
-                                <h4>Delivery Options</h4>
-                                
-                                <div class="delivery-option premium" :class="{}" @click="selectDeliveryOption('premium')">
-                                    <div class="option-header">
-                                        <input type="radio" name="delivery-speed" id="premium-delivery" v-model="delivery_meta.delivery_speed" value="premium">
-                                        <label for="premium-delivery">Premium Instant </label>
-                                        <span class="price"> {{deliveryFee.currency | currencySymbol}}{{deliveryFee.price || dynamic_delivery_fee | money}}</span>
-                                    </div>
-                                    <p class="description">Get your order delivered as soon as possible</p>
-                                </div>
-                                
-                                <div class="delivery-option scheduled" :class="{}" @click="selectDeliveryOption('scheduled')" v-if="false">
-                                    <div class="option-header">
-                                        <input type="radio" name="delivery-speed" id="scheduled-delivery" v-model="delivery_meta.delivery_speed" value="scheduled">
-                                        <label for="scheduled-delivery">Scheduled Delivery <span class="discount-tag">Save up to 50%</span></label>
-                                        <span class="price">{{deliveryFee.currency | currencySymbol}}{{getDiscountedDeliveryFee | money}}</span>
-                                    </div>
-                                    <p class="description">Select a time slot and stand a chance to save 50%</p>
-                                    
-                                    <div class="time-slots" v-if="delivery_meta.delivery_speed === 'scheduled'">
-                                        <div class="slot-day">
-                                            <h5>Today</h5>
-                                            <div class="slot-times">
-                                                <button class="slot-time" 
-                                                    v-for="slot in todayTimeSlots" 
-                                                    :key="slot"
-                                                    :class="{ selected: delivery_meta.selected_slot === slot }"
-                                                    @click="selectTimeSlot(slot)">
-                                                    {{slot.time}} ({{ slot.discount }}% off delivery)
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="slot-day">
-                                            <h5>Tomorrow</h5>
-                                            <div class="slot-times">
-                                                <button class="slot-time" 
-                                                    v-for="slot in tomorrowTimeSlots" 
-                                                    :key="slot"
-                                                    :class="{ selected: delivery_meta.selected_slot === slot }"
-                                                    @click="selectTimeSlot(slot)">
-                                                    {{slot.time}} ({{ slot.discount }}% off delivery)
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-input">
-                                <label> Delivery Note (optional)</label>
-                                <textarea v-model="delivery_meta.note"></textarea>
-                            </div>
-
-
-                            <div class=" gap-16 grid grid-cols-2">
-                              <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
-                                  Back
-                              </button>
-                                <button class="big-btn full-width" :disabled="!canProceedFromDelivery" @click="nextStep">
-                                    Continue
-                                </button>
-
-                            </div>
-
-                        </template>
-
-                        <template v-else-if="delivery_type === 'pickup'">
-                            <div class="form-input flex-col">
-                                <label for="">Pickup Date</label>
-                                <date-picker :option="date_picker_option" :date="date_picker_date"></date-picker>
-
-                                
-                            </div>
-                            <div class="form-input">
-                                <label>Pickup Time </label>
-                                <vue-timepicker v-model="delivery_meta.pickup_time" format="hh:mm A"></vue-timepicker>     
-                            </div>
-
-
-                            <div class="form-input">
-                                <label>Pickup Note (optional)</label>
-                                <textarea v-model="delivery_meta.note"></textarea>
-                            </div>
-                            
-
-
-                            <div class=" gap-16 grid grid-cols-2">
-
-                              <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
-                                  Back
-                              </button>
-                                <button class="big-btn full-width" @click="nextStep">
-                                    Continue
-                                </button>
-                            </div>
-
-                        </template>
-                    </div>
-                </template>
-
-
-                <template v-else-if="step ===4">
-                    <div>
-                        <div class="section-title">Items</div>
-                        <div class="flex space-between gap-2 total-item" style="margin: 16px 0;" v-for="(item, index) in cart" :key="index">
-                            <div>
-                                {{ item.name }} x  {{ item.quantity }}
-                            </div>
-
-                            <div class="no-wrap">
-                              {{ "NGN" | currencySymbol }}  {{ getItemTotal(item) }}
-                            </div>
-                        </div>
-                        <div class="section-title">Delivery Detail</div>
-
-                        <template v-if="delivery_type === 'delivery'">
-
-                            <div class="padding-16-y total-item">
-                                <div>
-                                    Delivery Region
-                                </div>
-    
-                                <div>
-                                    {{ delivery_meta.destination_region }}
-                                </div>
-                            </div>
-
-                            <div  class="padding-16-y total-item">
-                                <div>
-                                    Delivery Address
-                                </div>
-    
-                                <div>
-                                    {{ delivery_meta.destination_address }}
-                                </div>
-                            </div>
-                            
-                        </template>
-                        <template v-else>
-                            <div class="padding-16-y form-input total-item">
-                                <div>
-                                    Pickup Date
-                                </div>
-    
-                                <div>
-                                    <p>
-
-                                        {{ delivery_meta.pickup_date}}
-                                    </p>
-                                </div>
-                            </div>
-                            <div>
-                                <div>
-                                    Pickup Time
-                                </div>
-    
-                                <div>
-                                    {{ delivery_meta.pickup_time?.hh + ':' + delivery_meta.pickup_time?.mm + ' ' + delivery_meta.pickup_time.A}}
-                                </div>
-                            </div>
-                            
-                        </template>
-
-
-
-
-                        <div class="total">
-                            <div class="total-item">
-                                <p>Subtotal</p>
-                                <p>{{"NGN" | currencySymbol}} {{cartTotal | money}}</p>
-                            </div>
-                            <div class="total-item" v-if="totalTaxes">
-                                <p>Taxes</p>
-                                <p>{{totalTaxes | money}}</p>
-                            </div>
-                            <div class="total-item">
-                                <p>Delivery Fee</p>
-                                <p>{{deliveryFee.currency || "NGN" | currencySymbol}} {{deliveryFee.price || dynamic_delivery_fee | money}}</p>
-                            </div>
-                            <div class="total-item">
-                                <p>
-                                    Service Fee
-                                </p>
-
-                                <p>{{"NGN" | currencySymbol}} {{appFee | money }}</p>
-                            </div>
-
-                            <div class="total-item">
-                                <b style="font-size: 16px;" class="bold">Total</b>
-
-                                <b style="font-size: 16px;" >{{"NGN" | currencySymbol}} {{grandTotal | money}}</b>
-                            </div>
-                        </div>
-
-
-
-                        <div class=" gap-16 grid grid-cols-2">
-                            
-                          <button  @click="step--" style="background-color: white; color: black !important" class="big-btn full-width">
-                            Back
-                          </button>
-
-                          <button class="big-btn full-width payment-button" 
-                            :disabled="creating_session" 
-                            @click="triggerPay"
-                            :class="{'loading': creating_session}"
-                            >
-                              Pay
-                          </button>
-
-                        </div>
-                    </div>
-                </template>
-
-                <template v-else-if="step === 5">
-                    <div class="payment-success">
-                        <div class="success-icon">
-                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18457 2.99721 7.13633 4.39828 5.49707C5.79935 3.85782 7.69279 2.71538 9.79619 2.24015C11.8996 1.76491 14.1003 1.98234 16.07 2.86" stroke="#5ac091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M22 4L12 14.01L9 11.01" stroke="#5ac091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <h2 class="success-title">Payment Successful!</h2>
-                        <p class="success-message">Your order has been placed successfully. The merchant will process it shortly.</p>
-                        
-                        <div class="order-details">
-                            <div class="order-number">
-                                <span>Order Number:</span>
-                                <strong>#{{ checkout_url }}</strong>
-                            </div>
-                            <div class="order-time">
-                                <span>Order Time:</span>
-                                <strong>{{ new Date().toLocaleString() }}</strong>
-                            </div>
-                        </div>
-                        
-                        <div class="success-actions">
-                            <button class="big-btn full-width" @click="viewOrderDetails">
-                                View Order Details
-                            </button>
-                            <button class="big-btn full-width outline" @click="$emit('close')">
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </template>
-
-                <template v-else-if="step===6"> 
-                    <p>Please enter your first name</p>
-                    <div class="form-input">
-                        <label for="">First Name <span class="required">*</span> </label>
-                        <input v-model="payload.customer_name">
-                    </div>
-                    <div class="form-input">
-                        <label for="">Phone Number</label>
-                        <vue-tel-input v-model="payload.customer_phone"></vue-tel-input>
-                        <span style="font-size: 11px !important">To track your order</span>
-                    </div>
-
-                    <button class="btn big-btn full-width" :disabled="!payload.customer_name || creating_session" @click="placeUnpaidOrder">Place Order</button>
-                </template>
-
-
-                <template v-else-if="step === 7">
-                    <div class="order-success-container">
-                      <!-- Success Illustration -->
-                      <div class="success-illustration">
-                        <svg width="120" height="120" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <circle cx="128" cy="128" r="120" fill="#F0FFF4" />
-                          <path d="M128 36C76.7878 36 36 76.7878 36 128C36 179.212 76.7878 220 128 220C179.212 220 220 179.212 220 128C220 76.7878 179.212 36 128 36Z" fill="#48BB78" fill-opacity="0.2" />
-                          <path d="M176 100L112 164L80 132" stroke="#48BB78" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+                    <h2 class="success-title">Order Placed Successfully!</h2>
+                    <p class="success-message">Your order has been received and is being processed. An attendant will assist you shortly.</p>
+                    
+                    <!-- WhatsApp Track Order Button - Fixed version -->
+                    <a :href="'https://wa.me/2348097000001?text=Track%20my%20order%20%23' + checkout_url" class="whatsapp-track-btn">
+                      <div class="whatsapp-icon">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                          <path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                          <path fill="currentColor" d="M12 0C5.373 0 0 5.373 0 12c0 6.628 5.373 12 12 12 6.628 0 12-5.373 12-12 0-6.627-5.372-12-12-12zm.029 18.88a6.736 6.736 0 0 1-3.831-1.184l-4.128 1.08 1.11-4.05a6.789 6.789 0 0 1-1.3-3.979C3.88 6.942 7.591 3.2 12.03 3.2c2.109 0 4.09.818 5.58 2.3a7.802 7.802 0 0 1 2.308 5.578c-.001 4.365-3.531 7.801-7.889 7.801z"/>
                         </svg>
                       </div>
-                      
-             
-                      
-                      <h2 class="success-title">Order Placed Successfully!</h2>
-                      <p class="success-message">Your order has been received and is being processed. An attendant will assist you shortly.</p>
-                      
-
-                      <button class="whatsapp-track-container" @click="trackOrder">
-                        <!-- Pulsating animation wrapper -->
-                        <div class="pulse-wrapper">
-                          <!-- Main WhatsApp tracking button -->
-                          <a href='https://wa.me/2349014424074?text=Track%20my%20order%20%23'  + checkout_url class="whatsapp-track-btn">
-                            <!-- WhatsApp icon -->
-                            <div class="whatsapp-icon">
-                              <svg viewBox="0 0 24 24" width="24" height="24">
-                                <path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-                                <path fill="currentColor" d="M12 0C5.373 0 0 5.373 0 12c0 6.628 5.373 12 12 12 6.628 0 12-5.373 12-12 0-6.627-5.372-12-12-12zm.029 18.88a6.736 6.736 0 0 1-3.831-1.184l-4.128 1.08 1.11-4.05a6.789 6.789 0 0 1-1.3-3.979C3.88 6.942 7.591 3.2 12.03 3.2c2.109 0 4.09.818 5.58 2.3a7.802 7.802 0 0 1 2.308 5.578c-.001 4.365-3.531 7.801-7.889 7.801z"/>
-                              </svg>
-                            </div>
-                            
-                            <span class="track-text">TRACK ORDER LIVE</span>
-                            <span class="on-whatsapp">on WhatsApp</span>
-                            
-                            <!-- Badge for instant updates -->
-                            <div class="instant-badge">
-                              <span class="instant-text">INSTANT UPDATES</span>
-                            </div>
-                          </a>
-                        </div>
-                        
-                        <!-- Incentive message -->
-                        <div class="incentive-message">
-                          <div class="incentive-icon">🎁</div>
-                          <p>Get <strong>10% OFF</strong> your next order when you track via WhatsApp!</p>
-                        </div>
-                      </button>
-
-
-
-                      <div class="order-details" v-if="false">
-                        <div class="order-info">
-                          <span class="info-label">Order ID:</span>
-                          <span class="info-value">{{ checkout_url || '' }}</span>
-                        </div>
-                        <div class="order-info">
-                          <span class="info-label">Time:</span>
-                          <span class="info-value">{{ new Date().toLocaleTimeString() }}</span>
-                        </div>
+                      <div class="track-text-container">
+                        <span class="track-text">TRACK ORDER LIVE</span>
+                        <span class="on-whatsapp">on WhatsApp</span>
                       </div>
-                      
-                      <!-- Track Order Button -->
-                      <div class="action-buttons" v-if="false">
-                        <button class="track-order-button" @click="trackOrder">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                          </svg>
-                          Track Order
-                        </button>
-                       
+                      <div class="instant-badge">
+                        <span class="instant-text">INSTANT UPDATES</span>
                       </div>
-                      
-                      <!-- Delivery Animation -->
-                      <div class="delivery-animation" v-if="false">
-                        <div class="road">
-                          <div class="divider"></div>
-                        </div>
-                        <div class="delivery-vehicle">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="1" y="3" width="15" height="13"></rect>
-                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                          </svg>
-                        </div>
-                      </div>
+                    </a>
+                    
+                    <!-- Incentive message -->
+                    <div class="incentive-message">
+                      <div class="incentive-icon">🎁</div>
+                      <p>Unlock a mystery box when you track your order on WhatsApp</p>
                     </div>
-                </template>
-            </div>
+                    
+                    <!-- Action buttons -->
+                    <div class="success-actions">
+                      <button class="big-btn full-width outline" @click="$emit('close')">
+                        Close
+                      </button>
+                    </div>
+                  </div>
+              </template>
+          </div>
 
-        </template>
-    
-
-
-    </BaseModal>
+      </template>
+  </BaseModal>
 </template>
 
 

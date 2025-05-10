@@ -1,5 +1,5 @@
 <template>
-    <p :style="{color: color || 'black', fontSize: fontSize || '', padding: '8px'}" v-if="text && limit">
+    <p :style="{color: color || 'black', fontSize: fontSize || ''}" v-if="text && limit">
       {{ computedText }}
       <template v-if="text.length > limit">
         <span class="red" style="cursor:pointer" v-if="truncated" @click="untruncateText">see more</span>

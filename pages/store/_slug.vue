@@ -312,8 +312,9 @@
   
                                           
                                           
-                                          <div class="products-grid" v-else>
+                                          <div  v-else>
                                             <GridItem 
+                                              :listType="true"
                                               :mixpanel="mixpanel"
                                               :styling="styling" 
                                               @onSelect="chooseProduct(item)"  
@@ -1810,6 +1811,8 @@ $info: #2196F3;
 
 .category-pane {
   padding: 16px 0 12px;
+  display: flex;
+  justify-content: center;
   
   .category-name {
     font-size: 18px;

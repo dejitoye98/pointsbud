@@ -1,135 +1,226 @@
 <template>
-  <div
-    class="gourmet-item"
-    :class="[
-      isInCart ? 'has-in-cart' : '',
-      product.availability === 'available' ? 'is-available' : 'is-out-of-stock',
-      isDeal ? 'is-deal' : ''
-    ]"
-    @click="onSelect"
-  >
-    <!-- Badges - Special offers, bestseller, etc. -->
-    <div class="item-badges" v-if="product.availability === 'available'">
-      <div class="badge deal-badge" v-if="isDeal">
-        <span class="badge-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="19" y1="5" x2="5" y2="19"></line>
-            <circle cx="6.5" cy="6.5" r="2.5"></circle>
-            <circle cx="17.5" cy="17.5" r="2.5"></circle>
-          </svg>
-        </span>
-        <span>Special</span>
-      </div>
-      <div class="badge popular-badge" v-if="product.is_popular">
-        <span class="badge-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-          </svg>
-        </span>
-        <span>Popular</span>
-      </div>
-    </div>
+  <div>
+    <template v-if="!listType">
 
-    <div class="ai-badge" v-if="product.thumbnail_ai_generated">
-      <span class="ai-badge-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-        </svg>
-      </span>
-      <span>AI</span>
-    </div>
-
-    <!-- Item Image -->
-    <div class="item-image-container">
-      <div class="item-image-wrapper">
-        <img
-          :src="thumbnailSrc"
-          loading="lazy"
-          class="item-image"
-          :style="{'object-fit' : product.thumbnail && !imageFailed ? 'cover' : 'contain'}"
-          @error="handleImageError"
-        />
-        
-        <!-- Out of stock overlay -->
-        <div class="out-of-stock-overlay" v-if="product.availability !== 'available'">
-          <div class="out-of-stock-message">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="8" y1="12" x2="16" y2="12"></line>
-            </svg>
-            <span>Out of Stock</span>
+      <div
+        class="gourmet-item"
+        :class="[
+          isInCart ? 'has-in-cart' : '',
+          product.availability === 'available' ? 'is-available' : 'is-out-of-stock',
+          isDeal ? 'is-deal' : ''
+        ]"
+        @click="onSelect"
+      >
+        <!-- Badges - Special offers, bestseller, etc. -->
+        <div class="item-badges" v-if="product.availability === 'available'">
+          <div class="badge deal-badge" v-if="isDeal">
+            <span class="badge-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="5" x2="5" y2="19"></line>
+                <circle cx="6.5" cy="6.5" r="2.5"></circle>
+                <circle cx="17.5" cy="17.5" r="2.5"></circle>
+              </svg>
+            </span>
+            <span>Special</span>
+          </div>
+          <div class="badge popular-badge" v-if="product.is_popular">
+            <span class="badge-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </span>
+            <span>Popular</span>
           </div>
         </div>
-      </div>
-      
-      <!-- Add to cart controls -->
-      <div class="cart-controls" v-if="product.availability === 'available'">
-        <div class="quantity-control" :style="quantityControlStyles" v-if="isInCart">
-          <button class="control-btn decrease" @click.stop="decrease">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-          </button>
-          <div class="quantity-display">
-            <input 
-              type="number" 
-              :value="isInCart.quantity" 
-              @input="handleQuantity($event)" 
-              @click.stop 
-              min="1"
-            >
-          </div>
-          <button class="control-btn increase" @click.stop="increase">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="plus-icon">
-              <line x1="12" y1="5" x2="12" y2="19" class="vertical-line"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-          </button>
-        </div>
-        
-        <button v-else class="add-to-cart-btn" @click.stop="addToCart" :style="addButtonStyles">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="plus-icon">
-            <line x1="12" y1="5" x2="12" y2="19" class="vertical-line"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-        </button>
-      </div>
-    </div>
     
-    <!-- Item Content -->
-    <div class="item-content">
-      <!-- Availability indicator -->
-      <div class="availability-indicator" v-if="product.availability === 'available' && product.quantity_available !== undefined">
-        <div class="indicator-dot" :class="product.quantity_available > 3 ? 'high' : 'low'"></div>
-        <span class="indicator-text" :class="product.quantity_available > 3 ? 'high' : 'low'">
-          {{ product.quantity_available > 3 ? 'In Stock' : 'Low Stock' }}
-        </span>
-      </div>
-      
-      <!-- Item name -->
-      <h3 class="item-name">{{ product.name }}</h3>
-      
-      <!-- Item description -->
-      <p class="item-description" @click.stop>
-        <TruncatedText
-          @click.stop
-          color="#666"
-          fontSize="12"
-          limit="60"
-          :text="product.description"
-        ></TruncatedText>
-      </p>
-      
-      <!-- Item price -->
-      <div class="price-container">
-        <div class="current-price" :class="{ 'deal-price': isDeal }">
-          {{ 'NGN' | currencySymbol }}{{ product.unitprice | money }}
+        <div class="ai-badge" v-if="product.thumbnail_ai_generated">
+          <span class="ai-badge-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+            </svg>
+          </span>
+          <span>AI</span>
         </div>
-        <div class="original-price" v-if="isDeal && product.original_price">
-          {{ 'NGN' | currencySymbol }} {{ product.original_price | money }}
+    
+        <!-- Item Image -->
+        <div class="item-image-container">
+          <div class="item-image-wrapper">
+            <img
+              
+              :src="thumbnailSrc"
+              loading="lazy"
+              class="item-image"
+              :style="{'object-fit' : product.thumbnail && !imageFailed ? 'cover' : 'contain'}"
+              @error="handleImageError"
+            />
+            
+            <!-- Out of stock overlay -->
+            <div class="out-of-stock-overlay" v-if="product.availability !== 'available'">
+              <div class="out-of-stock-message">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+                <span>Out of Stock</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Add to cart controls -->
+          <div class="cart-controls" v-if="product.availability === 'available'">
+            <div class="quantity-control" :style="quantityControlStyles" v-if="isInCart">
+              <button class="control-btn decrease" @click.stop="decrease">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+              <div class="quantity-display">
+                <input 
+                  type="number" 
+                  :value="isInCart.quantity" 
+                  @input="handleQuantity($event)" 
+                  @click.stop 
+                  min="1"
+                >
+              </div>
+              <button class="control-btn increase" @click.stop="increase">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="plus-icon">
+                  <line x1="12" y1="5" x2="12" y2="19" class="vertical-line"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+            </div>
+            
+            <button v-else class="add-to-cart-btn" @click.stop="addToCart" :style="addButtonStyles">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="plus-icon">
+                <line x1="12" y1="5" x2="12" y2="19" class="vertical-line"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+          </div>
         </div>
+        
+        <!-- Item Content -->
+        <div class="item-content">
+          <!-- Availability indicator -->
+          <div class="availability-indicator" v-if="product.availability === 'available' && product.quantity_available !== undefined">
+            <div class="indicator-dot" :class="product.quantity_available > 3 ? 'high' : 'low'"></div>
+            <span class="indicator-text" :class="product.quantity_available > 3 ? 'high' : 'low'">
+              {{ product.quantity_available > 3 ? 'In Stock' : 'Low Stock' }}
+            </span>
+          </div>
+          
+          <!-- Item name -->
+          <h3 class="item-name">{{ product.name }}</h3>
+          
+          <!-- Item description -->
+          <p class="item-description" @click.stop>
+            <TruncatedText
+              @click.stop
+              color="#666"
+              fontSize="12"
+              limit="60"
+              :text="product.description"
+            ></TruncatedText>
+          </p>
+          
+          <!-- Item price -->
+          <div class="price-container">
+            <div class="current-price" :class="{ 'deal-price': isDeal }">
+              {{ 'NGN' | currencySymbol }}{{ product.unitprice | money }}
+            </div>
+            <div class="original-price" v-if="isDeal && product.original_price">
+              {{ 'NGN' | currencySymbol }} {{ product.original_price | money }}
+            </div>
+          </div>
+        </div>
+    
       </div>
-    </div>
+    </template>
+    <template v-else>
+
+      <div
+        class="gourmet-item"
+        :class="[
+          isInCart ? 'has-in-cart' : '',
+          product.availability === 'available' ? 'is-available' : 'is-out-of-stock',
+          isDeal ? 'is-deal' : ''
+        ]"
+        @click="onSelect"
+      >
+        <!-- Badges - Special offers, bestseller, etc. -->
+        <div class="item-badges" v-if="product.availability === 'available'">
+          <div class="badge deal-badge" v-if="isDeal">
+            <span class="badge-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="5" x2="5" y2="19"></line>
+                <circle cx="6.5" cy="6.5" r="2.5"></circle>
+                <circle cx="17.5" cy="17.5" r="2.5"></circle>
+              </svg>
+            </span>
+            <span>Special</span>
+          </div>
+          <div class="badge popular-badge" v-if="product.is_popular">
+            <span class="badge-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </span>
+            <span>Popular</span>
+          </div>
+        </div>
+    
+        <div class="ai-badge" v-if="product.thumbnail_ai_generated">
+          <span class="ai-badge-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+            </svg>
+          </span>
+          <span>AI</span>
+        </div>
+    
+        <!-- Item Image -->
+       
+        
+        <!-- Item Content -->
+        <div class="item-content">
+          <!-- Availability indicator -->
+          <div class="availability-indicator" v-if="product.availability === 'available' && product.quantity_available !== undefined">
+            <div class="indicator-dot" :class="product.quantity_available > 3 ? 'high' : 'low'"></div>
+            <span class="indicator-text" :class="product.quantity_available > 3 ? 'high' : 'low'">
+              {{ product.quantity_available > 3 ? 'In Stock' : 'Low Stock' }}
+            </span>
+          </div>
+          
+          <!-- Item name -->
+          <h3 class="item-name">{{ product.name }}</h3>
+          
+          <!-- Item description -->
+          <p class="item-description" @click.stop>
+            <TruncatedText
+              @click.stop
+              color="#666"
+              fontSize="12"
+              limit="60"
+              :text="product.description"
+            ></TruncatedText>
+          </p>
+          
+          <!-- Item price -->
+          <div class="price-container">
+            <div class="current-price" :class="{ 'deal-price': isDeal }">
+              {{ 'NGN' | currencySymbol }}{{ product.unitprice | money }}
+            </div>
+            <div class="original-price" v-if="isDeal && product.original_price">
+              {{ 'NGN' | currencySymbol }} {{ product.original_price | money }}
+            </div>
+          </div>
+        </div>
+    
+      </div>
+    </template>
+
+    
   </div>
 </template>
 
@@ -140,7 +231,7 @@ import { mapGetters } from "vuex";
 import mixpanel from 'mixpanel-browser';
 
 export default {
-  props: ["product", "styling", "category", "mixpanel"],
+  props: ["product", "styling", "listType", "category", "mixpanel"],
   data() {
     return {
       quantity: 1,
