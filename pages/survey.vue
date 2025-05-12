@@ -395,10 +395,10 @@ generateVoucher() {
   // Determine voucher amount based on probability
   if (randomValue < 0.05) {
     // 5% chance of winning ₦3000
-    this.voucherAmount = 3000;
+    this.voucherAmount = 1500;
   } else if (randomValue < 0.15) {
     // 10% chance of winning ₦1500
-    this.voucherAmount = 1500;
+    this.voucherAmount = 1000;
   } else if (randomValue < 0.35) {
     // 20% chance of winning ₦500
     this.voucherAmount = 500;
