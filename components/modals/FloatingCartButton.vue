@@ -23,7 +23,6 @@
                 <img class="icon-animated" style="height: 32px; width: 32px;" :src="waiterIcon"></img>
                 <div class="cta-text">
                   <span class="main-cta">Place Order</span>
-                  <span class="sub-cta">Complete your experience</span>
                 </div>
             </template>
             <template v-else-if="cart_mode === 'pickup'">

@@ -354,17 +354,13 @@
                   </div>
               </template>
 
-              <template v-else-if="step===6"> 
-                  <p>Please enter your first name</p>
+              <template v-else-if="step === 6"> 
+                  <p class="please">Please enter your first name</p>
                   <div class="form-input">
                       <label for="">First Name <span class="required">*</span> </label>
                       <input v-model="payload.customer_name">
                   </div>
-                  <div class="form-input">
-                      <label for="">Phone Number</label>
-                      <vue-tel-input v-model="payload.customer_phone"></vue-tel-input>
-                      <span style="font-size: 11px !important">To track your order</span>
-                  </div>
+                 
 
                   <button class="btn big-btn full-width" :disabled="!payload.customer_name || creating_session" @click="placeUnpaidOrder">Place Order</button>
               </template>
@@ -883,8 +879,8 @@ export default {
                 // vat: parseFloat(this.vat || 0),
                     //appFee: this.appFee,
                     // checkout_session: ref,
-                    customer_phone: this.payload.customer_phone,
-                    customer_name: this.payload.customer_name,
+                    customer_phone: this.payload.customer_phone || '-',
+                    customer_name: this.payload.customer_name || "",
                     send_alert: true,
                     send_customer_alert: true,
                     r_uid
@@ -950,7 +946,7 @@ export default {
                 space: this.table_identifier || 'dinein',
                 timestamp: serverTimestamp(),
                 customer_name: this.payload.customer_name || '',
-                customer_phone: this.payload.customer_phone || '',
+                customer_phone: this.payload.customer_phone || '-',
                 taxes: this.totalTaxes || 0,
                 ...orders,
                 seen: false,
@@ -2438,6 +2434,7 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
     border: 1px solid #E2E8F0;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin-top: 20px !important;
     
     &:hover {
       background-color: #EDF2F7;
@@ -2727,5 +2724,13 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
     10% { opacity: 0.5; }
     20% { left: 100%; opacity: 0; }
     100% { left: 100%; opacity: 0; }
+  }
+
+
+  .please {
+    font-family: "Inter", sans-serif !important;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 30px;
   }
 </style>
