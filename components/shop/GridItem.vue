@@ -186,7 +186,6 @@
          <div class="item-image-container" style="width: 40%; padding-top: 0px !important;">
           <div class="item-image-wrapper">
             <img
-              v-if="false"
               :src="thumbnailSrc"
               loading="lazy"
               class="item-image"
