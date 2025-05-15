@@ -64,11 +64,11 @@
                       <CartItem v-for="(item, index) in cart" :item="item" :styling="styling"></CartItem>
                   </div>
 
-                  <button class="big-btn full-width" @click="step++" v-if="business.qr_ordering_mode === 'order-and-pay' ">
+                  <button class="big-btn full-width" @click="step++" v-if="business.qr_ordering_mode === 'order-and-pay' || !table_identifier ">
                       Continue With Items
                   </button>
 
-                  <button class="big-btn full-width" :disabled="creating_session" v-else-if="business.qr_ordering_mode === 'order-only'" @click="resolvePlaceOrderWithAttendant">
+                  <button class="big-btn full-width" :disabled="creating_session" v-else-if="business.qr_ordering_mode === 'order-only' && table_identifier" @click="resolvePlaceOrderWithAttendant">
                       Place Order with Attendant
                   </button>
               </template>
