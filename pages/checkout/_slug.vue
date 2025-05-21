@@ -44,7 +44,7 @@ export default {
             return this.session?.id
         },
         grandTotal() {
-            return this.subtotal + this.deliveryFee + this.appFee + this.taxes;
+            return this.subtotal + this.deliveryFee + this.appFee + this.taxes + this.deliveryPackFee;
         },
         subtotal() {
             return this.session?.pending_sale?.orders.reduce((sum, item) => sum + (item.product?.unitprice * item.quantity), 0) || 0;
@@ -67,7 +67,23 @@ export default {
         },
         taxes() {
             return this.session?.pending_sale?.taxes || 0;
-        }
+        },
+        deliveryPackFee() {
+            let fee = 0; 
+
+            let delivery_meta = this.session?.pending_sale?.delivery_meta;
+            if (delivery_meta) {
+                try {
+                    delivery_meta = JSON.parse(delivery_meta);
+                    alert(JSON.stringify(delivery_meta))
+                    return delivery_meta?.delivery_pack_total || 0;
+                } catch (e) {
+                    console.error("Error parsing delivery_meta:", e);
+                    return 0;
+                }
+            }
+            return 0;
+        },
     },
     watch: {
         sessionId(value) {
@@ -140,6 +156,7 @@ export default {
                     alert('Transaction was not completed, window closed.');
                 }
             });
+            
         }
     }
 }
