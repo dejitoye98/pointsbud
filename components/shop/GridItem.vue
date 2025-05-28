@@ -441,7 +441,7 @@ $shadow-hard: rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
   height: 100%;
-  
+  margin-bottom: 10px;
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 24px $shadow-medium;
