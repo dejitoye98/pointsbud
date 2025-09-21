@@ -28,4 +28,4 @@ COPY --from=build /app ./
 EXPOSE 3000
 
 # Start the app, binding to $PORT
-CMD ["sh", "-c", "nuxt start -p ${PORT:-3000}"]
+CMD ["npx", "nuxt", "start", "-p", "${PORT:-3000}"]
