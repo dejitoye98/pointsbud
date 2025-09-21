@@ -1,4 +1,8 @@
 export default {
+    target: 'static',
+    generate: {
+      fallback: '404.html'
+    },
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
     publicRuntimeConfig: {
