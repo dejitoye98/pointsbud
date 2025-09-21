@@ -123,6 +123,11 @@ export default {
         },
 
         payWithBudpay() {
+
+            if (!this.session.transaction_reference) {
+                alert("Could not find transaction reference")
+            }
+            // first generate a response 
             BudPayCheckout({
                 key: this.$config.BUDPAY_PUBLIC_KEY || 'pk_test_ts9gpurgsis82hlhoaezoayijt06m4vhn4jrk2', // Replace with your public key
                 email: this.customer?.email || 'anon@gmail.com',
@@ -130,7 +135,7 @@ export default {
                 first_name: this.customer?.name || 'anon',
                 last_name: this.customer?.name || 'anon',
                 currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
-                reference: '' + Math.floor((Math.random() * 100000000000) + 1) + new Date().getSeconds() + new Date().getMilliseconds(), // generates a pseudo-unique reference
+                reference: this.session.transaction_reference ,
                 callback: (response) => {
                     //this happens after the payment is completed successfully
                     var reference = response.reference;
@@ -146,9 +151,9 @@ export default {
                         business_id: this.session.business_id 
                     };
                     
-                    this.$api.post("/transactions/verify-budpay", payload).then(resp => {
+                   // this.$api.post("/transactions/verify-budpay", payload).then(resp => {
                         //this.registerFirebaseOrder()
-                    });
+                   // });
                     //let message = this.createOrderMessage()
                 },
                 onClose: function(response) {
