@@ -47,6 +47,7 @@ class SimpleWord2Vec {
   }
 }
 
+
 // Example usage
 const model = new SimpleWord2Vec(coPurchaseData);
 const queryId = "26";

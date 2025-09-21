@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "nuxt",
         "build": "nuxt build",
-        "start": "npx serve -s dist -l $PORT",
+        "start": "nuxt start",
         "generate": "nuxt generate"
     },
     "dependencies": {
@@ -21,7 +21,6 @@
         "chart.js": "^2.9.4",
         "cookie-universal-nuxt": "^2.2.2",
         "core-js": "^3.19.3",
-        
         "crypto": "^1.0.1",
         "crypto-js": "^4.1.1",
         "currency-symbol-map": "^5.1.0",
