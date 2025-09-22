@@ -1,5 +1,8 @@
 export default {
     target: 'server',
+    port: process.env.PORT || 3000, // fallback for local dev
+    host: '0.0.0.0',
+
 
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
