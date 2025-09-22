@@ -16,6 +16,7 @@ export default {
         BUDPAY_PUBLIC_KEY: process.env.BUDPAY_PUBLIC_KEY,
     },
 
+    
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
         title: "PointsBud",
