@@ -1,31 +1,23 @@
-# Stage 1: Build
+# Install dependencies
 FROM node:18-alpine AS build
-
-# Set working directory
 WORKDIR /app
 
-# Copy package files
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the app
 COPY . .
-
-# Build the app
 RUN npm run build
 
-# Stage 2: Run
-FROM node:18-alpine
-
+# Production image
+FROM node:18-alpine AS production
 WORKDIR /app
 
-# Copy only necessary files from build stage
 COPY --from=build /app ./
 
-# Expose the port (Heroku/Render/Fly use $PORT)
+# Ensure Nuxt binds to Render’s injected port
+ENV HOST=0.0.0.0
+ENV PORT=$PORT
+
 EXPOSE 3000
 
-# Start the app, binding to $PORT
-CMD ["npx", "nuxt", "start", "-p", "${PORT:-3000}"]
+CMD ["npm", "run", "start"]
